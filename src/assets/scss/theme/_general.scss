@@ -1,0 +1,295 @@
+// scrollbar styles
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $white-100;
+  border-radius: 1rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $tip;
+  border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $tip;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: $font-rg;
+  font-weight: 400;
+  color: $text-body;
+  background-color: $grey-150;
+  &,
+  p {
+    font-size: 1.7rem;
+  }
+}
+i {
+  font-family: $font-italic;
+}
+.btn,
+.form-control,
+a,
+span,
+button {
+  &:focus,
+  &:active {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+.w-fit-content {
+  width: fit-content;
+}
+table.table {
+  caption {
+    color: $blue-800;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  tbody {
+    border-top: none !important;
+    tr {
+      border: 0.05rem solid $grey-200 td {
+        color: $text-body;
+        font-size: 1.4rem;
+        padding: 1.6rem;
+        border: transparent;
+      }
+    }
+  }
+  thead {
+    background-color: $grey-200;
+    border-top: none !important;
+    border-bottom: solid 0.1rem $grey-200 !important;
+    th {
+      border-bottom: 0;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: $text-body;
+      padding: 1.4rem;
+    }
+  }
+}
+
+.radio-box {
+  position: relative;
+  background-color: $grey-250;
+  width: 9rem;
+  padding: 0.4rem 1rem;
+  color: $black-700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  label,
+  input {
+    cursor: pointer;
+  }
+}
+
+.auth-wrapper {
+  margin-block: 5.6rem;
+  .title {
+    font-size: 3.2rem;
+    color: $black-700;
+    font-family: $font-bd;
+    font-weight: bold;
+  }
+}
+.click {
+  cursor: pointer;
+}
+
+@keyframes growProgressBar {
+  0%,
+  33% {
+    --pgPercentage: 0;
+  }
+  100% {
+    --pgPercentage: var(--value);
+  }
+}
+
+@property --pgPercentage {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+.dropdown-item {
+  font-size: 1.5rem;
+}
+
+.rounded-progressbar {
+  &[role="progressbar"] {
+    --size: 10rem;
+    --fg: #5c993d;
+    --bg: #def;
+    --pgPercentage: var(--value);
+    animation: growProgressBar 3s 1 forwards;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(
+        closest-side,
+        white 80%,
+        transparent 0 99.9%,
+        white 0
+      ),
+      conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), var(--bg) 0);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: calc(var(--size) / 5);
+    color: var(--fg);
+    &::before {
+      counter-reset: percentage var(--value);
+      content: counter(percentage) "%";
+    }
+  }
+}
+
+.r-card {
+  box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
+  border-radius: 0.8rem;
+  .r-card-title {
+    font-size: 1.8rem;
+    color: $black-700;
+    font-weight: 800;
+  }
+}
+
+.nav-pills {
+  border-bottom: 0.1rem solid rgba($color: $blue-800, $alpha: 0.1);
+  .nav-link {
+    color: $text-body;
+    opacity: 0.6;
+    transition: all ease 0.3s;
+    font-size: 1.6rem;
+    border-radius: 0;
+    &.active {
+      color: $text-body;
+      font-weight: bold;
+      opacity: 1;
+      background-color: transparent;
+      position: relative;
+      border-bottom: $green-600 solid 0.2rem;
+    }
+  }
+}
+
+table.table {
+  caption {
+    color: $black-700;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  tbody {
+    border-top: none !important;
+    tr {
+      border-bottom: 0.05rem solid rgba($color: $blue-800, $alpha: 0.1);
+      td {
+        color: $text-body;
+        font-size: 1.5rem;
+        padding: 1.6rem;
+        border: transparent;
+      }
+    }
+  }
+  thead {
+    border: 0 !important;
+    th {
+      border-bottom: 0;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: $text-body;
+      padding: 1.4rem;
+    }
+    &.bg-blue-800 {
+      background-color: $blue-800;
+      th {
+        color: $white-100;
+      }
+    }
+  }
+}
+
+.modal {
+  .modal-header {
+    padding: 1.9rem 4rem;
+    .modal-title {
+      font-family: $font-bd;
+      font-size: 1.8rem;
+    }
+    #btn-close {
+      cursor: pointer;
+    }
+  }
+  .modal-body {
+    padding: 2.5rem 4rem;
+  }
+}
+
+.accordion {
+  .accordion-item {
+    box-shadow: none;
+    border: none;
+    margin-bottom: 2rem;
+    .accordion-header {
+      background: $blue-800;
+      border-radius: 0.8rem;
+      margin: 6px 0px;
+      .accordion-button {
+        box-shadow: none;
+        color: $white-100;
+        background-color: transparent;
+        font-weight: bold;
+        font-size: 1.4rem;
+        cursor: pointer;
+        width: fit-content;
+        white-space: nowrap;
+        padding-left: 4.4rem;
+        padding-block: 1.5rem;
+        &::after {
+          margin-left: 1rem;
+          color: $blue-800;
+          background-color: $white-100;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          height: 2.4rem;
+          width: 2.4rem;
+          background-position: center;
+          position: absolute;
+          left: 0;
+        }
+        &:not(.collapsed) {
+          background: transparent;
+          border: none;
+          color: $white-100;
+          box-shadow: none;
+          &::after {
+            margin-left: 1rem;
+          }
+        }
+      }
+    }
+    .accordion-collapse {
+      background: transparent;
+      .accordion-body {
+        background-color: $blue-200;
+        padding: 1.6rem;
+        font-size: 1.4rem;
+      }
+    }
+  }
+}
