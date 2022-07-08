@@ -7,7 +7,7 @@ export default [
   },
   {
     id: "email",
-    title: "Email",
+    title: "Dine",
     icon: <Mail size={20} />,
     navLink: "/student/courses",
   },
