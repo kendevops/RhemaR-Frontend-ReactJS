@@ -1,20 +1,58 @@
 import React, { useState, useRef, useEffect } from "react";
 
+const tuitioncard = {
+    section: {
+      display: "flex",
+      justifyContent: "end",
+      flexDirection: "column",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "top right",
+      height: "17.3rem"              
+    },
+    wrapper: {
+      textAlign: "center",
+      margin: "0 auto",
+      marginTop: "10px",
+      border: "1px, solid, #d1d1d1"
+    }
+  }
+
 const FinanceAdminTuitionClearance = () => {
   return (
     <>
             <div className="container my-5">
-                <div className="row mb-5">
+                <section className="row mb-5">
                     <div className="col-lg-4 col-sm-6 col-12 mb-4">
-                  
+                    <div _ngcontent-vby-c59="" class="r-card tuition-card" ng-reflect-ng-class="[object Object]">
+                        <section style={tuitioncard.section}>
+                        <div style={tuitioncard.wrapper}>
+                            <p>Total Students</p>
+                            <p>126</p>
+                        </div>
+                        </section>
+                    </div>
                     </div>
                     <div className="col-lg-4 col-sm-6 col-12 mb-4">
-                  
+                    <div _ngcontent-vby-c59="" class="r-card tuition-card" ng-reflect-ng-class="[object Object]">
+                        <section style={tuitioncard.section}>
+                        <div style={tuitioncard.wrapper}>
+                            <p>Total Fees Paid</p>
+                            <p>N750,000</p>
+                        </div>
+                        </section>
+                    </div>
                     </div>
                     <div className="col-lg-4 col-sm-6 col-12 mb-4">
-                  
+                    <div _ngcontent-vby-c59="" class="r-card tuition-card" ng-reflect-ng-class="[object Object]">
+                        <section style={tuitioncard.section}>
+                        <div style={tuitioncard.wrapper}>
+                            <p>Total Pending Fess</p>
+                            <p>N320,000</p>
+                        </div>
+                        </section>
                     </div>
-                </div>
+                    </div>
+                </section>
                 <div>
         
 
