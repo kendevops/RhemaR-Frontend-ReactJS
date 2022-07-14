@@ -36,3 +36,8 @@ textarea.form-control {
   min-height: 4.8rem;
   height: auto;
 }
+
+
+.was-validated .form-control:invalid, .form-control.is-invalid {
+  border: 1px solid #dc3545;
+}

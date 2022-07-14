@@ -22,14 +22,14 @@ import Spinner from "@components/spinner/Fallback-spinner";
 // ** React Perfect Scrollbar
 import "react-perfect-scrollbar/dist/css/styles.css";
 
-// ** React Toastify
-import "@styles/libs/toastify/toastify.scss";
-
 // ** Core styles
 import "@styles/index.scss";
 
 // ** Service Worker
 import * as serviceWorker from "./serviceWorker";
+
+// ** Fake Database
+import './@fake-db'
 
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"));

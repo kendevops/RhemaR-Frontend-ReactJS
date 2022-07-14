@@ -1,0 +1,1051 @@
+// Import first main menu mixin
+@import "./mixins/mixin-main-menu";
+
+.app-layout-wrapper {
+  position: relative;
+}
+
+.app-sidebar {
+  position: relative;
+  top: $navbar-height;
+}
+
+// Main menu base
+//==============
+.main-menu {
+  z-index: 1031;
+  position: absolute;
+  display: table-cell;
+  height: 100%;
+  overflow: hidden;
+  background-color: $blue-800;
+
+  &.menu-light {
+    @include menu-theme($body-color, $white);
+  }
+
+  &.menu-dark {
+    @include menu-theme($menu-dark-color, $menu-dark-bg-color);
+  }
+
+  &.menu-fixed {
+    position: fixed;
+  }
+  &.menu-static {
+    height: 100%;
+    padding-bottom: calc(100% - 20rem);
+    .main-menu-content {
+      height: unset !important;
+    }
+  }
+
+  &.menu-shadow {
+    box-shadow: 0 0 15px 0 rgba($black, 0.05);
+  }
+
+  &.menu-border {
+    border-right: 1px solid $border-color;
+  }
+
+  // Native Scrollbar (.menu-native-scroll)
+  &.menu-native-scroll {
+    .main-menu-content {
+      overflow-y: scroll !important;
+    }
+  }
+
+  .main-menu-content {
+    height: calc(100% - #{$navbar-height}) !important;
+    position: relative;
+    .ps__rail-y {
+      z-index: 3;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &.navigation-main {
+      overflow-x: hidden;
+      padding-bottom: 0.75rem;
+      > li:first-child {
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  a {
+    outline: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+}
+
+// Main Navigation
+.navigation {
+  font-size: 1.5rem;
+  font-family: $font-family-monospace;
+  font-weight: 400;
+  overflow-y: hidden;
+  padding-bottom: 20px;
+
+  .navigation-header {
+    font-family: $font-family-monospace;
+    font-weight: $headings-font-weight;
+    line-height: $headings-line-height;
+    padding: 12px 22px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+
+    &:first-of-type {
+      margin-top: 0 !important;
+    }
+  }
+
+  li {
+    position: relative;
+    white-space: nowrap;
+
+    a {
+      display: block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      i,
+      svg {
+        height: 11px;
+        width: 11px;
+        font-size: 11px;
+        margin-right: 1.38rem;
+      }
+    }
+
+    &.menu-item-animating {
+      transition: height 0.25s ease-in-out;
+    }
+
+    &.disabled {
+      a {
+        cursor: not-allowed;
+        opacity: 0.65;
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+// Media queries for small screen devices
+// =========================================
+@include media-breakpoint-down(md) {
+  // menu hide/open animation
+  .menu-hide .main-menu,
+  .menu-open .main-menu {
+    transition: transform 0.25s, top 0.35s, height 0.35s;
+  }
+
+  .main-menu {
+    transform: translate3d(-240px, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000;
+  }
+
+  .menu-open .main-menu {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .drag-target {
+    z-index: 0;
+  }
+}
+
+//  Vertical menu
+//=========================
+.vertical-layout {
+  &.vertical-menu-modern {
+    .main-menu {
+      transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0s;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+
+      ul.navigation.navigation-main {
+        padding-top: calc(#{$navbar-height});
+      }
+
+      .navigation {
+        li a {
+          align-items: center;
+
+          &.active {
+            background-color: $gold-200;
+            border-right: solid 0.4rem $gold-600;
+            svg path {
+              color: $gold-600;
+              fill: $gold-600;
+            }
+          }
+        }
+        > li > a svg,
+        > li > a i {
+          height: 20px;
+          width: 20px;
+          font-size: 1.45rem;
+          margin-right: 1.1rem;
+          flex-shrink: 0;
+        }
+        // Sub-menu icon size
+        .menu-content {
+          > li > a svg,
+          > li > a i {
+            margin-right: 1.45rem;
+            font-size: 11px;
+            height: 11px;
+            width: 11px;
+          }
+        }
+      }
+    }
+
+    //Vertical menu [Expanded]
+    &.menu-expanded {
+      // Main menu expanded
+      .main-menu {
+        width: $menu-expanded-width;
+        .navigation {
+          .navigation-header {
+            .feather-more-horizontal {
+              display: none;
+            }
+          }
+          > li {
+            > a {
+              > i,
+              > svg {
+                &:before {
+                  height: 20px;
+                  width: 20px;
+                  font-size: 1.45rem;
+                }
+              }
+            }
+          }
+          li {
+            @include vertical-menu-has-sub-arrow($font-size-base + 0.1);
+          }
+        }
+      }
+      //Content expanded
+      .footer {
+        @include main-menu-width($menu-expanded-width);
+      }
+    }
+    //Vertical menu [Collapsed]
+    &.menu-collapsed {
+      // Main menu collapsed
+      .main-menu {
+        width: $menu-collapsed-width;
+
+        .nav-toggle-dien {
+          display: none;
+        }
+
+        // When menu is collapsed and mouse is not hovered over menu
+        &:not(.expanded) {
+          .navigation-header {
+            margin-left: calc(2.2rem + 10px);
+            span {
+              display: none;
+            }
+            .feather-more-horizontal {
+              display: block;
+              font-size: 1.285rem;
+              width: 18px;
+              height: 18px;
+            }
+          }
+          .navigation li {
+            &:last-child {
+              margin-bottom: 1.25rem !important;
+            }
+            &.active {
+              a {
+                background-color: $gold-200;
+                border-right: solid 0.4rem $gold-600;
+                svg path {
+                  color: $gold-600;
+                  fill: $gold-600;
+                }
+              }
+            }
+          }
+        }
+
+        // When menu is collapsed but mouse is hovered over menu
+        &.expanded {
+          width: $menu-expanded-width;
+          .navigation {
+            > li.navigation-header {
+              span {
+                display: block;
+              }
+              .feather-more-horizontal {
+                display: none;
+              }
+            }
+            li {
+              @include vertical-menu-has-sub-arrow(1rem);
+            }
+          }
+          .nav-toggle-dien {
+            display: block;
+          }
+        }
+
+        //Navigation collapsed
+        .navigation {
+          overflow: visible;
+          > li.navigation-header {
+            span {
+              display: none;
+            }
+          }
+          > li {
+            > a {
+              text-overflow: inherit;
+            }
+          }
+        }
+      }
+      //Brand center content collapsed
+      .app-content,
+      .footer {
+        @include main-menu-width($menu-collapsed-width);
+      }
+      .header-navbar {
+        // Floating-navbar
+        &.floating-nav {
+          width: calc(100vw - (100vw - 100%) - 4.4rem - 74px);
+        }
+        // Navbar-static-top
+        &.navbar-static-top {
+          width: calc(100vw - (100vw - 100%) - 74px);
+          left: 74px;
+        }
+      }
+    }
+
+    .toggle-icon,
+    .collapse-toggle-icon {
+      margin-right: 0.425rem;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+// Initially menu & content width for lg and up screen
+@include media-breakpoint-up(lg) {
+  .vertical-layout {
+    &.vertical-menu-modern {
+      .main-menu {
+        width: $menu-expanded-width;
+      }
+    }
+  }
+}
+
+// Initially menu & content width for md and down screen
+@include media-breakpoint-down(xl) {
+  .vertical-layout {
+    &.vertical-menu-modern {
+      // not using this class in below < 992
+      .main-menu {
+        width: 0;
+      }
+      .content,
+      .footer {
+        @include main-menu-width(0);
+      }
+      &.menu-collapsed {
+        .app-content,
+        .footer {
+          margin-left: 0;
+        }
+        .main-menu {
+          width: 0;
+        }
+      }
+    }
+  }
+}
+
+// Initially menu & content width for sm and down screen
+@include media-breakpoint-down(md) {
+  .vertical-layout {
+    &.vertical-menu-modern {
+      // not using this class <992
+      .main-menu {
+        width: 0;
+      }
+      .content,
+      .footer {
+        @include main-menu-width(0);
+      }
+    }
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+// IE Specific CSS
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .vertical-menu-modern.vertical-layout .main-menu .navigation > li > a > span {
+    animation: none;
+  }
+}
+
+// Vertical Overlay Menu
+//=========================
+.vertical-overlay-menu {
+  //Content expanded
+  .content {
+    @include main-menu-width(0);
+  }
+  // Main menu expanded
+  .main-menu {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    transition: width 0.25s, opacity 0.25s, transform 0.25s;
+    width: $menu-expanded-width;
+    left: -($menu-expanded-width);
+
+    .navigation {
+      > li {
+        > a {
+          > svg,
+          > i {
+            margin-right: 14px;
+            float: left;
+            transition: 200ms ease all;
+            height: 20px;
+            width: 20px;
+            &:before {
+              transition: 200ms ease all;
+              font-size: 1.429rem;
+            }
+          }
+        }
+      }
+      li {
+        @include vertical-menu-has-sub-arrow(1rem);
+      }
+
+      .navigation-header {
+        .feather-more-horizontal {
+          display: none;
+        }
+      }
+    }
+  }
+  &.menu-open {
+    .main-menu {
+      opacity: 1;
+      transform: translate3d($menu-expanded-width, 0, 0);
+      transition: width 0.25s, opacity 0.25s, transform 0.25s;
+    }
+  }
+  &.menu-hide {
+    .main-menu {
+      @extend .main-menu;
+    }
+  }
+}
+
+// Sidebar Overlay
+//=========================
+.sidenav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120vh;
+  background-color: rgba($black, 0.5);
+  z-index: 997;
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s ease;
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.5s ease;
+  }
+}
+
+
+//  Page Content
+//=========================
+html {
+  height: 100%;
+  letter-spacing: 0.01rem;
+  body {
+    height: 100%;
+    // direction: $body-direction;
+    // paragraph line-height
+    p {
+      line-height: 1.5rem;
+    }
+  }
+  .content {
+    padding: 0;
+    position: relative;
+    transition: 300ms ease all;
+    backface-visibility: hidden;
+    min-height: calc(100% - #{$footer-height});
+    margin-left: $menu-expanded-width;
+    &.app-content {
+      padding: calc(#{$content-padding} + #{$navbar-height}) #{$content-padding}
+        0;
+      &.show-overlay {
+        .content-overlay {
+          z-index: 10;
+          opacity: 1;
+          ~ .header-navbar-shadow {
+            display: none;
+          }
+        }
+      }
+      .content-overlay {
+        position: fixed;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba($black, 0.5);
+        cursor: pointer;
+        transition: all 0.7s, z-index 0s;
+        z-index: -1;
+      }
+      .content-area-wrapper {
+        display: flex;
+        position: relative;
+        overflow: hidden; // Required in apps
+        .content-wrapper,
+        .content-body {
+          height: 100%;
+        }
+      }
+    }
+    .body-content-overlay {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+      display: block;
+      z-index: 4;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+      &.show {
+        visibility: visible;
+        transition: all 0.3s ease;
+        opacity: 1;
+        background-color: rgba($black, 0.2);
+        border-radius: $border-radius/2;
+      }
+    }
+    .content-wrapper {
+      .content-header-title {
+        font-weight: 500;
+        color: $gray-400;
+        padding-right: $spacer;
+        border-right: 1px solid lighten($gray-600, 10%);
+      }
+      .content-header-right {
+        .dropdown-toggle {
+          &::after {
+            display: none;
+          }
+          i,
+          svg {
+            margin-right: 0;
+          }
+        }
+        .btn-icon {
+          padding: 0.8rem;
+          i,
+          svg {
+            height: $font-size-base;
+            width: $font-size-base;
+          }
+        }
+      }
+    }
+  }
+
+  // kanban app uses kanban-wrapper class as not having content-layout so added this class with all the options
+  // For floating navbar
+  .navbar-floating {
+    &.footer-static {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            #{$navbar-height}
+          );
+        }
+      }
+    }
+    &.footer-hidden {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            0rem,
+            #{$navbar-height},
+            0rem,
+            2
+          );
+        }
+      }
+    }
+    &.footer-fixed {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            #{$navbar-height},
+            0rem,
+            2
+          );
+        }
+      }
+    }
+  }
+
+  //for navbar hidden
+  .navbar-hidden {
+    .app-content {
+      padding: #{$content-padding} #{$content-padding} 0 #{$content-padding} !important;
+    }
+    &.footer-static {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            0rem,
+            #{$footer-height}
+          );
+        }
+      }
+    }
+    &.footer-hidden {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            0rem,
+            0rem,
+            0rem,
+            0rem,
+            2
+          );
+        }
+      }
+    }
+    &.footer-fixed {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            0rem,
+            #{$footer-height},
+            0rem,
+            0rem,
+            2
+          );
+        }
+      }
+    }
+  }
+
+  // for static navbar
+  .navbar-static {
+    .main-menu {
+      top: 0;
+    }
+    .content {
+      min-height: calc(100% - calc(#{$navbar-height} + #{$footer-height}));
+    }
+    .app-content {
+      padding: #{$content-padding} #{$content-padding} 0 #{$content-padding};
+    }
+    &.footer-static {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            #{$footer-height}
+          );
+        }
+      }
+    }
+    &.footer-hidden {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            0rem,
+            0rem,
+            0rem,
+            2
+          );
+        }
+      }
+    }
+    &.footer-fixed {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            0rem,
+            0rem,
+            2
+          );
+        }
+      }
+    }
+  }
+
+  // for sticky navbar
+  .navbar-sticky {
+    .app-content {
+      padding: calc(#{$content-padding} + #{$navbar-height}) #{$content-padding}
+        0 #{$content-padding};
+    }
+    &.footer-static {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            #{$footer-height}
+          );
+        }
+      }
+    }
+    &.footer-hidden {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            0rem,
+            0rem,
+            0rem,
+            2
+          );
+        }
+      }
+    }
+    &.footer-fixed {
+      .app-content {
+        .content-area-wrapper,
+        .kanban-wrapper {
+          @include content-area-wrapper-height(
+            #{$content-padding},
+            #{$navbar-height},
+            #{$footer-height},
+            0rem,
+            0rem,
+            2
+          );
+        }
+      }
+    }
+  }
+
+  // navbar search width for sticky and static navbar
+  .navbar-static,
+  .navbar-sticky {
+    .nav.header-navbar {
+      .navbar-container {
+        padding-left: 1.6rem;
+        padding-right: 1.6rem;
+        .search-input {
+          .search-list {
+            &.show {
+              width: 98%;
+              left: 1%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Fixed layout
+  .footer-fixed {
+    .content {
+      &.app-content {
+        padding-bottom: $footer-height !important; // ? Added extra padding bottom due to fixed footer height
+      }
+    }
+  }
+
+  //Remove left margin for 1 column layout
+  [data-col="1-column"] {
+    .header-navbar {
+      // Custom width for floating nav
+      &.floating-nav {
+        width: calc(
+          100vw - (100vw - 100%) - calc(#{$content-padding} * 2)
+        ) !important; // ? override all navbar type width
+      }
+      width: 100%; // Full width for other nav options
+      left: 0 !important;
+    }
+    .content,
+    .footer {
+      margin-left: 0px !important;
+    }
+
+    // horizontal layout
+    &.horizontal-layout {
+      .header-navbar {
+        width: 100% !important;
+      }
+      .app-content {
+        padding: calc(
+            #{$content-padding} + #{$navbar-height} + #{$navbar-height}
+          )
+          #{$content-padding} 0 #{$content-padding} !important; // ? need to check all navbar types case
+      }
+      &.footer-fixed {
+        .app-content {
+          padding: calc(
+              #{$content-padding} + #{$navbar-height} + #{$navbar-height}
+            )
+            #{$content-padding} #{$footer-height} #{$content-padding} !important; // ? need to check all navbar types case
+        }
+      }
+    }
+  }
+
+  /*
+    * Blank page
+    */
+
+  .blank-page {
+    .content {
+      margin-left: 0; // not using in both cases
+      // overflow-x hidden, overflow for y in sm screen issue resolved default
+      &.app-content {
+        overflow: overlay;
+        overflow-x: hidden;
+        padding: 0 !important;
+        transition: none;
+        // remove white space on top by header-navbar-shadow class
+        .header-navbar-shadow {
+          display: none;
+        }
+      }
+    }
+    // blank page content-wrapper
+    .content-wrapper {
+      padding: 0 !important;
+      // content to be in center horizontally and vertically
+      .flexbox-container {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+        justify-content: center;
+      }
+    }
+  }
+
+  .pace {
+    .pace-progress {
+      background: $primary;
+    }
+  }
+}
+
+.app-content.center-layout {
+  overflow: hidden;
+}
+
+/*
+* Col 3 layout for detached and general type
+*/
+
+@include media-breakpoint-up(lg) {
+  body {
+    // Normal sidebar
+    .content-right {
+      width: calc(100vw - (100vw - 100%) - #{$sidebar-width});
+      float: right;
+    }
+    .content-left {
+      width: calc(100vw - (100vw - 100%) - #{$sidebar-width});
+      float: left;
+    }
+    // Detached sidebar
+    .content-detached {
+      width: 100%;
+      &.content-right {
+        float: right;
+        margin-left: -$sidebar-width;
+        .content-body {
+          margin-left: calc(#{$sidebar-width} + #{$content-padding});
+        }
+      }
+      &.content-left {
+        float: left;
+        margin-right: -$sidebar-width;
+        .content-body {
+          margin-right: calc(#{$sidebar-width} + #{$content-padding});
+        }
+      }
+    }
+  }
+  .sidebar-right.sidebar-sticky {
+    float: right !important;
+    margin-left: -$sidebar-width;
+    width: $sidebar-width !important;
+    margin-top: $navbar-height + 1.25;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  html body .app-content {
+    // padding: calc(
+    //     #{$content-padding} - 0.8rem + #{$navbar-height} + #{$navbar-height}
+    //   )
+    //   calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+
+  // For static navbar
+  html body.navbar-static .app-content {
+    padding: calc(#{$content-padding} - 0.8rem)
+      calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+
+  // For sticky navbar
+  html body.navbar-sticky .app-content {
+    padding: calc(#{$content-padding} - 0.8rem + #{$navbar-height})
+      calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+
+  // For Hidden navbar
+  html body.navbar-hidden .app-content {
+    padding: calc(#{$content-padding} - 0.8rem)
+      calc(#{$content-padding} - 0.8rem) 0 calc(#{$content-padding} - 0.8rem) !important; // - 0.8rem to reduce padding in small screen
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .navbar-static,
+  .navbar-sticky {
+    .app-content {
+      .header-navbar {
+        .navbar-container {
+          padding-left: 1rem;
+          padding-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+// For Fullscreen IE
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  html.full-screen {
+    width: 100%;
+    .content.app-content {
+      height: 100%;
+      overflow: scroll;
+      overflow-x: hidden;
+    }
+  }
+}
+
+//  Navbar
+//=========================
+nav {
+  min-height: 6.4rem;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.6rem 2.88rem;
+  background-color: $white-100;
+  font-size: 1.6rem;
+  .logo {
+    width: 4.8rem;
+    height: 5.2rem;
+  }
+  .menu-icon {
+    font-size: 2.8rem;
+  }
+  .profile-sm {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    background-color: $blue-800;
+    padding: 0.9rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .notifcation-bell {
+    font-size: 2rem;
+    cursor: pointer;
+  }
+}

@@ -31,10 +31,6 @@ import { useSkin } from "@hooks/useSkin";
 import { useNavbarType } from "@hooks/useNavbarType";
 import { useFooterType } from "@hooks/useFooterType";
 
-// ** Styles
-// import '@styles/base/core/menu/menu-types/vertical-menu.scss'
-// import '@styles/base/core/menu/menu-types/vertical-overlay-menu.scss'
-
 const AppLayoutWrapper = (props) => {
   // ** Props
   const {

@@ -1,5 +1,6 @@
 // ** Icons Import
 import { Home, Circle, Mail, MessageSquare } from "react-feather";
+import { Icon } from '@iconify/react';
 
 export default [
   {
@@ -8,7 +9,7 @@ export default [
   {
     id: "email",
     title: "Email",
-    icon: <Mail size={20} />,
+    icon: <Icon icon="heroicons-solid:menu" width="40" height="40" />,
     navLink: "/student/courses",
   },
   {
