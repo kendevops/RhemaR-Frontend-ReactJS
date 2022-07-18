@@ -8,8 +8,8 @@ export default [
   },
   {
     id: "email",
-    title: "Email",
-    icon: <Icon icon="heroicons-solid:menu" width="40" height="40" />,
+    title: "Dine",
+    icon: <Mail size={20} />,
     navLink: "/student/courses",
   },
   {
