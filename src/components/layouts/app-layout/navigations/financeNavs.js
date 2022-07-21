@@ -5,49 +5,49 @@ import { Icon } from '@iconify/react';
 
 export default [
   {
-    header: "Students",
+    header: "Finance",
   },
   {
     id: "dashboards",
     title: "Dashboards",
     icon: <Icon icon="ep:menu" />,
-    navLink: "/student/courses",
+    navLink: "/finance/dashboards",
   },
   {
-    id: "courses",
-    title: "Courses",
-    icon: <Icon icon="bi:collection-fill" />,
-    navLink: "/student/courses",
-  },
-  {
-    id: "downloads",
-    title: "Downloads",
-    icon: <Icon icon="akar-icons:download" />,
-    navLink: "/student/courses",
-  },
-  {
-    id: "tution&clearance",
+    id: "tutionClearnce",
     title: "Tution & Clearance",
     icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/student/courses",
+    navLink: "/finance/tution-clearance",
+  },
+  {
+    id: "reports",
+    title: "Reports",
+    icon: <Icon icon="tabler:report-analytics" />,
+    navLink: "/finance/reports",
+  },
+  {
+    id: "chat",
+    title: "Chat",
+    icon: <Icon icon="heroicons-solid:chat-alt-2" />,
+    navLink: "/finance/chat",
   },
   {
     id: "events",
     title: "Events",
     icon: <Icon icon="bi:calendar2-event-fill" />,
-    navLink: "/student/courses",
+    navLink: "/finance/events",
   },
   {
     id: "profile",
     title: "Profile",
     icon: <Icon icon="bxs:user-circle" />,
-    navLink: "/student/courses",
+    navLink: "/finance/profile",
   },
   {
-    id: "helpdesk",
+    id: "helpDesk",
     title: "Help Desk",
     icon: <Icon icon="ri:customer-service-2-line" />,
-    navLink: "/student/courses",
+    navLink: "/finance/helpdesk",
   },
 
   //{

@@ -1,68 +1,69 @@
 // ** Icons Import
-import { Home, Circle, Mail, MessageSquare } from "react-feather";
+//import { Home, Circle, Mail, MessageSquare } from "react-feather";
+import { Icon } from '@iconify/react';
 
 export default [
   {
-    header: "Campus Coordinator",
+    header: "CampusCoordinator",
   },
   {
     id: "dashboard",
     title: "Dashboard",
-    icon: <Mail size={20} />,
+    icon: <Icon icon="ep:menu" />,
     navLink: "/campus-coordinator/dahsboard",
   },
   {
     id: "students",
     title: "Students",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/campus-coordinator/students",
   },
   {
     id: "instructors",
     title: "Instructors",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="fa-solid:chalkboard-teacher" />,
     navLink: "/campus-coordinator/instructors",
   },
   {
     id: "alumni",
     title: "Alumni",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="ion:school-sharp" />,
     navLink: "/campus-coordinator/alumni",
   },
   {
     id: "tuition-clearance",
     title: "Tuition & Clearance ",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="fa-regular:credit-card" />,
     navLink: "/campus-coordinator/tuition-clearance",
   },
   {
     id: "message-board",
     title: "Message Board",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="fluent:mail-24-filled" />,
     navLink: "/campus-coordinator/",
   },
   {
     id: "chat",
     title: "Chat",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="heroicons-solid:chat-alt-2" />,
     navLink: "/campus-coordinator/chat",
   },
   {
     id: "events",
     title: "Events",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="bi:calendar2-event-fill" />,
     navLink: "/campus-coordinator/events",
   },
   {
     id: "profile",
     title: "Profile",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="bxs:user-circle" />,
     navLink: "/campus-coordinator/profile",
   },
   {
     id: "helpdesk",
     title: "Help Desk",
-    icon: <MessageSquare size={20} />,
+    icon: <Icon icon="ri:customer-service-2-line" />,
     navLink: "/campus-coordinator/helpdesk",
   },
 //   {
@@ -86,7 +87,7 @@ export default [
 //       },
 //     ],
 //   },
-//   {
-//     header: "Partners",
-//   },
+   {
+     header: "Partners",
+   },
 ];

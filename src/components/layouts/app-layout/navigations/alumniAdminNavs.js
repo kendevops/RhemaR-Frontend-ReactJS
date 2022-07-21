@@ -5,49 +5,43 @@ import { Icon } from '@iconify/react';
 
 export default [
   {
-    header: "Students",
+    header: "AlumniAdmin",
   },
   {
     id: "dashboards",
     title: "Dashboards",
     icon: <Icon icon="ep:menu" />,
-    navLink: "/student/courses",
+    navLink: "/alumni-admin/dashborad",
   },
   {
-    id: "courses",
-    title: "Courses",
-    icon: <Icon icon="bi:collection-fill" />,
-    navLink: "/student/courses",
+    id: "connectCare",
+    title: "Connect & Care",
+    icon: <Icon icon="ri:hearts-fill" />,
+    navLink: "/alumni-admin/connect-care",
   },
   {
-    id: "downloads",
-    title: "Downloads",
-    icon: <Icon icon="akar-icons:download" />,
-    navLink: "/student/courses",
+    id: "alumniConnect",
+    title: "alumni Connect",
+    icon: <Icon icon="ion:school-sharp" />,
+    navLink: "/alumni-admin/alumni-connect",
   },
   {
-    id: "tution&clearance",
-    title: "Tution & Clearance",
-    icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/student/courses",
+    id: "chat",
+    title: "Chat",
+    icon: <Icon icon="heroicons-solid:chat-alt-2" />,
+    navLink: "/alumni-admin/chat",
   },
   {
     id: "events",
     title: "Events",
     icon: <Icon icon="bi:calendar2-event-fill" />,
-    navLink: "/student/courses",
+    navLink: "/alumni-admin/events",
   },
   {
     id: "profile",
     title: "Profile",
     icon: <Icon icon="bxs:user-circle" />,
-    navLink: "/student/courses",
-  },
-  {
-    id: "helpdesk",
-    title: "Help Desk",
-    icon: <Icon icon="ri:customer-service-2-line" />,
-    navLink: "/student/courses",
+    navLink: "/alumni-admin/profile",
   },
 
   //{

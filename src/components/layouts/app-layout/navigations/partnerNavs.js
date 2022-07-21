@@ -5,49 +5,49 @@ import { Icon } from '@iconify/react';
 
 export default [
   {
-    header: "Students",
+    header: "Partner",
   },
   {
     id: "dashboards",
     title: "Dashboards",
     icon: <Icon icon="ep:menu" />,
-    navLink: "/student/courses",
+    navLink: "/partner/dashboards",
   },
   {
-    id: "courses",
-    title: "Courses",
-    icon: <Icon icon="bi:collection-fill" />,
-    navLink: "/student/courses",
+    id: "donation",
+    title: "Donation",
+    icon: <Icon icon="bxs:donate-heart" />,
+    navLink: "/partner/donation",
   },
   {
-    id: "downloads",
-    title: "Downloads",
-    icon: <Icon icon="akar-icons:download" />,
-    navLink: "/student/courses",
+    id: "RBTCgoals",
+    title: "RBTC Goals",
+    icon: <Icon icon="gg:edit-black-point" />,
+    navLink: "/partner/rbtc-goals",
   },
   {
-    id: "tution&clearance",
-    title: "Tution & Clearance",
-    icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/student/courses",
+    id: "publication",
+    title: "Publication",
+    icon: <Icon icon="mdi:note-text" />,
+    navLink: "/partner/publication",
+  },
+  {
+    id: "chat",
+    title: "Chat",
+    icon: <Icon icon="heroicons-solid:chat-alt-2" />,
+    navLink: "/partner/chat",
   },
   {
     id: "events",
     title: "Events",
     icon: <Icon icon="bi:calendar2-event-fill" />,
-    navLink: "/student/courses",
+    navLink: "/partner/events",
   },
   {
-    id: "profile",
-    title: "Profile",
+    id: "myProfile",
+    title: "My Profile",
     icon: <Icon icon="bxs:user-circle" />,
-    navLink: "/student/courses",
-  },
-  {
-    id: "helpdesk",
-    title: "Help Desk",
-    icon: <Icon icon="ri:customer-service-2-line" />,
-    navLink: "/student/courses",
+    navLink: "/partner/my-profile",
   },
 
   //{

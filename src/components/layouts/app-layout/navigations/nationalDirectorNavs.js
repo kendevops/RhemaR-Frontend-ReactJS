@@ -5,49 +5,61 @@ import { Icon } from '@iconify/react';
 
 export default [
   {
-    header: "Students",
+    header: "NationalDirector",
   },
   {
     id: "dashboards",
     title: "Dashboards",
     icon: <Icon icon="ep:menu" />,
-    navLink: "/student/courses",
+    navLink: "/national-director/dashboards",
   },
   {
-    id: "courses",
-    title: "Courses",
-    icon: <Icon icon="bi:collection-fill" />,
-    navLink: "/student/courses",
+    id: "campusNetwork",
+    title: "Campus Network",
+    icon: <Icon icon="mdi:home-analytics" />,
+    navLink: "/national-director/campus-network",
   },
   {
-    id: "downloads",
-    title: "Downloads",
-    icon: <Icon icon="akar-icons:download" />,
-    navLink: "/student/courses",
-  },
-  {
-    id: "tution&clearance",
+    id: "tutionClearance",
     title: "Tution & Clearance",
     icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/student/courses",
+    navLink: "/national-director/tution-clearance",
+  },
+  {
+    id: "messageBoard",
+    title: "Message Board",
+    icon: <Icon icon="fluent:mail-24-filled" />,
+    navLink: "/national-director/message-board",
+  },
+  {
+    id: "chat",
+    title: "Chat",
+    icon: <Icon icon="heroicons-solid:chat-alt-2" />,
+    navLink: "/national-director/chat",
+  },
+  {
+    id: "report",
+    title: "Report",
+    icon: <Icon icon="tabler:report-analytics" />,
+    navLink: "/national-director/report",
   },
   {
     id: "events",
     title: "Events",
     icon: <Icon icon="bi:calendar2-event-fill" />,
-    navLink: "/student/courses",
+    navLink: "/national-director/events",
   },
   {
     id: "profile",
     title: "Profile",
     icon: <Icon icon="bxs:user-circle" />,
-    navLink: "/student/courses",
+    navLink: "/national-director/profile",
   },
   {
-    id: "helpdesk",
+    id: "helpDesk",
     title: "Help Desk",
     icon: <Icon icon="ri:customer-service-2-line" />,
-    navLink: "/student/courses",
+    navLink: "/national-director/help-desk",
   },
 
   //{
