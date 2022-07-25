@@ -2,14 +2,17 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+
 // ** Third Party Components
 import classnames from "classnames";
 import { ArrowUp } from "react-feather";
 
 // ** Reactstrap Imports
 import { Navbar, Button } from "reactstrap";
+import { Icon } from '@iconify/react';
 
 const AppLayoutWrapper = (props) => {
+  
   // ** Props
   const { menuData, children } = props;
 
@@ -46,7 +49,7 @@ const AppLayoutWrapper = (props) => {
                 target="_blank"
                 className="me-4"
               >
-                <span className="iconify" dataIcon="dashicons:facebook"></span>
+                <Icon icon="bxl:facebook-circle" />
               </a>
 
               <a
@@ -54,20 +57,14 @@ const AppLayoutWrapper = (props) => {
                 target="_blank"
                 className="me-4"
               >
-                <span
-                  className="iconify"
-                  dataIcon="brandico:twitter-bird"
-                ></span>
+                <Icon icon="ant-design:twitter-circle-filled" />
               </a>
               <a
                 href="https://youtube.com/rhema"
                 target="_blank"
                 className="me-4"
               >
-                <span
-                  className="iconify"
-                  dataIcon="entypo-social:youtube"
-                ></span>
+                <Icon icon="cib:youtube" />
               </a>
             </div>
           </div>
@@ -80,6 +77,7 @@ const AppLayoutWrapper = (props) => {
             <div className="d-flex align-items-center">
               <div className="navlink" routerLinkActive="router-link-active">
                 Home
+                <Icon icon="bxs:down-arrow" />
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -93,6 +91,7 @@ const AppLayoutWrapper = (props) => {
               </div>
               <div className="navlink" routerLinkActive="router-link-active">
                 Admissions
+                <Icon icon="bxs:down-arrow" />
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -102,6 +101,7 @@ const AppLayoutWrapper = (props) => {
               </div>
               <div className="navlink" routerLinkActive="router-link-active">
                 Academics
+                <Icon icon="bxs:down-arrow" />
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -112,6 +112,7 @@ const AppLayoutWrapper = (props) => {
 
               <div className="navlink" routerLinkActive="router-link-active">
                 Students
+                <Icon icon="bxs:down-arrow" />
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -136,7 +137,7 @@ const AppLayoutWrapper = (props) => {
                 target="_blank"
                 className="me-4"
               >
-                <span className="iconify" dataIcon="dashicons:facebook"></span>
+                <Icon icon="bxl:facebook-circle" width="40" height="40" />
               </a>
 
               <a
@@ -144,27 +145,21 @@ const AppLayoutWrapper = (props) => {
                 target="_blank"
                 className="me-4"
               >
-                <span
-                  className="iconify"
-                  dataIcon="brandico:twitter-bird"
-                ></span>
+                <Icon icon="ant-design:twitter-circle-filled" width="40" height="40" />
               </a>
               <a
                 href="https://youtube.com/rhema"
                 target="_blank"
                 className="me-4"
               >
-                <span
-                  className="iconify"
-                  dataIcon="entypo-social:youtube"
-                ></span>
+                 <Icon icon="cib:youtube" width="40" height="40" />
               </a>
               <a
                 href="https://instagram.com/rhema"
                 target="_blank"
                 className="me-4"
               >
-                <span className="iconify" dataIcon="bi:instagram"></span>
+                <Icon icon="akar-icons:instagram-fill" width="40" height="40" />
               </a>
             </div>
             <div className="d-flex justify-content-center font10 flex-wrap mb-4">
