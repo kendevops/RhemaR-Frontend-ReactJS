@@ -29,7 +29,7 @@ import "@styles/index.scss";
 import * as serviceWorker from "./serviceWorker";
 
 // ** Fake Database
-import './@fake-db'
+// import './@fake-db'
 
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"));

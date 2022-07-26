@@ -1,11 +1,9 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
-require('dotenv')
 
 const API_ENDPOINT = process.env.API_ENDPOINT;
 
-export default class JwtService {
-  // ** jwtConfig <= Will be used by this service
+export default class DataService {
   jwtConfig = { ...jwtDefaultConfig };
 
   // ** For Refreshing Token
@@ -14,10 +12,7 @@ export default class JwtService {
   // ** For Refreshing Token
   subscribers = [];
 
-  constructor(jwtOverrideConfig) {
-    this.jwtConfig = { ...this.jwtConfig, ...jwtOverrideConfig };
-
-    axios.defaults.baseURL = 'http://localhost:6868/api';
+  constructor() {
 
     // ** Request Interceptor
     axios.interceptors.request.use(
@@ -68,9 +63,6 @@ export default class JwtService {
           });
           return retryOriginalRequest;
         }
-        // ** if (error.message.includes('401')) {
-        //   window.location.replace('/login');
-        // }
         return Promise.reject(error);
       }
     );
@@ -102,44 +94,34 @@ export default class JwtService {
     localStorage.setItem(this.jwtConfig.storageRefreshTokenKeyName, value);
   }
 
-  login(...args) {
-    return axios.post(
-      `${this.jwtConfig.loginEndpoint}`,
-      ...args
-    );
+  static get(path = "") {
+    return axios.get({
+      method: "GET",
+      url: `${path}`,
+    });
   }
 
-  register(...args) {
-    return axios.post(
-      `${this.jwtConfig.registerEndpoint}`,
-      ...args
-    );
+  static post(path = "", data = {}) {
+    return axios.post({
+      method: "POST",
+      url: `${path}`,
+      data,
+    });
   }
 
-  forgotPassword(...args) {
-    return axios.post(
-      `${this.jwtConfig.forgotPasswordEndpoint}`,
-      ...args
-    );
+  static patch(path = "", data = {}) {
+    return axios.patch({
+      method: "PATCH",
+      url: `${path}`,
+      data: JSON.stringify(data),
+    });
   }
 
-  resetPassword(...args) {
-    return axios.post(
-      `${this.jwtConfig.resetPasswordEndpoint}`,
-      ...args
-    );
-  }
-
-  verifyEmail(...args) {
-    return axios.post(
-      `${this.jwtConfig.verifyEmailEndpoint}`,
-      ...args
-    );
-  }
-
-  refreshToken() {
-    return axios.post(`${this.jwtConfig.refreshEndpoint}`, {
-      refreshToken: this.getRefreshToken(),
+  static put(path = "", data = {}) {
+    return axios.put({
+      method: "PUT",
+      url: `${path}`,
+      data: JSON.stringify(data),
     });
   }
 }
