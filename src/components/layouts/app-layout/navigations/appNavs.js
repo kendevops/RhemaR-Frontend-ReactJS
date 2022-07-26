@@ -1,12 +1,16 @@
 // ** Navigation imports
-import studentNavs from './studentNavs'
-import alumniNavs from './alumniNavs'
-import financeNavs from './financeNavs'
-import ictAdminNavs from './ictAdminNavs'
-import instructorNavs from './instructorNavs'
-import alumniAdminNavs from './alumniAdminNavs'
-import nationalDirectorNavs from './nationalDirectorNavs'
-import campusCoordinatorNavs from './campusCoordinatorNavs'
+
+import AlumniNavs from './alumniNavs'
+import PartnerNavs from './partnerNavs'
+import TcAdminNavs from './tcAdminNavs'
+import StudentNavs from './studentNavs'
+import FinanceNavs from './financeNavs'
+import IctAdminNavs from './ictAdminNavs'
+import InstructorNavs from './instructorNavs'
+import AlumniAdminNavs from './alumniAdminNavs'
+import PartnerAdminNavs from './partnerAdminNavs'
+import NationalDirectorNavs from './nationalDirectorNavs'
+import CampusCoordinatorNavs from './campusCoordinatorNavs'
 
 // ** Merge & Export
-export default [...studentNavs, ...campusCoordinatorNavs, ...alumniNavs]
+export default [...StudentNavs, ...CampusCoordinatorNavs, ...AlumniAdminNavs, ...AlumniNavs, ...FinanceNavs, ...IctAdminNavs, ...InstructorNavs, ...NationalDirectorNavs, ...PartnerAdminNavs, ...PartnerNavs, ...TcAdminNavs]
