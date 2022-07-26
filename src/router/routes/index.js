@@ -1,4 +1,5 @@
 // ** Routes Imports
+import AuthRoutes from './auth'
 import MiscRoutes from './misc'
 import StudentRoutes from './student'
 import ProspectiveStudentRoutes from './prospectiveStudent'
@@ -13,6 +14,7 @@ const DefaultRoute = '/'
 
 // ** Merge Routes
 const Routes = [
+  ...AuthRoutes,
   ...MiscRoutes,
   ...StudentRoutes,
   ...ProspectiveStudentRoutes,

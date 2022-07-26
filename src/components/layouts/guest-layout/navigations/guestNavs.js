@@ -1,5 +1,5 @@
 // ** Icons Import
-import { Home, Circle } from "react-feather";
+import { Home, Circle, Mail, MessageSquare } from "react-feather";
 
 export default [
   {

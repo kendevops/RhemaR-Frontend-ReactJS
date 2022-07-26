@@ -153,7 +153,7 @@ const AuthRegistrationPage = () => {
                   >
                     <span className="inline-block">Proceed</span>
 
-                    <span className="inline-block">
+                    {/* <span className="inline-block">
                       <span
                         className="spinner-border spinner-border-sm"
                         role="status"
@@ -161,7 +161,7 @@ const AuthRegistrationPage = () => {
                       ></span>
                       <span>Processing...</span>
                       <span></span>
-                    </span>
+                    </span> */}
                   </button>
                 </form>
               </div>

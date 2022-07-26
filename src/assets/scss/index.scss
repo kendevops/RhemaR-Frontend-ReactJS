@@ -1,5 +1,5 @@
-
-@import "./theme/variables/";
+@import "./theme/variables"; // bootstrap needs some of these variables
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import "./theme/bootstrap-extended/include/"; // other theme variables
 @import "./elements/";
 @import "./theme/";

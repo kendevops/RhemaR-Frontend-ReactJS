@@ -20,7 +20,7 @@ import {
   writeBatch,
   Timestamp,
 } from "firebase/firestore";
-import { firebaseFirestore } from "@configs/firebase";
+import { firebaseFirestore } from "@configs/firebaseConfig";
 
 const ToastComponent = ({ title, icon, color, fullname }) => (
   <Fragment>

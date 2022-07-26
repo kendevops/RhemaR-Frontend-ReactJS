@@ -18,10 +18,10 @@
 }
 
 // Alerts
-$success: #5C993D;
-$warning: #f2b12e;
-$error: #f53844;
-$info: #418ed9;
+$success: #28c76f;
+$warning: #ff9f43;
+$error: #ea5455;
+$info: #00cfe8;
 $tip: #4d4d4d;
 
 // Brand Colours
@@ -75,39 +75,3 @@ $font-bd: "lato-bd", sans-serif;
 $font-md: "lato-md", sans-serif;
 $font-rg: "lato-rg", sans-serif;
 $font-italic: "lato-italic", sans-serif;
-
-
-//  ------------------------------
-//    Navbar
-//  ------------------------------
-$navbar-height: 6.45rem !default;
-$footer-height: 3.35rem !default;
-
-//  ------------------------------
-//    Main Menu
-//  ------------------------------
-
-//main menu dark
-$menu-dark-color: #dcdcdc !default;
-$menu-dark-bg-color: #203864 !default;
-
-$menu-padding: 10px 15px 10px 15px !default;
-$menu-second-level-padding: 10px 15px 10px 20px !default;
-$menu-third-level-padding: 10px 15px 10px 53px !default;
-$menu-forth-level-padding: 10px 15px 10px 53px !default;
-
-// vertical menu
-$menu-expanded-width: 260px !default;
-$menu-collapsed-width: 80px !default;
-
-//  ------------------------------
-//    Sidebar
-//  -------------------------------
-$sidebar-width: 260px !default;
-
-
-$body-direction: ltr !default; // Default ltr, change it to rtl for Right To Left support.
-$content-padding: 2rem !default;
-
-
-$chevron-right: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-right'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E";
