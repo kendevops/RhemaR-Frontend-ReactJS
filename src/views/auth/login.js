@@ -95,6 +95,7 @@ const AuthLoginPage = () => {
       useJwt
         .login({ email: data.email, password: data.password })
         .then((res) => {
+          console.log("LOGIN.RESPONSE", res);
           const data = {
             ...res.data.userData,
             accessToken: res.data.accessToken,

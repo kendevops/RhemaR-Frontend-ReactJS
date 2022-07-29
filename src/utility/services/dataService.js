@@ -14,6 +14,8 @@ export default class DataService {
 
   constructor() {
 
+    axios.defaults.baseURL = 'http://localhost:6868/api';
+
     // ** Request Interceptor
     axios.interceptors.request.use(
       (config) => {
