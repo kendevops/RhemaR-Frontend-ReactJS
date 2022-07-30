@@ -2,12 +2,12 @@ import { lazy } from 'react'
 
 const StudentRoutes = [
   {
-    path: '/dashboard',
+    path: '/student/dashboard',
     component: lazy(() => import('../../views/student/dashboard')),
   },
   {
-    path: '/student/courses',
-    component: lazy(() => import('../../views/student/dashboard')),
+    path: '/student/tuition-clearance',
+    component: lazy(() => import('../../views/student/tuition-clearance')),
   }
 ]
 
