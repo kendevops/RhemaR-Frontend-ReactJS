@@ -18,7 +18,7 @@ import {
   HelpCircle,
   Coffee,
 } from "react-feather";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 
 // ** Actions
 import { handleLogin } from "@store/slices/authSlice";
@@ -78,12 +78,7 @@ const AuthLoginPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const ability = useContext(AbilityContext);
-  const {
-    control,
-    setError,
-    handleSubmit,
-    formState,
-  } = useForm({
+  const { control, setError, handleSubmit, formState } = useForm({
     defaultValues,
     mode: "onChange", // onBlur
     // reValidateMode: "onChange",
@@ -188,7 +183,6 @@ const AuthLoginPage = () => {
                       )}
                       rules={{ required: true }}
                     />
-                    {/* <p> {formState.errors.email?.message}</p>  */}
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Password</label>
@@ -220,7 +214,6 @@ const AuthLoginPage = () => {
                   <button
                     className="btn btn-blue-800 btn-lg w-100 mb-5"
                     type="submit"
-                    // !formState.isValid !formState.isSubmitted formState.isSubmitting
                     disabled={!formState.isValid}
                   >
                     Login
