@@ -81,7 +81,7 @@ export default function StudentCourses() {
             >
               <h2 className="text-xl font-bold text-blue-600">My Courses</h2>
 
-              <Link to={"/"}>
+              <Link to={"/student/all-courses"}>
                 <small className="text-decoration-underline">Show All</small>
               </Link>
             </div>

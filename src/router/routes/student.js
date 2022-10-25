@@ -17,6 +17,10 @@ const StudentRoutes = [
     path: "/student/courses",
     component: lazy(() => import("../../views/student/Courses")),
   },
+  {
+    path: "/student/all-courses",
+    component: lazy(() => import("../../views/student/AllCourses")),
+  },
 ];
 
 export default StudentRoutes;

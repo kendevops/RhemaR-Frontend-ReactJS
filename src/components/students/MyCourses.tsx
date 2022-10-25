@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Course, Courses } from "../../data/Courses";
+import {
+  Course,
+  Courses,
+  MissedCourse,
+  missedCourses as missed,
+} from "../../data/Courses";
 import Tab from "../atoms/Tab";
 import Table, { TableColumns } from "../general/table/Table";
 import { Chart, ArcElement } from "chart.js";
@@ -49,12 +54,30 @@ const courseColumns: TableColumns<Course>[] = [
   },
 ];
 
+const missedColumns: TableColumns<MissedCourse>[] = [
+  {
+    key: "Course Title",
+    render: (d) => <p>{d?.title}</p>,
+    title: "Course Title",
+  },
+  {
+    key: "Next Available Date",
+    render: (d) => <p>{d?.nextAvailableDate?.toDateString()}</p>,
+    title: "Next Available Date",
+  },
+  {
+    key: "Action",
+    render: (d) => <u>Re-sit Course</u>,
+    title: "Action",
+  },
+];
+
 export default function MyCourses() {
   const [missedCourses, setMissedCourses] = useState(false);
-  let data = Courses;
+  let data: any[] = Courses;
 
   if (missedCourses) {
-    data = [];
+    data = missed;
   }
 
   // Toggle missed course
@@ -84,11 +107,12 @@ export default function MyCourses() {
       </Tab.Wrapper>
 
       <div className="rounded-3 border-1 mt-3">
-        <div className="tab-content p-4" id="pills-tabContent">
-          <div className="table-responsive rounded-2 r-card bg-white">
-            <Table columns={courseColumns} data={data} />
-          </div>
-        </div>
+        <Table.Wrapper>
+          <Table
+            columns={missedCourses ? missedColumns : courseColumns}
+            data={data}
+          />
+        </Table.Wrapper>
       </div>
     </>
   );
