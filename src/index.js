@@ -25,6 +25,9 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 // ** Core styles
 import "@styles/index.scss";
 
+// ** Extra Styles
+import "./assets/styles/student.css";
+
 // ** Service Worker
 import * as serviceWorker from "./serviceWorker";
 

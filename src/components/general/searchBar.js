@@ -1,31 +1,50 @@
 import React from "react";
+import { Search } from "react-feather";
 
-const SearchBar = ()=>{
+const searchBarStyle = {
+  width: "70%",
+  padding: "1.4%",
+  outline: "none",
+  border: "none",
+};
 
-    const searchBarStyle = {
-        width : "70%",
-        padding : "1.4%",
-        outline : "none",
-        border : "none"
-    }
+const searchButtonStyle = {
+  //   border: "none",
+};
 
-    const searchButtonStyle = {
-        background : "blue",
-        color : "white",
-        padding : "1%",
-        outline : "none",
-        border : "none"
-    }
+const SearchBar = (props) => {
+  const { onSearch, inputOnChange } = props;
 
-    return(
-        <>
-            <div>
-                <input type = "text" placeholder =  "Enter Your Search Key" style = {searchBarStyle}/>
-                <button style = {searchButtonStyle}>Search</button>
-            </div>
-        </>
-    )
-
-}
+  return (
+    <>
+      <div className="input-group bg-blue-400">
+        <div className="input-group-prepend">
+          <span className="input-group-text h-100" id="basic-addon1">
+            <Search color="#182252" />
+          </span>
+        </div>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter Your Search Key"
+          style={searchBarStyle}
+          onChange={inputOnChange}
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+        />
+        <div className="input-group-append">
+          <button
+            onClick={onSearch}
+            style={searchButtonStyle}
+            className="btn btn-lg btn-blue-800"
+            type="button"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default SearchBar;

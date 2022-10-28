@@ -1,0 +1,48 @@
+/* Easing */
+.ease-transition {
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5;
+}
+
+/* Tabs */
+.tab:hover {
+  background-color: "#F5F5F5";
+}
+
+/* Student Avatar */
+.student-avatar {
+  background-color: #203864;
+  width: 6rem;
+  height: 6rem;
+  overflow: hidden;
+  border-radius: 100%;
+  display: grid;
+  place-content: center;
+}
+
+.student-avatar-wrapper {
+  position: relative;
+}
+
+/* Button */
+.student-avatar-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  box-shadow: none;
+}
+
+/* Nav  */
+li.nav-item.active > a {
+  background: #3d4d65 !important;
+  border-style: solid;
+  border-right-width: 3px;
+  border-right-color: #dfc46d;
+  border-left-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  box-shadow: none !important;
+}
+
+li.nav-item.active > a > svg {
+  color: #dfc46d;
+}

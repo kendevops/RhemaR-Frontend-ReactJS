@@ -1,6 +1,5 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
-require('dotenv')
 
 const API_ENDPOINT = process.env.API_ENDPOINT;
 
@@ -17,7 +16,7 @@ export default class JwtService {
   constructor(jwtOverrideConfig) {
     this.jwtConfig = { ...this.jwtConfig, ...jwtOverrideConfig };
 
-    axios.defaults.baseURL = 'http://localhost:6868/api';
+    axios.defaults.baseURL = "http://localhost:6868/api";
 
     // ** Request Interceptor
     axios.interceptors.request.use(
@@ -103,38 +102,23 @@ export default class JwtService {
   }
 
   login(...args) {
-    return axios.post(
-      `${this.jwtConfig.loginEndpoint}`,
-      ...args
-    );
+    return axios.post(`${this.jwtConfig.loginEndpoint}`, ...args);
   }
 
   register(...args) {
-    return axios.post(
-      `${this.jwtConfig.registerEndpoint}`,
-      ...args
-    );
+    return axios.post(`${this.jwtConfig.registerEndpoint}`, ...args);
   }
 
   forgotPassword(...args) {
-    return axios.post(
-      `${this.jwtConfig.forgotPasswordEndpoint}`,
-      ...args
-    );
+    return axios.post(`${this.jwtConfig.forgotPasswordEndpoint}`, ...args);
   }
 
   resetPassword(...args) {
-    return axios.post(
-      `${this.jwtConfig.resetPasswordEndpoint}`,
-      ...args
-    );
+    return axios.post(`${this.jwtConfig.resetPasswordEndpoint}`, ...args);
   }
 
   verifyEmail(...args) {
-    return axios.post(
-      `${this.jwtConfig.verifyEmailEndpoint}`,
-      ...args
-    );
+    return axios.post(`${this.jwtConfig.verifyEmailEndpoint}`, ...args);
   }
 
   refreshToken() {

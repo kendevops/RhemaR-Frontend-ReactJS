@@ -9,6 +9,8 @@ import { PaystackButton } from "react-paystack";
 import { StarIcon } from '@heroicons/react/solid';
 import { GridCard } from './gridcard';
 
+
+
     const TuitionAndClearancePage = () => {
 
     const Paystack = () => {
@@ -83,12 +85,16 @@ import { GridCard } from './gridcard';
           btnName="Make Payment"
         </div>
       </div>
-      <section>
-        <div>
-            <div>
-                <input type = "text" placeholder =  "Enter Your Search Key"/>
-                <button>Search</button>
+      <section className="bg-white r-card px-5 pb-5">
+        <div className="row">
+          <div className="col-xl-9 col-lg-10 col-md-11 col-12 mx-auto">
+            <div className="app-searchbar">
+              placeHolder="Search"
+              [canFilter]="false"
+              (searchQuery)="getSearchQuery($event)"
+              (searchAction)="search(false)"
             </div>
+          </div>
         </div>
         <ul className="nav nav-pills mb-5" id="pills-tab" role="tablist">
           <li className="nav-item" role="presentation">
