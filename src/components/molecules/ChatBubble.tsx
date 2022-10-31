@@ -17,7 +17,7 @@ export default function ChatBubble({
   const gClass = "d-flex flex-column gap-3";
   return (
     <div className={`${gClass} ${isRecipient ? "align-items-end" : ""}`}>
-      <div className="d-flex align-items-center gap3">
+      <div className="d-flex align-items-center gap-3">
         <UserAvatar />
         <p
           style={{
@@ -28,8 +28,8 @@ export default function ChatBubble({
         </p>
       </div>
       <article
-        className={`rounded-2 ${
-          isRecipient ? "bg-blue-600 text-white " : "bg-blue-200 text-blue-500"
+        className={`rounded-2 p-4 text-sm ${
+          isRecipient ? "bg-blue-800 text-white " : "bg-blue-200 text-blue-500"
         }`}
         about="message"
         style={{

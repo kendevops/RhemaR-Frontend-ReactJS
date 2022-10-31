@@ -15,6 +15,12 @@ const defaultValues = {
   alternatePhoneNumber: "+234 (0)803 856 2070",
 };
 
+const defaultPValues = {
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+};
+
 export default function StudentProfile() {
   const Options = ["Account Info", "Password & Security"];
   const [option, setOption] = useState(0);
@@ -26,7 +32,13 @@ export default function StudentProfile() {
     mode: "onChange",
   });
 
+  const pform = useForm({
+    defaultValues: defaultPValues,
+    mode: "onChange",
+  });
+
   function onSubmit() {}
+  function onSubmitP() {}
 
   return (
     <section className="container mt-5">
@@ -47,18 +59,18 @@ export default function StudentProfile() {
             })}
           </div>
 
+          {/* Avatar */}
+          <div className="pb-2 mt-4 d-flex align-items-center gap-5 border-bottom ">
+            <StudentAvatar />
+            <div>
+              <h2 className="text-2xl font-bold text-blue-500">John Ade</h2>
+              <p className="text-sm ">adejohn@gmail.com</p>
+            </div>
+          </div>
+
           {/* Account Info */}
           {currentPage === "Account Info" && (
             <section className="mt-5 mb-5">
-              {/* Avatar */}
-              <div className="pb-2 d-flex align-items-center gap-5 border-bottom ">
-                <StudentAvatar />
-                <div>
-                  <h2 className="text-2xl font-bold text-blue-500">John Ade</h2>
-                  <p className="text-sm ">adejohn@gmail.com</p>
-                </div>
-              </div>
-
               {/* Form */}
               <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
@@ -221,6 +233,76 @@ export default function StudentProfile() {
                   disabled={!formState.isValid}
                 >
                   Save Changes
+                </button>
+              </form>
+            </section>
+          )}
+
+          {/* Password and Sceurity */}
+          {currentPage === "Password & Security" && (
+            <section className="mt-5 mb-5">
+              <form className="mt-3" onSubmit={handleSubmit(onSubmitP)}>
+                <div className="form-group">
+                  <label htmlFor="currentPassword">Current Password</label>
+                  <Controller
+                    control={pform.control}
+                    name="currentPassword"
+                    defaultValue=""
+                    render={({ field }) => (
+                      <Input
+                        autoFocus
+                        type="password"
+                        placeholder="Enter Current Password"
+                        className="form-control"
+                        {...field}
+                      />
+                    )}
+                    rules={{ required: true }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="newPassword">New Password</label>
+                  <Controller
+                    control={pform.control}
+                    name="newPassword"
+                    defaultValue=""
+                    render={({ field }) => (
+                      <Input
+                        autoFocus
+                        type="password"
+                        placeholder="Enter New Password"
+                        className="form-control"
+                        {...field}
+                      />
+                    )}
+                    rules={{ required: true }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <Controller
+                    control={pform.control}
+                    name="confirmPassword"
+                    defaultValue=""
+                    render={({ field }) => (
+                      <Input
+                        autoFocus
+                        type="password"
+                        placeholder="Re-type Password"
+                        className="form-control"
+                        {...field}
+                      />
+                    )}
+                    rules={{ required: true }}
+                  />
+                </div>
+
+                <button
+                  className="btn btn-blue-800 btn-lg w-100 my-5"
+                  type="submit"
+                  disabled={!pform.formState.isValid}
+                >
+                  Save
                 </button>
               </form>
             </section>

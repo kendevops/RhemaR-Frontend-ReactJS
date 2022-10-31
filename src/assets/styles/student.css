@@ -46,3 +46,26 @@ li.nav-item.active > a {
 li.nav-item.active > a > svg {
   color: #dfc46d;
 }
+
+li {
+  list-style: none;
+}
+
+.no-padding-left {
+  padding-left: 0;
+}
+
+/* Header in exam page */
+.exam-header {
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* @media (min-width: 1280px) {
+  .exam-header {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+} */
