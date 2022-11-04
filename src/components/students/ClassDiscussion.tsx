@@ -33,7 +33,7 @@ export default function ClassDiscussion({ course }: ClassDiscussionProps) {
   const dataIsValid = Array?.isArray(data);
 
   return (
-    <div>
+    <div className="my-4">
       {/* Loaders */}
 
       {/* Chats */}

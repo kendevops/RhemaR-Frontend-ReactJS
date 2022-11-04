@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import CardWrapper from "../../components/students/CardWrapper";
+import CourseSchedule from "../../components/students/CourseSchedule";
+import upcoming from "../../assets/img/upcoming-event.svg";
 
 const StudentDashboardPage = () => {
   return (
@@ -7,19 +10,23 @@ const StudentDashboardPage = () => {
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           {/* Semester Progress */}
           <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
-            <p className="r-card-title">Semester Progress</p>
-            <div className="d-flex align-items-center">
-              <div className="progress">
+            <div className="d-flex justify-content-between ">
+              <p className="r-card-title">Semester Progress</p>
+              <h2 className="font-bold text-2xl ms-4">43%</h2>
+            </div>
+
+            {/* Progress bar */}
+            <div>
+              <div class="progress ">
                 <div
-                  className="progress-bar bg-gold-600"
+                  class="progress-bar progress-bar-animated bg-warning "
                   role="progressbar"
                   style={{ width: "43%" }}
-                  aria-valuenow="43"
+                  aria-valuenow="25"
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
               </div>
-              <div className="font-bold text-2xl ms-4">43%</div>
             </div>
           </div>
 
@@ -55,8 +62,9 @@ const StudentDashboardPage = () => {
 
         {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
-          <div className="bg-white r-card px-5 py-4 mb-4 payment-card">
-            <div>
+          <div className="bg-white d-flex align-items-center justify-content-between r-card px-5 py-4 mb-4 payment-card">
+            {/* left */}
+            <div className="text-center mx-auto">
               <div>
                 <div
                   className="rounded-progressbar"
@@ -69,8 +77,17 @@ const StudentDashboardPage = () => {
               </div>
               <div className="text-lg">Payment Completion</div>
             </div>
-            <div className="line"></div>
-            <div>
+
+            <div
+              style={{
+                width: "2px",
+                backgroundColor: "#D2D7E0",
+                height: "100%",
+              }}
+            ></div>
+
+            {/* right */}
+            <div className="text-center mx-auto">
               <p className="text-xl">Next Payment</p>
               <p className="next-payment">N10,000</p>
               <p className="mb-0 text-lg click">
@@ -86,16 +103,18 @@ const StudentDashboardPage = () => {
         </div>
 
         <div className="col-lg-6 col-md-6 col-12 mb-4">
-          <app-course-schedule></app-course-schedule>
+          <CardWrapper>
+            <CourseSchedule />
+          </CardWrapper>
         </div>
 
         {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           <div className="bg-white r-card px-5 py-4 mb-4">
             <div className="bg-blue-200 rounded-2 py-2 px-4 d-flex justify-content-between align-items-center mt-3 mb-4">
-              <div className="r-card-title me-3">Upcoming Events</div>
+              <h2 className="r-card-title me-3">Upcoming Events</h2>
               <div>
-                <img src="assets/img/upcoming-event.svg" alt="" />
+                <img src={upcoming} alt="Upcoming event" />
               </div>
             </div>
 

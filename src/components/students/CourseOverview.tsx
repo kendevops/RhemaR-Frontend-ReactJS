@@ -26,7 +26,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
   );
 
   return (
-    <article>
+    <article className="my-4">
       <h2
         style={{
           fontSize: typography.h2,
@@ -36,7 +36,13 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
         {title}
       </h2>
 
-      <p>{content}</p>
+      <p
+        style={{
+          lineHeight: "2rem",
+        }}
+      >
+        {content}
+      </p>
     </article>
   );
 }

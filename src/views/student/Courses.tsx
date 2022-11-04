@@ -39,7 +39,7 @@ export default function StudentCourses() {
                 </div>
               </div>
 
-              <Link to={"/"}>
+              <Link to={"/student/lecture/Pneumatology"}>
                 <span
                   className="p-3 rounded-3"
                   style={{

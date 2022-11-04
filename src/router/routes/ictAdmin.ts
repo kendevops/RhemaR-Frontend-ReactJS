@@ -17,6 +17,10 @@ const ictAdminRoutes = [
     path: "/ict-admin/courses",
     component: lazy(() => import("../../views/ict-admin/Courses")),
   },
+  {
+    path: "/ict-admin/message-board",
+    component: lazy(() => import("../../views/ict-admin/MessageBoard")),
+  },
 ];
 
 export default ictAdminRoutes;
