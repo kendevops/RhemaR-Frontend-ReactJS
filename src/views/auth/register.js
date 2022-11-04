@@ -1,6 +1,31 @@
-import React, { useState, useRef, useEffect } from "react";
+import useForm from "../../utility/hooks/useForm";
+import useJwt from "@hooks/useJwt";
 
 const AuthRegistrationPage = () => {
+  const initialState = {
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    phoneNumber: "",
+    alternatePhoneNumber: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const { formData, formIsValid, updateForm } = useForm({ initialState });
+
+  function registerUser() {
+    console.log(formData);
+    // useJwt.register();
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    formIsValid ? registerUser() : alert("Please fill in all fields");
+  }
+
   return (
     <>
       <div className="container mt-5">
@@ -28,7 +53,7 @@ const AuthRegistrationPage = () => {
 
                 <div className="alert alert-danger"></div>
 
-                <form>
+                <form onSubmit={submitForm}>
                   <div className="row">
                     <div className="col-12">
                       <div className="form-group">
@@ -38,6 +63,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter First Name"
                           className="form-control"
                           formControlName="firstName"
+                          onChange={(e) =>
+                            updateForm("firstName", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -49,6 +77,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter Middle Name"
                           className="form-control"
                           formControlName="middleName"
+                          onChange={(e) =>
+                            updateForm("middleName", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -60,6 +91,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter Last Name (Surname)"
                           className="form-control"
                           formControlName="lastName"
+                          onChange={(e) =>
+                            updateForm("lastName", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -72,6 +106,7 @@ const AuthRegistrationPage = () => {
                           id="email"
                           className="form-control"
                           formControlName="email"
+                          onChange={(e) => updateForm("email", e.target.value)}
                         />
                       </div>
                     </div>
@@ -87,6 +122,9 @@ const AuthRegistrationPage = () => {
                               value="Male"
                               name="gender"
                               formControlName="gender"
+                              onChange={(e) =>
+                                updateForm("gender", e.target.value)
+                              }
                             />
                           </div>
                           <div className="radio-box">
@@ -98,6 +136,9 @@ const AuthRegistrationPage = () => {
                               value="Female"
                               selected
                               formControlName="gender"
+                              onChange={(e) =>
+                                updateForm("gender", e.target.value)
+                              }
                             />
                           </div>
                         </div>
@@ -111,6 +152,9 @@ const AuthRegistrationPage = () => {
                           placeholder="WhatsApp & Telegram"
                           className="form-control"
                           formControlName="phoneNumber"
+                          onChange={(e) =>
+                            updateForm("phoneNumber", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -122,6 +166,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter Alternate Phone Number"
                           className="form-control"
                           formControlName="altPhoneNumber"
+                          onChange={(e) =>
+                            updateForm("alternatePhoneNumber", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -132,6 +179,9 @@ const AuthRegistrationPage = () => {
                           type="password"
                           className="form-control"
                           formControlName="password"
+                          onChange={(e) =>
+                            updateForm("password", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -142,6 +192,9 @@ const AuthRegistrationPage = () => {
                           type="password"
                           className="form-control"
                           formControlName="confirmPassword"
+                          onChange={(e) =>
+                            updateForm("confirmPassword", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -152,16 +205,6 @@ const AuthRegistrationPage = () => {
                     type="submit"
                   >
                     <span className="inline-block">Proceed</span>
-
-                    {/* <span className="inline-block">
-                      <span
-                        className="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      <span>Processing...</span>
-                      <span></span>
-                    </span> */}
                   </button>
                 </form>
               </div>

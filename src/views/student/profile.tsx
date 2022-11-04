@@ -159,25 +159,54 @@ export default function StudentProfile() {
                       name="gender"
                       defaultValue=""
                       render={({ field }) => (
-                        <div>
-                          <RadioGroup
-                            sx={{ display: "block" }}
-                            id="gender"
-                            defaultValue="female"
-                            name="gender"
-                          >
-                            <FormControlLabel
-                              control={<Radio />}
-                              label="Male"
-                              {...field}
-                            />
-                            <FormControlLabel
-                              control={<Radio />}
-                              label="Female"
-                              {...field}
-                            />
-                          </RadioGroup>
+                        <div className="col-lg-6 col-md-12">
+                          <div className="form-group">
+                            <label htmlFor="Gender">Gender</label>
+                            <div className="d-flex">
+                              <div className="radio-box me-3">
+                                <label htmlFor="gender">Male</label>
+                                <input
+                                  type="radio"
+                                  id="gender"
+                                  value="Male"
+                                  name="gender"
+                                  checked={field.value === "male"}
+
+                                  // formControlName="gender"
+                                />
+                              </div>
+                              <div className="radio-box">
+                                <label htmlFor="gender">Female</label>
+                                <input
+                                  type="radio"
+                                  id="gender"
+                                  name="gender"
+                                  value="Female"
+                                  checked={field.value === "female"}
+                                />
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                        // <div>
+                        //   <RadioGroup
+                        //     sx={{ display: "block" }}
+                        //     id="gender"
+                        //     defaultValue="female"
+                        //     name="gender"
+                        //   >
+                        //     <FormControlLabel
+                        //       control={<Radio />}
+                        //       label="Male"
+                        //       {...field}
+                        //     />
+                        //     <FormControlLabel
+                        //       control={<Radio />}
+                        //       label="Female"
+                        //       {...field}
+                        //     />
+                        //   </RadioGroup>
+                        // </div>
                       )}
                       rules={{ required: true }}
                     />
