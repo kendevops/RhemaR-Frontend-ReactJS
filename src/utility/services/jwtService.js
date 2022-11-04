@@ -1,8 +1,7 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
 
-const API_ENDPOINT = process.env.API_ENDPOINT;
-
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
 export default class JwtService {
   // ** jwtConfig <= Will be used by this service
   jwtConfig = { ...jwtDefaultConfig };
@@ -16,7 +15,7 @@ export default class JwtService {
   constructor(jwtOverrideConfig) {
     this.jwtConfig = { ...this.jwtConfig, ...jwtOverrideConfig };
 
-    axios.defaults.baseURL = "http://localhost:6868/api";
+    axios.defaults.baseURL = API_ENDPOINT;
 
     // ** Request Interceptor
     axios.interceptors.request.use(

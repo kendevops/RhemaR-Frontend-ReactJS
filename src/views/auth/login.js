@@ -10,15 +10,7 @@ import { useDispatch } from "react-redux";
 import { toast, Slide } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 
-import {
-  AlertTriangle,
-  CheckCircle,
-  Mail,
-  GitHub,
-  HelpCircle,
-  Coffee,
-} from "react-feather";
-import { Icon } from "@iconify/react";
+import { AlertTriangle, CheckCircle } from "react-feather";
 
 // ** Actions
 import { handleLogin } from "@store/slices/authSlice";
@@ -28,36 +20,22 @@ import { AbilityContext } from "@src/utility/context/can";
 
 // ** Custom Components
 import Avatar from "@components/avatar";
-import InputPasswordToggle from "@components/input-password-toggle";
 
 // ** Utils
-import {
-  getHomeRouteForLoggedInUser,
-  UpdateLoggedInUserAbility,
-} from "@utils/utilsGeneric";
+import { getHomeRouteForLoggedInUser } from "@utils/utilsGeneric";
 
 // ** Reactstrap Imports
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Label,
-  Alert,
-  Button,
-  CardText,
-  CardTitle,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Input, Label } from "reactstrap";
+import { UpdateLoggedInUserAbility } from "../../utility/utilsGeneric";
 
 const ToastContent = ({ heading, message, type }) => (
   <Fragment>
     <div className="toastify-header">
       <div className="title-wrapper">
-        {type == "danger" && (
+        {type === "danger" && (
           <Avatar size="sm" color="error" icon={<AlertTriangle size={20} />} />
         )}
-        {type == "success" && (
+        {type === "success" && (
           <Avatar size="sm" color="success" icon={<CheckCircle size={20} />} />
         )}
         <h3 className="toast-title fw-bold">{heading}</h3>
@@ -70,8 +48,8 @@ const ToastContent = ({ heading, message, type }) => (
 );
 
 const defaultValues = {
-  password: "admin",
-  email: "admin@demo.com",
+  password: "helloWorld1",
+  email: "rhemar_tests@protonmail.com",
 };
 
 const AuthLoginPage = () => {
@@ -203,14 +181,22 @@ const AuthLoginPage = () => {
                       )}
                       rules={{ required: true }}
                     />
-                    {/* <p> {formState.errors.password?.message}</p>  */}
                   </div>
-                  <div className="form-group form-check">
-                    <Input type="checkbox" id="remember-me" />
-                    <Label className="form-check-label" for="remember-me">
-                      Remember Me
-                    </Label>
-                  </div>
+                  <section className="d-flex justify-content-between">
+                    {/* Remember me */}
+                    <div className="form-group form-check">
+                      <Input type="checkbox" id="remember-me" />
+                      <Label className="form-check-label" for="remember-me">
+                        Remember Me
+                      </Label>
+                    </div>
+
+                    {/* Forgot Password */}
+                    <Link to="/forgot-password">
+                      <small>Forgot Password?</small>
+                    </Link>
+                  </section>
+
                   <button
                     className="btn btn-blue-800 btn-lg w-100 mb-5"
                     type="submit"
@@ -221,8 +207,8 @@ const AuthLoginPage = () => {
                 </form>
 
                 <div className="text-center mb-2">
-                  <Link to="/forgot-password">
-                    <small>Forgot Password?</small>
+                  <Link to="/register">
+                    <small>Register</small>
                   </Link>
                 </div>
               </div>
