@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Tab from "../../components/atoms/Tab";
+import SearchBar from "../../components/general/searchBar";
 import AddSchedule from "../../components/modals/AddSchedule";
 import NewSession from "../../components/modals/NewSession";
 import AcademicSessionTable from "../../components/tables/admin-tables/AcademicSessionTable";
+import CourseCompletionTable from "../../components/tables/admin-tables/CourseCompletionTable";
 import CoursesScheduleTable from "../../components/tables/admin-tables/CoursesScheduleTable";
 import useToggle from "../../utility/hooks/useToggle";
 
@@ -14,6 +16,7 @@ export default function AdminCourses() {
 
   const [session, toggleSession] = useToggle();
   const [schedule, toggleSchedule] = useToggle();
+  const [attendance, toggleStudentProgreess] = useToggle();
 
   return (
     <section>
@@ -33,7 +36,7 @@ export default function AdminCourses() {
         })}
       </Tab.Wrapper>
 
-      {/* Academic Sections */}
+      {/* Academic Session */}
       {tab === 0 && (
         <section>
           <article>
@@ -88,6 +91,27 @@ export default function AdminCourses() {
           </article>
         </section>
       )}
+
+
+        {/* Search Bar */}
+        <article className="d-flex gap-5 m-5">
+          <div style={{ width: "80%" }}>
+            <SearchBar />
+          </div>
+        </article>
+
+        {/**Start Course Completion Tab */}
+        {tab === 1 && (
+        <section>
+          <article>
+
+      
+            {/* Table */}
+            <CourseCompletionTable />
+          </article>
+        </section>
+      )}
+      {/**End Course Completion Tab */}
     </section>
   );
 }
