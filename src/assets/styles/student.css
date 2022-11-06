@@ -69,3 +69,17 @@ li {
     margin-right: auto;
   }
 } */
+
+/* Avatar in Nav header */
+.avatar-dropdown {
+  position: fixed;
+  padding: 1.5rem;
+  background-color: white;
+  right: 1%;
+  top: 8%;
+}
+
+.avatar-dropdown-item {
+  cursor: pointer;
+  margin-bottom: 0.8rem;
+}

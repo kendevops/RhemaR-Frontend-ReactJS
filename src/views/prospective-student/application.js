@@ -1,13 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import { isUserLoggedIn, getUserData } from "../../utility/utilsGeneric";
 
 const ProspectiveStudentApplicationPage = () => {
+  console.log({
+    auth: isUserLoggedIn(),
+    user: getUserData(),
+  });
+
   return (
     <div className="container mt-5">
       <div className="auth-wrapper">
         <div className="row">
           <div className="col-xl-7 col-lg-8 col-md-10 col-12 mx-auto">
             <div className="mb-5 text-center nav-logo">
-              <img src="assets/img/logo.svg" alt="" style={{ width: "100px"}} />
+              <img
+                src="assets/img/logo.svg"
+                alt=""
+                style={{ width: "100px" }}
+              />
             </div>
 
             <div className="bg-white shadow rounded-2 p-5">

@@ -4,11 +4,8 @@ import { Icon } from "@iconify/react";
 
 export default [
   {
-    header: "Students",
-  },
-  {
-    id: "dashboards",
-    title: "Dashboards",
+    id: "dashboard",
+    title: "Dashboard",
     icon: <Icon icon="ep:menu" />,
     navLink: "/student/dashboard",
   },
@@ -70,7 +67,4 @@ export default [
   //},
   //],
   //},
-  {
-    header: "Partners",
-  },
 ];

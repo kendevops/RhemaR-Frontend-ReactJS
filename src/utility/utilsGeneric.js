@@ -1,12 +1,11 @@
 // import { useContext } from "react";
 // import { AbilityContext } from "@src/utility/context/can";
 
-
 /**
  ** Setup user abilities based on their roles
  * @param {String} userRole Role of user
  */
- export const UpdateLoggedInUserAbility = (userRole, ability) => {
+export const UpdateLoggedInUserAbility = (userRole, ability) => {
   // const ability = useContext(AbilityContext);
   if (userRole === "AllAdmin") {
     ability.update([
@@ -21,6 +20,14 @@
       {
         action: "Access",
         subject: "AllGuestPages",
+      },
+      {
+        action: "Access",
+        subject: "Applications",
+      },
+      {
+        action: "read",
+        subject: "Applications",
       },
       {
         action: "Verify",
@@ -116,7 +123,7 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
  ** This is completely up to you and how you want to store the token in your frontend application
  *  ? e.g. If you are using cookies to store the application please update this function
  */
-export const isUserLoggedIn = () => localStorage.getItem("userData");
+export const isUserLoggedIn = () => !!localStorage.getItem("userData");
 export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
 
 /**
@@ -125,7 +132,9 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
   if (userRole === "AllAdmin") return "/dashboard";
-  if (userRole === "client") return "/access-control";
+  if (userRole === "Client") return "/access-control";
+  if (userRole === "ProspectiveStudent") return "/application";
+  if (userRole === "Student") return "/student/dashboard";
   return "/login";
 };
 

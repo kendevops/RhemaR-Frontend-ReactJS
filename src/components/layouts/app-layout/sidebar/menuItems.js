@@ -1,34 +1,43 @@
 // ** Menu Components
-import MenuLink from './menuLink'
-import MenuGroup from './menuGroup'
-import MenuHeader from './menuHeader'
+import MenuLink from "./menuLink";
+import MenuGroup from "./menuGroup";
+import MenuHeader from "./menuHeader";
 
 // ** Utils
 import {
   CanViewMenuItem,
   CanViewMenuGroup,
-  resolveMenuItemComponent as resolveNavItemComponent
-} from  '@utils/utilsLayout'
+  resolveMenuItemComponent as resolveNavItemComponent,
+} from "@utils/utilsLayout";
 
-const MenuItems = props => {
+const MenuItems = (props) => {
   // ** Components Object
   const Components = {
     MenuLink,
     MenuGroup,
-    MenuHeader
-  }
+    MenuHeader,
+  };
 
   // ** Render Nav Menu Items
   const RenderNavItems = props.items.map((item, index) => {
-    const TagName = Components[resolveNavItemComponent(item)]
-    return <TagName key={item.id || item.header} item={item} {...props} />
-    if (item.children) {
-      return CanViewMenuGroup(item) && <TagName item={item} index={index} key={item.id} {...props} />
-    }
-    return CanViewMenuItem(item) && <TagName key={item.id || item.header} item={item} {...props} />
-  })
+    const TagName = Components[resolveNavItemComponent(item)];
 
-  return RenderNavItems
-}
+    console.log(CanViewMenuItem(item));
 
-export default MenuItems
+    return (
+      CanViewMenuItem(item) && <TagName key={item.id} item={item} {...props} />
+    );
+    // if (item.children) {
+    //   return (
+    //     CanViewMenuGroup(item) && (
+    //       <TagName item={item} index={index} key={item.id} {...props} />
+    //     )
+    //   );
+    // }
+    // return <TagName key={item.id || item.header} item={item} {...props} />;
+  });
+
+  return RenderNavItems;
+};
+
+export default MenuItems;

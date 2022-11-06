@@ -1,5 +1,10 @@
 import useForm from "../../utility/hooks/useForm";
 import useJwt from "@hooks/useJwt";
+import { toast, Slide } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import useToggle from "../../utility/hooks/useToggle";
+import SpinnerComponent from "../../components/spinner/Fallback-spinner";
+import { useHistory } from "react-router-dom";
 
 const AuthRegistrationPage = () => {
   const initialState = {
@@ -15,15 +20,69 @@ const AuthRegistrationPage = () => {
   };
 
   const { formData, formIsValid, updateForm } = useForm({ initialState });
+  const [loading, toggleLoading] = useToggle();
+  const history = useHistory();
 
   function registerUser() {
-    console.log(formData);
-    // useJwt.register();
+    const {
+      confirmPassword,
+      alternatePhoneNumber: altPhoneNumber,
+      gender,
+      ...others
+    } = formData;
+    const data = { ...others, altPhoneNumber, gender: gender.toUpperCase() };
+
+    toggleLoading();
+    useJwt
+      .register(data)
+      .then((d) => {
+        toggleLoading();
+        toast.success(
+          <ToastContent
+            heading={"Registration Successfull!"}
+            message={`Welcome ${formData.firstName}`}
+            type={"success"}
+          />,
+          { ...ToastContent.Config }
+        );
+        console.log(d);
+        history.push("/verify");
+      })
+      .catch((e) => {
+        toggleLoading();
+        console.log(e);
+        toast.error(
+          <ToastContent
+            heading={"An error occurred"}
+            message={e?.message}
+            type={"error"}
+          />,
+          { ...ToastContent.Config }
+        );
+      })
+      .finally(() => console.log(data));
   }
 
   function submitForm(e) {
     e.preventDefault();
-    formIsValid ? registerUser() : alert("Please fill in all fields");
+    if (!formIsValid) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error(
+        <ToastContent
+          heading={"Passwords do not match!"}
+          message={"Please check and try again"}
+          type={"error"}
+        />,
+        { ...ToastContent.Config }
+      );
+      return;
+    }
+
+    registerUser();
   }
 
   return (
@@ -52,6 +111,8 @@ const AuthRegistrationPage = () => {
                 </div>
 
                 <div className="alert alert-danger"></div>
+
+                {loading && <SpinnerComponent />}
 
                 <form onSubmit={submitForm}>
                   <div className="row">
