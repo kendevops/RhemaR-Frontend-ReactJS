@@ -1,12 +1,12 @@
 // ** Auth Endpoints
 export default {
   loginEndpoint: "/auth/login",
-  registerEndpoint: "/register",
-  refreshEndpoint: "/refresh-token",
-  logoutEndpoint: "/logout",
-  verifyEmailEndpoint: "/verify-email",
-  resetPasswordEndpoint: "/reset-password",
-  forgotPasswordEndpoint: "/forgot-password",
+  registerEndpoint: "auth/signup",
+  refreshEndpoint: "/auth/refresh",
+  logoutEndpoint: "/auth/logout",
+  verifyEmailEndpoint: "/auth/email/resend-verification",
+  resetPasswordEndpoint: "/auth/password/reset",
+  forgotPasswordEndpoint: "/auth/password/forgot",
 
   // ** This will be prefixed in authorization header with token
   // ? e.g. Authorization: Bearer <token>

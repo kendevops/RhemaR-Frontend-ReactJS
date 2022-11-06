@@ -75,8 +75,8 @@ const Router = () => {
     const route = props.route;
     let action, resource;
 
-    // delete in production
-    return <route.component {...props} />;
+    // // delete in production
+    // return <route.component {...props} />;
 
     // ** Assign vars based on route meta
     if (route.meta) {
@@ -103,6 +103,8 @@ const Router = () => {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
       return <Redirect to="/" />;
     } else if (isUserLoggedIn() && !ability.can(action || "read", resource)) {
+      console.log("Route access", action, resource, isUserLoggedIn());
+
       // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
       return <Redirect to="/misc/not-authorized" />;
     } else {
@@ -213,7 +215,7 @@ const Router = () => {
           exact
           path="/"
           render={() => {
-            return isUserLoggedIn() ? ( //change later
+            return isUserLoggedIn() ? (
               <Redirect to={DefaultRoute} />
             ) : (
               <Redirect to="/login" />

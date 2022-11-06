@@ -161,7 +161,6 @@ export default function StudentProfile() {
                       render={({ field }) => (
                         <div className="col-lg-6 col-md-12">
                           <div className="form-group">
-                            <label htmlFor="Gender">Gender</label>
                             <div className="d-flex">
                               <div className="radio-box me-3">
                                 <label htmlFor="gender">Male</label>

@@ -6,14 +6,39 @@ import themeConfig from "@configs/themeConfig";
 
 // ** Components
 import SidebarToggle from "./sidebarToggle";
+import { getUserData } from "../../../../utility/utilsGeneric";
+import UserAvatar from "../../../atoms/UserAvatar";
+import useToggle from "../../../../utility/hooks/useToggle";
+import { handleLogout } from "../../../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+const options = [
+  {
+    title: "Edit Profile",
+    onClick: () => {},
+  },
+];
 
 const Navbar = (props) => {
-
   // ** States
   const [groupOpen, setGroupOpen] = useState([]);
 
+  // ** Avatar Dropdown
+
+  const [avatarOpen, toggleAvatarOpen] = useToggle();
+
   // ** Menu Hover State
   const [menuHover, setMenuHover] = useState(false);
+
+  const currentUser = getUserData();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const logOut = () => {
+    dispatch(handleLogout(currentUser));
+    history.replace("/login");
+  };
 
   return (
     <Fragment>
@@ -66,8 +91,11 @@ const Navbar = (props) => {
                 </svg>
               </a>
             </div>
-            <div className="me-3">John Ade</div>
+            <h2 className="me-3">
+              {currentUser?.firstName} {currentUser?.lastName}
+            </h2>
 
+            {/* Dropdown Toggle */}
             <div className="dropdown">
               <div className="d-flex align-items-center">
                 <div
@@ -75,35 +103,25 @@ const Navbar = (props) => {
                   id="dropdownMenuButton1"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  onClick={toggleAvatarOpen}
                 >
-                  <div className="profile-sm me-2">
-                    <span
-                      className="iconify"
-                      data-icon="clarity:avatar-solid"
-                    ></span>
-                  </div>
+                  <UserAvatar />
+                  {avatarOpen && (
+                    <ul className="avatar-dropdown shadow-lg rounded-2">
+                      {options?.map(({ onClick, title }) => {
+                        return (
+                          <li className="avatar-dropdown-item" {...{ onClick }}>
+                            {title}
+                          </li>
+                        );
+                      })}
+                      <li className="avatar-dropdown-item" onClick={logOut}>
+                        Logout
+                      </li>
+                    </ul>
+                  )}
                 </div>
               </div>
-              <ul
-                className="dropdown-menu"
-                aria-labelledby="dropdownMenuButton1"
-              >
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Action
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Another action
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Something else here
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
         </nav>

@@ -1,5 +1,5 @@
 // ** React Imports
-import React, { useContext, Fragment } from "react";
+import { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 // ** Custom Hooks
@@ -9,43 +9,13 @@ import useJwt from "@hooks/useJwt";
 import { useDispatch } from "react-redux";
 import { toast, Slide } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-
-import { AlertTriangle, CheckCircle } from "react-feather";
-
-// ** Actions
 import { handleLogin } from "@store/slices/authSlice";
-
-// ** Context
 import { AbilityContext } from "@src/utility/context/can";
-
-// ** Custom Components
-import Avatar from "@components/avatar";
-
-// ** Utils
 import { getHomeRouteForLoggedInUser } from "@utils/utilsGeneric";
-
-// ** Reactstrap Imports
-import { Input, Label } from "reactstrap";
+import { Input, Label, Spinner } from "reactstrap";
 import { UpdateLoggedInUserAbility } from "../../utility/utilsGeneric";
-
-const ToastContent = ({ heading, message, type }) => (
-  <Fragment>
-    <div className="toastify-header">
-      <div className="title-wrapper">
-        {type === "danger" && (
-          <Avatar size="sm" color="error" icon={<AlertTriangle size={20} />} />
-        )}
-        {type === "success" && (
-          <Avatar size="sm" color="success" icon={<CheckCircle size={20} />} />
-        )}
-        <h3 className="toast-title fw-bold">{heading}</h3>
-      </div>
-    </div>
-    <div className="toastify-body fs-">
-      <span>{message} </span>
-    </div>
-  </Fragment>
-);
+import ToastContent from "../../components/molecules/ToastContent";
+import useToggle from "../../utility/hooks/useToggle";
 
 const defaultValues = {
   password: "helloWorld1",
@@ -54,6 +24,7 @@ const defaultValues = {
 
 const AuthLoginPage = () => {
   const dispatch = useDispatch();
+  const [loading, toggleLoading] = useToggle();
   const history = useHistory();
   const ability = useContext(AbilityContext);
   const { control, setError, handleSubmit, formState } = useForm({
@@ -63,22 +34,33 @@ const AuthLoginPage = () => {
   });
 
   const onSubmit = (data) => {
+    toggleLoading();
     if (Object.values(data).every((field) => field.length > 0)) {
-      console.log("data", data);
       useJwt
         .login({ email: data.email, password: data.password })
         .then((res) => {
+          toggleLoading();
           console.log("LOGIN.RESPONSE", res);
-          const data = {
-            ...res.data.userData,
-            accessToken: res.data.accessToken,
-            refreshToken: res.data.refreshToken,
-          };
-          dispatch(handleLogin(data));
-          UpdateLoggedInUserAbility(data.role, ability);
-          history.push(getHomeRouteForLoggedInUser(data.role));
+          const d = res?.data?.data;
 
-          const successMsg = "Welcome " + data.fullName;
+          const data = {
+            ...d?.user,
+            accessToken: d?.tokens?.access_token,
+            refreshToken: d?.tokens?.refresh_token,
+          };
+
+          console.log(data);
+
+          const userRole =
+            Array.isArray(data?.role) && data?.role?.length
+              ? data?.role[0]
+              : "ProspectiveStudent";
+
+          dispatch(handleLogin(data));
+          UpdateLoggedInUserAbility(userRole, ability);
+          history.push(getHomeRouteForLoggedInUser(userRole));
+
+          const successMsg = "Welcome " + data?.firstName;
           toast.success(
             <ToastContent
               heading={"Login Successfull!"}
@@ -95,6 +77,7 @@ const AuthLoginPage = () => {
           );
         })
         .catch((err) => {
+          toggleLoading();
           const errMsg = "Unsuccesful login attempt. " + err.message;
           toast.error(
             <ToastContent
@@ -137,6 +120,7 @@ const AuthLoginPage = () => {
 
               <div className="bg-white shadow rounded-2 p-5">
                 <div className="text-center mb-5">
+                  {loading && <Spinner />}
                   <h3 className="title mb-4">Login</h3>
                   <p>Enter your credentials to access your portal</p>
                 </div>

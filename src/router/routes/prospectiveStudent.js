@@ -1,10 +1,24 @@
-import { lazy } from 'react'
+import { lazy } from "react";
 
 const ProspectiveStudentRoutes = [
   {
-    path: '/application',
-    component: lazy(() => import('../../views/prospective-student/application')),
-  }
-]
+    path: "/application",
+    component: lazy(() =>
+      import("../../views/prospective-student/application")
+    ),
+    meta: {
+      action: "read",
+      resource: "Applications",
+    },
+  },
+  {
+    path: "/verify",
+    component: lazy(() => import("../../views/prospective-student/Verify")),
+    layout: "GuestLayout",
+    meta: {
+      publicRoute: true,
+    },
+  },
+];
 
-export default ProspectiveStudentRoutes
+export default ProspectiveStudentRoutes;
