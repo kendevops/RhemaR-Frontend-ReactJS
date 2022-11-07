@@ -1,55 +1,55 @@
-import { lazy } from 'react'
-import { Redirect } from 'react-router-dom'
+import { lazy } from "react";
+import { Redirect } from "react-router-dom";
 
 const AuthRoutes = [
   {
-    path: '/login',
-    component: lazy(() => import('../../views/auth/login')),
-    layout: 'BlankLayout',
+    path: "/login",
+    component: lazy(() => import("../../views/auth/login")),
+    layout: "GuestLayout",
     meta: {
-      publicRoute: true
-    }
+      publicRoute: true,
+    },
   },
   {
-    path: '/forgot-password',
-    component: lazy(() => import('../../views/auth/forgotPassword')),
-    layout: 'BlankLayout',
+    path: "/forgot-password",
+    component: lazy(() => import("../../views/auth/forgotPassword")),
+    layout: "BlankLayout",
     meta: {
-      publicRoute: true
-    }
+      publicRoute: true,
+    },
   },
   {
-    path: '/reset-password',
-    component: lazy(() => import('../../views/auth/resetPassword')),
-    layout: 'BlankLayout',
+    path: "/reset-password",
+    component: lazy(() => import("../../views/auth/resetPassword")),
+    layout: "BlankLayout",
     meta: {
-      publicRoute: true
-    }
+      publicRoute: true,
+    },
   },
   {
-    path: '/register',
-    component: lazy(() => import('../../views/auth/register')),
-    layout: 'GuestLayout',
+    path: "/register",
+    component: lazy(() => import("../../views/auth/register")),
+    layout: "GuestLayout",
     meta: {
-      publicRoute: true
-    }
+      publicRoute: true,
+    },
   },
   {
-    path: '/email-sent',
-    component: lazy(() => import('../../views/auth/emailVerificationLink')),
-    layout: 'GuestLayout',
+    path: "/email-sent",
+    component: lazy(() => import("../../views/auth/emailVerificationLink")),
+    layout: "GuestLayout",
     meta: {
-      publicRoute: true
-    }
+      publicRoute: true,
+    },
   },
   {
-    path: '/email-verification',
-    component: lazy(() => import('../../views/auth/emailVerificationResult')),
-    layout: 'GuestLayout',
+    path: "/email-verification",
+    component: lazy(() => import("../../views/auth/emailVerificationResult")),
+    layout: "GuestLayout",
     meta: {
-      publicRoute: true
-    }
+      publicRoute: true,
+    },
   },
-]
+];
 
-export default AuthRoutes
+export default AuthRoutes;
