@@ -76,7 +76,7 @@ const Router = () => {
     let action, resource;
 
     // // delete in production
-    // return <route.component {...props} />;
+    return <route.component {...props} />;
 
     // ** Assign vars based on route meta
     if (route.meta) {
@@ -101,7 +101,7 @@ const Router = () => {
       return <Redirect to="/login" />;
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
-      return <Redirect to="/" />;
+      return <Redirect to="/login" />;
     } else if (isUserLoggedIn() && !ability.can(action || "read", resource)) {
       console.log("Route access", action, resource, isUserLoggedIn());
 

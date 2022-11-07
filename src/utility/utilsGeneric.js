@@ -7,7 +7,7 @@
  */
 export const UpdateLoggedInUserAbility = (userRole, ability) => {
   // const ability = useContext(AbilityContext);
-  if (userRole === "AllAdmin") {
+  if (userRole === "ICT_ADMIN") {
     ability.update([
       {
         action: "manage",
