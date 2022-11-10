@@ -41,6 +41,14 @@ const ictAdminRoutes = [
       resource: "all",
     },
   },
+  {
+    path: "/ict-admin/resources",
+    component: lazy(() => import("../../views/ict-admin/Resources")),
+    meta: {
+      action: "manage",
+      resource: "all",
+    },
+  },
 ];
 
 export default ictAdminRoutes;
