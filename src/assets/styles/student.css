@@ -83,3 +83,10 @@ li {
   cursor: pointer;
   margin-bottom: 0.8rem;
 }
+
+.resources-text {
+  position: absolute;
+  left: 10%;
+  top: 20%;
+  color: #ffffff;
+}

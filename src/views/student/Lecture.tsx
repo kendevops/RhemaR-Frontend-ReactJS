@@ -51,6 +51,10 @@ export default function Lecture() {
     params?.id ? console.log(params?.id) : router?.goBack();
   }, [params?.id, router]);
 
+  //authomatically mark attendance when the user reaches this page
+
+  //download button for courses
+
   return (
     <>
       <BackButton />

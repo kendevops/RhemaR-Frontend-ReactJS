@@ -7,7 +7,7 @@ export type useFormProps<FormData> = {
 export default function useForm<T>({ initialState }: useFormProps<T>) {
   const [formData, setFormData] = useState(initialState);
 
-  function updateForm(key: string, value: any) {
+  function updateForm(key: keyof T, value: any) {
     setFormData((p) => ({ ...p, [key]: value }));
   }
 

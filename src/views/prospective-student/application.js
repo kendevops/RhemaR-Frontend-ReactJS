@@ -107,6 +107,7 @@ function ApplicationPage(props) {
           <FormInput
             label="D.O.B"
             placeholder="Date of Birth"
+            type={"date"}
             onChange={(e) => updateForm("dateOfBirth", e.target.value)}
             lg="6"
           />
