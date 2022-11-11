@@ -93,20 +93,22 @@ export default function AdminCourses() {
         </section>
       )}
 
+        {/**Start Course Completion Tab */}
+        {tab === 1 && (
+        <section>
+
 
         {/* Search Bar */}
         <div style={{ marginLeft: "2%", marginTop: "30px" }}>
         <h2 className="text-xl font-bold text-blue-600">
             Browse List of Students Progress
         </h2>
-        </div>
+       
         <article className="d-flex gap-5 m-5">
           <SearchBarAutocomplete />
         </article>
-
-        {/**Start Course Completion Tab */}
-        {tab === 1 && (
-        <section>
+        </div>
+        
           <article>
 
             {/* Table */}

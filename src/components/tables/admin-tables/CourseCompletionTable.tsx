@@ -1,20 +1,16 @@
-import useToggle from "../../../utility/hooks/useToggle";
-import Table, { TableColumns } from "../../general/table/Table";
-import Vertical from '../../atoms/Vertical'
-// import React, { useState } from 'react';
-// import StudentProgress from "../../modals/StudentProgress";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+//import DataTable from '../../tables/data-table/DataTableBase';
+import DataTable, { TableColumn } from 'react-data-table-component';
+import StudentProgress from '../../modals/StudentProgress';
 
-// import {
-//   Nav,
-//   NavItem,
-//   Dropdown,
-//   DropdownItem,
-//   DropdownToggle,
-//   DropdownMenu,
-//   NavLink,
-// } from 'reactstrap';
+//TODO: Implement CSV Export
+//TODO: Call student progree modal
+//TODO: Customize UI
+//TODO: Connect SearchBar and Data Table to API Data
 
 type StudentProgressData = {
+  cell: string;
   studentFullname: string;
   studentID: string;
   email: string;
@@ -22,115 +18,119 @@ type StudentProgressData = {
   campus: string;
   level: string;
   courseAttendanceProgress: string;
-  // courseAttendance: string; //This is course names with attendance status
-  // courseGrade: number; //This is course names with acquired grades
 };
 
-interface Props {
-  data: StudentProgressData;
-}
+const handleButtonClick = () => {
+		//<StudentProgress /> //TODO: Call student progree modal
+  console.log('clicked');
+};
 
-//Connect the type to data
-const data: StudentProgressData[] = [
-  { studentFullname: "Taiwo Oladipopo", studentID: "23245", email: "taiwo@gmail.com", mobile: "09078670058", campus: "Abuja", level: "2", courseAttendanceProgress:"82%"}, //TODO: Substitute hard-coded data for live data
-];
-
-    function ViewStudentProgess({ data }: Props) {
-        //const [dropdownOpen, setDropdownOpen] = useState(false);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [visibility, toggle] = useToggle();
-        //const toggle = () => setDropdownOpen(!dropdownOpen);
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const defaultValues = {
-            studentFullname: data?.studentFullname,
-            // studentFirstname: data?.studentFirstname,
-            // studentLastnama: data?.studentLastname,
-            campus: data?.campus,
-            level: data?.level,
-            courseAttendanceProgress: data?.courseAttendanceProgress,
-            // courseAttendance: data?.courseAttendance,
-            // courseGrade: data?.courseGrade
-          };
-
-          return (
-          <>
-          <u
-            onClick={toggle}
-            className="text-info click"
-            data-bs-toggle="modal"
-            data-bs-target="#progressModal"
-          >
-            <Vertical />
-          </u>
-          {/* TODO <StudentProgress {...{ visibility, toggle, defaultValues }} /> */} 
-        </>
-          );
-          
-        // TODO
-        //  return (
-        //     <Dropdown nav isOpen={dropdownOpen} toggle={toggle}>
-        //       <DropdownToggle nav caret>
-        //         View Progress
-        //       </DropdownToggle>
-        //       <DropdownMenu>
-        //         <DropdownItem header>View Student</DropdownItem>
-        //         <DropdownItem>View Feedback Form</DropdownItem>
-        //         <DropdownItem>Modify Attendance</DropdownItem>
-        //         <DropdownItem>Modify Grade</DropdownItem>
-        //       </DropdownMenu>
-        //     </Dropdown>
-        // );
-      }
-
-
-export default function CourseCompletionTable() {
-  const columns: TableColumns<StudentProgressData>[] = [
-    {
-      key: "Student Name",
-      title: "Student Name",
-      render: (data) => <p>{data?.studentFullname}</p>,
-    },
-    {
-      key: "Student ID",
-      title: "Student ID",
-      render: (data) => <p>{data?.studentID}</p>,
-    },
-    {
-      key: "Email",
-      title: "Email",
-      render: (data) => <p>{data?.email}</p>,
-    },
-    {
-      key: "Mobile",
-      title: "Mobile",
-      render: (data) => <p>{data?.mobile}</p>,
-    },
-    {
-      key: "Campus",
-      title: "Campus",
-      render: (data) => <p>{data?.campus}</p>,
-    },
-    {
-      key: "Level",
-      title: "Level",
-      render: (data) => <p>{data?.level}</p>,
-    },
-    {
-        key: "Course Attendance Progress",
-        title: "Course Attendance Progress",
-        render: (data) => <p>{data?.courseAttendanceProgress}</p>,
+const columns: TableColumn<StudentProgressData>[] = [
+      {         
+        cell: () => <button onClick={handleButtonClick}>View Report</button>,
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true,
+        name: "View",
       },
-    {
-      key: "Action",
-      title: "Action",
-      render: (data) => <ViewStudentProgess data={data} />,
-    },
-  ];
+      {
+        name: "Student Name",
+        selector: row => row.studentFullname,
+        sortable: true,
+      },
+      {
+        name: "Student ID",
+        selector: row => row.studentID,
+        sortable: true,
+      },
+      {
+        name: "Email",
+        selector: row => row.email,
+        sortable: true,
+      },
+      {
+        name: "Mobile",
+        selector: row => row.mobile,
+        sortable: true,
+      },
+      {
+        name: "Campus",
+        selector: row => row.campus,
+        sortable: true,
+      },
+      {
+        name: "Level",
+        selector: row => row.level,
+        sortable: true,
+      },
+      {
+          name: "Course Attendance Progress",
+          selector: row => row.courseAttendanceProgress,
+          sortable: true,
+        },
+    ];
 
-  return (
-    <Table.Wrapper>
-      <Table {...{ data, columns }} />
-    </Table.Wrapper>
-  );
-}
+//Backend Engr. refer to comment at bottom
+function CourseCompletionComponent(): JSX.Element {
+	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [totalRows, setTotalRows] = useState(0);
+	const [perPage, setPerPage] = useState(10);
+
+	const fetchUsers = async (page: number) => {
+		setLoading(true);
+
+		const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`);
+
+		setData(response.data.data);
+		setTotalRows(response.data.total);
+		setLoading(false);
+	};
+
+	const handlePageChange = (page: any) => {
+		fetchUsers(page);
+	};
+
+	const handlePerRowsChange = async (newPerPage: React.SetStateAction<number>, page: any) => {
+		setLoading(true);
+
+		const response = await axios.get(`https://reqres.in/api/users?page=${page}&per_page=${newPerPage}&delay=1`);
+
+		setData(response.data.data);
+		setPerPage(newPerPage);
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		fetchUsers(1); // fetch page 1 of users
+		
+	}, []); //ignore warning
+
+	return (
+		<DataTable
+			title="Students"
+			columns={columns}
+			data={data}
+			progressPending={loading}
+			pagination
+			paginationServer
+			paginationTotalRows={totalRows}
+			onChangeRowsPerPage={handlePerRowsChange}
+			onChangePage={handlePageChange}
+      selectableRows
+      //expandableRows
+		/>
+	);
+};
+
+export default CourseCompletionComponent;
+
+
+
+
+
+
+
+// To enable remote/manual pagination you'll need to add the paginationServer property and ensure the remote API you are using supports pagination metadata.
+// You'll also need to implement the onChangeRowsPerPage, and onChangePage callbacks.
+// Finally, you'll need to keep track of your total rows using paginationTotalRows. This should be obtained from the remote API you are calling from to get the pagnination records.
