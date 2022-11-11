@@ -16,8 +16,9 @@ import Vertical from '../../atoms/Vertical'
 
 type StudentProgressData = {
   studentFullname: string;
-  // studentFirstname: string;
-  // studentLastname: string;
+  studentID: string;
+  email: string;
+  mobile: string;
   campus: string;
   level: string;
   courseAttendanceProgress: string;
@@ -31,10 +32,7 @@ interface Props {
 
 //Connect the type to data
 const data: StudentProgressData[] = [
-  { studentFullname: "Taiwo Oladipopo", campus: "Abuja", level: "2", courseAttendanceProgress:"82%"}, //TODO: Substitute hard-coded data for live data
-  { studentFullname: "", campus: "", level: "", courseAttendanceProgress:""},
-  { studentFullname: "", campus: "", level: "", courseAttendanceProgress:""},
-  { studentFullname: "", campus: "", level: "", courseAttendanceProgress:""},
+  { studentFullname: "Taiwo Oladipopo", studentID: "23245", email: "taiwo@gmail.com", mobile: "09078670058", campus: "Abuja", level: "2", courseAttendanceProgress:"82%"}, //TODO: Substitute hard-coded data for live data
 ];
 
     function ViewStudentProgess({ data }: Props) {
@@ -92,6 +90,21 @@ export default function CourseCompletionTable() {
       key: "Student Name",
       title: "Student Name",
       render: (data) => <p>{data?.studentFullname}</p>,
+    },
+    {
+      key: "Student ID",
+      title: "Student ID",
+      render: (data) => <p>{data?.studentID}</p>,
+    },
+    {
+      key: "Email",
+      title: "Email",
+      render: (data) => <p>{data?.email}</p>,
+    },
+    {
+      key: "Mobile",
+      title: "Mobile",
+      render: (data) => <p>{data?.mobile}</p>,
     },
     {
       key: "Campus",
