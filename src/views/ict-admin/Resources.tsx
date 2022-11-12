@@ -1,5 +1,5 @@
 import React from "react";
-import backgroundImg from "../../../public/resources.png";
+//import backgroundImg from "../../../public/resources.png"; Solomon this resources does not exist
 import SearchBar from "../../components/general/searchBar";
 import UploadResourceModal from "../../components/modals/UploadResource";
 import FileCard, { FileCardProps } from "../../components/molecules/FileCard";
@@ -17,7 +17,7 @@ export default function Resources() {
       {/* Card Header */}
       <div className="relative mt-3 mb-5">
         <h1 className="fw-bold resources-text">Resources</h1>
-        <img src={backgroundImg} alt="Resources" />
+        {/* <img src={backgroundImg} alt="Resources" /> */}
       </div>
 
       {/* Search Row */}

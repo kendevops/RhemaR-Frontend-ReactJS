@@ -1,3 +1,7 @@
+/**
+ * Ref: https://react-data-table-component.netlify.app/?path=/docs/getting-started-intro--page
+ */
+
 import React from 'react';
 import DataTable, { TableProps } from 'react-data-table-component';
 import Checkbox from '@material-ui/core/Checkbox';
