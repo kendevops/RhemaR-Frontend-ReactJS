@@ -35,7 +35,7 @@ export default function FileCard({ type, title, url }: FileCardProps) {
   }
 
   return (
-    <article className="border-1 rounded-3 overflow-hidden">
+    <article className="border-1 rounded-3 overflow-hidden mb-3">
       <div style={{ backgroundColor, ...styles }}>{icon}</div>
       <p className="mb-3">{title}</p>
       <a
@@ -49,7 +49,6 @@ export default function FileCard({ type, title, url }: FileCardProps) {
         Download
         <Download color="#fff" />
       </a>
-      ;
     </article>
   );
 }
