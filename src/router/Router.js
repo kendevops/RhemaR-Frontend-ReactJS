@@ -25,6 +25,9 @@ import { DefaultRoute, Routes } from "./routes";
 import AppLayout from "@layouts/app-layout/appLayout";
 import GuestLayout from "@layouts/guest-layout/guestLayout";
 import BlankLayout from "@layouts/blank-layout/blankLayout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryclient = new QueryClient();
 
 const Router = () => {
   // ** Hooks
@@ -208,36 +211,38 @@ const Router = () => {
   };
 
   return (
-    <AppRouter basename={process.env.REACT_APP_BASENAME}>
-      <Switch>
-        {/* If user is logged in Redirect user to DefaultRoute else to login */}
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return isUserLoggedIn() ? (
-              <Redirect to={DefaultRoute} />
-            ) : (
-              <Redirect to="/login" />
-            );
-          }}
-        />
-        {/* Not Auth Route */}
-        <Route
-          exact
-          path="/misc/not-authorized"
-          render={() => (
-            <Layouts.BlankLayout>
-              <NotAuthorized />
-            </Layouts.BlankLayout>
-          )}
-        />
-        {ResolveRoutes()}
+    <QueryClientProvider client={queryclient}>
+      <AppRouter basename={process.env.REACT_APP_BASENAME}>
+        <Switch>
+          {/* If user is logged in Redirect user to DefaultRoute else to login */}
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return isUserLoggedIn() ? (
+                <Redirect to={DefaultRoute} />
+              ) : (
+                <Redirect to="/login" />
+              );
+            }}
+          />
+          {/* Not Auth Route */}
+          <Route
+            exact
+            path="/misc/not-authorized"
+            render={() => (
+              <Layouts.BlankLayout>
+                <NotAuthorized />
+              </Layouts.BlankLayout>
+            )}
+          />
+          {ResolveRoutes()}
 
-        {/* NotFound Error page */}
-        <Route path="*" component={Error} />
-      </Switch>
-    </AppRouter>
+          {/* NotFound Error page */}
+          <Route path="*" component={Error} />
+        </Switch>
+      </AppRouter>
+    </QueryClientProvider>
   );
 };
 

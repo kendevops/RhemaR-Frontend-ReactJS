@@ -9,7 +9,7 @@ import { resourcesData } from "../../data/Resources";
 
 const options = ["Course Timetable", "RBTC Materials"];
 export default function Downloads() {
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState(0);
   const currentOption = options[tab];
 
   const data = resourcesData;
@@ -47,13 +47,13 @@ export default function Downloads() {
 
       {/* Search Bar */}
       {currentOption === "RBTC Materials" && (
-        <article className="d-flex gap-5 ">
+        <article className="d-flex gap-4 mt-3 mb-5">
           <SearchBar />
         </article>
       )}
 
       {/* Content */}
-      <CardWrapper>
+      <CardWrapper className="mb-5">
         {/* Course Timetable */}
         {currentOption === "Course Timetable" && (
           <>

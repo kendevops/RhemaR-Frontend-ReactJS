@@ -7,8 +7,11 @@ export default function downloadFile(url: string, fileName: string) {
     target: "_blank",
   };
 
-  fetch(url, { method: "get", mode: "no-cors", referrerPolicy: "no-referrer" })
-    .then((res) => res.blob())
+  fetch(url, { mode: "no-cors", referrerPolicy: "no-referrer" })
+    .then((res) => {
+      console.log(res.json());
+      return res.blob();
+    })
     .then((res) => {
       href = URL.createObjectURL(res);
 
