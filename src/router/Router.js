@@ -1,5 +1,5 @@
 // ** React Imports
-import { Suspense, useContext, lazy, Fragment } from "react";
+import { Suspense, useContext, lazy, Fragment, useEffect } from "react";
 
 // ** Utils
 import { isUserLoggedIn } from "@utils/utilsGeneric.js";
@@ -26,16 +26,36 @@ import AppLayout from "@layouts/app-layout/appLayout";
 import GuestLayout from "@layouts/guest-layout/guestLayout";
 import BlankLayout from "@layouts/blank-layout/blankLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  getUserData,
+  UpdateLoggedInUserAbility,
+} from "../utility/utilsGeneric";
+import userRoles from "../utility/userRoles";
 
 const queryclient = new QueryClient();
 
 const Router = () => {
+  // ** ACL Ability Context
+  const ability = useContext(AbilityContext);
+
+  // ** Updating Ability on Load
+  const loggedIn = isUserLoggedIn();
+
+  useEffect(() => {
+    if (loggedIn) {
+      const data = getUserData();
+      const userRole =
+        Array.isArray(data?.roles) && data?.roles?.length
+          ? data?.roles[0]?.name
+          : userRoles.PROSPECTIVE_STUDENT;
+
+      UpdateLoggedInUserAbility(userRole, ability);
+    }
+  }, [loggedIn, ability]);
+
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout();
   const { transition, setTransition } = useRouterTransition();
-
-  // ** ACL Ability Context
-  const ability = useContext(AbilityContext);
 
   // ** Default Layout
   const DefaultLayout = layout === "app" ? "AppLayout" : "GuestLayout";
@@ -79,12 +99,17 @@ const Router = () => {
     let action, resource;
 
     // // delete in production
-    return <route.component {...props} />;
+    // return <route.component {...props} />;
 
     // ** Assign vars based on route meta
     if (route.meta) {
       action = route.meta.action ? route.meta.action : null;
       resource = route.meta.resource ? route.meta.resource : null;
+
+      console.log({
+        action,
+        resource,
+      });
     }
 
     if (

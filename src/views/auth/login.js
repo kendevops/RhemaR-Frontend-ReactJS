@@ -16,6 +16,7 @@ import { Input, Label, Spinner } from "reactstrap";
 import { UpdateLoggedInUserAbility } from "../../utility/utilsGeneric";
 import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
+import userRoles from "../../utility/userRoles";
 
 const defaultValues = {
   password: "helloWorld1",
@@ -52,9 +53,9 @@ const AuthLoginPage = () => {
           console.log(data);
 
           const userRole =
-            Array.isArray(data?.role) && data?.role?.length
-              ? data?.role[0]
-              : "ProspectiveStudent";
+            Array.isArray(data?.roles) && data?.roles?.length
+              ? data?.roles[0]?.name
+              : userRoles.PROSPECTIVE_STUDENT;
 
           dispatch(handleLogin(data));
           UpdateLoggedInUserAbility(userRole, ability);
