@@ -22,11 +22,12 @@ const MenuItems = (props) => {
   const RenderNavItems = props.items.map((item, index) => {
     const TagName = Components[resolveNavItemComponent(item)];
 
-    console.log(CanViewMenuItem(item));
+    // console.log(CanViewMenuItem(item));
 
     return (
       CanViewMenuItem(item) && <TagName key={item.id} item={item} {...props} />
     );
+
     // if (item.children) {
     //   return (
     //     CanViewMenuGroup(item) && (

@@ -87,6 +87,18 @@ li {
 .resources-text {
   position: absolute;
   left: 10%;
-  top: 20%;
+  top: 16%;
   color: #ffffff;
+}
+
+/* React Timetable */
+.styles-module_day_title__cc17c,
+.styles-module_hour__TLyj9 {
+  background-color: #ffffff !important;
+  color: #203864 !important;
+}
+
+.styles-module_event__28gBZ.undefined {
+  background-color: #edf3fa !important;
+  color: #203864 !important;
 }
