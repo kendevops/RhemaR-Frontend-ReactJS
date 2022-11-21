@@ -1,5 +1,6 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
+import dataService from "../hooks/useDataservice";
 
 const API_ENDPOINT = process.env.API_ENDPOINT;
 
@@ -13,8 +14,7 @@ export default class DataService {
   subscribers = [];
 
   constructor() {
-
-    axios.defaults.baseURL = 'http://localhost:6868/api';
+    axios.defaults.baseURL = API_ENDPOINT;
 
     // ** Request Interceptor
     axios.interceptors.request.use(

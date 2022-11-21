@@ -1,6 +1,90 @@
-import React, { useState, useRef, useEffect } from "react";
+import useForm from "../../utility/hooks/useForm";
+import useJwt from "@hooks/useJwt";
+import { toast, Slide } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import useToggle from "../../utility/hooks/useToggle";
+import SpinnerComponent from "../../components/spinner/Fallback-spinner";
+import { useHistory } from "react-router-dom";
 
 const AuthRegistrationPage = () => {
+  const initialState = {
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    phoneNumber: "",
+    alternatePhoneNumber: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const { formData, formIsValid, updateForm } = useForm({ initialState });
+  const [loading, toggleLoading] = useToggle();
+  const history = useHistory();
+
+  function registerUser() {
+    const {
+      confirmPassword,
+      alternatePhoneNumber: altPhoneNumber,
+      gender,
+      ...others
+    } = formData;
+    const data = { ...others, altPhoneNumber, gender: gender.toUpperCase() };
+
+    toggleLoading();
+    useJwt
+      .register(data)
+      .then((d) => {
+        toggleLoading();
+        toast.success(
+          <ToastContent
+            heading={"Registration Successfull!"}
+            message={`Welcome ${formData.firstName}`}
+            type={"success"}
+          />,
+          { ...ToastContent.Config }
+        );
+        console.log(d);
+        history.push("/verify");
+      })
+      .catch((e) => {
+        toggleLoading();
+        console.log(e);
+        toast.error(
+          <ToastContent
+            heading={"An error occurred"}
+            message={e?.message}
+            type={"error"}
+          />,
+          { ...ToastContent.Config }
+        );
+      })
+      .finally(() => console.log(data));
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    if (!formIsValid) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error(
+        <ToastContent
+          heading={"Passwords do not match!"}
+          message={"Please check and try again"}
+          type={"error"}
+        />,
+        { ...ToastContent.Config }
+      );
+      return;
+    }
+
+    registerUser();
+  }
+
   return (
     <>
       <div className="container mt-5">
@@ -28,7 +112,9 @@ const AuthRegistrationPage = () => {
 
                 <div className="alert alert-danger"></div>
 
-                <form>
+                {loading && <SpinnerComponent />}
+
+                <form onSubmit={submitForm}>
                   <div className="row">
                     <div className="col-12">
                       <div className="form-group">
@@ -38,6 +124,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter First Name"
                           className="form-control"
                           formControlName="firstName"
+                          onChange={(e) =>
+                            updateForm("firstName", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -49,6 +138,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter Middle Name"
                           className="form-control"
                           formControlName="middleName"
+                          onChange={(e) =>
+                            updateForm("middleName", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -60,6 +152,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter Last Name (Surname)"
                           className="form-control"
                           formControlName="lastName"
+                          onChange={(e) =>
+                            updateForm("lastName", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -72,6 +167,7 @@ const AuthRegistrationPage = () => {
                           id="email"
                           className="form-control"
                           formControlName="email"
+                          onChange={(e) => updateForm("email", e.target.value)}
                         />
                       </div>
                     </div>
@@ -87,6 +183,9 @@ const AuthRegistrationPage = () => {
                               value="Male"
                               name="gender"
                               formControlName="gender"
+                              onChange={(e) =>
+                                updateForm("gender", e.target.value)
+                              }
                             />
                           </div>
                           <div className="radio-box">
@@ -98,6 +197,9 @@ const AuthRegistrationPage = () => {
                               value="Female"
                               selected
                               formControlName="gender"
+                              onChange={(e) =>
+                                updateForm("gender", e.target.value)
+                              }
                             />
                           </div>
                         </div>
@@ -111,6 +213,9 @@ const AuthRegistrationPage = () => {
                           placeholder="WhatsApp & Telegram"
                           className="form-control"
                           formControlName="phoneNumber"
+                          onChange={(e) =>
+                            updateForm("phoneNumber", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -122,6 +227,9 @@ const AuthRegistrationPage = () => {
                           placeholder="Enter Alternate Phone Number"
                           className="form-control"
                           formControlName="altPhoneNumber"
+                          onChange={(e) =>
+                            updateForm("alternatePhoneNumber", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -132,6 +240,9 @@ const AuthRegistrationPage = () => {
                           type="password"
                           className="form-control"
                           formControlName="password"
+                          onChange={(e) =>
+                            updateForm("password", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -142,6 +253,9 @@ const AuthRegistrationPage = () => {
                           type="password"
                           className="form-control"
                           formControlName="confirmPassword"
+                          onChange={(e) =>
+                            updateForm("confirmPassword", e.target.value)
+                          }
                         />
                       </div>
                     </div>
@@ -152,16 +266,6 @@ const AuthRegistrationPage = () => {
                     type="submit"
                   >
                     <span className="inline-block">Proceed</span>
-
-                    {/* <span className="inline-block">
-                      <span
-                        className="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      <span>Processing...</span>
-                      <span></span>
-                    </span> */}
                   </button>
                 </form>
               </div>

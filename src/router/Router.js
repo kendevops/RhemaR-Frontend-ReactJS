@@ -1,5 +1,5 @@
 // ** React Imports
-import { Suspense, useContext, lazy, Fragment } from "react";
+import { Suspense, useContext, lazy, Fragment, useEffect } from "react";
 
 // ** Utils
 import { isUserLoggedIn } from "@utils/utilsGeneric.js";
@@ -25,14 +25,37 @@ import { DefaultRoute, Routes } from "./routes";
 import AppLayout from "@layouts/app-layout/appLayout";
 import GuestLayout from "@layouts/guest-layout/guestLayout";
 import BlankLayout from "@layouts/blank-layout/blankLayout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  getUserData,
+  UpdateLoggedInUserAbility,
+} from "../utility/utilsGeneric";
+import userRoles from "../utility/userRoles";
+
+const queryclient = new QueryClient();
 
 const Router = () => {
+  // ** ACL Ability Context
+  const ability = useContext(AbilityContext);
+
+  // ** Updating Ability on Load
+  const loggedIn = isUserLoggedIn();
+
+  useEffect(() => {
+    if (loggedIn) {
+      const data = getUserData();
+      const userRole =
+        Array.isArray(data?.roles) && data?.roles?.length
+          ? data?.roles[0]?.name
+          : userRoles.PROSPECTIVE_STUDENT;
+
+      UpdateLoggedInUserAbility(userRole, ability);
+    }
+  }, [loggedIn, ability]);
+
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout();
   const { transition, setTransition } = useRouterTransition();
-
-  // ** ACL Ability Context
-  const ability = useContext(AbilityContext);
 
   // ** Default Layout
   const DefaultLayout = layout === "app" ? "AppLayout" : "GuestLayout";
@@ -75,13 +98,18 @@ const Router = () => {
     const route = props.route;
     let action, resource;
 
-    // delete in production
-    return <route.component {...props} />;
+    // // delete in production
+    // return <route.component {...props} />;
 
     // ** Assign vars based on route meta
     if (route.meta) {
       action = route.meta.action ? route.meta.action : null;
       resource = route.meta.resource ? route.meta.resource : null;
+
+      console.log({
+        action,
+        resource,
+      });
     }
 
     if (
@@ -101,8 +129,10 @@ const Router = () => {
       return <Redirect to="/login" />;
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
-      return <Redirect to="/" />;
+      return <Redirect to="/login" />;
     } else if (isUserLoggedIn() && !ability.can(action || "read", resource)) {
+      console.log("Route access", action, resource, isUserLoggedIn());
+
       // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
       return <Redirect to="/misc/not-authorized" />;
     } else {
@@ -206,36 +236,38 @@ const Router = () => {
   };
 
   return (
-    <AppRouter basename={process.env.REACT_APP_BASENAME}>
-      <Switch>
-        {/* If user is logged in Redirect user to DefaultRoute else to login */}
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return isUserLoggedIn() ? ( //change later
-              <Redirect to={DefaultRoute} />
-            ) : (
-              <Redirect to="/login" />
-            );
-          }}
-        />
-        {/* Not Auth Route */}
-        <Route
-          exact
-          path="/misc/not-authorized"
-          render={() => (
-            <Layouts.BlankLayout>
-              <NotAuthorized />
-            </Layouts.BlankLayout>
-          )}
-        />
-        {ResolveRoutes()}
+    <QueryClientProvider client={queryclient}>
+      <AppRouter basename={process.env.REACT_APP_BASENAME}>
+        <Switch>
+          {/* If user is logged in Redirect user to DefaultRoute else to login */}
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return isUserLoggedIn() ? (
+                <Redirect to={DefaultRoute} />
+              ) : (
+                <Redirect to="/login" />
+              );
+            }}
+          />
+          {/* Not Auth Route */}
+          <Route
+            exact
+            path="/misc/not-authorized"
+            render={() => (
+              <Layouts.BlankLayout>
+                <NotAuthorized />
+              </Layouts.BlankLayout>
+            )}
+          />
+          {ResolveRoutes()}
 
-        {/* NotFound Error page */}
-        <Route path="*" component={Error} />
-      </Switch>
-    </AppRouter>
+          {/* NotFound Error page */}
+          <Route path="*" component={Error} />
+        </Switch>
+      </AppRouter>
+    </QueryClientProvider>
   );
 };
 

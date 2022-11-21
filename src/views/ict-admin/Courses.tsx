@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Tab from "../../components/atoms/Tab";
+import SearchBarAutocomplete from "../../components/general/searchBarAutocomplete";
 import AddSchedule from "../../components/modals/AddSchedule";
 import NewSession from "../../components/modals/NewSession";
 import AcademicSessionTable from "../../components/tables/admin-tables/AcademicSessionTable";
+import CourseCompletionTable from "../../components/tables/admin-tables/CourseCompletionTable";
 import CoursesScheduleTable from "../../components/tables/admin-tables/CoursesScheduleTable";
 import useToggle from "../../utility/hooks/useToggle";
+
 
 const tabs = ["Course Curriculum", "Course Completion"];
 
@@ -14,6 +17,7 @@ export default function AdminCourses() {
 
   const [session, toggleSession] = useToggle();
   const [schedule, toggleSchedule] = useToggle();
+
 
   return (
     <section>
@@ -33,7 +37,7 @@ export default function AdminCourses() {
         })}
       </Tab.Wrapper>
 
-      {/* Academic Sections */}
+      {/* Academic Session */}
       {tab === 0 && (
         <section>
           <article>
@@ -88,6 +92,32 @@ export default function AdminCourses() {
           </article>
         </section>
       )}
+
+        {/**Start Course Completion Tab */}
+        {tab === 1 && (
+        <section>
+
+
+        {/* Search Bar */}
+        <div style={{ marginLeft: "2%", marginTop: "30px" }}>
+        <h2 className="text-xl font-bold text-blue-600">
+            Browse List of Students Progress
+        </h2>
+       
+        <article className="d-flex gap-5 m-5">
+          <SearchBarAutocomplete />
+        </article>
+        </div>
+        
+          <article>
+
+            {/* Table */}
+            <CourseCompletionTable />
+          </article>
+        </section>
+      )}
+      {/**End Course Completion Tab */}
     </section>
   );
 }
+

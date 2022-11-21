@@ -1,26 +1,35 @@
 // import { useContext } from "react";
 // import { AbilityContext } from "@src/utility/context/can";
 
+import userRoles from "./userRoles";
 
 /**
  ** Setup user abilities based on their roles
  * @param {String} userRole Role of user
  */
- export const UpdateLoggedInUserAbility = (userRole, ability) => {
+export const UpdateLoggedInUserAbility = (userRole, ability) => {
   // const ability = useContext(AbilityContext);
-  if (userRole === "AllAdmin") {
+  if (userRole === userRoles.ICT_ADMIN) {
     ability.update([
       {
-        action: "manage",
-        subject: "all",
+        action: "read",
+        subject: "Admins",
       },
     ]);
   }
-  if (userRole === "ProspectiveStudent") {
+  if (userRole === userRoles.PROSPECTIVE_STUDENT) {
     ability.update([
       {
         action: "Access",
         subject: "AllGuestPages",
+      },
+      {
+        action: "Access",
+        subject: "Applications",
+      },
+      {
+        action: "read",
+        subject: "Applications",
       },
       {
         action: "Verify",
@@ -116,7 +125,7 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
  ** This is completely up to you and how you want to store the token in your frontend application
  *  ? e.g. If you are using cookies to store the application please update this function
  */
-export const isUserLoggedIn = () => localStorage.getItem("userData");
+export const isUserLoggedIn = () => !!localStorage.getItem("userData");
 export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
 
 /**
@@ -124,8 +133,10 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  if (userRole === "AllAdmin") return "/dashboard";
-  if (userRole === "client") return "/access-control";
+  if (userRole === userRoles.ICT_ADMIN) return "ict-admin/dashboard";
+  if (userRole === "Client") return "/access-control";
+  if (userRole === userRoles.PROSPECTIVE_STUDENT) return "/application";
+  if (userRole === userRoles.STUDENT) return "/student/dashboard";
   return "/login";
 };
 

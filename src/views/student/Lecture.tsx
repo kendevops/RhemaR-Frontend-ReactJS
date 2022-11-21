@@ -1,4 +1,5 @@
 import { Checkbox, colors } from "@material-ui/core";
+import { Feedback } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { ArrowRight, Edit2 } from "react-feather";
 import ReactPlayer from "react-player";
@@ -8,11 +9,14 @@ import Timeline from "../../components/atoms/Timeline";
 import AudioNoteIcon from "../../components/icons/AudioNote";
 import PdfIcon from "../../components/icons/Pdf";
 import Row from "../../components/layouts/Row";
+import StudentFeedbackModal from "../../components/modals/StudentFeedbackModal";
 import BackButton from "../../components/molecules/BackButton";
 import CardWrapper from "../../components/students/CardWrapper";
 import ClassDiscussion from "../../components/students/ClassDiscussion";
 import ColWrapper from "../../components/students/ColWrapper";
 import CourseOverview from "../../components/students/CourseOverview";
+import useToggle from "../../utility/hooks/useToggle";
+import downloadFile from "../../utils/downloadFile";
 
 interface LectureParams {
   id: string;
@@ -47,9 +51,21 @@ export default function Lecture() {
 
   const video = require("../../assets/videos/class.mp4");
 
+  const [isOpen, toggle] = useToggle();
+  const formValues = {
+    level: "",
+    course: "",
+    instructor: "",
+    studentName: "John Doe",
+  };
+
   useEffect(() => {
     params?.id ? console.log(params?.id) : router?.goBack();
   }, [params?.id, router]);
+
+  //authomatically mark attendance when the user reaches this page
+
+  //download button for courses
 
   return (
     <>
@@ -94,15 +110,30 @@ export default function Lecture() {
             {/* Course Outline Sessions */}
             <article {...{ className }}>
               <Timeline />
-              <div>
+              <div className="w-100">
                 <h2 className="text-xl font-bold text-blue-600">
                   {params?.id}
                 </h2>
                 <ul className="no-padding-left">
-                  {sessionData?.map((s) => {
+                  {sessionData?.map((s, i) => {
+                    const value = i <= 3 ? 100 : Math.round(Math.random() * 10);
                     return (
-                      <li key={s}>
+                      <li
+                        className="d-flex align-items-center justify-content-between"
+                        key={s}
+                      >
                         <u>{s}</u>
+
+                        <div className="progress w-25">
+                          <div
+                            className="progress-bar progress-bar-animated bg-success "
+                            role="progressbar"
+                            style={{ width: `${value}%` }}
+                            aria-valuenow={value}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                          ></div>
+                        </div>
                       </li>
                     );
                   })}
@@ -120,10 +151,14 @@ export default function Lecture() {
 
                 <ul className="no-padding-left">
                   {materials?.map((m) => {
+                    const attributes = downloadFile("", m);
+
                     return (
-                      <li className={className} key={m}>
-                        <PdfIcon />
-                        {m}
+                      <li key={m}>
+                        <a {...attributes} className={className}>
+                          <PdfIcon />
+                          {m}
+                        </a>
                       </li>
                     );
                   })}
@@ -142,10 +177,13 @@ export default function Lecture() {
                 <ul className="no-padding-left">
                   {assignments?.map((a) => {
                     const isAudio = a.endsWith("mp3");
+                    const attributes = downloadFile("", a);
                     return (
-                      <li className={className} key={a}>
-                        {isAudio ? <AudioNoteIcon /> : <PdfIcon />}
-                        {a}
+                      <li key={a}>
+                        <a {...attributes} className={className}>
+                          {isAudio ? <AudioNoteIcon /> : <PdfIcon />}
+                          {a}
+                        </a>
                       </li>
                     );
                   })}
@@ -170,6 +208,17 @@ export default function Lecture() {
 
                 <ArrowRight color="#fff" />
               </Link>
+
+              {/* Student feedback modal */}
+              <div>
+                <button
+                  onClick={toggle}
+                  className="btn btn-blue-800 btn-lg w-100  d-flex align-items-center justify-content-between"
+                >
+                  Give Feedback <Feedback fill="#fff" />
+                </button>
+                <StudentFeedbackModal {...{ formValues, isOpen, toggle }} />
+              </div>
             </article>
           </CardWrapper>
         </ColWrapper>
