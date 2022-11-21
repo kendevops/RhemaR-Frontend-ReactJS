@@ -1,21 +1,23 @@
 // import { useContext } from "react";
 // import { AbilityContext } from "@src/utility/context/can";
 
+import userRoles from "./userRoles";
+
 /**
  ** Setup user abilities based on their roles
  * @param {String} userRole Role of user
  */
 export const UpdateLoggedInUserAbility = (userRole, ability) => {
   // const ability = useContext(AbilityContext);
-  if (userRole === "ICT_ADMIN") {
+  if (userRole === userRoles.ICT_ADMIN) {
     ability.update([
       {
-        action: "manage",
-        subject: "all",
+        action: "read",
+        subject: "Admins",
       },
     ]);
   }
-  if (userRole === "ProspectiveStudent") {
+  if (userRole === userRoles.PROSPECTIVE_STUDENT) {
     ability.update([
       {
         action: "Access",
@@ -131,10 +133,10 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  if (userRole === "AllAdmin") return "/dashboard";
+  if (userRole === userRoles.ICT_ADMIN) return "ict-admin/dashboard";
   if (userRole === "Client") return "/access-control";
-  if (userRole === "ProspectiveStudent") return "/application";
-  if (userRole === "Student") return "/student/dashboard";
+  if (userRole === userRoles.PROSPECTIVE_STUDENT) return "/application";
+  if (userRole === userRoles.STUDENT) return "/student/dashboard";
   return "/login";
 };
 
