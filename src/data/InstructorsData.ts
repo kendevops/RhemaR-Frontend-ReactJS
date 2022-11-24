@@ -2,6 +2,8 @@ export const InstructorsData = [
   {
     name: "Rev Toks Adejuwon",
     rating: 56,
+    email: "a-oo@gmail.com",
+    phome: "0800 000 0000",
     courses: [
       {
         name: "Pneumatology 1",
@@ -39,6 +41,8 @@ export const InstructorsData = [
   {
     name: "Rev Ade Olowoshoke",
     rating: 77,
+    email: "revAde@gmail.com",
+    phome: "0800 000 0000",
     courses: [
       {
         name: "Aspects of Grace",

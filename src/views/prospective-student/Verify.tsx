@@ -1,17 +1,39 @@
 import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { Spinner } from "reactstrap";
+import ToastContent from "../../components/molecules/ToastContent";
+import useResendVerification from "../../hooks/mutations/useResendVerification";
 
 export default function Verify() {
-  useEffect(() => {
-    //recheck every {{interval}} for when the user has verified their email
-    //then route the user to the prospective student dashboard
-  });
+  const { mutate, isLoading } = useResendVerification();
 
   function resendLink() {
-    //maybe check the history params for an email property
+    mutate(undefined, {
+      onSuccess: () =>
+        toast.success(
+          <ToastContent
+            heading={"Email Verification Resent!"}
+            message={`Email verification link has been resent successfully`}
+            type={"success"}
+          />,
+          { ...ToastContent.Config }
+        ),
+      onError: (e: any) => {
+        toast.error(
+          <ToastContent
+            heading={"Uh-oh an error occurred!"}
+            message={e?.response?.data?.message}
+            type={"error"}
+          />,
+          { ...ToastContent.Config }
+        );
+      },
+    });
   }
 
   return (
     <section className="container mt-5">
+      {isLoading && <Spinner />}
       <div className="auth-wrapper">
         <div className="row">
           <div className="col-xl-7 col-lg-8 col-md-10 col-12 mx-auto">

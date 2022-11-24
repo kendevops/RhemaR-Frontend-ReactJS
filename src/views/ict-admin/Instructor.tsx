@@ -3,6 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import { useHistory, useParams } from "react-router-dom";
 import typography from "../../assets/img/Typography";
 import Table, { TableColumns } from "../../components/general/table/Table";
+import ViewRatingModal from "../../components/modals/ViewRating";
 import BackButton from "../../components/molecules/BackButton";
 import { InstructorsData } from "../../data/InstructorsData";
 import useToggle from "../../utility/hooks/useToggle";
@@ -13,15 +14,16 @@ type ViewRatingProps = {
 };
 
 function ViewRating({ data }: ViewRatingProps) {
-  const [isOpen, toggle] = useToggle();
+  const [visibility, toggle] = useToggle();
 
   return (
     <>
+      <ViewRatingModal {...{ visibility, toggle, data }} />
       <u
         onClick={toggle}
         className="text-info click"
         data-bs-toggle="modal"
-        data-bs-target="#assignInstructorModal"
+        data-bs-target="#ratingModal"
       >
         View Rating
       </u>
@@ -54,15 +56,18 @@ const columns: TableColumns<any>[] = [
       };
 
       return (
-        <Doughnut
-          style={{
-            maxWidth: "3rem",
-            maxHeight: "3rem",
-          }}
-          height={5}
-          width={5}
-          data={dat}
-        />
+        <span className="d-flex gap-4 align-items-center ">
+          <p>{data?.rating} %</p>
+          <Doughnut
+            style={{
+              maxWidth: "3rem",
+              maxHeight: "3rem",
+            }}
+            height={5}
+            width={5}
+            data={dat}
+          />
+        </span>
       );
     },
   },
@@ -70,7 +75,7 @@ const columns: TableColumns<any>[] = [
     key: "Action",
     title: "Action",
     render: (data) => {
-      return <ViewRating data={data} />;
+      return <ViewRating data={data?.feedback} />;
     },
   },
 ];
@@ -94,10 +99,9 @@ export default function Instructor() {
 
   return (
     <section>
-      <BackButton prevUrl={"/ict-admin/instructors"} />
-
-      <div className="my-5">
-        <h2 style={{ fontSize: typography.h2 }} className="font-bold">
+      <div className="px-4 my-5">
+        <BackButton prevUrl={"/ict-admin/instructors"} />
+        <h2 style={{ fontSize: typography.h2 }} className="font-bold mt-3">
           {params?.id}
         </h2>
       </div>

@@ -6,20 +6,17 @@ import Button from "@material-ui/core/Button";
 import CardActions from "@material-ui/core/CardActions";
 import { PaystackButton } from "react-paystack";
 
-import { StarIcon } from '@heroicons/react/solid';
-import { GridCard } from './gridcard';
+import { StarIcon } from "@heroicons/react/solid";
+import { GridCard } from "./gridcard";
 
+const TuitionAndClearancePage = () => {
+  const Paystack = () => {
+    const publicKey = "pk_test_f00e1201fd644cf609e1be7954e8bdf299d1be5b";
+    const amount = 1000000;
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
 
-
-    const TuitionAndClearancePage = () => {
-
-    const Paystack = () => {
-    const publicKey = "pk_test_f00e1201fd644cf609e1be7954e8bdf299d1be5b"
-    const amount = 1000000
-    const [email, setEmail] = useState("")
-    const [name, setName] = useState("")
-    const [phone, setPhone] = useState("")
-  
     const componentProps = {
       email,
       amount,
@@ -30,18 +27,17 @@ import { GridCard } from './gridcard';
       publicKey,
       text: "Buy Now",
       onSuccess: () => {
-        setEmail("")
-        setName("")
-        setPhone("")
+        setEmail("");
+        setName("");
+        setPhone("");
       },
       onClose: () => alert("Wait! You need this oil, don't go!!!!"),
-    }
-  }
+    };
+  };
 
   return (
-    
     <>
-    <div style={{}}>
+      <div style={{}}>
         <Card
           style={{
             width: 300,
@@ -49,48 +45,37 @@ import { GridCard } from './gridcard';
           }}
         >
           <CardContent>
-            btnColor="green"
-            [title]="'Application Fee'"
-            [number]="'N10,000'"
+            btnColor="green" [title]="'Application Fee'" [number]="'N10,000'"
           </CardContent>
           <CardActions>
             <Button size="medium">Paid</Button>
           </CardActions>
         </Card>
       </div>
-    
+
       <div className="col-lg-4 col-sm-6 col-12 mb-4">
         <div className="app-tuition-summary-card">
-          btnColor="green"
-          [title]="'Application Fee'"
-          [number]="'N10,000'"
+          btnColor="green" [title]="'Application Fee'" [number]="'N10,000'"
           btnName="Paid"
         </div>
       </div>
       <div className="col-lg-4 col-sm-6 col-12 mb-4">
         <div className="app-tuition-summary-card">
-          btnColor="green"
-          btnName="Paid"
-          [title]="'Initial Payment'"
+          btnColor="green" btnName="Paid" [title]="'Initial Payment'"
           [number]="'N30,000'"
         </div>
       </div>
       <div className="col-lg-4 col-sm-6 col-12 mb-4">
         <div classname="app-tuition-summary-card">
-          btnColor="blue"
-          [title]="'Monthly Installment'"
-          [number]="'N10,000'"
-          [progress]="true"
-          (btnAction)="openModal()"
-          btnName="Make Payment"
+          btnColor="blue" [title]="'Monthly Installment'" [number]="'N10,000'"
+          [progress]="true" (btnAction)="openModal()" btnName="Make Payment"
         </div>
       </div>
       <section className="bg-white r-card px-5 pb-5">
         <div className="row">
           <div className="col-xl-9 col-lg-10 col-md-11 col-12 mx-auto">
             <div className="app-searchbar">
-              placeHolder="Search"
-              [canFilter]="false"
+              placeHolder="Search" [canFilter]="false"
               (searchQuery)="getSearchQuery($event)"
               (searchAction)="search(false)"
             </div>
@@ -202,14 +187,12 @@ import { GridCard } from './gridcard';
           </div>
         </div>
       </section>
-    
-    <div className openAccountModal>
-      data-bs-toggle="modal"
-      data-bs-target="#accountModal"
-    </div>
 
+      <div className openAccountModal>
+        data-bs-toggle="modal" data-bs-target="#accountModal"
+      </div>
     </>
-    )
-  }
+  );
+};
 
 export default TuitionAndClearancePage;

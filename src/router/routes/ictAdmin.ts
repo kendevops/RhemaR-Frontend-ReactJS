@@ -1,5 +1,8 @@
 import { lazy } from "react";
 
+//campuses route
+//campus/:id route
+
 const ictAdminRoutes = [
   {
     path: "/ict-admin/dashboard",

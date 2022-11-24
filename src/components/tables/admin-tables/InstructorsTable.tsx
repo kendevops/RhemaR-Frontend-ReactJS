@@ -3,17 +3,26 @@ import { Link } from "react-router-dom";
 import { InstructorsData } from "../../../data/InstructorsData";
 import useToggle from "../../../utility/hooks/useToggle";
 import Table, { TableColumns } from "../../general/table/Table";
+import { Chart, ArcElement } from "chart.js";
+import AssignInstructorModal from "../../modals/AssignInstructorModal";
 
 type ReassignInstructorProps = {
   data: any;
 };
 
+Chart.register(ArcElement);
+
 function ReassignInstructor({ data }: ReassignInstructorProps) {
-  const defaultValues = {};
-  const [isOpen, toggle] = useToggle();
+  const defaultValues = {
+    name: data?.name,
+    email: data?.email,
+    phone: data?.phone,
+  };
+  const [visibility, toggle] = useToggle();
 
   return (
     <>
+      <AssignInstructorModal {...{ toggle, visibility, defaultValues }} />
       <u
         onClick={toggle}
         className="text-info click"
@@ -33,7 +42,7 @@ export default function InstructorsTable() {
       title: "Instructor Name",
       render: (data) => {
         return (
-          <Link to={`ict-admin/instructor/${data?.name}`}>{data?.name}</Link>
+          <Link to={`/ict-admin/instructor/${data?.name}`}>{data?.name}</Link>
         );
       },
     },
@@ -60,15 +69,18 @@ export default function InstructorsTable() {
         };
 
         return (
-          <Doughnut
-            style={{
-              maxWidth: "3rem",
-              maxHeight: "3rem",
-            }}
-            height={5}
-            width={5}
-            data={dat}
-          />
+          <span className="d-flex gap-4 align-items-center ">
+            <p>{data?.rating} %</p>
+            <Doughnut
+              style={{
+                maxWidth: "3rem",
+                maxHeight: "3rem",
+              }}
+              height={5}
+              width={5}
+              data={dat}
+            />
+          </span>
         );
       },
     },

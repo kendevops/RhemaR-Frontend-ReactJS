@@ -50,7 +50,7 @@ export default function AddSchedule({
   return (
     <div>
       <Modal centered isOpen={visibility} toggle={toggle} id="scheduleModal">
-        <ModalHeader toggle={toggle}>Add Schedule</ModalHeader>
+        <ModalHeader toggle={toggle}>Add Course</ModalHeader>
         <ModalBody>
           <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
@@ -162,7 +162,7 @@ export default function AddSchedule({
               type="submit"
               disabled={!formState.isValid}
             >
-              Add Schedule
+              Add Course
             </button>
           </form>
         </ModalBody>
