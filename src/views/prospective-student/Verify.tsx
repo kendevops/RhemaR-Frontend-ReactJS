@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { Spinner } from "reactstrap";
 import ToastContent from "../../components/molecules/ToastContent";

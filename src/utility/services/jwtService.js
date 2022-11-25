@@ -85,7 +85,8 @@ export default class JwtService {
   }
 
   getToken() {
-    return localStorage.getItem(this.jwtConfig.storageTokenKeyName);
+    const token = localStorage.getItem(this.jwtConfig.storageTokenKeyName);
+    return token;
   }
 
   getRefreshToken() {

@@ -56,11 +56,7 @@ export default function UserManagement() {
       </article>
 
       {/* Table */}
-      <div className="tab-content p-4" id="pills-tabContent">
-        <div className="table-responsive rounded-2 r-card bg-white">
-          {currentOption === "Staff" && <UserManagementTable />}
-        </div>
-      </div>
+      {currentOption === "Staff" && <UserManagementTable />}
     </section>
   );
 }

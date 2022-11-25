@@ -59,6 +59,7 @@ const AuthLoginPage = () => {
 
           dispatch(handleLogin(data));
           UpdateLoggedInUserAbility(userRole, ability);
+
           history.push(getHomeRouteForLoggedInUser(userRole));
 
           const successMsg = "Welcome " + data?.firstName;
