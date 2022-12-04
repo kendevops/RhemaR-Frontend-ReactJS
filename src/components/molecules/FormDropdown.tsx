@@ -1,16 +1,10 @@
 import { MouseEventHandler, ReactNode } from "react";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
-import useToggle from "../../utility/hooks/useToggle";
+import { Input, InputProps } from "reactstrap";
 import FormInputWrapper from "./FormInputWrapper";
 
 interface FormDropdownOption {
   children: ReactNode;
-  onClick: MouseEventHandler;
+  onClick?: MouseEventHandler;
 }
 
 type FormDropdownProps = {
@@ -18,39 +12,66 @@ type FormDropdownProps = {
   title: string;
   lg?: string;
   md?: string;
-};
+} & InputProps;
 
 export default function FormDropdown({
   options,
   title,
   lg,
   md,
+  ...otherProps
 }: FormDropdownProps) {
-  const [roleOpen, toggleRole] = useToggle();
-
   return (
     <FormInputWrapper {...{ lg, md }}>
       <label>{title}</label>
 
-      <Dropdown
-        onChange={(e) => console.log(e.target)}
+      <Input
+        name="title"
         className="form-control"
-        isOpen={roleOpen}
-        toggle={toggleRole}
+        type="select"
+        {...otherProps}
       >
-        <DropdownToggle className="text-lg w-100 text-left shadow-none" caret>
-          Select {title}
-        </DropdownToggle>
-        <DropdownMenu>
+        <>
           {options.map(({ children, ...others }, i) => {
             return (
-              <DropdownItem key={i.toString()} {...others}>
+              <option key={i.toString()} {...others}>
                 {children}
-              </DropdownItem>
+              </option>
             );
           })}
-        </DropdownMenu>
-      </Dropdown>
+        </>
+      </Input>
     </FormInputWrapper>
   );
 }
+
+//Old
+// function ActionDropdown({ options, title, lg, md }: FormDropdownProps) {
+//   const [roleOpen, toggleRole] = useToggle();
+
+//   return (
+//     <FormInputWrapper {...{ lg, md }}>
+//       <label>{title}</label>
+
+//       <Dropdown
+//         onChange={(e) => console.log(e.target)}
+//         className="form-control"
+//         isOpen={roleOpen}
+//         toggle={toggleRole}
+//       >
+//         <DropdownToggle className="text-lg w-100 text-left shadow-none" caret>
+//           Select {title}
+//         </DropdownToggle>
+//         <DropdownMenu>
+//           {options.map(({ children, ...others }, i) => {
+//             return (
+//               <DropdownItem key={i.toString()} {...others}>
+//                 {children}
+//               </DropdownItem>
+//             );
+//           })}
+//         </DropdownMenu>
+//       </Dropdown>
+//     </FormInputWrapper>
+//   );
+// }

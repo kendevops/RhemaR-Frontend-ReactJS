@@ -39,7 +39,7 @@ export default [
     id: "tutionClearance",
     title: "Tution & Clearance",
     icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/ict-admin/tution-clearance",
+    navLink: "/ict-admin/tuition-clearance",
     action: "read",
     resource: "Admins",
   },

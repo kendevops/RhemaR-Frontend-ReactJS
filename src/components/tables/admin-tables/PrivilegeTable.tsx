@@ -1,6 +1,5 @@
 import React from "react";
 import { Spinner } from "reactstrap";
-import api from "../../../api";
 import useRoles from "../../../hooks/queries/useRoles";
 import Table from "../../general/table/Table";
 import UpdatePrivilege from "../../modals/UpdatePrivilege";
@@ -8,9 +7,7 @@ import UpdatePrivilege from "../../modals/UpdatePrivilege";
 export default function PrivilegeTable() {
   const { data: query, isLoading } = useRoles();
 
-  const data = query?.data?.roles;
-
-  // console.log({data});
+  const data = query?.roles;
 
   return (
     <Table.Wrapper>

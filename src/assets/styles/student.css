@@ -102,3 +102,8 @@ li {
   background-color: #edf3fa !important;
   color: #203864 !important;
 }
+
+/* MUI Autocomplete */
+.css-1ghykbv-MuiAutocomplete-root.MuiOutlinedInput-root.MuiAutocomplete-input {
+  font-size: 1.3rem;
+}

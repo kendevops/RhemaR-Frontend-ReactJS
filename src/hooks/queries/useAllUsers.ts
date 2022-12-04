@@ -4,6 +4,6 @@ import queryKeys from "../../queryKeys";
 
 export default function useAllUsers() {
   return useQuery([queryKeys.users], () =>
-    api.get("/users").then((r) => r.data)
+    api.get("/users").then((r) => r.data?.data)
   );
 }
