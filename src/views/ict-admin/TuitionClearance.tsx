@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import typography from "../../assets/img/Typography";
 import SearchBar from "../../components/general/searchBar";
 import Table, { TableColumns } from "../../components/general/table/Table";
@@ -17,6 +18,18 @@ const studentData = [
     dueDate: new Date(),
     status: "Ongoing (4/8)",
   },
+  {
+    studentName: "Ali Joshua",
+    fee: "Level 1 Application Fee",
+    dueDate: new Date(),
+    status: "Ongoing (4/8)",
+  },
+  {
+    studentName: "Ali Joshua",
+    fee: "Level 1 Application Fee",
+    dueDate: new Date(),
+    status: "Ongoing (4/8)",
+  },
 ];
 
 const columns: TableColumns<typeof studentData[0]>[] = [
@@ -24,7 +37,32 @@ const columns: TableColumns<typeof studentData[0]>[] = [
     key: "Student Name",
     title: "Student Name",
     render: (d) => {
-      return <></>;
+      return (
+        <Link to={`/ict-admin/tuition/${d?.studentName}`}>
+          <u> {d?.studentName}</u>
+        </Link>
+      );
+    },
+  },
+  {
+    key: "Fee",
+    title: "Fee",
+    render: (d) => {
+      return <p>{d?.fee}</p>;
+    },
+  },
+  {
+    key: "Due Date",
+    title: "Due Date",
+    render: (d) => {
+      return <p>{new Date(d?.dueDate)?.toDateString()}</p>;
+    },
+  },
+  {
+    key: "Status",
+    title: "Status",
+    render: (d) => {
+      return <p>{d?.status}</p>;
     },
   },
 ];

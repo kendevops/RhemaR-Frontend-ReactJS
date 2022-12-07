@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export type TableColumns<T> = {
-  title: string;
+  title?: string;
   key: string;
   render: (data: T) => JSX.Element;
 };

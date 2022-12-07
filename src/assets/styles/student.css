@@ -107,3 +107,25 @@ li {
 .css-1ghykbv-MuiAutocomplete-root.MuiOutlinedInput-root.MuiAutocomplete-input {
   font-size: 1.3rem;
 }
+
+/* Receipt Header lines */
+.receipt-first {
+  height: 1.1rem;
+  background-color: #203864;
+}
+
+.receipt-second {
+  height: 0.4rem;
+  background-color: #dfc46d;
+}
+
+.receipt-third {
+  height: 0.7rem;
+  background-color: #203864;
+  margin-bottom: 0.2rem;
+}
+
+.receipt-fourth {
+  height: 0.2rem;
+  background-color: #203864;
+}

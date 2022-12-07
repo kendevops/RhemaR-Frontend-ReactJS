@@ -87,7 +87,7 @@ const ictAdminRoutes = [
   },
   {
     path: "/ict-admin/tuition/:id",
-    component: lazy(() => import("../../views/ict-admin/TuitionClearance")),
+    component: lazy(() => import("../../views/ict-admin/Tuition")),
     meta: {
       action: "read",
       resource: "Admins",
