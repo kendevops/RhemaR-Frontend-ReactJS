@@ -8,47 +8,82 @@ import colors from "../../assets/img/Colors";
 import CourseSchedule from "../../components/students/CourseSchedule";
 import MyCourses from "../../components/students/MyCourses";
 import EmptyNotifications from "../../components/icons/EmptyNotifications";
+import useClasses from "../../hooks/queries/classes/useClasses";
+import { Spinner } from "reactstrap";
+import getMonth from "../../utils/getMonth";
+import getTimeString from "../../utils/getTimeString";
 
 export default function StudentCourses() {
+  const { data, isLoading } = useClasses({
+    startTime: "2022-12-01T21:56:53.900Z",
+  });
+  const lectures = data?.classes?.nodes;
+
   return (
     <section className="container my-5">
       <Row>
         <ColWrapper lg="5">
           {/* Upcoming Lecture */}
           <section className="mb-6">
-            <h2 className="text-xl font-bold text-blue-600">
-              Upcoming Lecture
-            </h2>
+            <div className="d-flex justify-content-between">
+              <h2 className="text-xl font-bold text-blue-600">
+                Upcoming Lecture
+              </h2>
+
+              {isLoading && <Spinner />}
+            </div>
 
             <article
               style={{ backgroundColor: colors.primary }}
               className="r-card px-4 py-4 mt-4 d-flex align-items-center justify-content-between"
             >
-              <div className="p-1 bg-white rounded-2">
-                <time className="font-bold text-center text-blue-600">
-                  10 - 12 <br />
-                  Oct
-                </time>
-              </div>
-
+              {lectures && lectures[0] && (
+                <div className="p-1 bg-white rounded-2">
+                  <time className="font-bold text-center text-blue-600">
+                    {new Date(lectures[0]?.startTime)?.getDate() ===
+                    new Date(lectures[0]?.endTime)?.getDate()
+                      ? new Date(lectures[0]?.startTime)?.getDate()
+                      : `${new Date(
+                          lectures[0]?.startTime
+                        )?.getDate()} - ${new Date(
+                          lectures[0]?.endTime
+                        )?.getDate()} `}{" "}
+                    <br />
+                    {getMonth(new Date(lectures[0]?.startTime))}
+                  </time>
+                </div>
+              )}
               <div>
-                <h2 className="text-xl font-bold text-white">Pneumatology 1</h2>
+                <h2 className="text-xl font-bold text-white">
+                  {(lectures && lectures[0]?.name) ?? ""}
+                </h2>
                 <div className="d-flex align-items-center gap-3">
                   <Clock color="#fff" size={12} />
-                  <time className="text-white">8:00AM - 9:00AM</time>
+                  <time className="text-white">
+                    {lectures &&
+                      getTimeString({
+                        date: new Date(lectures[0]?.startTime),
+                      })}{" "}
+                    -{" "}
+                    {lectures &&
+                      getTimeString({
+                        date: new Date(lectures[0]?.endTime),
+                      })}
+                  </time>
                 </div>
               </div>
-
-              <Link to={"/student/lecture/Pneumatology"}>
-                <span
-                  className="p-3 rounded-3"
-                  style={{
-                    backgroundColor: "#364C74",
-                  }}
-                >
-                  <ChevronRight color="white" />
-                </span>
-              </Link>
+              {lectures && (
+                <Link to={`/student/lecture/${lectures[0]?.id}`}>
+                  <span
+                    className="p-3 rounded-3"
+                    style={{
+                      backgroundColor: "#364C74",
+                    }}
+                  >
+                    <ChevronRight color="white" />
+                  </span>
+                </Link>
+              )}
             </article>
           </section>
 
@@ -59,7 +94,7 @@ export default function StudentCourses() {
                 My Course Schedule
               </h2>
 
-              <Link to={"/"}>
+              <Link to={"/student/all-courses"}>
                 <small className="text-decoration-underline">Show All</small>
               </Link>
             </div>

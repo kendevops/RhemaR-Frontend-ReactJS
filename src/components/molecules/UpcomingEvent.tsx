@@ -38,7 +38,8 @@ export default function UpcomingEvent({
         }}
       >
         <div className="text-lg font-medium lh-1 mb-1">
-          {startDate?.getDate()} {endDate && -endDate.getDate()}
+          {startDate?.getDate()}{" "}
+          {endDate?.getDate() === startDate.getDate() ? "" : endDate?.getDate()}
         </div>
         <div className="text-xxl font-bold lh-1">{month}</div>
       </div>
@@ -47,7 +48,7 @@ export default function UpcomingEvent({
       <div>
         <h2 className="text-xl font-bold">{title}</h2>
         <time className="text-sm">
-          {startTime} {endTime && -endTime}
+          {startTime} {endTime ? `-${endTime}` : ""}
         </time>
       </div>
     </article>

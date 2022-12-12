@@ -12,8 +12,26 @@ const ProspectiveStudentRoutes = [
     },
   },
   {
+    path: "/profile",
+    component: lazy(() => import("../../views/student/profile")),
+    meta: {
+      action: "read",
+      resource: "Applications",
+    },
+  },
+  {
     path: "/verify",
     component: lazy(() => import("../../views/prospective-student/Verify")),
+    layout: "GuestLayout",
+    meta: {
+      publicRoute: true,
+    },
+  },
+  {
+    path: "/confirm-verification/:id",
+    component: lazy(() =>
+      import("../../views/prospective-student/ConfirmVerification")
+    ),
     layout: "GuestLayout",
     meta: {
       publicRoute: true,

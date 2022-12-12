@@ -24,7 +24,14 @@ function ViewReceipt({ name }: ViewReceiptProps) {
 
   return (
     <div>
-      <u onClick={toggle}>View Receipt</u>
+      <u
+        style={{
+          cursor: "pointer",
+        }}
+        onClick={toggle}
+      >
+        View Receipt
+      </u>
       <ViewReceiptModal {...{ isOpen, data, toggle }} />
     </div>
   );

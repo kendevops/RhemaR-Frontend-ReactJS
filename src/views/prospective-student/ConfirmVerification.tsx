@@ -21,6 +21,8 @@ export default function ConfirmVerification() {
     history.replace("/login");
   }
 
+  console.log({ data });
+
   return (
     <section>
       {isLoading && <Spinner />}

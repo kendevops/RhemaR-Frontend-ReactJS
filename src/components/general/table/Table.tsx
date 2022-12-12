@@ -22,10 +22,10 @@ export default function Table({ columns, data }: TableProps) {
   ));
 
   //** TableBody */
-  const tabData = data.map((data, i) => {
+  const tabData = data?.map((data, i) => {
     return (
       <tr key={`column${i}`}>
-        {columns.map(({ render }, i2) => (
+        {columns?.map(({ render }, i2) => (
           <td key={`data${i}${i2}`}>{render(data)}</td>
         ))}
       </tr>

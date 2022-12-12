@@ -1,21 +1,35 @@
 import { useState } from "react";
 import { Calendar, ChevronLeft, ChevronRight } from "react-feather";
+import { Spinner } from "reactstrap";
 import colors from "../../assets/img/Colors";
 import { WeekendClasses } from "../../data/Classes";
+import useClasses from "../../hooks/queries/classes/useClasses";
 import { months } from "../../utils/getMonth";
 import Tab from "../atoms/Tab";
 import UpcomingEvent from "../molecules/UpcomingEvent";
 
-const classTabs = ["Weekend Classes", "Night Classes"];
+const classTabs = ["All", "Weekend Classes", "Night Classes"];
 
 export default function CourseSchedule() {
   const [viewing, setViewing] = useState(0);
-  const [nightClass, setNightClass] = useState(false);
+  const [clas, setClas] = useState(0);
+  const currentClass = classTabs[clas];
 
-  let classes = WeekendClasses;
+  const monthParam = viewing + 1 < 10 ? `0${viewing + 1}` : viewing + 1;
 
-  if (nightClass) {
-    classes = [];
+  const { data, isLoading } = useClasses({
+    startTime: `${new Date().getFullYear()}-${monthParam}-01T21:56:53.900Z`,
+  });
+
+  const allClasses = data?.classes?.nodes;
+  let classes = allClasses;
+
+  if (currentClass === classTabs[1]) {
+    classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
+  }
+
+  if (currentClass === classTabs[2]) {
+    classes = allClasses?.filter((clas: any) => clas?.type === "night");
   }
 
   // For navigating between dates
@@ -28,13 +42,13 @@ export default function CourseSchedule() {
     });
   }
 
-  //   For toggling Night class
-  function toggleNightClass() {
-    setNightClass((p) => !p);
-  }
+  /* TODO -  Upcoming 5 classes instead of per month
+   * Caret Buttons become "View All" to view all courses
+   */
 
   return (
     <>
+      {isLoading && <Spinner />}
       {/* Header */}
       <section className="mb-3 d-flex justify-content-between">
         <div className="d-flex gap-3 align-items-center">
@@ -71,15 +85,12 @@ export default function CourseSchedule() {
         {/* Tabs */}
         <Tab.Wrapper>
           {classTabs?.map((t, i) => {
-            function checkSelected() {
-              return i === 0 ? !nightClass : nightClass;
-            }
             return (
               <Tab
                 key={t}
                 tabColor="#289483"
-                isSelected={checkSelected()}
-                onClick={toggleNightClass}
+                isSelected={currentClass === t}
+                onClick={() => setClas(i)}
               >
                 {t}
               </Tab>
@@ -89,9 +100,20 @@ export default function CourseSchedule() {
 
         {/* Class List */}
         <div>
-          {classes?.map((clas, i) => {
-            return <UpcomingEvent key={i} {...clas} />;
-          })}
+          {classes ? (
+            classes?.map((clas: any, i: number) => {
+              return (
+                <UpcomingEvent
+                  title={clas?.name}
+                  key={i}
+                  endDate={new Date(clas?.endTime)}
+                  startDate={new Date(clas?.startTime)}
+                />
+              );
+            })
+          ) : (
+            <p>No Classes yet...</p>
+          )}
         </div>
       </section>
     </>
