@@ -12,6 +12,7 @@ import useToggle from "../../../../utility/hooks/useToggle";
 import { handleLogout } from "../../../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
 
 const options = [
   {
@@ -30,6 +31,8 @@ const Navbar = (props) => {
 
   // ** Menu Hover State
   const [menuHover, setMenuHover] = useState(false);
+
+  const { data } = useCurrentUser();
 
   const currentUser = getUserData();
   const dispatch = useDispatch();
@@ -92,7 +95,7 @@ const Navbar = (props) => {
               </a>
             </div>
             <h2 className="me-3">
-              {currentUser?.firstName} {currentUser?.lastName}
+              {data?.firstName} {data?.lastName}
             </h2>
 
             {/* Dropdown Toggle */}

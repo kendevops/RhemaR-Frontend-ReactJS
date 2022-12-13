@@ -8,12 +8,23 @@ import getMonth from "../../utils/getMonth";
 import getTimeString from "../../utils/getTimeString";
 import { Link } from "react-router-dom";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import useCourses from "../../hooks/queries/classes/useCourses";
 
 const StudentDashboardPage = () => {
   const { data, isLoading } = useClasses({
     startTime: "2022-12-01T21:56:53.900Z",
   });
   const lectures = data?.classes?.nodes;
+
+  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const courses = coursesData?.courses;
+
+  const completion = courses?.reduce((a, b) => {
+    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
+  });
+
+  const totalCompletion = courses?.length * 100;
+  const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const application = userData?.applications
@@ -26,28 +37,30 @@ const StudentDashboardPage = () => {
     <div className="container my-5">
       <div className="row">
         <div className="col-lg-6 col-md-6 col-12 mb-4">
+          {coursesLoading && <Spinner />}
           {/* Semester Progress */}
-          <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
-            <div className="d-flex justify-content-between ">
-              <p className="r-card-title">Semester Progress</p>
-              <h2 className="font-bold text-2xl ms-4">43%</h2>
-            </div>
+          {courses && (
+            <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
+              <div className="d-flex justify-content-between ">
+                <p className="r-card-title">Semester Progress</p>
+                <h2 className="font-bold text-2xl ms-4">{semesterProgress}%</h2>
+              </div>
 
-            {/* Progress bar */}
-            <div>
-              <div class="progress ">
-                <div
-                  class="progress-bar progress-bar-animated bg-warning "
-                  role="progressbar"
-                  style={{ width: "43%" }}
-                  aria-valuenow="25"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
+              {/* Progress bar */}
+              <div>
+                <div class="progress ">
+                  <div
+                    class="progress-bar progress-bar-animated bg-warning "
+                    role="progressbar"
+                    style={{ width: `${semesterProgress}%` }}
+                    aria-valuenow={semesterProgress}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
               </div>
             </div>
-          </div>
-
+          )}
           {/* Upcmonign lecture */}
           <section className="bg-white r-card px-5 py-4">
             <div className="d-flex justify-content-between">

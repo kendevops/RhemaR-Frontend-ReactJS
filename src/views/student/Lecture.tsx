@@ -24,7 +24,6 @@ interface LectureParams {
   id: string;
 }
 
-const materials = ["Course Material", "Course Material"];
 const assignments = ["Reading Assignment.pdf", "Listening Assignment.mp3"];
 
 const tabs = ["Course Overview", "Class Discussion"];
@@ -44,6 +43,10 @@ export default function Lecture() {
   const sessions = course?.sections;
   const [watching, setWatching] = useState("");
   const currentSession = sessions?.find((s: any) => s?.videoUrl === watching);
+
+  console.log({
+    currentSession,
+  });
 
   const [isOpen, toggle] = useToggle();
   const formValues = {
@@ -147,7 +150,14 @@ export default function Lecture() {
                           className="d-flex align-items-center justify-content-between"
                           key={s?.name}
                         >
-                          <u onClick={handleWatch}>{s?.name}</u>
+                          <u
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            onClick={handleWatch}
+                          >
+                            {s?.name}
+                          </u>
 
                           <div className="progress w-25">
                             <div
@@ -175,18 +185,37 @@ export default function Lecture() {
                 </h2>
 
                 <ul className="no-padding-left">
-                  {materials?.map((m) => {
-                    const attributes = downloadFile("", m);
+                  {currentSession &&
+                    currentSession?.materials?.map((m: any) => {
+                      const attributes = downloadFile(m?.path, m?.name);
+                      let icon = <></>;
 
-                    return (
-                      <li key={m}>
-                        <a {...attributes} className={className}>
-                          <PdfIcon />
-                          {m}
-                        </a>
-                      </li>
-                    );
-                  })}
+                      switch (m?.type) {
+                        case "png":
+                          icon = (
+                            <img
+                              alt={m?.name}
+                              src={m?.path}
+                              style={{
+                                width: "20px",
+                                height: "20px",
+                              }}
+                            />
+                          );
+                          break;
+                        default:
+                          icon = <PdfIcon />;
+                      }
+
+                      return (
+                        <li key={m?.name}>
+                          <a {...attributes} className={className}>
+                            {icon}
+                            {m?.name}
+                          </a>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </article>
@@ -200,18 +229,34 @@ export default function Lecture() {
                 </h2>
 
                 <ul className="no-padding-left">
-                  {assignments?.map((a) => {
-                    const isAudio = a.endsWith("mp3");
-                    const attributes = downloadFile("", a);
-                    return (
-                      <li key={a}>
-                        <a {...attributes} className={className}>
-                          {isAudio ? <AudioNoteIcon /> : <PdfIcon />}
-                          {a}
-                        </a>
-                      </li>
-                    );
-                  })}
+                  {currentSession &&
+                    currentSession?.assignments?.map((a: any) => {
+                      const attributes = downloadFile(a?.path, a?.name);
+                      let icon = <></>;
+
+                      if (a?.name?.endsWith("mp3")) icon = <AudioNoteIcon />;
+                      if (a?.name?.endsWith("pdf")) icon = <PdfIcon />;
+                      if (a?.type === "jpg" || "png")
+                        icon = (
+                          <img
+                            alt={a?.name}
+                            src={a?.path}
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                            }}
+                          />
+                        );
+
+                      return (
+                        <li key={a}>
+                          <a {...attributes} className={className}>
+                            {icon}
+                            {a?.name}
+                          </a>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </article>
