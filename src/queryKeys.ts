@@ -5,6 +5,7 @@ const queryKeys = {
   currentUser: "current-user",
   classes: "my-classes",
   courses: "my-courses",
+  paymentHistory: "payment-history",
 };
 
 export default queryKeys;

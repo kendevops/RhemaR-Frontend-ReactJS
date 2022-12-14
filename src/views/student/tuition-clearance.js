@@ -1,68 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { PaystackButton } from "react-paystack";
+import { Spinner } from "reactstrap";
 import typography from "../../assets/img/Typography";
 import Tab from "../../components/atoms/Tab";
 import SearchBar from "../../components/general/searchBar";
 import Table from "../../components/general/table/Table";
 import MakePaymentModal from "../../components/modals/MakePaymentModal";
 import CardWrapper from "../../components/students/CardWrapper";
+import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import usePaymentHistory from "../../hooks/queries/users/usePaymentHistory";
 import useToggle from "../../utility/hooks/useToggle";
 import downloadFile from "../../utils/downloadFile";
-
-const dashData = [
-  {
-    title: "Application Fee",
-    amount: 10000,
-    paid: true,
-  },
-  {
-    title: "Application Fee",
-    amount: 30000,
-    paid: true,
-  },
-  {
-    title: "Monthly Installment",
-    amount: 10000,
-    paid: false,
-    pendingPayments: 7,
-  },
-];
-
-const feeData = [
-  {
-    fee: "Level 1 Application Fee",
-    amount: 10000,
-    date: new Date(),
-    status: "Completed",
-  },
-  {
-    fee: "Level 1 Application Fee",
-    amount: 10000,
-    date: new Date(),
-    status: "Completed",
-  },
-  {
-    fee: "Level 1 Application Fee",
-    amount: 10000,
-    date: new Date(),
-    status: "Completed",
-  },
-];
-
-const paymentData = [
-  {
-    payment: "Level 1 Application Fee",
-    trxId: "CH03508885",
-    amount: 10000,
-    date: new Date(),
-  },
-  {
-    payment: "Level 1 Application Fee",
-    trxId: "CH03508885",
-    amount: 10000,
-    date: new Date(),
-  },
-];
 
 const tabs = ["Fee Breakdown", "Payment History"];
 
@@ -74,6 +22,32 @@ const TuitionAndClearancePage = () => {
   let columns = [];
   let data = [];
 
+  const { data: userData, isLoading } = useCurrentUser();
+  const applications = userData?.applications;
+  const application = applications?.length ? applications[0] : undefined;
+
+  const dash = [
+    {
+      title: "Application Fee",
+      ...application?.feePayment,
+    },
+    {
+      title: "Initial Payment",
+      ...application?.initialPayment,
+    },
+    {
+      title: "Monthly Installment",
+      installments: application?.installments,
+      amount: 80000,
+      paidAt: application?.installments?.length === 8,
+    },
+  ];
+
+  const feeData = application?.installments;
+  const { data: paymentsData, isLoading: paymentsDataLoading } =
+    usePaymentHistory();
+
+  // Conditionals
   if (currentTab === tabs[0]) {
     columns = [
       {
@@ -108,11 +82,15 @@ const TuitionAndClearancePage = () => {
     data = feeData;
   } else if (currentTab === tabs[1]) {
     columns = [
-      { title: "Payment", key: "Payment", render: (d) => <p>{d?.payment}</p> },
+      {
+        title: "Payment",
+        key: "Payment",
+        render: (d) => <p>{d?.payment ?? "Level 1 Fees"}</p>,
+      },
       {
         title: "Transaction ID",
         key: "Transaction ID",
-        render: (d) => <p>{d?.trxId}</p>,
+        render: (d) => <p>{d?.accessCode}</p>,
       },
       {
         title: "Amount Paid",
@@ -122,25 +100,31 @@ const TuitionAndClearancePage = () => {
       {
         title: "Payment Date",
         key: "Payment Date",
-        render: (d) => <p>{new Date(d?.date)?.toDateString()}</p>,
+        render: (d) => <p>{new Date(d?.createdAt)?.toDateString()}</p>,
       },
       {
         title: "Action",
         key: "Action",
         render: (d) => {
           const attributes = downloadFile(
-            "https://google.com/",
-            `Payment Receipt - ${d?.trxId}`
+            d?.paymentUrl,
+            `Payment Receipt - ${new Date(d?.createdAt)?.toLocaleString()}`
           );
           return (
-            <u>
-              <a {...attributes}>Download Receipt</a>
-            </u>
+            <>
+              {d?.status === "success" ? (
+                <u>
+                  <a {...attributes}>Download Receipt</a>
+                </u>
+              ) : (
+                <p>{d?.status}</p>
+              )}
+            </>
           );
         },
       },
     ];
-    data = paymentData;
+    data = paymentsData?.nodes;
   }
 
   return (
@@ -149,47 +133,50 @@ const TuitionAndClearancePage = () => {
       <MakePaymentModal amount={10000} {...{ isOpen, toggle }} />
       {/* Dash Cards */}
       <section className="mb-5 d-flex gap-5 justify-content-between">
-        {dashData?.map((d) => {
-          return (
-            <CardWrapper className="w-100" key={d?.title}>
-              <div className="my-3">
-                <p className="d-flex justify-content-between">
-                  {d?.title}
-                  <span>
-                    {!!d?.pendingPayments && `${8 - d?.pendingPayments}/8`}
-                  </span>
-                </p>
-                <h2
-                  style={{
-                    fontSize: typography.h2,
-                    fontWeight: "bold",
-                  }}
-                >
-                  N{d?.amount}
-                </h2>
-              </div>
-
-              {d?.paid ? (
-                <div
-                  style={{
-                    background: "rgba(92, 153, 61, 0.1)",
-                    color: "#5C993D",
-                  }}
-                  className="p-3 rounded-3 text-center w-100  bg-success-200"
-                >
-                  Paid
+        {application &&
+          dash?.map((d) => {
+            return (
+              <CardWrapper className="w-100" key={d?.title}>
+                <div className="my-3">
+                  <p className="d-flex justify-content-between">
+                    {d?.title}
+                    {d?.title === "Monthly Installment" && (
+                      <span>{`${d?.installments?.length}/8`}</span>
+                    )}
+                  </p>
+                  <h2
+                    style={{
+                      fontSize: typography.h2,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    N{d?.amount}
+                  </h2>
                 </div>
-              ) : (
-                <button
-                  onClick={toggle}
-                  className="btn btn-blue-800 btn-lg w-100"
-                >
-                  Make Payment
-                </button>
-              )}
-            </CardWrapper>
-          );
-        })}
+
+                {d?.paidAt ? (
+                  <div
+                    style={{
+                      background: "rgba(92, 153, 61, 0.1)",
+                      color: "#5C993D",
+                    }}
+                    className="p-3 rounded-3 text-center w-100  bg-success-200"
+                  >
+                    Paid
+                  </div>
+                ) : (
+                  <button
+                    onClick={() =>
+                      d?.paymentUrl ? window?.open(d?.paymentUrl) : toggle()
+                    }
+                    className="btn btn-blue-800 btn-lg w-100"
+                  >
+                    Make Payment
+                  </button>
+                )}
+              </CardWrapper>
+            );
+          })}
       </section>
 
       {/* Table */}
@@ -215,6 +202,7 @@ const TuitionAndClearancePage = () => {
 
         {/* Tables */}
         <Table.Wrapper>
+          {(isLoading || paymentsDataLoading) && <Spinner />}
           <Table columns={columns} data={data} />
         </Table.Wrapper>
       </CardWrapper>
