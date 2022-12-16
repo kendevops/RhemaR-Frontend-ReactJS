@@ -20,6 +20,14 @@ export default [
     resource: "Admins",
   },
   {
+    id: "applications",
+    title: "Applications",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/ict-admin/applications",
+    action: "read",
+    resource: "Admins",
+  },
+  {
     id: "roles-privilleges",
     title: "Roles & Privilleges",
     icon: <Icon icon="wpf:security-checked" />,

@@ -27,9 +27,13 @@ const userManagementData: Data[] = [
 
 export default function UserManagementTable() {
   const { data, isLoading } = useAllUsers();
-  const users = data?.users?.nodes as UserDto[];
+  const users = data?.users?.nodes;
 
-  const columns: TableColumns<UserDto>[] = [
+  console.log({
+    users,
+  });
+
+  const columns: TableColumns<any>[] = [
     {
       key: "Name",
       title: "Name",
@@ -52,18 +56,18 @@ export default function UserManagementTable() {
     {
       key: "Role",
       title: "Role",
-      render: (data) => <p>{data?.address}</p>,
+      render: (data) => <p>{data?.roles[0]?.name}</p>,
     },
     {
       key: "Privilege",
       title: "Privilege",
-      render: (data) => <p>{data?.address}</p>,
+      render: (data) => <p>{data?.roles[0]?.name}</p>,
     },
-    {
-      key: "State",
-      title: "State",
-      render: (data) => <p>{data?.nationality}</p>,
-    },
+    // {
+    //   key: "State",
+    //   title: "State",
+    //   render: (data) => <p>{data?.nationality}</p>,
+    // },
     {
       key: "Action",
       title: "Action",

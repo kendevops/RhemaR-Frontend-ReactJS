@@ -6,6 +6,9 @@ const queryKeys = {
   classes: "my-classes",
   courses: "my-courses",
   paymentHistory: "payment-history",
+  academicSession: "academic-session",
+  campus: "campus",
+  applications: "applications",
 };
 
 export default queryKeys;
