@@ -84,9 +84,11 @@ function ApplicationPage(props) {
     };
 
     mutate(body, {
-      onSuccess: () => {
+      onSuccess: (d) => {
         //proceed to make payment
-        // toggleSuccess();
+        const paymentUrl =
+          d?.data?.data?.application?.initialPayment?.paymentUrl;
+        window?.location?.replace(paymentUrl);
       },
       onError: (err) => {
         console.log({ err, body });
@@ -242,15 +244,21 @@ function ApplicationPage(props) {
 const ProspectiveStudentApplicationPage = () => {
   const [hasApplied, setHasApplied] = useState(false);
   const { data } = useCurrentUser();
-  console?.log({ data });
 
   useEffect(() => {
     if (!data) return;
     if (!data?.applications?.length) return;
 
     //check the user application status
-    switch (data?.applications[0]?.status) {
-      case "PENDING":
+    const application = data?.applications[0];
+    switch (application?.initialPayment?.status) {
+      case "pending":
+        window.location.replace(application?.initialPayment?.paymentUrl);
+        break;
+
+      case "success":
+        setHasApplied(true);
+
         break;
       default:
         console.log("Default");
