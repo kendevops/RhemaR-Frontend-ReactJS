@@ -40,18 +40,24 @@ const Router = () => {
 
   // ** Updating Ability on Load
   const loggedIn = isUserLoggedIn();
+  const data = getUserData();
 
   useEffect(() => {
     if (loggedIn) {
-      const data = getUserData();
       const userRole =
         Array.isArray(data?.roles) && data?.roles?.length
           ? data?.roles[0]?.name
           : userRoles.PROSPECTIVE_STUDENT;
 
       UpdateLoggedInUserAbility(userRole, ability);
+
+      // Giving permissions for multiple roles
+      // data?.roles?.length &&
+      //   data?.roles?.forEach((role) =>
+      //     UpdateLoggedInUserAbility(role?.name, ability)
+      //   );
     }
-  }, [loggedIn, ability]);
+  }, [loggedIn, ability, data]);
 
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout();

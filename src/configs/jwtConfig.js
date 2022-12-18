@@ -1,7 +1,7 @@
 // ** Auth Endpoints
 export default {
   loginEndpoint: "/auth/login",
-  registerEndpoint: "auth/signup",
+  registerEndpoint: "/auth/signup",
   refreshEndpoint: "/auth/refresh",
   logoutEndpoint: "/auth/logout",
   verifyEmailEndpoint: "/auth/email/resend-verification",

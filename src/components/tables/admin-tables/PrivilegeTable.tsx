@@ -1,25 +1,34 @@
 import React from "react";
+import { Spinner } from "reactstrap";
+import useRoles from "../../../hooks/queries/useRoles";
 import Table from "../../general/table/Table";
 import UpdatePrivilege from "../../modals/UpdatePrivilege";
 
-const data = ["Privilege 1", "Privilege 2", "Privilege 3"];
-
 export default function PrivilegeTable() {
+  const { data: query, isLoading } = useRoles();
+
+  const data = query?.roles;
+
   return (
-    <Table
-      columns={[
-        {
-          key: "Privilege",
-          render: (data) => <p>{data}</p>,
-          title: "Privilege",
-        },
-        {
-          key: "Action",
-          render: (data) => <UpdatePrivilege data={data} />,
-          title: "Action",
-        },
-      ]}
-      data={data}
-    />
+    <Table.Wrapper>
+      {isLoading && <Spinner />}
+      {data && (
+        <Table
+          columns={[
+            {
+              key: "Privilege",
+              render: (data) => <p>{data?.name}</p>,
+              title: "Privilege",
+            },
+            {
+              key: "Action",
+              render: (data) => <UpdatePrivilege data={data?.name} />,
+              title: "Action",
+            },
+          ]}
+          data={data}
+        />
+      )}
+    </Table.Wrapper>
   );
 }

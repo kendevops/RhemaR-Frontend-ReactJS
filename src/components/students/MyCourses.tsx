@@ -9,11 +9,13 @@ import Tab from "../atoms/Tab";
 import Table, { TableColumns } from "../general/table/Table";
 import { Chart, ArcElement } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import useCourses from "../../hooks/queries/classes/useCourses";
+import { Spinner } from "reactstrap";
 
 Chart.register(ArcElement);
 
 const TabOptions = ["Course Completion", "Missed Courses"];
-const courseColumns: TableColumns<Course>[] = [
+const courseColumns: TableColumns<any>[] = [
   {
     key: "Course Title",
     title: "Course Title",
@@ -23,11 +25,12 @@ const courseColumns: TableColumns<Course>[] = [
     key: "% Complete",
     title: "% Complete",
     render: (data) => {
+      const completion = data?.report?.completion ?? 10;
       const dat = {
         labels: ["Completion", ""],
         datasets: [
           {
-            data: [data?.completion, 100 - data?.completion],
+            data: [completion, 100 - completion],
             backgroundColor: ["#FF6384", "#ffffff"],
             borderWidth: 2,
           },
@@ -50,7 +53,7 @@ const courseColumns: TableColumns<Course>[] = [
   {
     key: "Score",
     title: "Score",
-    render: (data) => <p>{data?.score ?? "-"}</p>,
+    render: (data) => <p>{data?.report?.score ?? "-"}</p>,
   },
 ];
 
@@ -73,8 +76,10 @@ const missedColumns: TableColumns<MissedCourse>[] = [
 ];
 
 export default function MyCourses() {
+  const { data: courses, isLoading } = useCourses();
   const [missedCourses, setMissedCourses] = useState(false);
-  let data: any[] = Courses;
+
+  let data: any[] = courses?.courses;
 
   if (missedCourses) {
     data = missed;
@@ -108,6 +113,7 @@ export default function MyCourses() {
 
       <div className="rounded-3 border-1 mt-3">
         <Table.Wrapper>
+          {isLoading && <Spinner />}
           <Table
             columns={missedCourses ? missedColumns : courseColumns}
             data={data}

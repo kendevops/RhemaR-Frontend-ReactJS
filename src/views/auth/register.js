@@ -5,6 +5,7 @@ import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
 import SpinnerComponent from "../../components/spinner/Fallback-spinner";
 import { useHistory } from "react-router-dom";
+import { Spinner } from "reactstrap";
 
 const AuthRegistrationPage = () => {
   const initialState = {
@@ -112,7 +113,7 @@ const AuthRegistrationPage = () => {
 
                 <div className="alert alert-danger"></div>
 
-                {loading && <SpinnerComponent />}
+                {loading && <Spinner />}
 
                 <form onSubmit={submitForm}>
                   <div className="row">

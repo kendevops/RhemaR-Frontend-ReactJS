@@ -28,11 +28,8 @@ export default function RolesPriviledges() {
       </article>
 
       {/* Table */}
-      <div className="tab-content p-4" id="pills-tabContent">
-        <div className="table-responsive rounded-2 r-card bg-white">
-          <PrivilegeTable />
-        </div>
-      </div>
+
+      <PrivilegeTable />
     </section>
   );
 }

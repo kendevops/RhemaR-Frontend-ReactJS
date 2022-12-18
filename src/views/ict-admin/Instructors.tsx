@@ -1,13 +1,15 @@
 import SearchBar from "../../components/general/searchBar";
+import AssignInstructorModal from "../../components/modals/AssignInstructorModal";
 import InstructorsTable from "../../components/tables/admin-tables/InstructorsTable";
 import useToggle from "../../utility/hooks/useToggle";
 
 export default function Instructors() {
-  const [isOpen, toggle] = useToggle();
+  const [visibility, toggle] = useToggle();
 
   return (
     <section>
       {/* Add Instructor Modal */}
+      <AssignInstructorModal {...{ visibility, toggle }} />
 
       {/* Search Bar and add Instructor */}
       <article className="d-flex gap-5 m-5">

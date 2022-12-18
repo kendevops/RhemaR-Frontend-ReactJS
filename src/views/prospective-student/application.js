@@ -1,50 +1,99 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SuccessModal from "../../components/modals/SuccessModal";
 import FormDropdown from "../../components/molecules/FormDropdown";
 import FormInput from "../../components/molecules/FormInput";
 import FormRadioGroup from "../../components/molecules/FormRadioGroup";
 import useForm from "../../utility/hooks/useForm";
 import useToggle from "../../utility/hooks/useToggle";
-import { isUserLoggedIn, getUserData } from "../../utility/utilsGeneric";
 import applicationPending from "../../assets/img/applicationPending.png";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import useCreateApplication from "../../hooks/mutations/applications/useCreateApplication";
+import { Spinner } from "reactstrap";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
+import useCampuses from "../../hooks/queries/classes/useCampuses";
+import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 
 function ApplicationPage(props) {
   const { setHasApplied } = props;
 
   const [success, toggleSuccess] = useToggle();
-  console.log("Auth", {
-    auth: isUserLoggedIn(),
-    user: getUserData(),
-  });
 
   const initialState = {
     campus: "",
-    academicSession: "",
+    session: "",
     classes: "",
-    contactAddress: "",
+    address: "",
     dateOfBirth: "",
-    nationality: "",
-    maritalStatus: "",
+    nationality: "Nigerian",
+    maritalStatus: "Single",
     churchName: "",
-    bornAgain: "",
-    phoneNumber: "",
-    altPhoneNumber: "",
+    isBornAgain: "",
     longBornAgain: "",
-    baptized: "",
+    isBaptized: "",
     affirmations: "",
+    state: "",
+    city: "",
   };
 
   const { formData, formIsValid, updateForm } = useForm({ initialState });
+  const { mutate, isLoading } = useCreateApplication();
+  const { data } = useAcademicSessions();
+  const { data: campusesData } = useCampuses();
 
-  const campusOptions = ["Option 1", "Option 2"];
-  const academicOptions = ["Option 1", "Option 2"];
-  const nationalityOptions = ["Option 1", "Option 2"];
-  const maritalOptions = ["Option 1", "Option 2"];
+  const campusOptions = campusesData?.nodes?.map((d) => d?.name);
+  const academicOptions = data?.nodes?.map((d) => d?.name);
+  const maritalOptions = ["Single", "Married"];
+
+  useEffect(() => {
+    //set Campus and academic sessions on render
+    if (formData?.campus?.length < 3 && !!campusOptions) {
+      updateForm("campus", campusOptions[0]);
+    }
+    if (formData?.session?.length < 3 && !!academicOptions) {
+      updateForm("session", academicOptions[0]);
+    }
+  }, [
+    formData?.campus?.length,
+    updateForm,
+    campusOptions,
+    academicOptions,
+    formData?.session?.length,
+  ]);
 
   function makePayment(e) {
     e.preventDefault();
-    toggleSuccess();
+    const {
+      state,
+      city,
+      affirmations,
+      longBornAgain,
+      address,
+      classes,
+      ...otherData
+    } = formData;
+    const body = {
+      ...otherData,
+      level: "LEVEL_1",
+      address: {
+        city,
+        street: address,
+        state,
+        country: "Nigeria",
+        zipCode: 234,
+      },
+    };
+
+    mutate(body, {
+      onSuccess: (d) => {
+        //proceed to make payment
+        const paymentUrl =
+          d?.data?.data?.application?.initialPayment?.paymentUrl;
+        window?.location?.replace(paymentUrl);
+      },
+      onError: (err) => {
+        console.log({ err, body });
+      },
+    });
   }
 
   return (
@@ -65,6 +114,7 @@ function ApplicationPage(props) {
         }
       />
       <div className="text-center mb-5">
+        {isLoading && <Spinner />}
         <h3 className="title mb-4">Level One Application</h3>
         <p>
           Fill the form below to register.
@@ -76,55 +126,71 @@ function ApplicationPage(props) {
 
       <form onSubmit={makePayment}>
         <div className="row">
-          <FormDropdown
-            options={campusOptions.map((o) => ({
-              children: o,
-              onClick: () => updateForm("campus", o),
-            }))}
-            title={"Campus"}
-          />
+          {campusOptions && (
+            <FormDropdown
+              onChange={(e) => updateForm("campus", e?.target?.value)}
+              options={campusOptions.map((o) => ({
+                children: o,
+              }))}
+              title={"Campus"}
+            />
+          )}
 
-          <FormDropdown
-            options={academicOptions.map((o) => ({
-              children: o,
-              onClick: () => updateForm("academicSession", o),
-            }))}
-            title={"Academic Session"}
-          />
-
-          <FormRadioGroup
+          {academicOptions && (
+            <FormDropdown
+              onChange={(e) => updateForm("session", e?.target?.value)}
+              options={academicOptions.map((o) => ({
+                children: o,
+              }))}
+              title={"Academic Session"}
+            />
+          )}
+          {/* <FormRadioGroup
             label="How will you attend your classes"
             options={["Onsite", "Online"]}
             onChange={(e) => updateForm("classes", e.target.value)}
-          />
+          /> */}
 
           <FormInput
             label="Address"
             placeholder="Enter Contact Address"
-            onChange={(e) => updateForm("contactAddress", e.target.value)}
+            onChange={(e) => updateForm("address", e.target.value)}
           />
 
+          <FormInput
+            label="City"
+            placeholder="Enter City"
+            onChange={(e) => updateForm("city", e.target.value)}
+            lg="6"
+          />
+          <FormInput
+            label="State"
+            placeholder="Enter State"
+            onChange={(e) => updateForm("state", e.target.value)}
+            lg="6"
+          />
           <FormInput
             label="D.O.B"
             placeholder="Date of Birth"
             type={"date"}
-            onChange={(e) => updateForm("dateOfBirth", e.target.value)}
+            onChange={(e) =>
+              updateForm("dateOfBirth", new Date(e.target.value)?.toISOString())
+            }
+            lg="6"
+          />
+
+          <FormInput
+            label="Nationality"
+            placeholder="Nigerian"
+            type={"text"}
+            onChange={(e) => updateForm("nationality", e.target.value)}
             lg="6"
           />
 
           <FormDropdown
-            options={nationalityOptions.map((o) => ({
-              children: o,
-              onClick: () => updateForm("nationality", o),
-            }))}
-            title={"Nationality"}
-            lg="6"
-          />
-
-          <FormDropdown
+            onChange={(e) => updateForm("maritalStatus", e?.target?.value)}
             options={maritalOptions.map((o) => ({
               children: o,
-              onClick: () => updateForm("maritalStatus", o),
             }))}
             title={"Marital Status"}
           />
@@ -138,7 +204,9 @@ function ApplicationPage(props) {
           <FormRadioGroup
             label="Are you born again as stated in Romans 10:8 to 10?"
             options={["Yes", "No"]}
-            onChange={(e) => updateForm("bornAgain", e.target.value)}
+            onChange={(e) =>
+              updateForm("isBornAgain", !!(e.target.value === "Yes"))
+            }
           />
 
           <FormInput
@@ -150,12 +218,10 @@ function ApplicationPage(props) {
           <FormRadioGroup
             label="Are you baptized in the Holy Spirit with the evidence of speaking in tongues as in Acts 2:4?"
             options={["Yes", "No"]}
-            onChange={(e) => updateForm("baptized", e.target.value)}
-          />
-          <FormRadioGroup
-            label="Affirmations? (See afirmation here)"
-            options={["Yes", "No"]}
-            onChange={(e) => updateForm("baptized", e.target.value)}
+            onChange={(e) => {
+              updateForm("isBaptized", !!(e.target.value === "Yes"));
+              console.log(e.target.value);
+            }}
           />
         </div>
 
@@ -177,6 +243,27 @@ function ApplicationPage(props) {
 // Main
 const ProspectiveStudentApplicationPage = () => {
   const [hasApplied, setHasApplied] = useState(false);
+  const { data } = useCurrentUser();
+
+  useEffect(() => {
+    if (!data) return;
+    if (!data?.applications?.length) return;
+
+    //check the user application status
+    const application = data?.applications[0];
+    switch (application?.initialPayment?.status) {
+      case "pending":
+        window.location.replace(application?.initialPayment?.paymentUrl);
+        break;
+
+      case "success":
+        setHasApplied(true);
+
+        break;
+      default:
+        console.log("Default");
+    }
+  });
 
   return (
     <>

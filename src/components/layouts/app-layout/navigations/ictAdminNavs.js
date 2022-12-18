@@ -20,6 +20,14 @@ export default [
     resource: "Admins",
   },
   {
+    id: "applications",
+    title: "Applications",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/ict-admin/applications",
+    action: "read",
+    resource: "Admins",
+  },
+  {
     id: "roles-privilleges",
     title: "Roles & Privilleges",
     icon: <Icon icon="wpf:security-checked" />,
@@ -39,7 +47,7 @@ export default [
     id: "tutionClearance",
     title: "Tution & Clearance",
     icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/ict-admin/tution-clearance",
+    navLink: "/ict-admin/tuition-clearance",
     action: "read",
     resource: "Admins",
   },

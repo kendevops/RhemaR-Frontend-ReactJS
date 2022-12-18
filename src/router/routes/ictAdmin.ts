@@ -1,5 +1,8 @@
 import { lazy } from "react";
 
+//campuses route
+//campus/:id route
+
 const ictAdminRoutes = [
   {
     path: "/ict-admin/dashboard",
@@ -65,9 +68,42 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+
   {
     path: "/ict-admin/instructor/:id",
     component: lazy(() => import("../../views/ict-admin/Instructor")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+  {
+    path: "/ict-admin/tuition-clearance",
+    component: lazy(() => import("../../views/ict-admin/TuitionClearance")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+  {
+    path: "/ict-admin/tuition/:id",
+    component: lazy(() => import("../../views/ict-admin/Tuition")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+  {
+    path: "/ict-admin/profile",
+    component: lazy(() => import("../../views/student/profile")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+  {
+    path: "/ict-admin/applications",
+    component: lazy(() => import("../../views/ict-admin/Applications")),
     meta: {
       action: "read",
       resource: "Admins",
