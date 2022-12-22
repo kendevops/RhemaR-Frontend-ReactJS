@@ -27,6 +27,7 @@ import GuestLayout from "@layouts/guest-layout/guestLayout";
 import BlankLayout from "@layouts/blank-layout/blankLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  getHomeRouteForLoggedInUser,
   getUserData,
   UpdateLoggedInUserAbility,
 } from "../utility/utilsGeneric";
@@ -251,7 +252,13 @@ const Router = () => {
             path="/"
             render={() => {
               return isUserLoggedIn() ? (
-                <Redirect to={DefaultRoute} />
+                <Redirect
+                  to={getHomeRouteForLoggedInUser(
+                    Array.isArray(data?.roles) && data?.roles?.length
+                      ? data?.roles[0]?.name
+                      : userRoles.PROSPECTIVE_STUDENT
+                  )}
+                />
               ) : (
                 <Redirect to="/login" />
               );

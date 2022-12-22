@@ -55,7 +55,7 @@ const AuthRegistrationPage = () => {
         toast.error(
           <ToastContent
             heading={"An error occurred"}
-            message={e?.message}
+            message={e?.response?.data?.message}
             type={"error"}
           />,
           { ...ToastContent.Config }

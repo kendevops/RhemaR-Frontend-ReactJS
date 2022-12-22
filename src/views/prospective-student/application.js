@@ -258,12 +258,11 @@ const ProspectiveStudentApplicationPage = () => {
 
       case "success":
         setHasApplied(true);
-
         break;
       default:
         console.log("Default");
     }
-  });
+  }, [data]);
 
   return (
     <>

@@ -57,7 +57,8 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "aws-deploy": "aws s3 sync ./build s3://portal.rhemanigeria.com"
   },
   "eslintConfig": {
     "extends": [
