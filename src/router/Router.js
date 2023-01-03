@@ -25,21 +25,21 @@ import { DefaultRoute, Routes } from "./routes";
 import AppLayout from "@layouts/app-layout/appLayout";
 import GuestLayout from "@layouts/guest-layout/guestLayout";
 import BlankLayout from "@layouts/blank-layout/blankLayout";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import {
   getHomeRouteForLoggedInUser,
   getUserData,
   UpdateLoggedInUserAbility,
 } from "../utility/utilsGeneric";
 import userRoles from "../utility/userRoles";
-
-const queryclient = new QueryClient();
+import useCurrentUser from "../hooks/queries/users/useCurrentUser";
 
 const Router = () => {
   // ** ACL Ability Context
   const ability = useContext(AbilityContext);
 
   // ** Updating Ability on Load
+  const { data: userData } = useCurrentUser();
   const loggedIn = isUserLoggedIn();
   const data = getUserData();
 
@@ -58,7 +58,7 @@ const Router = () => {
       //     UpdateLoggedInUserAbility(role?.name, ability)
       //   );
     }
-  }, [loggedIn, ability, data]);
+  }, [loggedIn, ability, data, userData]);
 
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout();
@@ -243,7 +243,7 @@ const Router = () => {
   };
 
   return (
-    <QueryClientProvider client={queryclient}>
+    <>
       <AppRouter basename={process.env.REACT_APP_BASENAME}>
         <Switch>
           {/* If user is logged in Redirect user to DefaultRoute else to login */}
@@ -280,7 +280,7 @@ const Router = () => {
           <Route path="*" component={Error} />
         </Switch>
       </AppRouter>
-    </QueryClientProvider>
+    </>
   );
 };
 
