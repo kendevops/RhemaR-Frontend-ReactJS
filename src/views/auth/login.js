@@ -186,7 +186,7 @@ const AuthLoginPage = () => {
                   <button
                     className="btn btn-blue-800 btn-lg w-100 mb-5"
                     type="submit"
-                    disabled={!formState.isValid}
+                    disabled={!formState.isValid || loading}
                   >
                     Login
                   </button>

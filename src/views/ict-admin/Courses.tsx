@@ -8,7 +8,6 @@ import CourseCompletionTable from "../../components/tables/admin-tables/CourseCo
 import CoursesScheduleTable from "../../components/tables/admin-tables/CoursesScheduleTable";
 import useToggle from "../../utility/hooks/useToggle";
 
-
 const tabs = ["Course Curriculum", "Course Completion"];
 
 export default function AdminCourses() {
@@ -17,7 +16,6 @@ export default function AdminCourses() {
 
   const [session, toggleSession] = useToggle();
   const [schedule, toggleSchedule] = useToggle();
-
 
   return (
     <section>
@@ -87,30 +85,27 @@ export default function AdminCourses() {
               </div>
             </div>
 
-            {/* Table */}
+            {/* Courses Table */}
             <CoursesScheduleTable />
           </article>
         </section>
       )}
 
-        {/**Start Course Completion Tab */}
-        {tab === 1 && (
+      {/**Start Course Completion Tab */}
+      {tab === 1 && (
         <section>
+          {/* Search Bar */}
+          <div style={{ marginLeft: "2%", marginTop: "30px" }}>
+            <h2 className="text-xl font-bold text-blue-600">
+              Browse List of Students Progress
+            </h2>
 
+            <article className="d-flex gap-5 m-5">
+              <SearchBarAutocomplete />
+            </article>
+          </div>
 
-        {/* Search Bar */}
-        <div style={{ marginLeft: "2%", marginTop: "30px" }}>
-        <h2 className="text-xl font-bold text-blue-600">
-            Browse List of Students Progress
-        </h2>
-       
-        <article className="d-flex gap-5 m-5">
-          <SearchBarAutocomplete />
-        </article>
-        </div>
-        
           <article>
-
             {/* Table */}
             <CourseCompletionTable />
           </article>
@@ -120,4 +115,3 @@ export default function AdminCourses() {
     </section>
   );
 }
-
