@@ -5,7 +5,7 @@ import {
   ChevronRight,
   DownloadCloud,
 } from "react-feather";
-import TimeTable from "react-timetable-events";
+// import TimeTable from "react-timetable-events";
 import colors from "../../assets/img/Colors";
 import downloadFile from "../../utils/downloadFile";
 import { months } from "../../utils/getMonth";
@@ -74,7 +74,7 @@ export default function CourseTimetable() {
       </section>
 
       {/* Timetable */}
-      <TimeTable
+      {/* <TimeTable
         events={{
           //tap from events in prod
           monday: [
@@ -92,7 +92,7 @@ export default function CourseTimetable() {
           friday: [],
         }}
         style={{ height: "500px", width: "100%" }}
-      />
+      /> */}
     </>
   );
 }
