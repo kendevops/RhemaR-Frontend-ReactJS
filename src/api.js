@@ -30,7 +30,8 @@ const refreshAccessToken = async (failedRequest) => {
 
   if (!refreshToken) {
     console.log("No refresh token found");
-    window.location.href = "/login";
+    // Logout
+    // window.location.href = "/login";
     return Promise.reject(failedRequest);
   }
   const response = await axios.post(`${API_ENDPOINT}/auth/refresh`, {
