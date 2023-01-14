@@ -5,6 +5,9 @@ import useToggle from "../../../utility/hooks/useToggle";
 import Table, { TableColumns } from "../../general/table/Table";
 import { Chart, ArcElement } from "chart.js";
 import AssignInstructorModal from "../../modals/AssignInstructorModal";
+import useAllUsers from "../../../hooks/queries/useAllUsers";
+import { Spinner } from "reactstrap";
+import userRoles from "../../../utility/userRoles";
 
 type ReassignInstructorProps = {
   data: any;
@@ -36,6 +39,27 @@ function ReassignInstructor({ data }: ReassignInstructorProps) {
 }
 
 export default function InstructorsTable() {
+  const { isLoading, data: usersData } = useAllUsers();
+  const users = usersData?.users?.nodes;
+  const instrsData = users
+    ?.filter(
+      (user: any) => user?.roles[0]?.name === userRoles.INSTRUCTORS_ADMIN
+    )
+    .map((user: any) => {
+      return {
+        name: user?.firstName + " " + user?.lastName,
+        rating: 56,
+        email: user?.email,
+        phome: user?.phoneNumber,
+        courses: [
+          {
+            name: "Pneumatology 1",
+            rating: 36,
+          },
+        ],
+      };
+    });
+
   const columns: TableColumns<typeof InstructorsData[0]>[] = [
     {
       key: "Instructor Name",
@@ -95,7 +119,8 @@ export default function InstructorsTable() {
 
   return (
     <Table.Wrapper>
-      <Table data={InstructorsData} columns={columns} />
+      {isLoading && <Spinner />}
+      <Table data={instrsData} columns={columns} />
     </Table.Wrapper>
   );
 }

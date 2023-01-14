@@ -61,6 +61,14 @@ export default [
     resource: "Admins",
   },
   {
+    id: "timetable",
+    title: "Timetable",
+    icon: <Icon icon="bi:collection-fill" />,
+    navLink: "/ict-admin/timetable",
+    action: "read",
+    resource: "Admins",
+  },
+  {
     id: "messageBoard",
     title: "Message Board",
     icon: <Icon icon="fluent:mail-24-filled" />,

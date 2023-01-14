@@ -7,6 +7,7 @@ import useToggle from "../../utility/hooks/useToggle";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import { Spinner } from "reactstrap";
 import useApplications from "../../hooks/queries/applications/useApplications";
+import userRoles from "../../utility/userRoles";
 
 const studentData = [
   {
@@ -73,7 +74,7 @@ export default function TuitionClearance() {
 
   let roles: any[] = [];
   allUsers?.forEach((u: any) => roles?.push(u?.roles[0]));
-  let students = roles?.filter((r) => r?.name === "STUDENT");
+  let students = roles?.filter((r) => r?.name === userRoles?.STUDENT);
 
   const dashData = [
     { title: "Total Students", value: students?.length },
