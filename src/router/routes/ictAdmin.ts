@@ -117,6 +117,14 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+  {
+    path: "/ict-admin/exams",
+    component: lazy(() => import("../../views/ict-admin/Exams")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
 ];
 
 export default ictAdminRoutes;
