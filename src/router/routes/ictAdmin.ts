@@ -45,6 +45,14 @@ const ictAdminRoutes = [
     },
   },
   {
+    path: "/ict-admin/course/:id",
+    component: lazy(() => import("../../views/ict-admin/Courses")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+  {
     path: "/ict-admin/timetable",
     component: lazy(() => import("../../views/ict-admin/TimeTable")),
     meta: {

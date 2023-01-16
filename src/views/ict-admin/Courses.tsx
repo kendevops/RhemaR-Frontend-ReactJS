@@ -5,12 +5,15 @@ import NewSession from "../../components/modals/NewSession";
 import AcademicSessionTable from "../../components/tables/admin-tables/AcademicSessionTable";
 import CourseCompletionTable from "../../components/tables/admin-tables/CourseCompletionTable";
 import useToggle from "../../utility/hooks/useToggle";
+import CoursesTable from "../../components/tables/admin-tables/CoursesTable";
+import SearchBar from "../../components/general/searchBar";
 
 const tabs = ["Course Curriculum", "Course Completion"];
 
 export default function AdminCourses() {
   const [tab, setTab] = useState(0);
   const currentTab = tabs[tab];
+  const [isCreating, toggle] = useToggle();
 
   return (
     <section>
@@ -31,7 +34,25 @@ export default function AdminCourses() {
       </Tab.Wrapper>
 
       {/* Course curriculum tab */}
-      {tab === 0 && <section>{/* All Courses */}</section>}
+      {tab === 0 && (
+        <section>
+          <article className="d-flex gap-5 m-5">
+            <div style={{ width: "70%" }}>
+              <SearchBar />
+            </div>
+
+            <button
+              onClick={toggle}
+              className="btn btn-blue-800 btn-lg "
+              style={{ width: "30%" }}
+            >
+              Add Course
+            </button>
+          </article>
+
+          <CoursesTable />
+        </section>
+      )}
 
       {/**Start Course Completion Tab */}
       {tab === 1 && (

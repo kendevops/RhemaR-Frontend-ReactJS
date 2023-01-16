@@ -5,6 +5,7 @@ const queryKeys = {
   currentUser: "current-user",
   classes: "my-classes",
   courses: "my-courses",
+  course: "course",
   allCourses: "all-courses",
   paymentHistory: "payment-history",
   academicSession: "academic-session",
