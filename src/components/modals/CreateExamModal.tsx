@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import QuestionInput from "../molecules/QuestionInput";
 import Tab from "../atoms/Tab";
 import FormInput from "../molecules/FormInput";
 import useForm from "../../utility/hooks/useForm";
 import { Autocomplete, TextField } from "@mui/material";
 import useAllCourses from "../../hooks/queries/classes/useAllCourses";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
+import useCreateExam from "../../hooks/mutations/classes/useCreateExam";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
 
 type CreateExamModalProps = {
   defaultValues?: any;
@@ -28,11 +31,15 @@ export default function CreateExamModal({
     id: cours?.title,
   }));
 
+  const { mutate, isLoading: isCreating } = useCreateExam();
+
   const initialState = defaultValues ?? {
     name: "",
     course: "",
     duration: 0,
-    questions: [],
+    endsAt: "",
+    startsAt: "",
+    score: 100,
   };
 
   const { formData: basicInformation, updateForm: updateBasicInformation } =
@@ -41,9 +48,60 @@ export default function CreateExamModal({
         name: initialState?.name,
         course: initialState?.course,
         duration: initialState?.duration,
+        endsAt: initialState?.endsAt,
+        startsAt: initialState?.startsAt,
+        score: initialState?.score,
       },
     });
-  const [questions, setQuestions] = useState({});
+
+  const [questions, setQuestions] = useState(
+    defaultValues?.questions ??
+      Array.from(Array(26).keys())?.map((val, ind) => {
+        return {
+          text: "question",
+          score: 1,
+          isActive: true,
+          answer: "a",
+          options: ["a", "b", "c", "d"],
+        };
+      })
+  );
+
+  function handleSubmit(e: FormEvent) {
+    e?.preventDefault();
+
+    const examData = {
+      ...basicInformation,
+      questions,
+    };
+
+    // Creating
+    if (!defaultValues) {
+      mutate(examData, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              heading={"Successful"}
+              message={"Exam created successfully"}
+              type={"success"}
+            />,
+            ToastContent.Config
+          );
+        },
+        onError: (e) => {
+          console.log(e);
+          toast.error(
+            <ToastContent
+              heading={"Error"}
+              message={"An error occurred"}
+              type={"error"}
+            />,
+            ToastContent.Config
+          );
+        },
+      });
+    }
+  }
 
   return (
     <>
@@ -67,7 +125,8 @@ export default function CreateExamModal({
             })}
           </Tab.Wrapper>
 
-          <form>
+          <form onSubmit={handleSubmit}>
+            {isCreating && <Spinner />}
             {/* Basic Information */}
             {currentOption === Options[0] && (
               <div>
@@ -96,8 +155,8 @@ export default function CreateExamModal({
                         />
                       );
                     }}
-                    onChange={(e, value) => {
-                      console.log(value);
+                    onChange={(e, value: any) => {
+                      updateBasicInformation("course", value?.id);
                     }}
                   />
                 </div>
@@ -107,7 +166,27 @@ export default function CreateExamModal({
                   value={basicInformation?.duration}
                   type={"number"}
                   onChange={(e) =>
-                    updateBasicInformation("name", e?.target?.valueAsNumber)
+                    updateBasicInformation("duration", e?.target?.valueAsNumber)
+                  }
+                />
+                <FormInput
+                  label="Start Date"
+                  type={"date"}
+                  onChange={(e) =>
+                    updateBasicInformation(
+                      "startsAt",
+                      new Date(e?.target?.value)?.toISOString()
+                    )
+                  }
+                />
+                <FormInput
+                  label="End Date"
+                  type={"date"}
+                  onChange={(e) =>
+                    updateBasicInformation(
+                      "endsAt",
+                      new Date(e?.target?.value)?.toISOString()
+                    )
                   }
                 />
               </div>
@@ -116,12 +195,33 @@ export default function CreateExamModal({
             {/* Questions */}
             {currentOption === Options[1] && (
               <div>
-                {Array.from(Array(26).keys())?.map((v) => {
+                {questions?.map((_: any, i: number) => {
+                  function handleQuestionChange(
+                    e: ChangeEvent<HTMLInputElement>,
+                    type: "question" | "answer"
+                  ) {
+                    setQuestions((prev: any) => {
+                      if (type === "question") prev[i].text = e?.target?.value;
+                      if (type === "answer") prev[i].answer = e?.target?.value;
+
+                      return prev;
+                    });
+                  }
+
+                  function handleOptionChange(opt: number, val: string) {
+                    setQuestions((prev: any) => {
+                      prev[i].options[opt] = val;
+                      return prev;
+                    });
+                  }
                   return (
                     <QuestionInput
-                      serialNumber={v + 1}
-                      onChangeQuestion={(e) => console.log(e?.target?.value)}
-                      onChangeOption={(opt, val) => console.log(opt, val)}
+                      serialNumber={i + 1}
+                      onChangeQuestion={(e) =>
+                        handleQuestionChange(e, "question")
+                      }
+                      onChangeOption={handleOptionChange}
+                      onChangeAnswer={(e) => handleQuestionChange(e, "answer")}
                     />
                   );
                 })}
