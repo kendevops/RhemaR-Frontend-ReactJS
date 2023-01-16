@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import useCourse from "../../hooks/queries/classes/useCourse";
 import { Spinner } from "reactstrap";
 import BackButton from "../../components/molecules/BackButton";
 import typography from "../../assets/img/Typography";
+import Row from "../../components/layouts/Row";
+import ColWrapper from "../../components/students/ColWrapper";
+import useToggle from "../../utility/hooks/useToggle";
+import CardWrapper from "../../components/students/CardWrapper";
+import Table from "../../components/general/table/Table";
+import CourseMaterials from "../../components/molecules/CourseMaterials";
 
 interface Params {
   id: string;
@@ -12,12 +18,24 @@ interface Params {
 export default function Course() {
   const { id } = useParams<Params>();
   const history = useHistory();
+  const [isAddingSection, toggleAddSection] = useToggle();
 
   useEffect(() => {
     if (!id) history.push("/");
   }, [id, history]);
 
   const { data, isLoading } = useCourse(id);
+  const sectionsData = data?.sections;
+  let courseMaterialsData: any[] = useMemo(() => [], []);
+
+  useEffect(() => {
+    if (!sectionsData) return;
+    sectionsData.forEach((s: any) => {
+      courseMaterialsData?.push(
+        ...s?.materials?.map((mat: any) => ({ ...mat, section: s?.name }))
+      );
+    });
+  }, [sectionsData, courseMaterialsData]);
 
   return (
     <>
@@ -47,10 +65,80 @@ export default function Course() {
               </div>
             </div>
 
-            <img src={data?.bannerUrl} alt={`${data?.title}`} />
+            <div
+              className="overflow-hidden"
+              style={{
+                maxHeight: "200px",
+              }}
+            >
+              <img
+                style={{
+                  width: "100%",
+                }}
+                src={data?.bannerUrl}
+                alt={`${data?.title}`}
+              />
+            </div>
           </>
         )}
       </section>
+
+      {/* Tables */}
+      <Row style={{ marginTop: "3rem" }}>
+        {/* Left */}
+        <ColWrapper lg="7">
+          <CardWrapper>
+            <div className="d-flex justify-content-between align-items-center">
+              <h1>Sections</h1>
+
+              <button
+                className="btn btn-lg btn-blue-800 w-25"
+                onClick={toggleAddSection}
+              >
+                Add
+              </button>
+            </div>
+
+            <Table.Wrapper>
+              <Table
+                data={sectionsData}
+                columns={[
+                  {
+                    key: "Name",
+                    title: "Name",
+                    render: (d) => <p>{d?.name}</p>,
+                  },
+                  {
+                    key: "Materials",
+                    title: "Materials",
+                    render: (d) => <p>{d?.materials?.length}</p>,
+                  },
+                  {
+                    key: "Action",
+                    title: "Action",
+                    render: (d) => {
+                      return (
+                        <div className="d-flex gap-4">
+                          <u>Edit</u>
+                          <u>Delete</u>
+                        </div>
+                      );
+                    },
+                  },
+                ]}
+              />
+            </Table.Wrapper>
+          </CardWrapper>
+        </ColWrapper>
+
+        {/* Right */}
+        <ColWrapper lg="4">
+          <CardWrapper>
+            <h1 className="mb-4">Course Materials</h1>
+            <CourseMaterials data={courseMaterialsData} />
+          </CardWrapper>
+        </ColWrapper>
+      </Row>
     </>
   );
 }
