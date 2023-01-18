@@ -22,6 +22,18 @@ export default function FileTypeIcon({ type, name, path }: FileTypeIconProps) {
         />
       );
       break;
+    case "jpg":
+      icon = (
+        <img
+          alt={name}
+          src={path}
+          style={{
+            width: "20px",
+            height: "20px",
+          }}
+        />
+      );
+      break;
     default:
       icon = <PdfIcon />;
   }
