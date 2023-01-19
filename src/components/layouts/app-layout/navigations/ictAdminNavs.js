@@ -61,6 +61,22 @@ export default [
     resource: "Admins",
   },
   {
+    id: "timetable",
+    title: "Timetable",
+    icon: <Icon icon="material-symbols:calendar-month-rounded" />,
+    navLink: "/ict-admin/timetable",
+    action: "read",
+    resource: "Admins",
+  },
+  {
+    id: "exams",
+    title: "Exams",
+    icon: <Icon icon="mdi:note-text" />,
+    navLink: "/ict-admin/exams",
+    action: "read",
+    resource: "Admins",
+  },
+  {
     id: "messageBoard",
     title: "Message Board",
     icon: <Icon icon="fluent:mail-24-filled" />,

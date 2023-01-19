@@ -4,12 +4,10 @@ import SearchBar from "../../components/general/searchBar";
 import Table, { TableColumns } from "../../components/general/table/Table";
 import CardWrapper from "../../components/students/CardWrapper";
 import useToggle from "../../utility/hooks/useToggle";
-
-const dashData = [
-  { title: "Total Students", value: 126 },
-  { title: "Total fees Paid", value: 750000 },
-  { title: "Total Pending Fees", value: 320000 },
-];
+import useAllUsers from "../../hooks/queries/useAllUsers";
+import { Spinner } from "reactstrap";
+import useApplications from "../../hooks/queries/applications/useApplications";
+import userRoles from "../../utility/userRoles";
 
 const studentData = [
   {
@@ -70,8 +68,32 @@ const columns: TableColumns<typeof studentData[0]>[] = [
 export default function TuitionClearance() {
   const [isOpen, toggle] = useToggle();
 
+  const { data, isLoading } = useAllUsers();
+  const { data: applicationsData } = useApplications();
+  const allUsers = data?.users?.nodes;
+
+  let roles: any[] = [];
+  allUsers?.forEach((u: any) => roles?.push(u?.roles[0]));
+  let students = roles?.filter((r) => r?.name === userRoles?.STUDENT);
+
+  const dashData = [
+    { title: "Total Students", value: students?.length },
+    { title: "Total fees Paid", value: 750000 },
+    { title: "Total Pending Fees", value: 320000 },
+  ];
+
+  const studentData = applicationsData?.nodes?.map((d: any) => {
+    return {
+      studentName: d?.user?.email,
+      fee: "Application Fee",
+      dueDate: d?.createdAt,
+      status: d?.feePayment?.status,
+    };
+  });
+
   return (
     <>
+      {isLoading && <Spinner />}
       {/* Dash Cards */}
       <section className="mb-5 d-flex gap-5 justify-content-between">
         {dashData?.map((d) => {
