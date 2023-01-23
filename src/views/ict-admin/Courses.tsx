@@ -7,6 +7,7 @@ import CourseCompletionTable from "../../components/tables/admin-tables/CourseCo
 import useToggle from "../../utility/hooks/useToggle";
 import CoursesTable from "../../components/tables/admin-tables/CoursesTable";
 import SearchBar from "../../components/general/searchBar";
+import { Link } from "react-router-dom";
 
 const tabs = ["Course Curriculum", "Course Completion"];
 
@@ -41,13 +42,13 @@ export default function AdminCourses() {
               <SearchBar />
             </div>
 
-            <button
-              onClick={toggle}
+            <Link
+              to={"/ict-admin/create-course"}
               className="btn btn-blue-800 btn-lg "
               style={{ width: "30%" }}
             >
-              Add Course
-            </button>
+              Create Course
+            </Link>
           </article>
 
           <CoursesTable />

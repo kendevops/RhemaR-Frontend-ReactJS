@@ -8,6 +8,7 @@ import useFileReader from "../../utility/hooks/useFileReader";
 import CardWrapper from "../../components/students/CardWrapper";
 import Table from "../../components/general/table/Table";
 import useToggle from "../../utility/hooks/useToggle";
+import CreateSectionModal from "../../components/modals/CreateSectionModal";
 
 const initialBasicInfo = {
   code: "",
@@ -22,6 +23,7 @@ export default function CreateCourse() {
   const [option, setOption] = useState(0);
   const currentOption = Options[option];
   const [isAddingSection, toggleAddSection] = useToggle();
+  const [isEditingSection, toggleEditSection] = useToggle();
   const { onChangeFile } = useFileReader();
 
   const [sectionsData, setSectionsData] = useState<any[]>([]);
@@ -34,14 +36,32 @@ export default function CreateCourse() {
     initialState: initialBasicInfo,
   });
 
-  function onDeleteSection(name: string) {}
+  function onDeleteSection(name: string) {
+    setSectionsData((p) => {
+      const toBeDeleted = p?.findIndex((v) => v?.name === name);
+      return p?.filter((_, i) => i !== toBeDeleted);
+    });
+  }
 
-  function onEditSection(name: string, data: any) {}
+  function onEditSection(index: number, data: any) {
+    setSectionsData((p) => {
+      p[index] = data;
+      return p;
+    });
+  }
 
-  function onCreateSection(name: string, data: any) {}
+  function onCreateSection(data: any) {
+    setSectionsData((p) => [...p, data]);
+  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    const data = {
+      ...basicInfoData,
+      sections: sectionsData,
+    };
+
+    console.log(data);
   }
 
   return (
@@ -110,6 +130,12 @@ export default function CreateCourse() {
           <div className="d-flex justify-content-between align-items-center">
             <h1>Sections ({sectionsData?.length?.toString()})</h1>
 
+            <CreateSectionModal
+              toggle={toggleAddSection}
+              isOpen={isAddingSection}
+              onCreate={onCreateSection}
+            />
+
             <button
               className="btn btn-lg btn-blue-800 w-25"
               onClick={toggleAddSection}
@@ -134,10 +160,26 @@ export default function CreateCourse() {
                 {
                   key: "Action",
                   title: "Action",
-                  render: (d) => {
+                  render: (d, i) => {
+                    console.log(i);
                     return (
                       <div className="d-flex gap-4">
-                        <u>Edit</u>
+                        <section>
+                          <u onClick={toggleEditSection}>Edit</u>
+                          <CreateSectionModal
+                            defaultValues={d}
+                            isOpen={isEditingSection}
+                            onCreate={(data) => {
+                              onEditSection(
+                                sectionsData?.findIndex(
+                                  (v) => v?.name === d?.name
+                                ),
+                                data
+                              );
+                            }}
+                            toggle={toggleEditSection}
+                          />
+                        </section>
                         <u
                           onClick={() => {
                             onDeleteSection(d?.name);
