@@ -9,6 +9,10 @@ import CardWrapper from "../../components/students/CardWrapper";
 import Table from "../../components/general/table/Table";
 import useToggle from "../../utility/hooks/useToggle";
 import CreateSectionModal from "../../components/modals/CreateSectionModal";
+import { Spinner } from "reactstrap";
+import useCreateCourse from "../../hooks/mutations/classes/useCreateCourse";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
 
 const initialBasicInfo = {
   code: "",
@@ -24,8 +28,7 @@ export default function CreateCourse() {
   const currentOption = Options[option];
   const [isAddingSection, toggleAddSection] = useToggle();
   const [isEditingSection, toggleEditSection] = useToggle();
-  const { onChangeFile } = useFileReader();
-
+  const { isLoading, mutate } = useCreateCourse();
   const [sectionsData, setSectionsData] = useState<any[]>([]);
 
   const {
@@ -34,6 +37,9 @@ export default function CreateCourse() {
     formIsValid: basicInfoIsValid,
   } = useForm({
     initialState: initialBasicInfo,
+  });
+  const { onChangeFile } = useFileReader({
+    onComplete: (file) => updateBasicInfo("bannerUrl", file),
   });
 
   function onDeleteSection(name: string) {
@@ -54,18 +60,40 @@ export default function CreateCourse() {
     setSectionsData((p) => [...p, data]);
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit() {
     const data = {
       ...basicInfoData,
       sections: sectionsData,
     };
 
-    console.log(data);
+    mutate(data, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            heading={"Course created successfully"}
+            type={"success"}
+            message={`${basicInfoData?.title} has been created successfully`}
+          />,
+          ToastContent.Config
+        );
+      },
+
+      onError: (e) => {
+        console.log(e);
+        toast.error(
+          <ToastContent
+            heading={"An error occurred"}
+            type={"error"}
+            message={`An error occurred while creating ${basicInfoData?.title}`}
+          />,
+          ToastContent.Config
+        );
+      },
+    });
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <section className="px-4 my-5">
         <BackButton />
 
@@ -89,9 +117,17 @@ export default function CreateCourse() {
             })}
           </Tab.Wrapper>
 
-          <button type="submit" className="btn btn-lg btn-blue-800 w-25">
-            Complete course creation
-          </button>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="btn btn-lg btn-blue-800 w-25"
+            >
+              Complete course creation
+            </button>
+          )}
         </div>
       </section>
 
@@ -137,6 +173,7 @@ export default function CreateCourse() {
             />
 
             <button
+              type="button"
               className="btn btn-lg btn-blue-800 w-25"
               onClick={toggleAddSection}
             >
