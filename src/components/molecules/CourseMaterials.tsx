@@ -2,6 +2,7 @@ import FileTypeIcon from "../atoms/FIleTypeIcon";
 import Table from "../general/table/Table";
 
 type CourseMaterialsProps = {
+  isAssignment?: boolean;
   data: {
     size: number;
     path: string;

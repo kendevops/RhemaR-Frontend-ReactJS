@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import useCourse from "../../hooks/queries/classes/useCourse";
 import { Spinner } from "reactstrap";
@@ -10,6 +10,7 @@ import useToggle from "../../utility/hooks/useToggle";
 import CardWrapper from "../../components/students/CardWrapper";
 import Table from "../../components/general/table/Table";
 import CourseMaterials from "../../components/molecules/CourseMaterials";
+import useFileReader from "../../utility/hooks/useFileReader";
 
 interface Params {
   id: string;
@@ -18,6 +19,7 @@ interface Params {
 export default function Course() {
   const { id } = useParams<Params>();
   const history = useHistory();
+  const { img, onChangeFile, status } = useFileReader();
   const [isAddingSection, toggleAddSection] = useToggle();
 
   useEffect(() => {
@@ -26,16 +28,26 @@ export default function Course() {
 
   const { data, isLoading } = useCourse(id);
   const sectionsData = data?.sections;
-  let courseMaterialsData: any[] = useMemo(() => [], []);
+  const [courseMaterials, setCourseMaterials] = useState<any[]>([]);
+  const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
 
   useEffect(() => {
     if (!sectionsData) return;
+    let courseMaterialsData: any[] = [];
+    let courseAssignmentsData: any[] = [];
+
     sectionsData.forEach((s: any) => {
       courseMaterialsData?.push(
         ...s?.materials?.map((mat: any) => ({ ...mat, section: s?.name }))
       );
+
+      courseAssignmentsData?.push(
+        ...s?.assignments?.map((mat: any) => ({ ...mat, section: s?.name }))
+      );
     });
-  }, [sectionsData, courseMaterialsData]);
+    setCourseMaterials(courseMaterialsData);
+    setCourseAssignments(courseAssignmentsData);
+  }, [sectionsData]);
 
   return (
     <>
@@ -59,7 +71,13 @@ export default function Course() {
                   <label htmlFor="banner">
                     <u>Change Banner</u>
                   </label>
-                  <input id="banner" type={"file"} accept="*/image" hidden />
+                  <input
+                    onChange={onChangeFile}
+                    id="banner"
+                    type={"file"}
+                    accept="*/image"
+                    hidden
+                  />
                 </div>
                 <u>Edit Course Name</u>
               </div>
@@ -87,7 +105,7 @@ export default function Course() {
       <Row style={{ marginTop: "3rem" }}>
         {/* Left */}
         <ColWrapper lg="7">
-          <CardWrapper>
+          <CardWrapper className="h-100">
             <div className="d-flex justify-content-between align-items-center">
               <h1>Sections</h1>
 
@@ -132,10 +150,19 @@ export default function Course() {
         </ColWrapper>
 
         {/* Right */}
-        <ColWrapper lg="4">
+        <ColWrapper lg="5">
+          <CardWrapper className="mb-5">
+            <h1 className="mb-4">
+              Course Materials ({courseMaterials?.length?.toString()})
+            </h1>
+            <CourseMaterials data={courseMaterials} />
+          </CardWrapper>
+
           <CardWrapper>
-            <h1 className="mb-4">Course Materials</h1>
-            <CourseMaterials data={courseMaterialsData} />
+            <h1 className="mb-4">
+              Course Assignments ({courseAssignments?.length?.toString()})
+            </h1>
+            <CourseMaterials data={courseAssignments} />
           </CardWrapper>
         </ColWrapper>
       </Row>
