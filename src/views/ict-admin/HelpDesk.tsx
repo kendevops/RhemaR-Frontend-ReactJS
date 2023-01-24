@@ -1,18 +1,53 @@
-import typography from "../../assets/img/Typography";
-import helpDeskImg from "../../assets/img/helpdesk.png";
+import HelpDeskIcon from "../../components/icons/HelpdeskIcon";
 import SearchBar from "../../components/general/searchBar";
 import AddFaq from "../../components/modals/AddFaq";
 import useToggle from "../../utility/hooks/useToggle";
 import EventsList from "../../components/lists/events-list";
+import Accordion from "../../components/molecules/Accordion";
 
 const Listdata = [
 	{
 		id: "1",
-		header: "Upcoming Events",
+		header: "all questions",
 	},
 	{
 		id: "2",
-		header: "Past Events",
+		header: "exam & courses",
+	},
+	{
+		id: "3",
+		header: "tuition & payment",
+	},
+	{
+		id: "4",
+		header: "login & security",
+	},
+	{
+		id: "5",
+		header: "events & meetings",
+	},
+];
+
+const Accordiondata = [
+	{
+		id: "1",
+		header: "What is RBTC?",
+	},
+	{
+		id: "2",
+		header: "What is RBTC?",
+	},
+	{
+		id: "3",
+		header: "What is RBTC?",
+	},
+	{
+		id: "4",
+		header: "What is RBTC?",
+	},
+	{
+		id: "5",
+		header: "What is RBTC?",
 	},
 ];
 
@@ -22,19 +57,10 @@ export default function HelpDesk() {
 	return (
 		<>
 			{/* Card Header */}
-			<div className="relative mt-3 mb-5">
-				<h1
-					style={{
-						fontSize: typography.h1,
-					}}
-					className="fw-bold resources-text helpdesk-text">
-					Frequently asked questions
-				</h1>
-				<img
-					className="w-100"
-					src={helpDeskImg}
-					alt="FAQ"
-				/>
+			<div className="helpdesk mt-3 mb-5 w-100 d-flex justify-content-between align-items-center px-5">
+				<h1 className="fw-bold">Frequently asked questions</h1>
+
+				<HelpDeskIcon />
 			</div>
 
 			<div className="">
@@ -45,9 +71,7 @@ export default function HelpDesk() {
 					</div>
 
 					<div>
-						<button
-							onClick={toggle}
-							className="btn btn-blue-800 btn-lg btn-helpdesk">
+						<button onClick={toggle} className="btn btn-blue-800 btn-lg btn-helpdesk">
 							Add F.A.Q
 						</button>
 						<AddFaq {...{ toggle, visibility }} />
@@ -57,6 +81,14 @@ export default function HelpDesk() {
 				{/* body */}
 				<div className="">
 					<EventsList ListData={Listdata} />
+
+					<div className="">
+						<h3 className="text-capitalize">All questions</h3>
+
+						{/* accordion */}
+						<Accordion AccordionData={Accordiondata} component="helpdesk" />
+						{/* end of accordion */}
+					</div>
 				</div>
 			</div>
 		</>

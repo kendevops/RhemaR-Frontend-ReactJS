@@ -1,7 +1,6 @@
 /* Easing */
 .ease-transition {
-	transition: all cubic-bezier(0.165, 0.84, 0.44, 1)
-		0.5;
+	transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5;
 }
 
 /* Tabs */
@@ -92,8 +91,13 @@ li {
 	color: #ffffff;
 }
 
-.helpdesk-text {
-	top: 45%;
+.helpdesk {
+	height: 190px;
+	border-radius: 8px;
+	background: #355da6 url("../img/helpdesk-bg.svg") no-repeat center center/cover;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	color: #ffffff;
+	text-transform: capitalize;
 }
 
 .btn-helpdesk {

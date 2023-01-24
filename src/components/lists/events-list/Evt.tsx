@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 
 interface IList {
 	id: string;
@@ -10,11 +10,13 @@ interface Props {
 }
 
 const EvtList = ({ ListData }: Props) => {
-	const [active, setActive] = useState("1");
+	// const [active, setActive] = useState("1");
 
-	const handleClick = (id: any) => {
-		setActive(id);
-	};
+	// const handleClick = (id: any) => {
+	// 	setActive(id);
+	// };
+
+  // This is just a setUp for the EventsList component. To be removed
 
 	return (
 		<ul
@@ -47,6 +49,29 @@ const EvtList = ({ ListData }: Props) => {
 					Past Events
 				</button>
 			</li>
+
+			{/* {ListData.map(({ id, header }) => (
+				<li
+					key={id}
+					className="nav-item"
+					role="presentation">
+					<button
+						onClick={() => handleClick(id)}
+						className={`nav-link ${
+							active === id ? "active" : ""
+						}`}
+						id="pills-UpcomingEvents-tab"
+						data-bs-toggle="pill"
+						data-bs-target="#pills-UpcomingEvents"
+						type="button"
+						role="tab"
+            aria-controls="pills-UpcomingEvents"
+            aria-selected={active === id ? "true" : "false"}
+          >
+						{header}
+					</button>
+				</li>
+			))} */}
 		</ul>
 	);
 };

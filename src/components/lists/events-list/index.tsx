@@ -28,7 +28,7 @@ const EventsList = ({ ListData }: Props) => {
 					role="presentation">
 					<button
 						onClick={() => handleClick(id)}
-						className={`nav-link ${
+						className={`nav-link text-capitalize ${
 							active === id ? "active" : ""
 						}`}
 						id="pills-UpcomingEvents-tab"
