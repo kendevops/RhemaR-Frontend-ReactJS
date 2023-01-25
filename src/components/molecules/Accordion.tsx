@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import useToggle from "../../utility/hooks/useToggle";
+import EditIcon from "../icons/Edit";
+import EditFaq from "../modals/EditFaq";
+
 
 interface IAccordion {
 	id: string;
@@ -12,6 +16,8 @@ interface IProps {
 
 const Accordion = ({ AccordionData, component }: IProps) => {
 	const [active, setActive] = useState("");
+	const [visibility, toggle] = useToggle();
+
 
 	const handleClick = (id: string) => {
 		setActive(id);
@@ -24,7 +30,7 @@ const Accordion = ({ AccordionData, component }: IProps) => {
 					<h2 className="accordion-header d-flex mb-0" id={`heading-${id}`}>
 						<button
 							onClick={() => handleClick(id)}
-							style={{ flex: 1 }}
+							style={{ flex: 1, marginRight: "15px" }}
 							className="accordion-button"
 							type="button"
 							data-bs-toggle="collapse"
@@ -34,7 +40,21 @@ const Accordion = ({ AccordionData, component }: IProps) => {
 							{header}
 						</button>
 
-						<button>Edit</button>
+						<div className="helpdesk-edit">
+							<button onClick={toggle} className="edit-btn py-3 px-4 d-flex justify-content-center align-items-center">
+								Edit
+								<EditIcon />
+							</button>
+
+						<EditFaq {...{ toggle, visibility }} />
+
+						</div>
+						{/* <div>
+						<button onClick={toggle} className="btn btn-blue-800 btn-lg btn-helpdesk">
+							Add F.A.Q
+						</button>
+						<AddFaq {...{ toggle, visibility }} />
+					</div> */}
 					</h2>
 					<div
 						id={`question-${id}`}

@@ -1,9 +1,5 @@
 import useForm from "../../utility/hooks/useForm";
-import {
-	Modal,
-	ModalHeader,
-	ModalBody,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { FormEvent } from "react";
 import FormInput from "../molecules/FormInput";
 import FormDropdown from "../molecules/FormDropdown";
@@ -22,15 +18,11 @@ type AssignInstructorModalProps = {
 
 const options = ["Category 1", "Category 2"];
 
-export default function AddFaq({
-	toggle,
-	visibility,
-	defaultValues,
-}: AssignInstructorModalProps) {
+export default function EditFaq({ toggle, visibility, defaultValues }: AssignInstructorModalProps) {
 	const { formData, updateForm } = useForm({
 		initialState: defaultValues ?? {
-			question: "",
-			answer: "",
+			question: "What is RBTC",
+			answer: "Rhema Bible training Center",
 		},
 	});
 
@@ -40,53 +32,31 @@ export default function AddFaq({
 
 	return (
 		<>
-			<Modal
-				centered
-				isOpen={visibility}
-				toggle={toggle}
-				id="assignInstructorModal">
-				<ModalHeader toggle={toggle}>
-					Add F.A.Q
-				</ModalHeader>
+			<Modal centered isOpen={visibility} toggle={toggle} id="assignInstructorModal">
+				<ModalHeader toggle={toggle}>Edit F.A.Q</ModalHeader>
 				<ModalBody>
-					<form
-						className="mt-3"
-						onSubmit={handleSubmit}>
+					<form className="mt-3" onSubmit={handleSubmit}>
 						{/* dropdown */}
 						<FormDropdown
 							title="Category"
 							options={options?.map((o) => ({
 								children: o,
-								onClick: () =>
-									updateForm("category", o),
+								onClick: () => updateForm("category", o),
 							}))}
 						/>
 
 						{/* question */}
-						<FormInput
-							label="Question"
-							value={formData["question"]}
-							onChange={(e) =>
-								updateForm("question", e.target.value)
-							}
-							placeholder="Enter Question"
-						/>
+						<FormInput label="Question" value={formData["question"]} onChange={(e) => updateForm("question", e.target.value)} placeholder="Enter Question" />
 
 						{/* answer */}
 						<TextArea
 							value={formData["answer"]}
-							onChange={(e: {
-								target: { value: any };
-							}) =>
-								updateForm("answer", e.target.value)
-							}
+							onChange={(e: { target: { value: any } }) => updateForm("answer", e.target.value)}
 							placeholder="Enter Answer"
 						/>
 
-						<button
-							className="btn btn-blue-800 btn-lg w-100 my-5"
-							type="submit">
-							Publish Question
+						<button className="btn btn-blue-800 btn-lg w-100 my-5" type="submit">
+							Update Question
 						</button>
 					</form>
 				</ModalBody>
