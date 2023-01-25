@@ -63,7 +63,7 @@ export default function HelpDesk() {
 				<HelpDeskIcon />
 			</div>
 
-			<div className="">
+			<div className="col col-md-9 mx-auto">
 				{/* Search Row */}
 				<article className="d-flex gap-5 ">
 					<div style={{ flex: 1 }}>
@@ -79,15 +79,14 @@ export default function HelpDesk() {
 				</article>
 
 				{/* body */}
-				<div className="">
+				<div className="card my-5 helpdesk-card">
 					<EventsList ListData={Listdata} />
 
-					<div className="">
-						<h3 className="text-capitalize">All questions</h3>
+					<div className="px-5 my-4">
+						<h3 className="text-capitalize fw-bold mb-4">All questions</h3>
 
 						{/* accordion */}
 						<Accordion AccordionData={Accordiondata} component="helpdesk" />
-						{/* end of accordion */}
 					</div>
 				</div>
 			</div>

@@ -20,10 +20,11 @@ const Accordion = ({ AccordionData, component }: IProps) => {
 	return (
 		<div className="accordion" id={component}>
 			{AccordionData.map(({ id, header }) => (
-				<div className="accordion-item">
-					<h2 className="accordion-header" id={`heading-${id}`}>
+				<div className="accordion-item mb-3" key={id}>
+					<h2 className="accordion-header d-flex mb-0" id={`heading-${id}`}>
 						<button
 							onClick={() => handleClick(id)}
+							style={{ flex: 1 }}
 							className="accordion-button"
 							type="button"
 							data-bs-toggle="collapse"
@@ -32,6 +33,8 @@ const Accordion = ({ AccordionData, component }: IProps) => {
 							aria-controls={`question-${id}`}>
 							{header}
 						</button>
+
+						<button>Edit</button>
 					</h2>
 					<div
 						id={`question-${id}`}
