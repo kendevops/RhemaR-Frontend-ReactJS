@@ -1,11 +1,10 @@
-// import HelpDeskIcon from "../../components/icons/HelpdeskIcon";
+import CardHeader from "../../components/atoms/CardHeader";
 import HelpdeskIcon from "../../assets/img/helpdeskIcon.svg";
 import SearchBar from "../../components/general/searchBar";
 import AddFaq from "../../components/modals/AddFaq";
 import useToggle from "../../utility/hooks/useToggle";
 import EventsList from "../../components/lists/events-list";
 import Accordion from "../../components/molecules/Accordion";
-import CardHeader from "../../components/atoms/CardHeader";
 
 const Listdata = [
 	{

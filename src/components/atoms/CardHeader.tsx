@@ -9,8 +9,6 @@ const CardHeader = ({ heading, imgSrc }: ICard) => {
 			<h1 className="fw-bold">{heading}</h1>
 
 			<img src={imgSrc} alt="icon" />
-
-			{/* <HelpDeskIcon /> */}
 		</div>
 	);
 };
