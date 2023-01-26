@@ -1,9 +1,11 @@
-import HelpDeskIcon from "../../components/icons/HelpdeskIcon";
+// import HelpDeskIcon from "../../components/icons/HelpdeskIcon";
+import HelpdeskIcon from "../../assets/img/helpdeskIcon.svg";
 import SearchBar from "../../components/general/searchBar";
 import AddFaq from "../../components/modals/AddFaq";
 import useToggle from "../../utility/hooks/useToggle";
 import EventsList from "../../components/lists/events-list";
 import Accordion from "../../components/molecules/Accordion";
+import CardHeader from "../../components/atoms/CardHeader";
 
 const Listdata = [
 	{
@@ -56,12 +58,7 @@ export default function HelpDesk() {
 
 	return (
 		<>
-			{/* Card Header */}
-			<div className="helpdesk mt-3 mb-5 w-100 d-flex justify-content-between align-items-center px-5">
-				<h1 className="fw-bold">Frequently asked questions</h1>
-
-				<HelpDeskIcon />
-			</div>
+			<CardHeader heading="Frequently asked questions" imgSrc={HelpdeskIcon} />
 
 			<div className="col col-md-9 mx-auto">
 				{/* Search Row */}
