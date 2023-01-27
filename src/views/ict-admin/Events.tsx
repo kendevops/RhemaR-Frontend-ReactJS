@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import CardHeader from "../../components/atoms/CardHeader";
 import EventsIcon from "../../assets/img/eventsIcon.svg";
-import AddFaq from "../../components/modals/AddFaq";
 import useToggle from "../../utility/hooks/useToggle";
 import EventsList from "../../components/lists/events-list";
 import { HiCalendar, HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import EventsCards from "../../components/molecules/EventsCards";
+import AddEvent from "../../components/modals/AddEvent";
 
 const Listdata = [
 	{
@@ -69,7 +69,7 @@ const Events = () => {
 					<button onClick={toggle} className="btn btn-blue-800 btn-lg card-btn">
 						new event
 					</button>
-					<AddFaq {...{ toggle, visibility }} />
+					<AddEvent {...{ toggle, visibility }} />
 				</div>
 
 				{/* card body */}
