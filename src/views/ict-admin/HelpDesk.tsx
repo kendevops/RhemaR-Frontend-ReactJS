@@ -67,7 +67,7 @@ export default function HelpDesk() {
 					</div>
 
 					<div>
-						<button onClick={toggle} className="btn btn-blue-800 btn-lg btn-helpdesk">
+						<button onClick={toggle} className="btn btn-blue-800 btn-lg card-btn">
 							Add F.A.Q
 						</button>
 						<AddFaq {...{ toggle, visibility }} />

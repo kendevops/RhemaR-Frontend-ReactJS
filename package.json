@@ -36,6 +36,7 @@
     "react-feather": "^2.0.10",
     "react-hook-form": "^7.33.1",
     "react-i18next": "^11.17.4",
+    "react-icons": "^4.7.1",
     "react-paystack": "^3.0.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-player": "^2.11.0",
