@@ -1,21 +1,16 @@
-import useToggle from "../../utility/hooks/useToggle";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import { Input } from "reactstrap";
-import { useForm, Controller } from "react-hook-form";
+import { FormEvent } from "react";
+import useForm from "../../utility/hooks/useForm";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Autocomplete, TextField } from "@mui/material";
+import useAllCourses from "../../hooks/queries/classes/useAllCourses";
 
 interface defaultValues {
   course: string;
-  level: string;
+  campus: string;
   classOption: string;
-  date: string;
+  instructor: string;
+  startDate: string;
+  endDate: string;
 }
 
 type AddScheduleProps = {
@@ -36,133 +31,53 @@ export default function AddSchedule({
     level: "",
   };
 
-  const [classOpen, toggleClass] = useToggle();
-  const [levelOpen, toggleLevel] = useToggle();
-  const [courseOpen, toggleCourse] = useToggle();
+  const { data: coursesData, isLoading } = useAllCourses();
+  const coursesOptions = coursesData?.nodes?.map((cours: any) => ({
+    label: cours?.title,
+    id: cours?.title,
+  }));
 
-  const { control, setError, handleSubmit, formState } = useForm({
-    defaultValues,
-    mode: "onChange",
+  const { formData, updateForm } = useForm({
+    initialState: defaultValues,
   });
 
-  function onSubmit() {}
+  function onSubmit(e: FormEvent) {
+    e?.preventDefault();
+  }
 
   return (
     <div>
       <Modal centered isOpen={visibility} toggle={toggle} id="scheduleModal">
         <ModalHeader toggle={toggle}>Add Course</ModalHeader>
         <ModalBody>
-          <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
+          <form className="mt-3" onSubmit={onSubmit}>
             <div className="form-group">
-              <label htmlFor="classOption">Course</label>
-              <Controller
-                control={control}
-                name="course"
-                defaultValue=""
-                render={({ field }) => (
-                  <Dropdown
-                    className="form-control "
-                    {...field}
-                    isOpen={courseOpen}
-                    toggle={toggleCourse}
-                  >
-                    <DropdownToggle
-                      className="text-lg w-100 text-start shadow-none"
-                      caret
-                    >
-                      Select Course
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Option 1</DropdownItem>
-                      <DropdownItem>Option 2</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                )}
-                rules={{ required: true }}
+              <label htmlFor="Search courses">Course</label>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="Search courses"
+                loading={isLoading}
+                options={coursesOptions}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      placeholder="Search courses"
+                      className="form-control "
+                    />
+                  );
+                }}
+                onChange={(e, value: any) => {
+                  // updateFormData("course", value?.id);
+                }}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="level">Level</label>
-              <Controller
-                control={control}
-                name="level"
-                defaultValue=""
-                render={({ field }) => (
-                  <Dropdown
-                    className="form-control"
-                    {...field}
-                    isOpen={levelOpen}
-                    toggle={toggleLevel}
-                  >
-                    <DropdownToggle
-                      className="text-lg w-100 text-left shadow-none"
-                      caret
-                    >
-                      Select Level
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Option 1</DropdownItem>
-                      <DropdownItem>Option 2</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="classOption">Class Option</label>
-              <Controller
-                control={control}
-                name="classOption"
-                defaultValue=""
-                render={({ field }) => (
-                  <Dropdown
-                    className="form-control"
-                    {...field}
-                    isOpen={classOpen}
-                    toggle={toggleClass}
-                  >
-                    <DropdownToggle
-                      className="text-lg w-100 text-left shadow-none"
-                      caret
-                    >
-                      Select Class Option
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Option 1</DropdownItem>
-                      <DropdownItem>Option 2</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="endDate">Date</label>
-              <Controller
-                control={control}
-                name="date"
-                defaultValue=""
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="date"
-                    placeholder="date"
-                    className="form-control"
-                    invalid={formState.errors.date && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-
             <button
               className="btn btn-blue-800 btn-lg w-100 my-5"
               type="submit"
-              disabled={!formState.isValid}
             >
-              Add Course
+              {!!defValues ? "Modify Schedule" : "Create Schedule"}
             </button>
           </form>
         </ModalBody>
