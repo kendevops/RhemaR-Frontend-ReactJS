@@ -8,6 +8,11 @@ import useFileReader from "../../utility/hooks/useFileReader";
 import CardWrapper from "../../components/students/CardWrapper";
 import Table from "../../components/general/table/Table";
 import useToggle from "../../utility/hooks/useToggle";
+import CreateSectionModal from "../../components/modals/CreateSectionModal";
+import { Spinner } from "reactstrap";
+import useCreateCourse from "../../hooks/mutations/classes/useCreateCourse";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
 
 const initialBasicInfo = {
   code: "",
@@ -22,8 +27,8 @@ export default function CreateCourse() {
   const [option, setOption] = useState(0);
   const currentOption = Options[option];
   const [isAddingSection, toggleAddSection] = useToggle();
-  const { onChangeFile } = useFileReader();
-
+  const [isEditingSection, toggleEditSection] = useToggle();
+  const { isLoading, mutate } = useCreateCourse();
   const [sectionsData, setSectionsData] = useState<any[]>([]);
 
   const {
@@ -33,19 +38,62 @@ export default function CreateCourse() {
   } = useForm({
     initialState: initialBasicInfo,
   });
+  const { onChangeFile } = useFileReader({
+    onComplete: (file) => updateBasicInfo("bannerUrl", file),
+  });
 
-  function onDeleteSection(name: string) {}
+  function onDeleteSection(name: string) {
+    setSectionsData((p) => {
+      const toBeDeleted = p?.findIndex((v) => v?.name === name);
+      return p?.filter((_, i) => i !== toBeDeleted);
+    });
+  }
 
-  function onEditSection(name: string, data: any) {}
+  function onEditSection(index: number, data: any) {
+    setSectionsData((p) => {
+      p[index] = data;
+      return p;
+    });
+  }
 
-  function onCreateSection(name: string, data: any) {}
+  function onCreateSection(data: any) {
+    setSectionsData((p) => [...p, data]);
+  }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit() {
+    const data = {
+      ...basicInfoData,
+      sections: sectionsData,
+    };
+
+    mutate(data, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            heading={"Course created successfully"}
+            type={"success"}
+            message={`${basicInfoData?.title} has been created successfully`}
+          />,
+          ToastContent.Config
+        );
+      },
+
+      onError: (e: any) => {
+        console.log(e);
+        toast.error(
+          <ToastContent
+            heading={`An error occurred while creating ${basicInfoData?.title}`}
+            type={"error"}
+            message={e?.response?.data?.error?.message?.toString()}
+          />,
+          ToastContent.Config
+        );
+      },
+    });
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <section className="px-4 my-5">
         <BackButton />
 
@@ -69,9 +117,17 @@ export default function CreateCourse() {
             })}
           </Tab.Wrapper>
 
-          <button type="submit" className="btn btn-lg btn-blue-800 w-25">
-            Complete course creation
-          </button>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="btn btn-lg btn-blue-800 w-25"
+            >
+              Complete course creation
+            </button>
+          )}
         </div>
       </section>
 
@@ -110,7 +166,14 @@ export default function CreateCourse() {
           <div className="d-flex justify-content-between align-items-center">
             <h1>Sections ({sectionsData?.length?.toString()})</h1>
 
+            <CreateSectionModal
+              toggle={toggleAddSection}
+              isOpen={isAddingSection}
+              onCreate={onCreateSection}
+            />
+
             <button
+              type="button"
               className="btn btn-lg btn-blue-800 w-25"
               onClick={toggleAddSection}
             >
@@ -134,10 +197,26 @@ export default function CreateCourse() {
                 {
                   key: "Action",
                   title: "Action",
-                  render: (d) => {
+                  render: (d, i) => {
+                    console.log(i);
                     return (
                       <div className="d-flex gap-4">
-                        <u>Edit</u>
+                        <section>
+                          <u onClick={toggleEditSection}>Edit</u>
+                          <CreateSectionModal
+                            defaultValues={d}
+                            isOpen={isEditingSection}
+                            onCreate={(data) => {
+                              onEditSection(
+                                sectionsData?.findIndex(
+                                  (v) => v?.name === d?.name
+                                ),
+                                data
+                              );
+                            }}
+                            toggle={toggleEditSection}
+                          />
+                        </section>
                         <u
                           onClick={() => {
                             onDeleteSection(d?.name);

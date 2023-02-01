@@ -2,17 +2,15 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-
 // ** Third Party Components
 import classnames from "classnames";
 import { ArrowUp } from "react-feather";
 
 // ** Reactstrap Imports
 import { Navbar, Button } from "reactstrap";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 
 const AppLayoutWrapper = (props) => {
-  
   // ** Props
   const { menuData, children } = props;
 
@@ -37,7 +35,14 @@ const AppLayoutWrapper = (props) => {
               </div>
               <div className="navlink">
                 <span className="mx-2"> |</span>
-                <span routerLink="/login">Student Login</span>
+                <span
+                  routerLink="/login"
+                  onClick={() => {
+                    window.location.href = "/login";
+                  }}
+                >
+                  Student Login
+                </span>
                 <span className="mx-2"> |</span>
                 <span routerLink="/register">Apply Now </span>
                 <span className="mx-2"> |</span>
@@ -77,7 +82,7 @@ const AppLayoutWrapper = (props) => {
             <div className="d-flex align-items-center">
               <div className="navlink" routerLinkActive="router-link-active">
                 Home
-                <Icon icon="bxs:down-arrow" />
+                {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -91,7 +96,7 @@ const AppLayoutWrapper = (props) => {
               </div>
               <div className="navlink" routerLinkActive="router-link-active">
                 Admissions
-                <Icon icon="bxs:down-arrow" />
+                {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -101,7 +106,7 @@ const AppLayoutWrapper = (props) => {
               </div>
               <div className="navlink" routerLinkActive="router-link-active">
                 Academics
-                <Icon icon="bxs:down-arrow" />
+                {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -112,7 +117,7 @@ const AppLayoutWrapper = (props) => {
 
               <div className="navlink" routerLinkActive="router-link-active">
                 Students
-                <Icon icon="bxs:down-arrow" />
+                {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
                     className="iconify"
@@ -145,14 +150,18 @@ const AppLayoutWrapper = (props) => {
                 target="_blank"
                 className="me-4"
               >
-                <Icon icon="ant-design:twitter-circle-filled" width="40" height="40" />
+                <Icon
+                  icon="ant-design:twitter-circle-filled"
+                  width="40"
+                  height="40"
+                />
               </a>
               <a
                 href="https://youtube.com/rhema"
                 target="_blank"
                 className="me-4"
               >
-                 <Icon icon="cib:youtube" width="40" height="40" />
+                <Icon icon="cib:youtube" width="40" height="40" />
               </a>
               <a
                 href="https://instagram.com/rhema"

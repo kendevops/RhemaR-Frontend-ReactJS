@@ -32,8 +32,8 @@ export default function AddStaff({ toggle, visibility }: AddStaffProps) {
   const { data: userData, isLoading: usersLoading } = useAllUsers();
   const users = userData?.users?.nodes as UserDto[];
   const userOptions = users?.map((u) => ({
-    label: `${u?.email}`,
-    id: u?.id,
+    label: `${u?.firstName} ${u?.lastName}`,
+    id: u?.email,
   }));
 
   const loading = isLoading || usersLoading;

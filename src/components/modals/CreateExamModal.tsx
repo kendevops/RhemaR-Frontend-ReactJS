@@ -88,12 +88,12 @@ export default function CreateExamModal({
             ToastContent.Config
           );
         },
-        onError: (e) => {
+        onError: (e: any) => {
           console.log(e);
           toast.error(
             <ToastContent
               heading={"Error"}
-              message={"An error occurred"}
+              message={e?.response?.data?.error?.message?.toString()}
               type={"error"}
             />,
             ToastContent.Config
@@ -146,6 +146,7 @@ export default function CreateExamModal({
                     id="Search courses"
                     loading={isLoading}
                     options={coursesOptions}
+                    value={basicInformation?.course}
                     renderInput={(params) => {
                       return (
                         <TextField

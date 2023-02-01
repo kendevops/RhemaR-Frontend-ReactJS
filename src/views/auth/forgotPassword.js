@@ -36,7 +36,6 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 
-
 const ToastContent = ({ heading, type }) => (
   <Fragment>
     <div className="toastify-header">
@@ -58,13 +57,8 @@ const AuthForgotPasswordPage = () => {
   const [responseMsg, setResponseMsg] = useState("");
   const [responseError, setResponseError] = useState("");
   const history = useHistory();
-  const {
-    control,
-    setError,
-    handleSubmit,
-    formState,
-  } = useForm({
-    mode: "onChange"
+  const { control, setError, handleSubmit, formState } = useForm({
+    mode: "onChange",
   });
 
   const onSubmit = (data) => {
@@ -72,17 +66,14 @@ const AuthForgotPasswordPage = () => {
       useJwt
         .forgotPassword({ email: data.resetEmail })
         .then((res) => {
-          console.log("res", res)
+          console.log("res", res);
           const data = {
             ...res.data,
           };
           setResponseMsg(data.message);
           setResponseError("");
           toast.success(
-            <ToastContent
-              heading={"Successfull!"}
-              type={"success"}
-            />,
+            <ToastContent heading={"Successfull!"} type={"success"} />,
             {
               icon: false,
               transition: Slide,
@@ -93,8 +84,8 @@ const AuthForgotPasswordPage = () => {
           );
         })
         .catch((err) => {
-          console.log("err message==>", err.message)
-          console.log("err response.status==>", err.response.status)
+          console.log("err message==>", err.message);
+          console.log("err response.status==>", err.response.status);
           if (
             err.response &&
             err.response.status >= 400 &&
@@ -104,6 +95,7 @@ const AuthForgotPasswordPage = () => {
               <ToastContent
                 heading={"Error!"}
                 type={"danger"}
+                message={err?.response?.data?.error?.message?.toString()}
               />,
               {
                 icon: false,
@@ -144,7 +136,10 @@ const AuthForgotPasswordPage = () => {
               <div className="bg-white shadow rounded-2 p-5">
                 <div className="text-center mb-5">
                   <h3 className="title mb-4">Forgot Password</h3>
-                  <p className="mx-auto" style={{ lineHeight: "1.234", maxWidth: "80%" }}>
+                  <p
+                    className="mx-auto"
+                    style={{ lineHeight: "1.234", maxWidth: "80%" }}
+                  >
                     Enter your email here to get a link to reset your password
                   </p>
                 </div>
@@ -164,12 +159,15 @@ const AuthForgotPasswordPage = () => {
                     </div>
                   </Alert>
                 )}
-                
+
                 {responseError && (
                   <Alert
                     color="error mb-5"
                     isOpen={visible}
-                    toggle={() => {setVisible(false); setResponseError("");}}
+                    toggle={() => {
+                      setVisible(false);
+                      setResponseError("");
+                    }}
                   >
                     <h4 className="alert-heading fs-2 mb-3">Error</h4>
                     <div className="alert-body fs-4 lh-1">{responseError}</div>
@@ -179,7 +177,7 @@ const AuthForgotPasswordPage = () => {
                 <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
-                    
+
                     <Controller
                       control={control}
                       id="resetEmail"

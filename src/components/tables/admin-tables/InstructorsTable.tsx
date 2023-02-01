@@ -42,9 +42,7 @@ export default function InstructorsTable() {
   const { isLoading, data: usersData } = useAllUsers();
   const users = usersData?.users?.nodes;
   const instrsData = users
-    ?.filter(
-      (user: any) => user?.roles[0]?.name === userRoles.INSTRUCTORS_ADMIN
-    )
+    ?.filter((user: any) => user?.roles[0]?.name === userRoles.INSTRUCTOR)
     .map((user: any) => {
       return {
         name: user?.firstName + " " + user?.lastName,
