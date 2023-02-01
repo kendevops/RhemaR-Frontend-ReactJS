@@ -3,7 +3,6 @@ import useJwt from "@hooks/useJwt";
 import { toast, Slide } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
-import SpinnerComponent from "../../components/spinner/Fallback-spinner";
 import { useHistory } from "react-router-dom";
 import { Spinner } from "reactstrap";
 
@@ -55,10 +54,10 @@ const AuthRegistrationPage = () => {
         toast.error(
           <ToastContent
             heading={"An error occurred"}
-            message={e?.response?.data?.message}
+            message={e?.response?.data?.error?.message?.toString()}
             type={"error"}
           />,
-          { ...ToastContent.Config }
+          { ...ToastContent.Config, autoClose: 10000000 }
         );
       })
       .finally(() => console.log(data));

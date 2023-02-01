@@ -80,7 +80,8 @@ const AuthLoginPage = () => {
         })
         .catch((err) => {
           toggleLoading();
-          const errMsg = "Unsuccesful login attempt. " + err.message;
+          const errMsg =
+            "Unsuccesful login attempt. " + err.response?.data?.error?.message;
           toast.error(
             <ToastContent
               heading={"Login Error!"}

@@ -21,7 +21,7 @@ export default function Verify() {
         toast.error(
           <ToastContent
             heading={"Uh-oh an error occurred!"}
-            message={e?.response?.data?.message}
+            message={e?.response?.data?.error?.message?.toString()}
             type={"error"}
           />,
           { ...ToastContent.Config }

@@ -78,13 +78,13 @@ export default function CreateCourse() {
         );
       },
 
-      onError: (e) => {
+      onError: (e: any) => {
         console.log(e);
         toast.error(
           <ToastContent
-            heading={"An error occurred"}
+            heading={`An error occurred while creating ${basicInfoData?.title}`}
             type={"error"}
-            message={`An error occurred while creating ${basicInfoData?.title}`}
+            message={e?.response?.data?.error?.message?.toString()}
           />,
           ToastContent.Config
         );
