@@ -96,7 +96,8 @@ const Events = () => {
 						<EventsList ListData={Listdata} />
 
 						<div className="container my-5">
-							<EventsCards Eventsdata={Eventsdata} />
+							{/* <EventsCards Eventsdata={Eventsdata} /> */}
+							<EventsCards />
 						</div>
 					</div>
 				</div>

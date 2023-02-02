@@ -74,7 +74,7 @@ export default function AddEvent({ toggle, visibility }: NewEventProps) {
 								control={control}
 								name="time"
 								render={({ field }) => (
-									<Input autoFocus type="textarea" placeholder="Event time" className="form-control" invalid={formState.errors.time && true} {...field} />
+									<Input autoFocus type="time" placeholder="Event time" className="form-control" invalid={formState.errors.time && true} {...field} />
 								)}
 								rules={{ required: true }}
 							/>

@@ -186,6 +186,90 @@ li {
 	font-size: 12px;
 }
 
+.events-back-arrow {
+	background-color: rgba(115, 130, 168, 0.25);
+	color: #1e1e1e;
+	width: max-content;
+	height: max-content;
+	padding: 10px;
+	font-size: 14px;
+	display: inline-block;
+	margin-right: 10px;
+}
+.events-back-arrow:hover {
+	background-color: rgba(62, 116, 252, 0.25);
+}
+
+.about-event {
+	box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
+	border: none;
+	padding: 15px;
+	flex: 2;
+}
+
+.event-resources {
+	flex: 1;
+}
+
+.about-event > h3 {
+	font-weight: 600;
+	font-size: 19px;
+}
+
+.about-event > h2 {
+	font-weight: 600;
+	margin-bottom: 18px;
+	color: #626161 !important;
+}
+
+.about-event > p {
+	line-height: 1.1;
+	font-size: 16px;
+}
+
+/* Video component */
+.video-wrapper {
+	height: 550px;
+	margin-bottom: 35px;
+}
+
+.video-style {
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: fill;
+	margin: 0 auto;
+}
+
+.progress-bar {
+	background-color: rgba(255, 255, 255, 0.7);
+	height: 8px;
+	border-width: 2px;
+	border-radius: 6px;
+	width: 98%;
+	margin: 0 auto 24px;
+}
+
+.progress-bar .progress-innerbar {
+	background-color: #e31717;
+	width: 0%;
+	height: 100%;
+}
+
+.progress-innerbar-animate {
+	animation: animate-bar linear forwards;
+	animation-play-state: paused;
+}
+@keyframes animate-bar {
+	from {
+		width: 0%;
+	}
+
+	to {
+		width: 100%;
+	}
+}
+
 /* React Timetable */
 .styles-module_day_title__cc17c,
 .styles-module_hour__TLyj9 {
