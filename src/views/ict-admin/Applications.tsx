@@ -54,7 +54,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
         toast.error(
           <ToastContent
             heading={"An Error Occurred"}
-            message={e?.response?.data?.message}
+            message={e?.response?.data?.error?.message?.toString()}
             type={"error"}
           />,
           { ...ToastContent.Config }
@@ -79,7 +79,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
         toast.error(
           <ToastContent
             heading={"An Error Occurred"}
-            message={e?.response?.data?.message}
+            message={e?.response?.data?.error?.message?.toString()}
             type={"error"}
           />,
           { ...ToastContent.Config }

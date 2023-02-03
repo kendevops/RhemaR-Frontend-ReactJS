@@ -1,8 +1,6 @@
 import useForm from "../../utility/hooks/useForm";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import { FormEvent } from "react";
-import FormInput from "../molecules/FormInput";
-import FormDropdown from "../molecules/FormDropdown";
 import { Autocomplete, TextField } from "@mui/material";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import { UserDto } from "../../types/dto";
@@ -10,6 +8,7 @@ import useAssignRole from "../../hooks/mutations/roles/useAssignRole";
 import userRoles from "../../utility/userRoles";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
+import useRetractRole from "../../hooks/mutations/roles/useRetractRole";
 
 type AssignInstructorModalProps = {
   toggle: VoidFunction;
@@ -17,12 +16,14 @@ type AssignInstructorModalProps = {
   defaultValues?: {
     email: string;
   };
+  onAssign?: VoidFunction;
 };
 
 export default function AssignInstructorModal({
   toggle,
   visibility,
   defaultValues,
+  onAssign,
 }: AssignInstructorModalProps) {
   const { formData, formIsValid, updateForm } = useForm({
     initialState: defaultValues ?? {
@@ -30,6 +31,9 @@ export default function AssignInstructorModal({
     },
   });
   const { isLoading, mutate } = useAssignRole();
+  const retractRole = useRetractRole();
+
+  const loading = retractRole.isLoading || isLoading;
 
   const { data: userData, isLoading: usersLoading } = useAllUsers();
   const users = userData?.users?.nodes as UserDto[];
@@ -41,34 +45,63 @@ export default function AssignInstructorModal({
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    formIsValid
-      ? mutate([{ email: formData?.email, role: userRoles.INSTRUCTOR }], {
-          onSuccess: () => {
-            toast.success(
-              <ToastContent
-                type={"success"}
-                heading={"Success"}
-                message={`Successfully assigned ${formData?.email} as instructor`}
-              />,
-              ToastContent.Config
-            );
+    if (formIsValid) {
+      const data = [{ email: formData?.email, role: userRoles.INSTRUCTOR }];
 
-            toggle();
-          },
-          onError: (e: any) => {
-            toast.error(
-              <ToastContent
-                type={"error"}
-                heading={"An Error Occurred"}
-                message={e?.response?.data?.error?.message?.toString()}
-              />,
-              ToastContent.Config
-            );
+      defaultValues
+        ? retractRole.mutate(data, {
+            onSuccess: () => {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Success"}
+                  message={`Successfully retracted ${formData?.email} as instructor`}
+                />,
+                ToastContent.Config
+              );
+              onAssign && onAssign();
+              toggle();
+            },
+            onError: (e: any) => {
+              toast.error(
+                <ToastContent
+                  type={"error"}
+                  heading={"An Error Occurred"}
+                  message={e?.response?.data?.error?.message?.toString()}
+                />,
+                ToastContent.Config
+              );
 
-            console.log({ e, formData });
-          },
-        })
-      : alert("Please fill in all fields befor submitting");
+              console.log({ e, formData });
+            },
+          })
+        : mutate(data, {
+            onSuccess: () => {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Success"}
+                  message={`Successfully assigned ${formData?.email} as instructor`}
+                />,
+                ToastContent.Config
+              );
+              onAssign && onAssign();
+              toggle();
+            },
+            onError: (e: any) => {
+              toast.error(
+                <ToastContent
+                  type={"error"}
+                  heading={"An Error Occurred"}
+                  message={e?.response?.data?.error?.message?.toString()}
+                />,
+                ToastContent.Config
+              );
+
+              console.log({ e, formData });
+            },
+          });
+    } else alert("Please fill in all fields befor submitting");
   }
 
   return (
@@ -105,7 +138,7 @@ export default function AssignInstructorModal({
               />
             </div>
 
-            {isLoading ? (
+            {loading ? (
               <Spinner />
             ) : (
               <button

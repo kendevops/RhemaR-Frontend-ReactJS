@@ -34,6 +34,18 @@ export default function FileTypeIcon({ type, name, path }: FileTypeIconProps) {
         />
       );
       break;
+    case "image/jpeg":
+      icon = (
+        <img
+          alt={name}
+          src={path}
+          style={{
+            width: "20px",
+            height: "20px",
+          }}
+        />
+      );
+      break;
     case "jpg":
       icon = (
         <img
