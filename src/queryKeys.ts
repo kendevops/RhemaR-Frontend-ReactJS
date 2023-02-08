@@ -4,6 +4,7 @@ const queryKeys = {
   users: "users",
   currentUser: "current-user",
   classes: "my-classes",
+  allClasses: "all-classes",
   courses: "my-courses",
   course: "course",
   allCourses: "all-courses",

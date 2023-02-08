@@ -13,7 +13,13 @@ import userRoles from "../../utility/userRoles";
 type AddScheduleProps = {
   toggle: VoidFunction;
   visibility: boolean;
-  defaultValues?: any;
+  defaultValues?: {
+    name: string;
+    course: string;
+    endTime: string;
+    startTime: string;
+    instructorEmail: string;
+  };
 };
 
 export default function AddSchedule({
