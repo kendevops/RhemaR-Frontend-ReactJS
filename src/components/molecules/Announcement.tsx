@@ -6,7 +6,7 @@ type AnnouncementProps = {
   title: string;
   message: string;
   date: Date;
-  onPress: MouseEventHandler;
+  onPress?: MouseEventHandler;
   onPressDelete?: MouseEventHandler;
   isSelected?: boolean;
 };
@@ -32,7 +32,7 @@ export default function Announcement({
             style={{
               cursor: "pointer",
             }}
-            onClick={onPress}
+            onClick={onPress ? onPress : console.log}
             className="text-xl font-bold text-blue-800 mb-2 hover"
           >
             {title}
@@ -46,13 +46,13 @@ export default function Announcement({
             />
           )}
         </div>
-        <p className="text-sm">
+        <p className="text-sm text-start">
           {date.toDateString()} • {getTimeString({ date })}
         </p>
       </div>
 
       <p
-        className="mt-3"
+        className="mt-3 text-start"
         style={{
           lineHeight: "2rem",
         }}

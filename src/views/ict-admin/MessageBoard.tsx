@@ -10,7 +10,7 @@ import getTimeString from "../../utils/getTimeString";
 import useNotifications from "../../hooks/queries/notifications/useNotifications";
 import { Spinner } from "reactstrap";
 
-interface announcement {
+export interface announcement {
   id: string;
   type: "important";
   title: string;

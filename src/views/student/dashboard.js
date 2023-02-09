@@ -24,7 +24,9 @@ const StudentDashboardPage = () => {
   });
 
   const totalCompletion = courses?.length * 100;
-  const semesterProgress = Math.floor((completion / totalCompletion) * 100);
+  const semesterProgress = Math.floor(
+    (completion ?? 0 / totalCompletion ?? 100) * 100
+  );
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const application = userData?.applications
@@ -43,7 +45,12 @@ const StudentDashboardPage = () => {
             <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
               <div className="d-flex justify-content-between ">
                 <p className="r-card-title">Semester Progress</p>
-                <h2 className="font-bold text-2xl ms-4">{semesterProgress}%</h2>
+                <h2 className="font-bold text-2xl ms-4">
+                  {semesterProgress.toString() === "NaN"
+                    ? "0"
+                    : semesterProgress.toString()}
+                  %
+                </h2>
               </div>
 
               {/* Progress bar */}
