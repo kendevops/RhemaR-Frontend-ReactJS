@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, useRef } from "react";
+import { Fragment, useState, useRef, useEffect } from "react";
 
 // ** Config
 import themeConfig from "@configs/themeConfig";
@@ -13,6 +13,7 @@ import { handleLogout } from "../../../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
+import useSubscribeNotifications from "../../../../hooks/queries/notifications/useSubscribeNotifications";
 
 const options = [
   {
@@ -37,6 +38,13 @@ const Navbar = (props) => {
   const currentUser = getUserData();
   const dispatch = useDispatch();
   const history = useHistory();
+  const { data: newNotification } = useSubscribeNotifications();
+
+  useEffect(() => {
+    if (newNotification) {
+      console.log({ newNotification });
+    }
+  }, [newNotification]);
 
   const logOut = () => {
     dispatch(handleLogout(currentUser));

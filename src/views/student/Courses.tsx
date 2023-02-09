@@ -12,12 +12,20 @@ import useClasses from "../../hooks/queries/classes/useClasses";
 import { Spinner } from "reactstrap";
 import getMonth from "../../utils/getMonth";
 import getTimeString from "../../utils/getTimeString";
+import { announcement } from "../ict-admin/MessageBoard";
+import useNotifications from "../../hooks/queries/notifications/useNotifications";
+import Announcement from "../../components/molecules/Announcement";
 
 export default function StudentCourses() {
   const { data, isLoading } = useClasses({
     startTime: "2022-12-01T21:56:53.900Z",
   });
   const lectures = data?.classes?.nodes;
+
+  const { data: notificationsData, isLoading: notifcationsLoading } =
+    useNotifications();
+
+  const notifications = notificationsData?.nodes as announcement[];
 
   return (
     <section className="container my-5">
@@ -139,9 +147,32 @@ export default function StudentCourses() {
           <section>
             <h2 className="text-xl font-bold text-blue-600">Notifications</h2>
             <CardWrapper className="text-center">
-              <EmptyNotifications />
+              {notifcationsLoading && <Spinner />}
+              {!!notifications ? (
+                <div>
+                  <ul className="no-padding-left">
+                    {notifications.map((others, i) => {
+                      const props = {
+                        title: others?.title,
+                        message: others?.content,
+                        date: new Date(others?.createdAt),
+                      };
 
-              <p className="text-center">There are no Notifications</p>
+                      return (
+                        <li className="text-left" key={i}>
+                          <Announcement {...props} />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ) : (
+                <div>
+                  {" "}
+                  <EmptyNotifications />
+                  <p className="text-center">There are no Notifications</p>{" "}
+                </div>
+              )}
             </CardWrapper>
           </section>
         </ColWrapper>

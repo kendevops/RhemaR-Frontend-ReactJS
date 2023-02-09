@@ -79,7 +79,7 @@ export default function CreateCourse() {
       },
 
       onError: (e: any) => {
-        console.log(e);
+        console.log({ e, data });
         toast.error(
           <ToastContent
             heading={`An error occurred while creating ${basicInfoData?.title}`}
@@ -138,18 +138,21 @@ export default function CreateCourse() {
             label="Course code"
             placeholder="Course code e.g COS104"
             onChange={(e) => updateBasicInfo("code", e?.target?.value)}
+            value={basicInfoData?.code}
             required
           />
           <FormInput
             label="Title"
             placeholder="Title of the course e.g Pneumatology 1"
             onChange={(e) => updateBasicInfo("title", e?.target?.value)}
+            value={basicInfoData?.title}
             required
           />
           <FormInput
             label="Level"
             placeholder="Enter level"
             onChange={(e) => updateBasicInfo("level", e?.target?.value)}
+            value={basicInfoData?.level}
             required
           />
           <FormInput

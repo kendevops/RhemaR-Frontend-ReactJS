@@ -5,11 +5,14 @@ import useToggle from "../../utility/hooks/useToggle";
 
 export default function Instructors() {
   const [visibility, toggle] = useToggle();
+  const [refetch, toggleRefetch] = useToggle();
 
   return (
     <section>
       {/* Add Instructor Modal */}
-      <AssignInstructorModal {...{ visibility, toggle }} />
+      <AssignInstructorModal
+        {...{ visibility, toggle, onAssign: toggleRefetch }}
+      />
 
       {/* Search Bar and add Instructor */}
       <article className="d-flex gap-5 m-5">
@@ -27,7 +30,7 @@ export default function Instructors() {
       </article>
 
       {/* Table */}
-      <InstructorsTable />
+      <InstructorsTable shouldRefetch={refetch} />
     </section>
   );
 }
