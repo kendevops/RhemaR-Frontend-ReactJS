@@ -1,58 +1,94 @@
+import { Spinner } from "reactstrap";
+import useAllClasses from "../../../hooks/queries/classes/useAllClasses";
 import Table, { TableColumns } from "../../general/table/Table";
+import useToggle from "../../../utility/hooks/useToggle";
+import AddSchedule from "../../modals/AddSchedule";
 
 type CourseSchedule = {
+  id: string;
   name: string;
-  level: string;
-  classOption: string;
-  date: Date;
+  type: string;
+  status: string;
+  endTime: string;
+  startTime: string;
+  createdAt: string;
+  course: {
+    id: string;
+    title: string;
+  };
+  instructor: {
+    id: string;
+    email: string;
+  };
 };
 
-const data: CourseSchedule[] = [
-  {
-    name: "Holy Spirit",
-    classOption: "Night Class",
-    date: new Date(),
-    level: "level 1",
-  },
-  {
-    name: "Pneumatology 1",
-    classOption: "Night Class",
-    date: new Date(),
-    level: "level 2",
-  },
-  {
-    name: "Aspects of Grace",
-    classOption: "Weekend Class",
-    date: new Date(),
-    level: "level 1",
-  },
-  {
-    name: "Love : The way to victory",
-    classOption: "Night Class",
-    date: new Date(),
-    level: "level 1",
-  },
-];
+type EditScheduleProps = {
+  data: CourseSchedule;
+};
+
+function EditSchedule({ data }: EditScheduleProps) {
+  const [visibility, toggle] = useToggle();
+
+  const defaultValues = {
+    name: data?.name,
+    course: data?.course?.title,
+    endTime: data?.endTime,
+    startTime: data?.startTime,
+    instructorEmail: data?.instructor?.email,
+  };
+
+  return (
+    <div>
+      <u className="cursor-pointer" onClick={toggle}>
+        Edit
+      </u>
+
+      <AddSchedule {...{ toggle, visibility, defaultValues }} />
+    </div>
+  );
+}
 
 export default function CoursesScheduleTable() {
+  const { isLoading, data: classesData } = useAllClasses({
+    status: "ongoing",
+    startTime: "2022-12-06T21:56:53.900Z",
+  });
+
+  const data = classesData?.nodes;
+
   const columns: TableColumns<CourseSchedule>[] = [
-    { key: "Courses", title: "Courses", render: (data) => <p>{data?.name}</p> },
-    { key: "Level", title: "Level", render: (data) => <p>{data?.level}</p> },
+    { key: "Name", title: "Name", render: (data) => <p>{data?.name}</p> },
     {
-      key: "Class Option",
-      title: "Class Option",
-      render: (data) => <p>{data?.classOption}</p>,
+      key: "Course",
+      title: "Course",
+      render: (data) => <p>{data?.course?.title}</p>,
+    },
+    {
+      key: "Instructor",
+      title: "Instructor",
+      render: (data) => <p>{data?.instructor?.email}</p>,
     },
     {
       key: "Date",
       title: "Date",
-      render: (data) => <p>{data?.date.toDateString()}</p>,
+      render: (data) => (
+        <p>
+          {new Date(data?.startTime).toDateString()} -{" "}
+          {new Date(data?.endTime).toDateString()}
+        </p>
+      ),
+    },
+    {
+      key: "Action",
+      title: "Action",
+      render: (data) => <EditSchedule {...{ data }} />,
     },
   ];
 
   return (
     <Table.Wrapper>
-      <Table {...{ data, columns }} />
+      {isLoading && <Spinner />}
+      {data && <Table {...{ data, columns }} />}
     </Table.Wrapper>
   );
 }

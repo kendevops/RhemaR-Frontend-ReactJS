@@ -5,6 +5,7 @@ const userRoles = {
   PROSPECTIVE_STUDENT: "PROSPECTIVE_STUDENT",
   ALUMNI: "ALUMNI",
   STUDENT: "STUDENT",
+  INSTRUCTOR: "INSTRUCTOR",
 };
 
 export default userRoles;

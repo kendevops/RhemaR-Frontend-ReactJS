@@ -1,65 +1,65 @@
 /* Easing */
 .ease-transition {
-	transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5;
 }
 
 /* Tabs */
 .tab:hover {
-	background-color: "#F5F5F5";
+  background-color: "#F5F5F5";
 }
 
 /* Student Avatar */
 .student-avatar {
-	background-color: #203864;
-	width: 6rem;
-	height: 6rem;
-	overflow: hidden;
-	border-radius: 100%;
-	display: grid;
-	place-content: center;
+  background-color: #203864;
+  width: 6rem;
+  height: 6rem;
+  overflow: hidden;
+  border-radius: 100%;
+  display: grid;
+  place-content: center;
 }
 
 .student-avatar-wrapper {
-	position: relative;
+  position: relative;
 }
 
 /* Button */
 .student-avatar-button {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	box-shadow: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  box-shadow: none;
 }
 
 /* Nav  */
 li.nav-item.active > a {
-	background: #3d4d65 !important;
-	border-style: solid;
-	border-right-width: 3px;
-	border-right-color: #dfc46d;
-	border-left-width: 0;
-	border-top-width: 0;
-	border-bottom-width: 0;
-	box-shadow: none !important;
+  background: #3d4d65 !important;
+  border-style: solid;
+  border-right-width: 3px;
+  border-right-color: #dfc46d;
+  border-left-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  box-shadow: none !important;
 }
 
 li.nav-item.active > a > svg {
-	color: #dfc46d;
+  color: #dfc46d;
 }
 
 li {
-	list-style: none;
+  list-style: none;
 }
 
 .no-padding-left {
-	padding-left: 0;
+  padding-left: 0;
 }
 
 /* Header in exam page */
 .exam-header {
-	max-width: 880px;
-	margin-left: auto;
-	margin-right: auto;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* @media (min-width: 1280px) {
@@ -72,68 +72,69 @@ li {
 
 /* Avatar in Nav header */
 .avatar-dropdown {
-	position: fixed;
-	padding: 1.5rem;
-	background-color: white;
-	right: 1%;
-	top: 8%;
+  position: fixed;
+  padding: 1.5rem;
+  background-color: white;
+  right: 1%;
+  top: 8%;
 }
 
 .avatar-dropdown-item {
-	cursor: pointer;
-	margin-bottom: 0.8rem;
+  cursor: pointer;
+  margin-bottom: 0.8rem;
 }
 
 .resources-text {
-	position: absolute;
-	left: 10%;
-	top: 16%;
-	color: #ffffff;
+  position: absolute;
+  left: 10%;
+  top: 16%;
+  color: #ffffff;
 }
 
 .card-deck {
-	/* height: 190px; */
-	border-radius: 8px;
-	background: #355da6 url("../img/helpdesk-bg.svg") no-repeat center center/cover;
-	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	color: #ffffff;
-	text-transform: capitalize;
+  /* height: 190px; */
+  border-radius: 8px;
+  background: #355da6 url("../img/helpdesk-bg.svg") no-repeat center
+    center/cover;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  text-transform: capitalize;
 }
 
 .card-btn {
-	padding-left: 35px !important;
-	padding-right: 35px !important;
-	width: fit-content;
-	text-transform: capitalize;
+  padding-left: 35px !important;
+  padding-right: 35px !important;
+  width: fit-content;
+  text-transform: capitalize;
 }
 
 /* helpdesk */
 .helpdesk-card ul {
-	box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
-	border-radius: 0 0 8px 8px;
+  box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
+  border-radius: 0 0 8px 8px;
 }
 
 .helpdesk-card ul li button.active {
-	border-color: #203864 !important;
+  border-color: #203864 !important;
 }
 
 .helpdesk-edit {
-	background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .helpdesk-edit .edit-btn {
-	background: inherit;
-	border: none;
-	color: #ffffff;
-	gap: 7px;
-	width: 100%;
-	height: 100%;
+  background: inherit;
+  border: none;
+  color: #ffffff;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
 }
 
 /* Events */
 .events-wrapper {
-	box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.1) !important;
-	border: none !important;
+  box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.1) !important;
+  border: none !important;
 }
 
 .evt-card {
@@ -150,49 +151,49 @@ li {
 }
 
 .current-date {
-	gap: 7px;
+  gap: 7px;
 }
 
 .current-date .formatted-date {
-	font-weight: 800;
-	font-size: 18px;
+  font-weight: 800;
+  font-size: 18px;
 }
 
 .header-nav {
-	gap: 16px;
+  gap: 16px;
 }
 
 .evt-btn {
-	width: 32px;
-	height: 32px;
+  width: 32px;
+  height: 32px;
 }
 
 .evt-card-top {
-	background: #edf3fa;
-	border: 1px solid rgba(0, 45, 107, 0.1);
-	height: 93px;
+  background: #edf3fa;
+  border: 1px solid rgba(0, 45, 107, 0.1);
+  height: 93px;
 }
 
 .evt-card-top .live {
-	font-size: 12px;
+  font-size: 12px;
 }
 
 .evt-info {
-	background: #edf3fa;
-	border: 1px solid rgba(0, 45, 107, 0.1);
-	border-radius: 4px;
+  background: #edf3fa;
+  border: 1px solid rgba(0, 45, 107, 0.1);
+  border-radius: 4px;
 
-	width: fit-content;
-	height: fit-content;
+  width: fit-content;
+  height: fit-content;
 }
 
 .evt-info .month {
-	display: block;
+  display: block;
 }
 
 .evt-time {
-	font-weight: 500;
-	font-size: 12px;
+  font-weight: 500;
+  font-size: 12px;
 }
 
 .events-back-arrow {
@@ -282,38 +283,42 @@ li {
 /* React Timetable */
 .styles-module_day_title__cc17c,
 .styles-module_hour__TLyj9 {
-	background-color: #ffffff !important;
-	color: #203864 !important;
+  background-color: #ffffff !important;
+  color: #203864 !important;
 }
 
 .styles-module_event__28gBZ.undefined {
-	background-color: #edf3fa !important;
-	color: #203864 !important;
+  background-color: #edf3fa !important;
+  color: #203864 !important;
 }
 
 /* MUI Autocomplete */
 .css-1ghykbv-MuiAutocomplete-root.MuiOutlinedInput-root.MuiAutocomplete-input {
-	font-size: 1.3rem;
+  font-size: 1.3rem;
 }
 
 /* Receipt Header lines */
 .receipt-first {
-	height: 1.1rem;
-	background-color: #203864;
+  height: 1.1rem;
+  background-color: #203864;
 }
 
 .receipt-second {
-	height: 0.4rem;
-	background-color: #dfc46d;
+  height: 0.4rem;
+  background-color: #dfc46d;
 }
 
 .receipt-third {
-	height: 0.7rem;
-	background-color: #203864;
-	margin-bottom: 0.2rem;
+  height: 0.7rem;
+  background-color: #203864;
+  margin-bottom: 0.2rem;
 }
 
 .receipt-fourth {
-	height: 0.2rem;
-	background-color: #203864;
+  height: 0.2rem;
+  background-color: #203864;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

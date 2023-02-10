@@ -56,13 +56,13 @@ export default function NewSession({
           !!onCreate && onCreate();
         },
 
-        onError: (e) => {
+        onError: (e: any) => {
           console.log(e);
           toast.error(
             <ToastContent
               type={"error"}
               heading={"Error"}
-              message={"An error occurred"}
+              message={e?.response?.data?.error?.message?.toString()}
             />,
             ToastContent.Config
           );

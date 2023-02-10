@@ -1,6 +1,11 @@
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
-import { Input } from "reactstrap";
-import { useForm, Controller } from "react-hook-form";
+import { FormEvent } from "react";
+import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
+import usePublishNotification from "../../hooks/mutations/notifications/usePublishNotification";
+import useForm from "../../utility/hooks/useForm";
+import FormInput from "../molecules/FormInput";
+import FormInputWrapper from "../molecules/FormInputWrapper";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
 
 type NewAnnouncementProps = {
   toggle: VoidFunction;
@@ -11,18 +16,43 @@ export default function NewAnnouncementModal({
   toggle,
   visibility,
 }: NewAnnouncementProps) {
-  const defaultValues = {
-    subject: "",
-    date: new Date().toDateString(),
-    message: "",
-  };
-
-  const { control, handleSubmit, formState } = useForm({
-    defaultValues,
-    mode: "onChange",
+  const { formData, formIsValid, updateForm } = useForm({
+    initialState: { type: "important", title: "", content: "" },
   });
+  const { mutate, isLoading } = usePublishNotification();
 
-  function onSubmit() {}
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    if (formIsValid) {
+      mutate(formData, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Success"}
+              message={`Announcement successful!`}
+            />,
+            ToastContent.Config
+          );
+          toggle();
+        },
+
+        onError: (e: any) => {
+          toast.error(
+            <ToastContent
+              type={"error"}
+              heading={"An Error Occurred"}
+              message={e?.response?.data?.error?.message?.toString()}
+            />,
+            ToastContent.Config
+          );
+
+          console.log({ e, formData });
+        },
+      });
+    } else alert("Please fill in all fields");
+  }
 
   return (
     <div>
@@ -34,68 +64,32 @@ export default function NewAnnouncementModal({
       >
         <ModalHeader toggle={toggle}>New Announcement</ModalHeader>
         <ModalBody>
-          <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-group">
-              <label htmlFor="subject">Subject</label>
-              <Controller
-                control={control}
-                name="subject"
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="text"
-                    placeholder="Academic Session"
-                    className="form-control"
-                    invalid={formState.errors.subject && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
+          <form className="mt-3" onSubmit={onSubmit}>
+            <FormInput
+              label="Title"
+              onChange={(e) => updateForm("title", e.target.value)}
+            />
+
+            <FormInputWrapper>
+              <label htmlFor={"content"}>Message</label>
+              <textarea
+                className="form-control"
+                placeholder="Enter message"
+                onChange={(e) => updateForm("content", e.target.value)}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="date">Date</label>
-              <Controller
-                control={control}
-                name="date"
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="date"
-                    placeholder="Date"
-                    className="form-control"
-                    invalid={formState.errors.date && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="message">Message</label>
-              <Controller
-                control={control}
-                name="message"
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="textarea"
-                    placeholder="Enter message"
-                    className="form-control"
-                    invalid={formState.errors.message && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <button
-              className="btn btn-blue-800 btn-lg w-100 my-5"
-              type="submit"
-              disabled={!formState.isValid}
-            >
-              Publish Announcement
-            </button>
+            </FormInputWrapper>
+
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <button
+                className="btn btn-blue-800 btn-lg w-100 my-5"
+                type="submit"
+                disabled={!formIsValid}
+              >
+                Publish Announcement
+              </button>
+            )}
           </form>
         </ModalBody>
       </Modal>

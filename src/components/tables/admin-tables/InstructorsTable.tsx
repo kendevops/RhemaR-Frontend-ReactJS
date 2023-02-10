@@ -8,10 +8,15 @@ import AssignInstructorModal from "../../modals/AssignInstructorModal";
 import useAllUsers from "../../../hooks/queries/useAllUsers";
 import { Spinner } from "reactstrap";
 import userRoles from "../../../utility/userRoles";
+import { useEffect } from "react";
 
 type ReassignInstructorProps = {
   data: any;
 };
+
+interface Props {
+  shouldRefetch?: boolean;
+}
 
 Chart.register(ArcElement);
 
@@ -38,13 +43,16 @@ function ReassignInstructor({ data }: ReassignInstructorProps) {
   );
 }
 
-export default function InstructorsTable() {
-  const { isLoading, data: usersData } = useAllUsers();
+export default function InstructorsTable({ shouldRefetch }: Props) {
+  const { isLoading, data: usersData, refetch } = useAllUsers();
+
+  useEffect(() => {
+    if (shouldRefetch) refetch();
+  }, [shouldRefetch, refetch]);
+
   const users = usersData?.users?.nodes;
   const instrsData = users
-    ?.filter(
-      (user: any) => user?.roles[0]?.name === userRoles.INSTRUCTORS_ADMIN
-    )
+    ?.filter((user: any) => user?.roles[0]?.name === userRoles.INSTRUCTOR)
     .map((user: any) => {
       return {
         name: user?.firstName + " " + user?.lastName,

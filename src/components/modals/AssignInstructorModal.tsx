@@ -1,37 +1,107 @@
 import useForm from "../../utility/hooks/useForm";
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import { FormEvent } from "react";
-import FormInput from "../molecules/FormInput";
-import FormDropdown from "../molecules/FormDropdown";
+import { Autocomplete, TextField } from "@mui/material";
+import useAllUsers from "../../hooks/queries/useAllUsers";
+import { UserDto } from "../../types/dto";
+import useAssignRole from "../../hooks/mutations/roles/useAssignRole";
+import userRoles from "../../utility/userRoles";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
+import useRetractRole from "../../hooks/mutations/roles/useRetractRole";
 
 type AssignInstructorModalProps = {
   toggle: VoidFunction;
   visibility: boolean;
   defaultValues?: {
-    name: string;
     email: string;
-    phone: string;
-    course?: string;
   };
+  onAssign?: VoidFunction;
 };
-
-const options = ["Option 1", "Option 2"];
 
 export default function AssignInstructorModal({
   toggle,
   visibility,
   defaultValues,
+  onAssign,
 }: AssignInstructorModalProps) {
   const { formData, formIsValid, updateForm } = useForm({
     initialState: defaultValues ?? {
-      name: "",
       email: "",
-      phone: "",
     },
   });
+  const { isLoading, mutate } = useAssignRole();
+  const retractRole = useRetractRole();
+
+  const loading = retractRole.isLoading || isLoading;
+
+  const { data: userData, isLoading: usersLoading } = useAllUsers();
+  const users = userData?.users?.nodes as UserDto[];
+  const userOptions = users?.map((u) => ({
+    label: `${u?.firstName} ${u?.lastName}`,
+    id: u?.email,
+  }));
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    if (formIsValid) {
+      const data = [{ email: formData?.email, role: userRoles.INSTRUCTOR }];
+
+      defaultValues
+        ? retractRole.mutate(data, {
+            onSuccess: () => {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Success"}
+                  message={`Successfully retracted ${formData?.email} as instructor`}
+                />,
+                ToastContent.Config
+              );
+              onAssign && onAssign();
+              toggle();
+            },
+            onError: (e: any) => {
+              toast.error(
+                <ToastContent
+                  type={"error"}
+                  heading={"An Error Occurred"}
+                  message={e?.response?.data?.error?.message?.toString()}
+                />,
+                ToastContent.Config
+              );
+
+              console.log({ e, formData });
+            },
+          })
+        : mutate(data, {
+            onSuccess: () => {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Success"}
+                  message={`Successfully assigned ${formData?.email} as instructor`}
+                />,
+                ToastContent.Config
+              );
+              onAssign && onAssign();
+              toggle();
+            },
+            onError: (e: any) => {
+              toast.error(
+                <ToastContent
+                  type={"error"}
+                  heading={"An Error Occurred"}
+                  message={e?.response?.data?.error?.message?.toString()}
+                />,
+                ToastContent.Config
+              );
+
+              console.log({ e, formData });
+            },
+          });
+    } else alert("Please fill in all fields befor submitting");
   }
 
   return (
@@ -45,36 +115,39 @@ export default function AssignInstructorModal({
         <ModalHeader toggle={toggle}>Assign Instructor</ModalHeader>
         <ModalBody>
           <form className="mt-3" onSubmit={handleSubmit}>
-            <FormInput
-              label="Name"
-              value={formData["name"]}
-              onChange={(e) => updateForm("name", e.target.value)}
-            />
-            <FormInput
-              label="Email"
-              type={"email"}
-              value={formData["email"]}
-              onChange={(e) => updateForm("email", e.target.value)}
-            />
-            <FormInput
-              label="Phone"
-              value={formData["phone"]}
-              onChange={(e) => updateForm("phone", e.target.value)}
-              type={"number"}
-            />
-            <FormDropdown
-              title="Course(Optional)"
-              options={options?.map((o) => ({
-                children: o,
-                onClick: () => updateForm("course", o),
-              }))}
-            />
-            <button
-              className="btn btn-blue-800 btn-lg w-100 my-5"
-              type="submit"
-            >
-              Assign Instructor
-            </button>
+            <div className="form-group">
+              <label htmlFor="Search Staff">Search Users</label>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="Search Staff"
+                loading={usersLoading}
+                options={userOptions}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      placeholder="Search Users"
+                      className="form-control "
+                    />
+                  );
+                }}
+                onChange={(e, value) => {
+                  updateForm("email", value?.id);
+                }}
+              />
+            </div>
+
+            {loading ? (
+              <Spinner />
+            ) : (
+              <button
+                className="btn btn-blue-800 btn-lg w-100 my-5"
+                type="submit"
+              >
+                {defaultValues ? "Remove Instructor" : "Assign Instructor"}
+              </button>
+            )}
           </form>
         </ModalBody>
       </Modal>
