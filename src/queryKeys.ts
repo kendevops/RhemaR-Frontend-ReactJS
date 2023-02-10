@@ -11,6 +11,7 @@ const queryKeys = {
   paymentHistory: "payment-history",
   academicSession: "academic-session",
   campus: "campus",
+  allCampuses: "campuses",
   applications: "applications",
   exams: "all-exams",
   exam: "exam",
