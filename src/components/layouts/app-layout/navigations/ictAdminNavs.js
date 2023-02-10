@@ -53,6 +53,14 @@ export default [
   },
 
   {
+    id: "campuses",
+    title: "Campuses",
+    icon: <Icon icon="mingcute:school-fill" />,
+    navLink: "/ict-admin/campuses",
+    action: "read",
+    resource: "Admins",
+  },
+  {
     id: "courses",
     title: "Courses",
     icon: <Icon icon="bi:collection-fill" />,

@@ -24,9 +24,7 @@ const StudentDashboardPage = () => {
   });
 
   const totalCompletion = courses?.length * 100;
-  const semesterProgress = Math.floor(
-    (completion ?? 0 / totalCompletion ?? 100) * 100
-  );
+  const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const application = userData?.applications
