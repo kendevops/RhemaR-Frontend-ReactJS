@@ -136,8 +136,17 @@ li {
 	border: none !important;
 }
 
+.evt-card {
+	margin-left: auto;
+	margin-right: auto;
+	width: 93%;
+	gap: 45px;
+}
+
 .evt {
 	border: 1px solid rgba(0, 45, 107, 0.1);
+	width: 100%;
+	max-width: 327px;
 }
 
 .current-date {

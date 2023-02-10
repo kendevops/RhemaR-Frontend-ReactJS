@@ -18,38 +18,6 @@ const Listdata = [
 	},
 ];
 
-const Eventsdata = [
-	{
-		id: "1",
-		event: "What is RBTC?",
-		status: "active",
-	},
-	{
-		id: "2",
-		event: "What is RBTC?",
-		status: "inactive",
-	},
-	{
-		id: "3",
-		event: "What is RBTC?",
-		status: "inactive",
-	},
-	{
-		id: "4",
-		event: "What is RBTC?",
-		status: "inactive",
-	},
-	{
-		id: "5",
-		event: "What is RBTC?",
-		status: "inactive",
-	},
-	{
-		id: "6",
-		event: "What is RBTC?",
-		status: "inactive",
-	},
-];
 
 const Events = () => {
 	const [visibility, toggle] = useToggle();
