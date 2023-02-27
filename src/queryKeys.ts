@@ -15,6 +15,7 @@ const queryKeys = {
   applications: "applications",
   exams: "all-exams",
   exam: "exam",
+  	allEvents: "events",
   notifications: "notifications",
 };
 
