@@ -79,7 +79,6 @@ export default function StudentHelpDesk() {
   return (
     <>
       <CardHeader heading="Frequently asked questions" imgSrc={HelpdeskIcon} />
-
       <section className="col col-md-9 mx-auto">
         {/* Search Row */}
         <article className="d-flex gap-5 ">
