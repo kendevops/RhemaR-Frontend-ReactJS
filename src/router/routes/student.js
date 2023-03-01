@@ -65,6 +65,14 @@ const StudentRoutes = [
       resource: "Students",
     },
   },
+  {
+    path: "/student/helpdesk",
+    component: lazy(() => import("../../views/student/HelpDesk")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
 ];
 
 export default StudentRoutes;

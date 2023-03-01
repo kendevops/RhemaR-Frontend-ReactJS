@@ -13,13 +13,15 @@ import { Spinner } from "reactstrap";
 import useCreateCourse from "../../hooks/mutations/classes/useCreateCourse";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
+import { useHistory } from "react-router-dom";
 
 const initialBasicInfo = {
   code: "",
   desc: "",
   level: "",
   title: "",
-  bannerUrl: "",
+  bannerUrl:
+    "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
 };
 
 export default function CreateCourse() {
@@ -30,6 +32,7 @@ export default function CreateCourse() {
   const [isEditingSection, toggleEditSection] = useToggle();
   const { isLoading, mutate } = useCreateCourse();
   const [sectionsData, setSectionsData] = useState<any[]>([]);
+  const history = useHistory();
 
   const {
     formData: basicInfoData,
@@ -39,7 +42,11 @@ export default function CreateCourse() {
     initialState: initialBasicInfo,
   });
   const { onChangeFile } = useFileReader({
-    onComplete: (file) => updateBasicInfo("bannerUrl", file),
+    onComplete: (file) =>
+      updateBasicInfo(
+        "bannerUrl",
+        "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4"
+      ),
   });
 
   function onDeleteSection(name: string) {
@@ -76,6 +83,8 @@ export default function CreateCourse() {
           />,
           ToastContent.Config
         );
+
+        history.push("/ict-admin/create-course");
       },
 
       onError: (e: any) => {
