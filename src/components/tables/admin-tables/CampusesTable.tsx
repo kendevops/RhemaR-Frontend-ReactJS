@@ -30,6 +30,8 @@ export default function CampusesTable() {
   const { isLoading, data } = useAllCampuses();
   const campusesData = data?.nodes;
 
+  // Breakdown students on campuses
+
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}

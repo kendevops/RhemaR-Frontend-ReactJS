@@ -6,13 +6,17 @@ import FileCard, { FileCardProps } from "../../components/molecules/FileCard";
 import CardWrapper from "../../components/students/CardWrapper";
 import CourseTimetable from "../../components/students/CourseTimetable";
 import { resourcesData } from "../../data/Resources";
+import getFileType from "../../utils/getFileType";
+import useResources from "../../hooks/queries/classes/useResources";
+import { Spinner } from "reactstrap";
 
 const options = ["Course Timetable", "RBTC Materials"];
 export default function Downloads() {
   const [tab, setTab] = useState(0);
   const currentOption = options[tab];
 
-  const data = resourcesData;
+  const { data, isLoading } = useResources();
+  const resourcesData = data?.nodes;
 
   return (
     <>
@@ -64,11 +68,17 @@ export default function Downloads() {
         {/* RBTC Materials */}
         {currentOption === "RBTC Materials" && (
           <section>
+            {isLoading && <Spinner />}
             <ul className="row mt-4">
-              {data.map((res: FileCardProps, i: number) => {
+              {resourcesData.map((res: any, i: number) => {
+                const props = {
+                  ...res,
+                  type: getFileType(res?.material?.type),
+                  url: res?.material?.path,
+                };
                 return (
                   <li className="col-sm-3" key={i.toString()}>
-                    <FileCard {...res} />
+                    <FileCard {...props} />
                   </li>
                 );
               })}

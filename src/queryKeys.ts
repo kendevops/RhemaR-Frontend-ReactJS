@@ -18,6 +18,7 @@ const queryKeys = {
   allEvents: "events",
   notifications: "notifications",
   faqs: "all-faqs",
+  resources: "all-resources",
 };
 
 export default queryKeys;

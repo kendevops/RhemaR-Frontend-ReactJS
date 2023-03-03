@@ -32,6 +32,11 @@ export default function FileCard({ type, title, url }: FileCardProps) {
       backgroundColor = "#EDFAF0";
       icon = VideoIcon;
       break;
+
+    case "pdf":
+      backgroundColor = "#EDFAF0";
+      icon = PdfIcon;
+      break;
   }
 
   return (
