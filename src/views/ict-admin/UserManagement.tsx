@@ -4,6 +4,7 @@ import UserManagementTable from "../../components/tables/admin-tables/UserManage
 import useToggle from "../../utility/hooks/useToggle";
 import SearchBar from "../../components/general/searchBar";
 import AddStaff from "../../components/modals/AddStaff";
+import StudentsManagementTable from "../../components/tables/admin-tables/StudentsManagementTable";
 
 export default function UserManagement() {
   const Options = ["Staff", "Students"];
@@ -57,6 +58,7 @@ export default function UserManagement() {
 
       {/* Table */}
       {currentOption === "Staff" && <UserManagementTable />}
+      {currentOption === "Students" && <StudentsManagementTable />}
     </section>
   );
 }

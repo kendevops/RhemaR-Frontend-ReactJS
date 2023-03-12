@@ -84,8 +84,16 @@ export default function CreateSectionModal({
     e.preventDefault();
     onCreate({
       ...formData,
-      materials,
-      assignments,
+      videoUrl:
+        "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
+      materials: materials?.map((m) => ({
+        ...m,
+        path: "https://rhema-course-uploads-bucket.s3.amazonaws.com/2181a670922ea04e097a72164fad0900.jpg",
+      })),
+      assignments: assignments?.map((m) => ({
+        ...m,
+        path: "https://rhema-course-uploads-bucket.s3.amazonaws.com/2181a670922ea04e097a72164fad0900.jpg",
+      })),
     });
     toggle();
   }

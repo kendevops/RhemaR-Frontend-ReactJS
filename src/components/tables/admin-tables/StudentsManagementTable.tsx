@@ -15,21 +15,24 @@ interface Data {
   state: string;
 }
 
-export default function UserManagementTable() {
+export default function StudentsManagementTable() {
   const { data: userData, isLoading } = useAllUsers();
 
   const users = userData?.users?.nodes;
 
+  console.log(users);
   const staffsData = users
     ? users
-        ?.filter((user: any) => user?.roles[0]?.name !== userRoles.STUDENT)
+        ?.filter((user: any) => user?.roles[0]?.name === userRoles.STUDENT)
         .map((user: any) => {
+          console.log(user);
           return {
             name: user?.firstName + " " + user?.lastName,
             rating: 56,
             email: user?.email,
             phoneNumber: user?.phoneNumber,
             role: user?.roles,
+            graduationStatus: "Pending",
           };
         })
     : [];
@@ -51,26 +54,13 @@ export default function UserManagementTable() {
       render: (data) => <p>{data?.email}</p>,
     },
     {
-      key: "Role",
-      title: "Role",
+      key: "Graduation Status",
+      title: "Graduation Status",
       render: (data) => {
-        const roles = data?.role?.map((r: any) => r?.name.toString());
-        return <p>{roles}</p>;
+        return <p>{data?.graduationStatus}</p>;
       },
     },
-    {
-      key: "Privilege",
-      title: "Privilege",
-      render: (data) => {
-        const roles = data?.role?.map((r: any) => r?.name.toString());
-        return <p>{roles}</p>;
-      },
-    },
-    // {
-    //   key: "State",
-    //   title: "State",
-    //   render: (data) => <p>{data?.nationality}</p>,
-    // },
+
     {
       key: "Action",
       title: "Action",

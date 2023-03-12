@@ -22,7 +22,7 @@ const Listdata = [
   },
 ];
 
-const Events = () => {
+export default function StudentEvents() {
   const [visibility, toggle] = useToggle();
   const dateRef = useRef(new Date());
 
@@ -34,15 +34,7 @@ const Events = () => {
     <>
       <CardHeader heading="events" imgSrc={EventsIcon} />
 
-      <div className="">
-        {/* Modal button */}
-        <div className="d-flex justify-content-end">
-          <button onClick={toggle} className="btn btn-blue-800 btn-lg card-btn">
-            new event
-          </button>
-          <AddEvent {...{ toggle, visibility }} />
-        </div>
-
+      <section className="">
         {/* card body */}
         <div className="card my-4 p-4 events-wrapper">
           {/* nav - date */}
@@ -68,13 +60,11 @@ const Events = () => {
 
             <div className="container my-5">
               {/* <EventsCards Eventsdata={Eventsdata} /> */}
-              <EventsCards />
+              <EventsCards isStudent />
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
-};
-
-export default Events;
+}

@@ -15,8 +15,10 @@ const queryKeys = {
   applications: "applications",
   exams: "all-exams",
   exam: "exam",
-  	allEvents: "events",
+  allEvents: "events",
   notifications: "notifications",
+  faqs: "all-faqs",
+  resources: "all-resources",
 };
 
 export default queryKeys;
