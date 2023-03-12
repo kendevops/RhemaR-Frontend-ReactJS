@@ -1,16 +1,28 @@
 import { useMutation } from "@tanstack/react-query";
-import api from "../../../api";
 import removeUrlParams from "../../../utils/removeUrlParams";
 
 type Data = {
   uploadUrl: string;
-  file: string;
+  file: File;
 };
+
+async function putUrl({ file, uploadUrl }: Data) {
+  const res = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    body: file,
+  });
+
+  return res;
+}
 
 export default function usePutFile() {
   return useMutation(({ file, uploadUrl }: Data) =>
-    api
-      .put(uploadUrl, file)
-      .then((r) => ({ r, fileUrl: removeUrlParams(uploadUrl) }))
+    putUrl({ file, uploadUrl }).then((r) => ({
+      r,
+      fileUrl: removeUrlParams(uploadUrl),
+    }))
   );
 }

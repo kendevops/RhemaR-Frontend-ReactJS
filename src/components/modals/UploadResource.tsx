@@ -6,6 +6,9 @@ import useForm from "../../utility/hooks/useForm";
 import FormInput from "../molecules/FormInput";
 import getFileFormat from "../../utils/getFileFormat";
 import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
+import useCreateResources from "../../hooks/mutations/classes/useCreateResources";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
 
 type UploadResourceModalProps = {
   toggle: VoidFunction;
@@ -19,21 +22,58 @@ export default function UploadResourceModal({
   const initialState = {
     title: "",
   };
+
+  const { mutate, isLoading: createLoading } = useCreateResources();
+
   const { formData, updateForm, formIsValid } = useForm({
     initialState,
   });
   const inputId = useId();
-  const { img: resource, onChangeFile, status, file } = useFileReader();
+  const { onChangeFile, file } = useFileReader();
 
   function handleSubmit(e: any) {
-    console.log(e);
+    const { size, type, name } = file!;
 
-    //mutate to the resource endpoint
-    // toggle();
+    const data = {
+      ...formData,
+      material: {
+        path: e?.fileUrl,
+        size,
+        type,
+        name,
+      },
+    };
+
+    mutate(data, {
+      onSuccess: () => {
+        toggle();
+        toast.success(
+          <ToastContent
+            heading={"Resource created successfully"}
+            type={"success"}
+            message={`You successfully created the resource ${formData?.title}`}
+          />,
+          { ...ToastContent.Config }
+        );
+      },
+      onError: (e: any) => {
+        console.log(e);
+        toast.error(
+          <ToastContent
+            heading={"An error occurred"}
+            type={"error"}
+            message={JSON.stringify(
+              e?.response?.data?.error?.message ?? e?.message
+            )}
+          />,
+          { ...ToastContent.Config }
+        );
+      },
+    });
   }
 
   const { isLoading, startUpload } = useUploadFile({
-    file: resource,
+    file: file!,
     format: getFileFormat(file?.name),
     onSuccess: handleSubmit,
   });
@@ -68,7 +108,7 @@ export default function UploadResourceModal({
             <input id={inputId} type={"file"} onChange={onChangeFile} />
           </div>
 
-          {isLoading ? (
+          {isLoading || createLoading ? (
             <Spinner />
           ) : (
             <button className="btn btn-blue-800 btn-lg w-100" type="submit">
