@@ -19,7 +19,8 @@ const AuthRegistrationPage = () => {
     confirmPassword: "",
   };
 
-  const { formData, formIsValid, updateForm } = useForm({ initialState });
+  const { formData, formIsValid, updateForm, formErrors, toggleError } =
+    useForm({ initialState });
   const [loading, toggleLoading] = useToggle();
   const history = useHistory();
 
@@ -51,14 +52,21 @@ const AuthRegistrationPage = () => {
       .catch((e) => {
         toggleLoading();
         console.log(e);
-        toast.error(
-          <ToastContent
-            heading={"An error occurred"}
-            message={e?.response?.data?.error?.message?.toString()}
-            type={"error"}
-          />,
-          { ...ToastContent.Config, autoClose: 10000000 }
-        );
+
+        const errorMessage = e?.response?.data?.error?.message;
+        const errors = Object.keys(errorMessage);
+        errors.forEach((err) => {
+          toast.error(
+            <ToastContent
+              heading={`${err} error`}
+              message={errorMessage[err]}
+              type={"error"}
+            />,
+            { ...ToastContent.Config, autoClose: false }
+          );
+
+          toggleError(err);
+        });
       })
       .finally(() => console.log(data));
   }
@@ -210,12 +218,20 @@ const AuthRegistrationPage = () => {
                         <label>Phone Number</label>
                         <input
                           type="tel"
-                          placeholder="WhatsApp & Telegram"
+                          placeholder="+2348012340000"
                           className="form-control"
                           formControlName="phoneNumber"
-                          onChange={(e) =>
-                            updateForm("phoneNumber", e.target.value)
-                          }
+                          onChange={(e) => {
+                            updateForm("phoneNumber", e.target.value);
+                            formErrors?.phoneNumber &&
+                              toggleError("phoneNumber");
+                          }}
+                          style={{
+                            borderColor: formErrors?.phoneNumber ? "red" : "",
+                            borderStyle: formErrors?.phoneNumber
+                              ? "solid"
+                              : "none",
+                          }}
                         />
                       </div>
                     </div>
@@ -224,7 +240,7 @@ const AuthRegistrationPage = () => {
                         <label>Alternate Phone Number</label>
                         <input
                           type="tel"
-                          placeholder="Enter Alternate Phone Number"
+                          placeholder="+2348012340000"
                           className="form-control"
                           formControlName="altPhoneNumber"
                           onChange={(e) =>

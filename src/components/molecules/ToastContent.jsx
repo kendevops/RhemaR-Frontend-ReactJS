@@ -25,7 +25,7 @@ ToastContent.Config = {
   icon: false,
   transition: Slide,
   hideProgressBar: false,
-  autoClose: 6000,
+  autoClose: 20000,
   position: toast.POSITION.BOTTOM_RIGHT,
 };
 

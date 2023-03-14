@@ -17,7 +17,11 @@ const AppLayoutWrapper = (props) => {
   const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
 
   return (
-    <>
+    <main
+      style={{
+        minHeight: "60vh",
+      }}
+    >
       <div className="nav-wrapper">
         <nav className="guest-layout navbar navbar-expand-lg navbar-dark first-section">
           <div className="container d-flex justify-content-between align-items-center w-100">
@@ -50,23 +54,26 @@ const AppLayoutWrapper = (props) => {
             </div>
             <div className="d-flex align-items-center social-links">
               <a
-                href="https://facebook.com/rhema"
+                href="https://facebook.com/rhemanigeria"
                 target="_blank"
                 className="me-4"
+                rel="noreferrer"
               >
                 <Icon icon="bxl:facebook-circle" />
               </a>
 
               <a
-                href="https://twitter.com/rhema"
+                href="https://twitter.com/rhemanigeria"
                 target="_blank"
                 className="me-4"
+                rel="noreferrer"
               >
                 <Icon icon="ant-design:twitter-circle-filled" />
               </a>
               <a
-                href="https://youtube.com/rhema"
+                href="https://youtube.com/rhemanigeria"
                 target="_blank"
+                rel="noreferrer"
                 className="me-4"
               >
                 <Icon icon="cib:youtube" />
@@ -77,11 +84,17 @@ const AppLayoutWrapper = (props) => {
         <nav className="guest-layout navbar navbar-expand-lg navbar-dark second-section">
           <div className="container d-flex justify-content-between align-items-center w-100">
             <div className="nav-logo">
-              <img src={rhemaLogo} alt="" />
+              <img src={rhemaLogo} alt="rhemarNigeria" />
             </div>
             <div className="d-flex align-items-center">
               <div className="navlink" routerLinkActive="router-link-active">
-                Home
+                <a
+                  href="https://rhemanigeria.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Home
+                </a>
                 {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
@@ -92,10 +105,22 @@ const AppLayoutWrapper = (props) => {
               </div>
 
               <div className="navlink" routerLinkActive="router-link-active">
-                Apply
+                <a
+                  href="https://app.rhemanigeria.com/register"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Apply
+                </a>
               </div>
               <div className="navlink" routerLinkActive="router-link-active">
-                Admissions
+                <a
+                  href="https://rhemanigeria.com/why-rbtc"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Admissions
+                </a>
                 {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
@@ -105,7 +130,13 @@ const AppLayoutWrapper = (props) => {
                 </span>
               </div>
               <div className="navlink" routerLinkActive="router-link-active">
-                Academics
+                <a
+                  href="https://rhemanigeria.com/rbtc-programs"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Academics
+                </a>
                 {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
@@ -116,7 +147,13 @@ const AppLayoutWrapper = (props) => {
               </div>
 
               <div className="navlink" routerLinkActive="router-link-active">
-                Students
+                <a
+                  href="https://rhemanigeria.com/about"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Students
+                </a>
                 {/* <Icon icon="bxs:down-arrow" /> */}
                 <span className="ms-2 text-lg">
                   <span
@@ -203,7 +240,7 @@ const AppLayoutWrapper = (props) => {
           </div>
         </div>
       </footer>
-    </>
+    </main>
   );
 };
 

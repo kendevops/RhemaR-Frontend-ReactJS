@@ -12,6 +12,7 @@ type FormDropdownProps = {
   title: string;
   lg?: string;
   md?: string;
+  hasErrors?: boolean;
 } & InputProps;
 
 export default function FormDropdown({
@@ -19,6 +20,7 @@ export default function FormDropdown({
   title,
   lg,
   md,
+  hasErrors,
   ...otherProps
 }: FormDropdownProps) {
   return (
@@ -30,6 +32,11 @@ export default function FormDropdown({
         className="form-control"
         type="select"
         {...otherProps}
+        style={{
+          ...otherProps.style,
+          borderColor: hasErrors ? "red" : "",
+          borderStyle: hasErrors ? "solid" : "none",
+        }}
       >
         <>
           {options.map(({ children, ...others }, i) => {

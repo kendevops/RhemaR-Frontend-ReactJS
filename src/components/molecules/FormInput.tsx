@@ -5,6 +5,7 @@ type FormInputProps = {
   label: string;
   lg?: string;
   md?: string;
+  hasErrors?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export default function FormInput({
@@ -12,6 +13,7 @@ export default function FormInput({
   md,
   label,
   placeholder,
+  hasErrors,
   ...others
 }: FormInputProps) {
   return (
@@ -21,6 +23,11 @@ export default function FormInput({
         className="form-control"
         placeholder={placeholder ?? label}
         {...others}
+        style={{
+          ...others.style,
+          borderColor: hasErrors ? "red" : "",
+          borderStyle: hasErrors ? "solid" : "none",
+        }}
       />
     </FormInputWrapper>
   );
