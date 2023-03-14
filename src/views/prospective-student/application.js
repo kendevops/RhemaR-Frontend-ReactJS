@@ -12,11 +12,15 @@ import { Spinner } from "reactstrap";
 import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 import useCampuses from "../../hooks/queries/classes/useCampuses";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import handleError from "../../utils/handleError";
+import countries from "../../data/Countries";
 
 function ApplicationPage(props) {
   const { setHasApplied } = props;
 
   const [success, toggleSuccess] = useToggle();
+
+  const countriesOptions = countries?.map((c) => c?.nationality);
 
   const initialState = {
     campus: "",
@@ -35,7 +39,8 @@ function ApplicationPage(props) {
     city: "",
   };
 
-  const { formData, formIsValid, updateForm } = useForm({ initialState });
+  const { formData, formIsValid, updateForm, toggleError, formErrors } =
+    useForm({ initialState });
   const { mutate, isLoading } = useCreateApplication();
   const { data } = useAcademicSessions();
   const { data: campusesData } = useCampuses();
@@ -91,7 +96,7 @@ function ApplicationPage(props) {
         window?.location?.replace(paymentUrl);
       },
       onError: (err) => {
-        console.log({ err, body });
+        handleError(err, formData, toggleError);
       },
     });
   }
@@ -155,18 +160,21 @@ function ApplicationPage(props) {
             label="Address"
             placeholder="Enter Contact Address"
             onChange={(e) => updateForm("address", e.target.value)}
+            hasErrors={formErrors?.address}
           />
 
           <FormInput
             label="City"
             placeholder="Enter City"
             onChange={(e) => updateForm("city", e.target.value)}
+            hasErrors={formErrors?.city}
             lg="6"
           />
           <FormInput
             label="State"
             placeholder="Enter State"
             onChange={(e) => updateForm("state", e.target.value)}
+            hasErrors={formErrors?.state}
             lg="6"
           />
           <FormInput
@@ -177,14 +185,17 @@ function ApplicationPage(props) {
               updateForm("dateOfBirth", new Date(e.target.value)?.toISOString())
             }
             lg="6"
+            hasErrors={formErrors?.dateOfBirth}
           />
 
-          <FormInput
-            label="Nationality"
-            placeholder="Nigerian"
-            type={"text"}
+          <FormDropdown
+            title="Nationality"
             onChange={(e) => updateForm("nationality", e.target.value)}
+            options={countriesOptions.map((o) => ({
+              children: o,
+            }))}
             lg="6"
+            hasErrors={formErrors?.nationality}
           />
 
           <FormDropdown
@@ -193,12 +204,14 @@ function ApplicationPage(props) {
               children: o,
             }))}
             title={"Marital Status"}
+            hasErrors={formErrors?.maritalStatus}
           />
 
           <FormInput
             label="Church Name"
             placeholder="Enter Church Name"
             onChange={(e) => updateForm("churchName", e.target.value)}
+            hasErrors={formErrors?.churchName}
           />
 
           <FormRadioGroup
@@ -213,6 +226,7 @@ function ApplicationPage(props) {
             label="How long have you been born again?"
             placeholder="How long have you been born again?"
             onChange={(e) => updateForm("longBornAgain", e.target.value)}
+            hasErrors={formErrors?.longBornAgain}
           />
 
           <FormRadioGroup
@@ -222,6 +236,7 @@ function ApplicationPage(props) {
               updateForm("isBaptized", !!(e.target.value === "Yes"));
               console.log(e.target.value);
             }}
+            hasErrors={formErrors?.isBaptized}
           />
         </div>
 
@@ -229,6 +244,10 @@ function ApplicationPage(props) {
           <p>
             You are to pay an application fee of N10,000 to proceed with your
             application
+          </p>
+          <p>
+            You will be redirected to paystack to make payment after filling the
+            form
           </p>
         </div>
 
@@ -243,7 +262,14 @@ function ApplicationPage(props) {
 // Main
 const ProspectiveStudentApplicationPage = () => {
   const [hasApplied, setHasApplied] = useState(false);
+  const [pendingPayment, setPendingPayment] = useState(false);
   const { data } = useCurrentUser();
+
+  function makePayment() {
+    const application = data?.applications[0];
+    const paymentUrl = application?.initialPayment?.paymentUrl;
+    window?.location?.replace(paymentUrl);
+  }
 
   useEffect(() => {
     if (!data) return;
@@ -253,7 +279,7 @@ const ProspectiveStudentApplicationPage = () => {
     const application = data?.applications[0];
     switch (application?.initialPayment?.status) {
       case "pending":
-        window.location.replace(application?.initialPayment?.paymentUrl);
+        setPendingPayment(true);
         break;
 
       case "success":
@@ -271,7 +297,22 @@ const ProspectiveStudentApplicationPage = () => {
           <div className="row">
             <div className="col-xl-7 col-lg-8 col-md-10 col-12 mx-auto">
               <article className="bg-white shadow rounded-2 p-5">
-                {hasApplied ? (
+                {pendingPayment && (
+                  <section className="text-center">
+                    <div className="p-3 bg-blue-200 rounded-3">
+                      <img src={applicationPending} alt="Payment pending" />
+                    </div>{" "}
+                    <button
+                      onClick={makePayment}
+                      className="btn btn-blue-800 btn-lg w-100"
+                      type="button"
+                    >
+                      Proceed to Payment
+                    </button>
+                  </section>
+                )}
+
+                {hasApplied && (
                   <section className="text-center">
                     <div className="p-3 bg-blue-200 rounded-3">
                       <img src={applicationPending} alt="Application Pending" />
@@ -291,9 +332,9 @@ const ProspectiveStudentApplicationPage = () => {
                       your admission request is processed.
                     </p>
                   </section>
-                ) : (
-                  <ApplicationPage {...{ setHasApplied }} />
                 )}
+
+                {!hasApplied && <ApplicationPage {...{ setHasApplied }} />}
               </article>
             </div>
           </div>
