@@ -5,6 +5,7 @@ import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
 import { useHistory } from "react-router-dom";
 import { Spinner } from "reactstrap";
+import handleError from "../../utils/handleError";
 
 const AuthRegistrationPage = () => {
   const initialState = {
@@ -51,22 +52,7 @@ const AuthRegistrationPage = () => {
       })
       .catch((e) => {
         toggleLoading();
-        console.log(e);
-
-        const errorMessage = e?.response?.data?.error?.message;
-        const errors = Object.keys(errorMessage);
-        errors.forEach((err) => {
-          toast.error(
-            <ToastContent
-              heading={`${err} error`}
-              message={errorMessage[err]}
-              type={"error"}
-            />,
-            { ...ToastContent.Config, autoClose: false }
-          );
-
-          toggleError(err);
-        });
+        handleError(e, formData, toggleError);
       })
       .finally(() => console.log(data));
   }
