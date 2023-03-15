@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Spinner, Toast } from "reactstrap";
 import useVerifyEmail from "../../hooks/queries/useVerifyEmail";
+import CardWrapper from "../../components/students/CardWrapper";
 
 export default function ConfirmVerification() {
   const history = useHistory();
@@ -24,20 +25,32 @@ export default function ConfirmVerification() {
   console.log({ data });
 
   return (
-    <section>
-      {isLoading && <Spinner />}
-      {isSuccess && (
-        <div className="text-center">
-          <h2>Email Confirmation Successful</h2>
-          <button
-            onClick={onProceed}
-            className="btn btn-blue-800 btn-lg w-100 mb-5"
-          >
-            Proceed to Login
-          </button>
+    <main
+      style={{
+        display: "grid",
+        placeContent: "center",
+        width: "100vw",
+        height: "50vh",
+      }}
+    >
+      <CardWrapper className="container ">
+        {isLoading && <Spinner />}
+
+        <div className=" mx-auto">
+          {isSuccess && (
+            <div className="text-center">
+              <h2 className="my-4">Email Confirmation Successful</h2>
+              <button
+                onClick={onProceed}
+                className="btn btn-blue-800 btn-lg w-100 mb-5"
+              >
+                Proceed to Login
+              </button>
+            </div>
+          )}
+          {isError && <Toast>An Error Occurred</Toast>}
         </div>
-      )}
-      {isError && <Toast>An Error Occurred</Toast>}
-    </section>
+      </CardWrapper>
+    </main>
   );
 }

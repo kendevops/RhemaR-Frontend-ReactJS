@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SuccessModal from "../../components/modals/SuccessModal";
 import FormDropdown from "../../components/molecules/FormDropdown";
 import FormInput from "../../components/molecules/FormInput";
@@ -48,11 +48,16 @@ function ApplicationPage(props) {
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const academicOptions = data?.nodes?.map((d) => d?.name);
   const maritalOptions = ["Single", "Married"];
+  const [campusFee, setCampusFee] = useState("");
 
   useEffect(() => {
     //set Campus and academic sessions on render
     if (formData?.campus?.length < 3 && !!campusOptions) {
       updateForm("campus", campusOptions[0]);
+      const fee = campusesData?.nodes?.find((c) => c?.name === formData?.campus)
+        ?.tuitions[0]?.initialPayment;
+
+      setCampusFee(fee);
     }
     if (formData?.session?.length < 3 && !!academicOptions) {
       updateForm("session", academicOptions[0]);
@@ -63,6 +68,8 @@ function ApplicationPage(props) {
     campusOptions,
     academicOptions,
     formData?.session?.length,
+    campusesData,
+    formData?.campus,
   ]);
 
   function makePayment(e) {
@@ -133,7 +140,14 @@ function ApplicationPage(props) {
         <div className="row">
           {campusOptions && (
             <FormDropdown
-              onChange={(e) => updateForm("campus", e?.target?.value)}
+              onChange={(e) => {
+                updateForm("campus", e?.target?.value);
+                const fee = campusesData?.nodes?.find(
+                  (c) => c?.name === formData?.campus
+                )?.tuitions[0]?.initialPayment;
+
+                setCampusFee(fee);
+              }}
               options={campusOptions.map((o) => ({
                 children: o,
               }))}
@@ -242,8 +256,8 @@ function ApplicationPage(props) {
 
         <div className="py-4 border-top">
           <p>
-            You are to pay an application fee of N10,000 to proceed with your
-            application
+            You are to pay an application fee of N{campusFee} to proceed with
+            your application
           </p>
           <p>
             You will be redirected to paystack to make payment after filling the
@@ -263,7 +277,7 @@ function ApplicationPage(props) {
 const ProspectiveStudentApplicationPage = () => {
   const [hasApplied, setHasApplied] = useState(false);
   const [pendingPayment, setPendingPayment] = useState(false);
-  const { data } = useCurrentUser();
+  const { data, isLoading } = useCurrentUser();
 
   function makePayment() {
     const application = data?.applications[0];
@@ -296,6 +310,7 @@ const ProspectiveStudentApplicationPage = () => {
         <div className="auth-wrapper">
           <div className="row">
             <div className="col-xl-7 col-lg-8 col-md-10 col-12 mx-auto">
+              {isLoading && <Spinner />}
               <article className="bg-white shadow rounded-2 p-5">
                 {pendingPayment && (
                   <section className="text-center">
@@ -334,7 +349,9 @@ const ProspectiveStudentApplicationPage = () => {
                   </section>
                 )}
 
-                {!hasApplied && <ApplicationPage {...{ setHasApplied }} />}
+                {!hasApplied && !pendingPayment && (
+                  <ApplicationPage {...{ setHasApplied }} />
+                )}
               </article>
             </div>
           </div>

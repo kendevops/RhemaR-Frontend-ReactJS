@@ -9,19 +9,166 @@ import { ArrowUp } from "react-feather";
 // ** Reactstrap Imports
 import { Navbar, Button } from "reactstrap";
 import { Icon } from "@iconify/react";
+import useToggle from "../../../utility/hooks/useToggle";
+
+const hamburgerIcon = (
+  <svg
+    width="38"
+    height="22"
+    viewBox="0 0 38 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1.5 1H36.5"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+    <path
+      d="M1.5 11H36.5"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+    <path
+      d="M1.5 21H36.5"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </svg>
+);
+
+const closeIcon = (
+  <svg
+    width="27"
+    height="27"
+    viewBox="0 0 27 27"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1 1L25.7487 25.7487"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+    <path
+      d="M1 25.748L25.7487 0.99931"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </svg>
+);
+
+const navItems = (
+  <>
+    <div className="navlink" routerLinkActive="router-link-active">
+      <a href="https://rhemanigeria.com/" target="_blank" rel="noreferrer">
+        Home
+      </a>
+      {/* <Icon icon="bxs:down-arrow" /> */}
+      <span className="ms-2 text-lg">
+        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+      </span>
+    </div>
+
+    <div className="navlink" routerLinkActive="router-link-active">
+      <a
+        href="https://app.rhemanigeria.com/register"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Apply
+      </a>
+    </div>
+    <div className="navlink" routerLinkActive="router-link-active">
+      <a
+        href="https://rhemanigeria.com/why-rbtc"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Admissions
+      </a>
+      {/* <Icon icon="bxs:down-arrow" /> */}
+      <span className="ms-2 text-lg">
+        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+      </span>
+    </div>
+    <div className="navlink" routerLinkActive="router-link-active">
+      <a
+        href="https://rhemanigeria.com/rbtc-programs"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Academics
+      </a>
+      {/* <Icon icon="bxs:down-arrow" /> */}
+      <span className="ms-2 text-lg">
+        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+      </span>
+    </div>
+
+    <div className="navlink" routerLinkActive="router-link-active">
+      <a href="https://rhemanigeria.com/about" target="_blank" rel="noreferrer">
+        Students
+      </a>
+      {/* <Icon icon="bxs:down-arrow" /> */}
+      <span className="ms-2 text-lg">
+        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+      </span>
+    </div>
+  </>
+);
 
 const AppLayoutWrapper = (props) => {
   // ** Props
   const { menuData, children } = props;
 
+  const [mobileNavOpen, toggleMobileNav] = useToggle();
+
   const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
 
   return (
-    <main
-      style={{
-        minHeight: "60vh",
-      }}
-    >
+    <main>
+      {/* Mobile Nav */}
+      <section className="mobile-nav-wrapper">
+        <article className="d-flex align-items-center justify-content-between mobile-nav-top">
+          <p className="navlink">Welcome!</p>
+          <div
+            routerLink="/login"
+            onClick={() => {
+              window.location.href = "/login";
+            }}
+          >
+            Login
+          </div>
+        </article>
+
+        <nav
+          style={{
+            height: mobileNavOpen ? "100vh" : "",
+          }}
+          className="w-100 mobile-nav-bottom"
+        >
+          <article className="d-flex justify-content-between align-items-center w-100">
+            <div className="nav-logo">
+              <img src={rhemaLogo} alt="rhemarNigeria" />
+            </div>
+
+            <div onClick={toggleMobileNav}>
+              {mobileNavOpen ? closeIcon : hamburgerIcon}
+            </div>
+          </article>
+
+          {/* Menu */}
+          {mobileNavOpen && <ul className="mobile-nav-items">{navItems}</ul>}
+        </nav>
+      </section>
+
+      {/* Web nav */}
       <div className="nav-wrapper">
         <nav className="guest-layout navbar navbar-expand-lg navbar-dark first-section">
           <div className="container d-flex justify-content-between align-items-center w-100">
@@ -86,89 +233,20 @@ const AppLayoutWrapper = (props) => {
             <div className="nav-logo">
               <img src={rhemaLogo} alt="rhemarNigeria" />
             </div>
-            <div className="d-flex align-items-center">
-              <div className="navlink" routerLinkActive="router-link-active">
-                <a
-                  href="https://rhemanigeria.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Home
-                </a>
-                {/* <Icon icon="bxs:down-arrow" /> */}
-                <span className="ms-2 text-lg">
-                  <span
-                    className="iconify"
-                    dataIcon="fontisto:angle-dobule-down"
-                  ></span>
-                </span>
-              </div>
-
-              <div className="navlink" routerLinkActive="router-link-active">
-                <a
-                  href="https://app.rhemanigeria.com/register"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Apply
-                </a>
-              </div>
-              <div className="navlink" routerLinkActive="router-link-active">
-                <a
-                  href="https://rhemanigeria.com/why-rbtc"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Admissions
-                </a>
-                {/* <Icon icon="bxs:down-arrow" /> */}
-                <span className="ms-2 text-lg">
-                  <span
-                    className="iconify"
-                    dataIcon="fontisto:angle-dobule-down"
-                  ></span>
-                </span>
-              </div>
-              <div className="navlink" routerLinkActive="router-link-active">
-                <a
-                  href="https://rhemanigeria.com/rbtc-programs"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Academics
-                </a>
-                {/* <Icon icon="bxs:down-arrow" /> */}
-                <span className="ms-2 text-lg">
-                  <span
-                    className="iconify"
-                    dataIcon="fontisto:angle-dobule-down"
-                  ></span>
-                </span>
-              </div>
-
-              <div className="navlink" routerLinkActive="router-link-active">
-                <a
-                  href="https://rhemanigeria.com/about"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Students
-                </a>
-                {/* <Icon icon="bxs:down-arrow" /> */}
-                <span className="ms-2 text-lg">
-                  <span
-                    className="iconify"
-                    dataIcon="fontisto:angle-dobule-down"
-                  ></span>
-                </span>
-              </div>
-            </div>
+            <div className="d-flex align-items-center">{navItems}</div>
           </div>
         </nav>
       </div>
 
       {/* Main Content */}
-      <div className="guest-content-wrapper">{children}</div>
+      <div
+        style={{
+          minHeight: "60vh",
+        }}
+        className="guest-content-wrapper"
+      >
+        {children}
+      </div>
 
       <footer className="guest-layout">
         <div className="bottom-footer text-center">

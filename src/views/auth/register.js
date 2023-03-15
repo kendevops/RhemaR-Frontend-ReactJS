@@ -246,6 +246,14 @@ const AuthRegistrationPage = () => {
                           onChange={(e) =>
                             updateForm("alternatePhoneNumber", e.target.value)
                           }
+                          style={{
+                            borderColor: formErrors?.altPhoneNumber
+                              ? "red"
+                              : "",
+                            borderStyle: formErrors?.altPhoneNumber
+                              ? "solid"
+                              : "none",
+                          }}
                         />
                       </div>
                     </div>
