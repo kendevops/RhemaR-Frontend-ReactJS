@@ -48,7 +48,7 @@ function ApplicationPage(props) {
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const academicOptions = data?.nodes?.map((d) => d?.name);
   const maritalOptions = ["Single", "Married"];
-  const [campusFee, setCampusFee] = useState("");
+  const [campusFee, setCampusFee] = useState("30000");
 
   useEffect(() => {
     //set Campus and academic sessions on render
