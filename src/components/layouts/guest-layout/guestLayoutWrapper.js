@@ -253,17 +253,19 @@ const AppLayoutWrapper = (props) => {
           <div className="container">
             <div className="d-flex align-items-center justify-content-center social-links mb-4">
               <a
-                href="https://facebook.com/rhema"
+                href="https://facebook.com/rhemanigeria"
                 target="_blank"
                 className="me-4"
+                rel="noreferrer"
               >
                 <Icon icon="bxl:facebook-circle" width="40" height="40" />
               </a>
 
               <a
-                href="https://twitter.com/rhema"
+                href="https://twitter.com/rhemanigeria"
                 target="_blank"
                 className="me-4"
+                rel="noreferrer"
               >
                 <Icon
                   icon="ant-design:twitter-circle-filled"
@@ -272,16 +274,18 @@ const AppLayoutWrapper = (props) => {
                 />
               </a>
               <a
-                href="https://youtube.com/rhema"
+                href="https://youtube.com/rhemanigeria"
                 target="_blank"
                 className="me-4"
+                rel="noreferrer"
               >
                 <Icon icon="cib:youtube" width="40" height="40" />
               </a>
               <a
-                href="https://instagram.com/rhema"
+                href="https://instagram.com/rhemanigeria"
                 target="_blank"
                 className="me-4"
+                rel="noreferrer"
               >
                 <Icon icon="akar-icons:instagram-fill" width="40" height="40" />
               </a>
@@ -289,17 +293,47 @@ const AppLayoutWrapper = (props) => {
             <div className="d-flex justify-content-center font10 flex-wrap mb-4">
               <a href="/">Home</a>
               <span className="text-grey-200 text-opacity-25 mx-3">/</span>
-              <a href="/">Apply</a>
+              <a href="/register">Apply</a>
               <span className="text-grey-200 text-opacity-25 mx-3">/</span>
-              <a href="/">Admissions</a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://rhemanigeria.com/why-rbtc"
+              >
+                Admissions
+              </a>
               <span className="text-grey-200 text-opacity-25 mx-3">/</span>
-              <a href="/">Academics</a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://rhemanigeria.com/rbtc-programs"
+              >
+                Academics
+              </a>
               <span className="text-grey-200 text-opacity-25 mx-3">/</span>
-              <a href="/">Students</a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://rhemanigeria.com/about"
+              >
+                Students
+              </a>
               <span className="text-grey-200 text-opacity-25 mx-3">/</span>
-              <a href="/">News & Events</a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://rhemanigeria.com"
+              >
+                News & Events
+              </a>
               <span className="text-grey-200 text-opacity-25 mx-3">/</span>
-              <a href="/">Give</a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://rhemanigeria.com/"
+              >
+                Give
+              </a>
             </div>
             <p className="font10 text-grey-100 text-opacity-75 mb-4">
               Copyright © 2021 Rhema Bible Training College <br />
