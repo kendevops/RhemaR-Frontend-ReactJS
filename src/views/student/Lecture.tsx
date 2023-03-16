@@ -26,7 +26,7 @@ interface LectureParams {
 
 const assignments = ["Reading Assignment.pdf", "Listening Assignment.mp3"];
 
-const tabs = ["Course Overview", "Class Discussion"];
+const tabs = ["Course Overview"]; //"Class Discussion"
 // const video = require("../../assets/videos/class.mp4");
 
 export default function Lecture() {
@@ -119,9 +119,9 @@ export default function Lecture() {
             {currentTab === "Course Overview" && (
               <CourseOverview course={params?.id} />
             )}
-            {currentTab === "Class Discussion" && (
+            {/* {currentTab === "Class Discussion" && (
               <ClassDiscussion course={params?.id} />
-            )}
+            )} */}
           </CardWrapper>
         </ColWrapper>
 

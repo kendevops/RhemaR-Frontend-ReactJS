@@ -13,7 +13,7 @@ const AuthRoutes = [
   {
     path: "/forgot-password",
     component: lazy(() => import("../../views/auth/forgotPassword")),
-    layout: "BlankLayout",
+    layout: "GuestLayout",
     meta: {
       publicRoute: true,
     },
@@ -21,7 +21,7 @@ const AuthRoutes = [
   {
     path: "/reset-password",
     component: lazy(() => import("../../views/auth/resetPassword")),
-    layout: "BlankLayout",
+    layout: "GuestLayout",
     meta: {
       publicRoute: true,
     },
