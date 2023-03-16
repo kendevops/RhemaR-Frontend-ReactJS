@@ -23,8 +23,18 @@ function ApplicationPage(props) {
   const countriesOptions = countries?.map((c) => c?.nationality);
 
   const initialState = {
+    title: "",
+    intake: "",
     campus: "",
     session: "",
+    whatsAppNo: "+2348180001108",
+    selectedDate: "2022-10-24T10:00:03.039Z",
+    referralSource: "referral source",
+    classAttendanceMethod: "class attendance preference",
+    churchDetails: "pastor solomon doziben's church of christ",
+    churchPastorName: "pastor solomon doziben 😁",
+    churchPastorPhoneNumber: "+2348180001108",
+    affirmationAndSubmissions: "Affirmation and Submissions",
     classes: "",
     address: "",
     dateOfBirth: "",
@@ -100,7 +110,8 @@ function ApplicationPage(props) {
         //proceed to make payment
         const paymentUrl =
           d?.data?.data?.application?.initialPayment?.paymentUrl;
-        window?.location?.replace(paymentUrl);
+        window?.open(paymentUrl);
+        window.location?.reload();
       },
       onError: (err) => {
         handleError(err, formData, toggleError);
@@ -256,8 +267,8 @@ function ApplicationPage(props) {
 
         <div className="py-4 border-top">
           <p>
-            You are to pay an application fee of N{campusFee} to proceed with
-            your application
+            You are to pay an application fee of N{campusFee ?? "30000"} to
+            proceed with your application
           </p>
           <p>
             You will be redirected to paystack to make payment after filling the
@@ -282,7 +293,8 @@ const ProspectiveStudentApplicationPage = () => {
   function makePayment() {
     const application = data?.applications[0];
     const paymentUrl = application?.initialPayment?.paymentUrl;
-    window?.location?.replace(paymentUrl);
+    window?.open(paymentUrl);
+    window.location?.reload();
   }
 
   useEffect(() => {

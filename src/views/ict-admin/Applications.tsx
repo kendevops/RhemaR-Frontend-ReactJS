@@ -8,6 +8,7 @@ import useAcceptApplication from "../../hooks/mutations/applications/useAcceptAp
 import useRejectApplication from "../../hooks/mutations/applications/useRejectApplication";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
 
 interface ViewApplicationProps {
   data: any;
@@ -76,14 +77,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
         );
       },
       onError: (e: any) => {
-        toast.error(
-          <ToastContent
-            heading={"An Error Occurred"}
-            message={e?.response?.data?.error?.message?.toString()}
-            type={"error"}
-          />,
-          { ...ToastContent.Config }
-        );
+        handleError(e);
       },
     });
   }
