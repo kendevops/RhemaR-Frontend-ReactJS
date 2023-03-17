@@ -14,6 +14,7 @@ import useCampuses from "../../hooks/queries/classes/useCampuses";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import handleError from "../../utils/handleError";
 import countries from "../../data/Countries";
+import TextArea from "../../components/molecules/TextArea";
 
 function ApplicationPage(props) {
   const { setHasApplied } = props;
@@ -24,18 +25,17 @@ function ApplicationPage(props) {
 
   const initialState = {
     title: "",
-    intake: "",
-    campus: "",
+    // classes: "",
+    // campus: "",
+    // whatsAppNo: "",
+    // selectedDate: "",
     session: "",
-    whatsAppNo: "",
-    selectedDate: "",
-    referralSource: "direct",
-    classAttendanceMethod: "",
-    churchDetails: "",
-    churchPastorName: "",
-    churchPastorPhoneNumber: "",
-    affirmationAndSubmissions: "",
-    classes: "",
+    // referralSource: "direct",
+    // classAttendanceMethod: "",
+    // churchDetails: "",
+    // churchPastorName: "",
+    // churchPastorPhoneNumber: "",
+    // affirmationAndSubmissions: "",
     address: "",
     dateOfBirth: "",
     nationality: "Nigerian",
@@ -84,15 +84,8 @@ function ApplicationPage(props) {
 
   function makePayment(e) {
     e.preventDefault();
-    const {
-      state,
-      city,
-      affirmations,
-      longBornAgain,
-      address,
-      classes,
-      ...otherData
-    } = formData;
+    const { state, city, affirmations, longBornAgain, address, ...otherData } =
+      formData;
     const body = {
       ...otherData,
       level: "LEVEL_1",
@@ -105,9 +98,14 @@ function ApplicationPage(props) {
       },
     };
 
+    if (!Object.values(body).every((v) => v > "")) {
+      alert("Please fill in all fields");
+      console.log({ body });
+      // return;
+    }
+
     mutate(body, {
       onSuccess: (d) => {
-        //proceed to make payment
         const paymentUrl =
           d?.data?.data?.application?.initialPayment?.paymentUrl;
         window?.open(paymentUrl);
@@ -149,6 +147,13 @@ function ApplicationPage(props) {
 
       <form onSubmit={makePayment}>
         <div className="row">
+          <FormInput
+            label="Title"
+            placeholder="Title"
+            onChange={(e) => updateForm("title", e.target.value)}
+            hasErrors={formErrors?.title}
+          />
+
           {campusOptions && (
             <FormDropdown
               onChange={(e) => {
@@ -175,11 +180,11 @@ function ApplicationPage(props) {
               title={"Academic Session"}
             />
           )}
-          {/* <FormRadioGroup
+          <FormRadioGroup
             label="How will you attend your classes"
             options={["Onsite", "Online"]}
             onChange={(e) => updateForm("classes", e.target.value)}
-          /> */}
+          />
 
           <FormInput
             label="Address"
@@ -233,10 +238,40 @@ function ApplicationPage(props) {
           />
 
           <FormInput
+            label="Whatsapp Number"
+            placeholder="+2348012340000"
+            onChange={(e) => updateForm("whatsAppNo", e.target.value)}
+            hasErrors={formErrors?.whatsAppNo}
+          />
+
+          <FormInput
+            label="Pick a date"
+            onChange={(e) =>
+              updateForm("selectedDate", new Date(e.target.value).toISOString())
+            }
+            hasErrors={formErrors?.selectedDate}
+            type="date"
+          />
+
+          <FormInput
             label="Church Name"
             placeholder="Enter Church Name"
             onChange={(e) => updateForm("churchName", e.target.value)}
             hasErrors={formErrors?.churchName}
+          />
+          <FormInput
+            label="Church Pastor's Name"
+            placeholder="Enter Church pastor's name"
+            onChange={(e) => updateForm("churchPastorName", e.target.value)}
+            hasErrors={formErrors?.churchPastorName}
+          />
+          <FormInput
+            label="Church Pastor's Phone Number"
+            placeholder="+2348012340000"
+            onChange={(e) =>
+              updateForm("churchPastorPhoneNumber", e.target.value)
+            }
+            hasErrors={formErrors?.churchPastorPhoneNumber}
           />
 
           <FormRadioGroup
@@ -262,6 +297,14 @@ function ApplicationPage(props) {
               console.log(e.target.value);
             }}
             hasErrors={formErrors?.isBaptized}
+          />
+
+          <TextArea
+            label="Affirmations & Submissions"
+            onChange={(e) =>
+              updateForm("affirmationAndSubmissions", e?.target?.value)
+            }
+            hasErrors={formErrors?.affirmationAndSubmissions}
           />
         </div>
 
