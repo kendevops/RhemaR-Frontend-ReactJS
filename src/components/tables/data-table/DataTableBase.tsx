@@ -14,7 +14,7 @@ function DataTableBase<T>(props: TableProps<T>): JSX.Element {
     return (
         <DataTable
             pagination
-            selectableRowsComponent={Checkbox}
+            //selectableRowsComponentProps={Checkbox}
             selectableRowsComponentProps={selectProps}
             sortIcon={sortIcon}
             dense

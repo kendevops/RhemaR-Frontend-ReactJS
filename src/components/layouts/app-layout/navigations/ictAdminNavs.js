@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 export default [
   {
     id: "dashboards",
-    title: "Dashboards",
+    title: "Dashboard",
     icon: <Icon icon="ep:menu" />,
     navLink: "/ict-admin/dashboard",
     action: "read",
@@ -37,7 +37,7 @@ export default [
   },
   {
     id: "instructors",
-    title: "instructors",
+    title: "Instructors",
     icon: <Icon icon="fa-solid:chalkboard-teacher" />,
     navLink: "/ict-admin/instructors",
     action: "read",
