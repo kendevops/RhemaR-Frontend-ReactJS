@@ -2,12 +2,13 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import useToggle from "../../utility/hooks/useToggle";
-import { useMutation } from "@tanstack/react-query";
 import useForm from "../../utility/hooks/useForm";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import { Spinner } from "reactstrap";
+import FormInput from "../../components/molecules/FormInput";
+import useResetPassword from "../../hooks/mutations/users/useResetPassword";
 
 const AuthResetPasswordPage = () => {
   const param = useParams();
@@ -16,7 +17,7 @@ const AuthResetPasswordPage = () => {
   const id = param?.id;
 
   const [validUrl, toggleValidUrl] = useToggle();
-  const { isLoading, mutate } = useMutation();
+  const { isLoading, mutate } = useResetPassword();
   const { formData, formErrors, updateForm, formIsValid, toggleError } =
     useForm({
       initialState: {
@@ -97,12 +98,21 @@ const AuthResetPasswordPage = () => {
                   </div>
 
                   <form className="login-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                      <label htmlFor="password">New Password</label>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="confirmPassword">Confirm Password</label>
-                    </div>
+                    <FormInput
+                      type="Password"
+                      label="New password"
+                      onChange={(e) => updateForm("password", e?.target?.value)}
+                      hasErrors={formErrors?.password}
+                    />
+                    <FormInput
+                      type="password"
+                      label="Confirm password"
+                      onChange={(e) =>
+                        updateForm("confirmPassword", e?.target?.value)
+                      }
+                      hasErrors={formErrors?.password}
+                    />
+
                     <button
                       className="btn btn-blue-800 btn-lg w-100 mt-5 mb-5"
                       type="submit"

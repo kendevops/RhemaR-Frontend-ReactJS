@@ -408,29 +408,29 @@ const ProspectiveStudentApplicationPage = () => {
 
                         {data?.applications[0] &&
                         data?.applications[0]?.feePayment?.status ===
-                          "pending" ? (
-                          <>
+                          "PENDING" ? (
+                          <div>
                             <h2 className="text-bold"> Application Pending </h2>
                             <p className="mb-3">
                               Initial deposit must be paid before admission is
                               granted
                             </p>
-                          </>
+                          </div>
                         ) : (
-                          <>
+                          <div>
                             <h2 className="text-bold"> Application Success </h2>
                             <p className="mb-3">
                               We will contact you via the email you registered
                               with once your admission request is processed.
                             </p>
-                          </>
+                          </div>
                         )}
                       </div>
                     </section>
 
                     {data?.applications[0] &&
                       data?.applications[0]?.feePayment?.status ===
-                        "pending" && (
+                        "PENDING" && (
                         <button type="button" onClick={makeDepositPayment}>
                           Complete Fee Payment
                         </button>
