@@ -99,7 +99,7 @@ function ApplicationPage(props) {
     };
 
     if (!Object.values(body).every((v) => v > "")) {
-      alert("Please fill in all fields");
+      // alert("Please fill in all fields");
       console.log({ body });
       // return;
     }
@@ -340,6 +340,13 @@ const ProspectiveStudentApplicationPage = () => {
     window.location?.reload();
   }
 
+  function makeDepositPayment() {
+    const application = data?.applications[0];
+    const paymentUrl = application?.feePayment?.paymentUrl;
+    window?.open(paymentUrl);
+    window.location?.reload();
+  }
+
   useEffect(() => {
     if (!data) return;
     if (!data?.applications?.length) return;
@@ -383,25 +390,52 @@ const ProspectiveStudentApplicationPage = () => {
                 )}
 
                 {hasApplied && (
-                  <section className="text-center">
-                    <div className="p-3 bg-blue-200 rounded-3">
-                      <img src={applicationPending} alt="Application Pending" />
-                    </div>
-                    <div
-                      className="d-flex my-4 align-items-center justify-content-center gap-3 p-3 rounded-3"
-                      style={{
-                        backgroundColor: "#FEF7EA",
-                      }}
-                    >
-                      <ExclamationCircleIcon color="#F2B12E" height={32} />
-                      <h2 className="text-bold">Application Pending</h2>
-                    </div>
+                  <>
+                    <section className="text-center">
+                      <div className="p-3 bg-blue-200 rounded-3">
+                        <img
+                          src={applicationPending}
+                          alt="Application Pending"
+                        />
+                      </div>
+                      <div
+                        className="d-flex my-4 align-items-center justify-content-center gap-3 p-3 rounded-3"
+                        style={{
+                          backgroundColor: "#FEF7EA",
+                        }}
+                      >
+                        <ExclamationCircleIcon color="#F2B12E" height={32} />
 
-                    <p className="mb-3">
-                      We will contact you via the email you registered with once
-                      your admission request is processed.
-                    </p>
-                  </section>
+                        {data?.applications[0] &&
+                        data?.applications[0]?.feePayment?.status ===
+                          "pending" ? (
+                          <>
+                            <h2 className="text-bold"> Application Pending </h2>
+                            <p className="mb-3">
+                              Initial deposit must be paid before admission is
+                              granted
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <h2 className="text-bold"> Application Success </h2>
+                            <p className="mb-3">
+                              We will contact you via the email you registered
+                              with once your admission request is processed.
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </section>
+
+                    {data?.applications[0] &&
+                      data?.applications[0]?.feePayment?.status ===
+                        "pending" && (
+                        <button type="button" onClick={makeDepositPayment}>
+                          Complete Fee Payment
+                        </button>
+                      )}
+                  </>
                 )}
 
                 {!hasApplied && !pendingPayment && (

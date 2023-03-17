@@ -19,7 +19,7 @@ const AuthRoutes = [
     },
   },
   {
-    path: "/reset-password",
+    path: "/reset-password/:id",
     component: lazy(() => import("../../views/auth/resetPassword")),
     layout: "GuestLayout",
     meta: {
