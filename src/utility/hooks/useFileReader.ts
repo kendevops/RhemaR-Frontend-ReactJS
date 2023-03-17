@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 
 interface fileReaderOptions {
-  onComplete?: (img: string) => void;
+  onComplete?: (img: string, file: File) => void;
   initialImgData?: string | undefined | void;
 }
 
@@ -11,6 +11,7 @@ export default function useFileReader(options?: fileReaderOptions) {
     loading: false,
   });
   const [img, setImg] = useState<any>(options?.initialImgData);
+  const [file, setFile] = useState<File | undefined>(undefined);
 
   function onChangeFile(e: ChangeEvent<HTMLInputElement>) {
     const files = e.target?.files;
@@ -23,11 +24,14 @@ export default function useFileReader(options?: fileReaderOptions) {
     fileReader.addEventListener("loadend", (e) => {
       setImg(e.target?.result);
       setStatus((prev) => ({ ...prev, loading: false, success: true }));
-      options?.onComplete && options?.onComplete(img);
+      options?.onComplete && file && options?.onComplete(img, file);
     });
 
-    files && fileReader.readAsDataURL(files[0]);
+    if (files) {
+      setFile(files[0]);
+      fileReader.readAsDataURL(files[0]);
+    }
   }
 
-  return { img, status, onChangeFile };
+  return { img, status, file, onChangeFile };
 }

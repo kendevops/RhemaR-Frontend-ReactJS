@@ -1,27 +1,25 @@
-import useToggle from "../../utility/hooks/useToggle";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import { Input } from "reactstrap";
-import { useForm, Controller } from "react-hook-form";
-
-interface defaultValues {
-  course: string;
-  level: string;
-  classOption: string;
-  date: string;
-}
+import { FormEvent } from "react";
+import useForm from "../../utility/hooks/useForm";
+import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
+import { Autocomplete, TextField } from "@mui/material";
+import useAllCourses from "../../hooks/queries/classes/useAllCourses";
+import useScheduleClass from "../../hooks/mutations/classes/useScheduleClass";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
+import FormInput from "../molecules/FormInput";
+import useAllUsers from "../../hooks/queries/useAllUsers";
+import userRoles from "../../utility/userRoles";
 
 type AddScheduleProps = {
   toggle: VoidFunction;
   visibility: boolean;
-  defaultValues?: defaultValues;
+  defaultValues?: {
+    name: string;
+    course: string;
+    endTime: string;
+    startTime: string;
+    instructorEmail: string;
+  };
 };
 
 export default function AddSchedule({
@@ -30,140 +28,156 @@ export default function AddSchedule({
   defaultValues: defValues,
 }: AddScheduleProps) {
   const defaultValues = defValues ?? {
-    classOption: "",
+    name: "",
     course: "",
-    date: "",
-    level: "",
+    endTime: "",
+    startTime: "",
+    instructorEmail: "",
   };
 
-  const [classOpen, toggleClass] = useToggle();
-  const [levelOpen, toggleLevel] = useToggle();
-  const [courseOpen, toggleCourse] = useToggle();
+  const { data: coursesData, isLoading: coursesLoading } = useAllCourses();
+  const coursesOptions = coursesData?.nodes?.map((cours: any) => ({
+    label: cours?.title,
+    id: cours?.title,
+  }));
 
-  const { control, setError, handleSubmit, formState } = useForm({
-    defaultValues,
-    mode: "onChange",
+  const { isLoading: usersLoading, data: usersData } = useAllUsers();
+  const users = usersData?.users?.nodes;
+  const instructorsOptions = users
+    ?.filter((user: any) => user?.roles[0]?.name === userRoles.INSTRUCTOR)
+    .map((u: any) => ({
+      label: `${u?.firstName} ${u?.lastName}`,
+      id: u?.email,
+    }));
+
+  const { mutate, isLoading: isScheduling } = useScheduleClass();
+  const { formData, updateForm, formIsValid } = useForm({
+    initialState: defaultValues,
   });
 
-  function onSubmit() {}
+  function onSubmit(e: FormEvent) {
+    e?.preventDefault();
+
+    formIsValid
+      ? mutate(formData, {
+          onSuccess: () => {
+            toast.success(
+              <ToastContent
+                type={"success"}
+                heading={"Success"}
+                message={`Successfully created ${formData?.name}`}
+              />,
+              ToastContent.Config
+            );
+
+            toggle();
+          },
+          onError: (e: any) => {
+            toast.error(
+              <ToastContent
+                type={"error"}
+                heading={"An Error Occurred"}
+                message={e?.response?.data?.error?.message?.toString()}
+              />,
+              ToastContent.Config
+            );
+
+            console.log({ e, formData });
+          },
+        })
+      : alert("Please fill in all fields");
+  }
 
   return (
     <div>
       <Modal centered isOpen={visibility} toggle={toggle} id="scheduleModal">
-        <ModalHeader toggle={toggle}>Add Schedule</ModalHeader>
+        <ModalHeader toggle={toggle}>Add Course</ModalHeader>
         <ModalBody>
-          <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
+          <form className="mt-3" onSubmit={onSubmit}>
+            <FormInput
+              label="name"
+              placeholder="Name this schedule"
+              onChange={(e) => updateForm("name", e?.target?.value)}
+              value={formData?.name}
+            />
+
             <div className="form-group">
-              <label htmlFor="classOption">Course</label>
-              <Controller
-                control={control}
-                name="course"
-                defaultValue=""
-                render={({ field }) => (
-                  <Dropdown
-                    className="form-control "
-                    {...field}
-                    isOpen={courseOpen}
-                    toggle={toggleCourse}
-                  >
-                    <DropdownToggle
-                      className="text-lg w-100 text-start shadow-none"
-                      caret
-                    >
-                      Select Course
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Option 1</DropdownItem>
-                      <DropdownItem>Option 2</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="level">Level</label>
-              <Controller
-                control={control}
-                name="level"
-                defaultValue=""
-                render={({ field }) => (
-                  <Dropdown
-                    className="form-control"
-                    {...field}
-                    isOpen={levelOpen}
-                    toggle={toggleLevel}
-                  >
-                    <DropdownToggle
-                      className="text-lg w-100 text-left shadow-none"
-                      caret
-                    >
-                      Select Level
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Option 1</DropdownItem>
-                      <DropdownItem>Option 2</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="classOption">Class Option</label>
-              <Controller
-                control={control}
-                name="classOption"
-                defaultValue=""
-                render={({ field }) => (
-                  <Dropdown
-                    className="form-control"
-                    {...field}
-                    isOpen={classOpen}
-                    toggle={toggleClass}
-                  >
-                    <DropdownToggle
-                      className="text-lg w-100 text-left shadow-none"
-                      caret
-                    >
-                      Select Class Option
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Option 1</DropdownItem>
-                      <DropdownItem>Option 2</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="endDate">Date</label>
-              <Controller
-                control={control}
-                name="date"
-                defaultValue=""
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="date"
-                    placeholder="date"
-                    className="form-control"
-                    invalid={formState.errors.date && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
+              <label htmlFor="Search courses">Course</label>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="Search courses"
+                loading={coursesLoading}
+                value={formData?.course}
+                options={coursesOptions}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      placeholder="Search courses"
+                      className="form-control "
+                    />
+                  );
+                }}
+                onChange={(e, value: any) => {
+                  updateForm("course", value?.id);
+                }}
               />
             </div>
 
-            <button
-              className="btn btn-blue-800 btn-lg w-100 my-5"
-              type="submit"
-              disabled={!formState.isValid}
-            >
-              Add Schedule
-            </button>
+            <div className="form-group">
+              <label htmlFor="Search instructors">Instructor</label>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="Search instructors"
+                value={formData?.instructorEmail}
+                loading={usersLoading}
+                options={instructorsOptions}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      placeholder="Search instructors"
+                      className="form-control "
+                    />
+                  );
+                }}
+                onChange={(e, value: any) => {
+                  updateForm("instructorEmail", value?.id);
+                }}
+              />
+            </div>
+
+            <FormInput
+              label="Start Date"
+              type={"date"}
+              onChange={(e) =>
+                updateForm(
+                  "startTime",
+                  new Date(e?.target?.value)?.toISOString()
+                )
+              }
+            />
+            <FormInput
+              label="End Date"
+              type={"date"}
+              onChange={(e) =>
+                updateForm("endTime", new Date(e?.target?.value)?.toISOString())
+              }
+            />
+
+            {/* submit button */}
+            {isScheduling ? (
+              <Spinner />
+            ) : (
+              <button
+                className="btn btn-blue-800 btn-lg w-100 my-5"
+                type="submit"
+              >
+                {!!defValues ? "Modify Schedule" : "Create Schedule"}
+              </button>
+            )}
           </form>
         </ModalBody>
       </Modal>

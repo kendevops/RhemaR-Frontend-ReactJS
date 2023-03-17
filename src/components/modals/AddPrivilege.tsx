@@ -37,7 +37,7 @@ export default function AddPrivilege({
                 <Input
                   autoFocus
                   type="text"
-                  placeholder="First Name"
+                  placeholder="Name"
                   className="form-control"
                   invalid={formState.errors.name && true}
                   {...field}

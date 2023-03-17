@@ -1,215 +1,213 @@
-import React, { useState, useRef, useEffect } from "react";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import CardActions from "@material-ui/core/CardActions";
+import React, { useState, useEffect } from "react";
 import { PaystackButton } from "react-paystack";
+import { Spinner } from "reactstrap";
+import typography from "../../assets/img/Typography";
+import Tab from "../../components/atoms/Tab";
+import SearchBar from "../../components/general/searchBar";
+import Table from "../../components/general/table/Table";
+import MakePaymentModal from "../../components/modals/MakePaymentModal";
+import CardWrapper from "../../components/students/CardWrapper";
+import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import usePaymentHistory from "../../hooks/queries/users/usePaymentHistory";
+import useToggle from "../../utility/hooks/useToggle";
+import downloadFile from "../../utils/downloadFile";
 
-import { StarIcon } from '@heroicons/react/solid';
-import { GridCard } from './gridcard';
+const tabs = ["Fee Breakdown", "Payment History"];
 
+const TuitionAndClearancePage = () => {
+  const [isOpen, toggle] = useToggle();
+  const [tab, setTab] = useState(0);
+  const currentTab = tabs[tab];
 
+  let columns = [];
+  let data = [];
 
-    const TuitionAndClearancePage = () => {
+  const { data: userData, isLoading } = useCurrentUser();
+  const applications = userData?.applications;
+  const application = applications?.length ? applications[0] : undefined;
 
-    const Paystack = () => {
-    const publicKey = "pk_test_f00e1201fd644cf609e1be7954e8bdf299d1be5b"
-    const amount = 1000000
-    const [email, setEmail] = useState("")
-    const [name, setName] = useState("")
-    const [phone, setPhone] = useState("")
-  
-    const componentProps = {
-      email,
-      amount,
-      metadata: {
-        name,
-        phone,
+  const dash = [
+    {
+      title: "Application Fee",
+      ...application?.feePayment,
+    },
+    {
+      title: "Initial Payment",
+      ...application?.initialPayment,
+    },
+    {
+      title: "Monthly Installment",
+      installments: application?.installments,
+      amount: 80000,
+      paidAt: application?.installments?.length === 8,
+    },
+  ];
+
+  const feeData = application?.installments;
+  const { data: paymentsData, isLoading: paymentsDataLoading } =
+    usePaymentHistory();
+
+  // Conditionals
+  if (currentTab === tabs[0]) {
+    columns = [
+      {
+        title: "Fee",
+        key: "Fee",
+        render: (d) => {
+          return <p>{d?.fee}</p>;
+        },
       },
-      publicKey,
-      text: "Buy Now",
-      onSuccess: () => {
-        setEmail("")
-        setName("")
-        setPhone("")
+      {
+        title: "Amount",
+        key: "Amount",
+        render: (d) => {
+          return <p>N{d?.amount}</p>;
+        },
       },
-      onClose: () => alert("Wait! You need this oil, don't go!!!!"),
-    }
+      {
+        title: "Due Date",
+        key: "Due Date",
+        render: (d) => {
+          return <p>{new Date(d?.date).toDateString()}</p>;
+        },
+      },
+      {
+        title: "Status",
+        key: "Status",
+        render: (d) => {
+          return <p>{d?.status}</p>;
+        },
+      },
+    ];
+    data = feeData;
+  } else if (currentTab === tabs[1]) {
+    columns = [
+      {
+        title: "Payment",
+        key: "Payment",
+        render: (d) => <p>{d?.payment ?? "Level 1 Fees"}</p>,
+      },
+      {
+        title: "Transaction ID",
+        key: "Transaction ID",
+        render: (d) => <p>{d?.accessCode}</p>,
+      },
+      {
+        title: "Amount Paid",
+        key: "Amount Paid",
+        render: (d) => <p>N{d?.amount}</p>,
+      },
+      {
+        title: "Payment Date",
+        key: "Payment Date",
+        render: (d) => <p>{new Date(d?.createdAt)?.toDateString()}</p>,
+      },
+      {
+        title: "Action",
+        key: "Action",
+        render: (d) => {
+          const attributes = downloadFile(
+            d?.paymentUrl,
+            `Payment Receipt - ${new Date(d?.createdAt)?.toLocaleString()}`
+          );
+          return (
+            <>
+              {d?.status === "success" ? (
+                <u>
+                  <a {...attributes}>Download Receipt</a>
+                </u>
+              ) : (
+                <p>{d?.status}</p>
+              )}
+            </>
+          );
+        },
+      },
+    ];
+    data = paymentsData?.nodes;
   }
 
   return (
-    
     <>
-    <div style={{}}>
-        <Card
-          style={{
-            width: 300,
-            backgroundColor: "grey",
-          }}
-        >
-          <CardContent>
-            btnColor="green"
-            [title]="'Application Fee'"
-            [number]="'N10,000'"
-          </CardContent>
-          <CardActions>
-            <Button size="medium">Paid</Button>
-          </CardActions>
-        </Card>
-      </div>
-    
-      <div className="col-lg-4 col-sm-6 col-12 mb-4">
-        <div className="app-tuition-summary-card">
-          btnColor="green"
-          [title]="'Application Fee'"
-          [number]="'N10,000'"
-          btnName="Paid"
-        </div>
-      </div>
-      <div className="col-lg-4 col-sm-6 col-12 mb-4">
-        <div className="app-tuition-summary-card">
-          btnColor="green"
-          btnName="Paid"
-          [title]="'Initial Payment'"
-          [number]="'N30,000'"
-        </div>
-      </div>
-      <div className="col-lg-4 col-sm-6 col-12 mb-4">
-        <div classname="app-tuition-summary-card">
-          btnColor="blue"
-          [title]="'Monthly Installment'"
-          [number]="'N10,000'"
-          [progress]="true"
-          (btnAction)="openModal()"
-          btnName="Make Payment"
-        </div>
-      </div>
-      <section className="bg-white r-card px-5 pb-5">
-        <div className="row">
-          <div className="col-xl-9 col-lg-10 col-md-11 col-12 mx-auto">
-            <div className="app-searchbar">
-              placeHolder="Search"
-              [canFilter]="false"
-              (searchQuery)="getSearchQuery($event)"
-              (searchAction)="search(false)"
-            </div>
-          </div>
-        </div>
-        <ul className="nav nav-pills mb-5" id="pills-tab" role="tablist">
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link active"
-              id="pills-FeeBreakdown-tab"
-              data-bs-toggle="pill"
-              data-bs-target="#pills-FeeBreakdown"
-              type="button"
-              role="tab"
-              aria-controls="pills-FeeBreakdown"
-              aria-selected="true"
-            >
-              Fee Breakdown
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="pills-PaymentHistory-tab"
-              data-bs-toggle="pill"
-              data-bs-target="#pills-PaymentHistory"
-              type="button"
-              role="tab"
-              aria-controls="pills-PaymentHistory"
-              aria-selected="false"
-            >
-              Payment History
-            </button>
-          </li>
-        </ul>
-        <div className="tab-content" id="pills-tabContent">
-          <div
-            className="tab-pane fade show active"
-            id="pills-FeeBreakdown"
-            role="tabpanel"
-            aria-labelledby="pills-FeeBreakdown-tab"
-          >
-            <div className="table-responsive rounded-2 border">
-              <table className="table caption-top text-nowrap">
-                <div ng-container>
-                  <thead className="bg-blue-800">
-                    <tr>
-                      <th>Fee</th>
-                      <th>Amount</th>
-                      <th>Due Date</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
+      {/* Payment Modal */}
+      <MakePaymentModal amount={10000} {...{ isOpen, toggle }} />
+      {/* Dash Cards */}
+      <section className="mb-5 d-flex gap-5 justify-content-between">
+        {application &&
+          dash?.map((d) => {
+            return (
+              <CardWrapper className="w-100" key={d?.title}>
+                <div className="my-3">
+                  <p className="d-flex justify-content-between">
+                    {d?.title}
+                    {d?.title === "Monthly Installment" && (
+                      <span>{`${d?.installments?.length}/8`}</span>
+                    )}
+                  </p>
+                  <h2
+                    style={{
+                      fontSize: typography.h2,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    N{d?.amount}
+                  </h2>
                 </div>
-                <tbody>
-                  <div g-container>
-                    {/**<tr let user of [1, 2, 3, 4]"></ndiv>**/}
-                    <tr>
-                      <td>Level 1 Application Fee</td>
-                      <td>N10,000</td>
-                      <td>23/02/2022</td>
-                      <td>Completed</td>
-                    </tr>
-                  </div>
-                </tbody>
-              </table>
-            </div>
-          </div>
 
-          <div
-            className="tab-pane fade"
-            id="pills-PaymentHistory"
-            role="tabpanel"
-            aria-labelledby="pills-PaymentHistory-tab"
-          >
-            <div className="table-responsive rounded-2 border">
-              <table className="table caption-top text-nowrap">
-                <div ng-container>
-                  <thead className="bg-blue-800">
-                    <tr>
-                      <th>Payment</th>
-                      <th>Transaction ID</th>
-                      <th>Amount Paid</th>
-                      <th>Payment Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                </div>
-                <tbody>
-                  <div ng-container>
-                    {/**<tr *ngFor="let user of [1, 2, 3, 4]">**/}
-                    <tr>
-                      <td>Level 1 Application Fee</td>
-                      <td>CH03508885</td>
-                      <td>N10,000</td>
-                      <td>23/02/2022</td>
-                      <td className="click">
-                        <u className="me-2">Download Receipt</u>
-                        <span>
-                          className="iconify"
-                          data-icon="ant-design:cloud-download-outlined"
-                        </span>
-                      </td>
-                    </tr>
+                {d?.paidAt ? (
+                  <div
+                    style={{
+                      background: "rgba(92, 153, 61, 0.1)",
+                      color: "#5C993D",
+                    }}
+                    className="p-3 rounded-3 text-center w-100  bg-success-200"
+                  >
+                    Paid
                   </div>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                ) : (
+                  <button
+                    onClick={() =>
+                      d?.paymentUrl ? window?.open(d?.paymentUrl) : toggle()
+                    }
+                    className="btn btn-blue-800 btn-lg w-100"
+                  >
+                    Make Payment
+                  </button>
+                )}
+              </CardWrapper>
+            );
+          })}
       </section>
-    
-    <div className openAccountModal>
-      data-bs-toggle="modal"
-      data-bs-target="#accountModal"
-    </div>
 
+      {/* Table */}
+      <CardWrapper>
+        <div className="text-center my-5">
+          <SearchBar />
+        </div>
+
+        <Tab.Wrapper>
+          {tabs.map((c, i) => {
+            return (
+              <Tab
+                onClick={() => setTab(i)}
+                tabColor="#289483"
+                isSelected={currentTab === c}
+                key={c}
+              >
+                {c}
+              </Tab>
+            );
+          })}
+        </Tab.Wrapper>
+
+        {/* Tables */}
+        <Table.Wrapper>
+          {(isLoading || paymentsDataLoading) && <Spinner />}
+          <Table columns={columns} data={data} />
+        </Table.Wrapper>
+      </CardWrapper>
     </>
-    )
-  }
+  );
+};
 
 export default TuitionAndClearancePage;

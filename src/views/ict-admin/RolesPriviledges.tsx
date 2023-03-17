@@ -18,21 +18,18 @@ export default function RolesPriviledges() {
           <SearchBar />
         </div>
 
-        <button
+        {/* <button
           onClick={toggleModal}
           className="btn btn-blue-800 btn-lg "
           style={{ width: "30%" }}
         >
           Add Privilege
-        </button>
+        </button> */}
       </article>
 
       {/* Table */}
-      <div className="tab-content p-4" id="pills-tabContent">
-        <div className="table-responsive rounded-2 r-card bg-white">
-          <PrivilegeTable />
-        </div>
-      </div>
+
+      <PrivilegeTable />
     </section>
   );
 }

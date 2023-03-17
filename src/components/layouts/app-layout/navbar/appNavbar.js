@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, useRef } from "react";
+import { Fragment, useState, useRef, useEffect } from "react";
 
 // ** Config
 import themeConfig from "@configs/themeConfig";
@@ -12,6 +12,8 @@ import useToggle from "../../../../utility/hooks/useToggle";
 import { handleLogout } from "../../../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
+import useSubscribeNotifications from "../../../../hooks/queries/notifications/useSubscribeNotifications";
 
 const options = [
   {
@@ -31,9 +33,18 @@ const Navbar = (props) => {
   // ** Menu Hover State
   const [menuHover, setMenuHover] = useState(false);
 
+  const { data } = useCurrentUser();
+
   const currentUser = getUserData();
   const dispatch = useDispatch();
   const history = useHistory();
+  const { data: newNotification } = useSubscribeNotifications();
+
+  useEffect(() => {
+    if (newNotification) {
+      console.log({ newNotification });
+    }
+  }, [newNotification]);
 
   const logOut = () => {
     dispatch(handleLogout(currentUser));
@@ -92,7 +103,7 @@ const Navbar = (props) => {
               </a>
             </div>
             <h2 className="me-3">
-              {currentUser?.firstName} {currentUser?.lastName}
+              {data?.firstName} {data?.lastName}
             </h2>
 
             {/* Dropdown Toggle */}

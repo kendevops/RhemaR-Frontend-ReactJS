@@ -1,19 +1,14 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Tab from "../../components/atoms/Tab";
 import StudentAvatar from "../../components/avatar/StudentAvatar";
-import { Input } from "reactstrap";
-import { useForm, Controller } from "react-hook-form";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-
-const defaultValues = {
-  firstName: "John",
-  middleName: "",
-  lastName: "Ade",
-  email: "adejohn@gmail.com",
-  gender: "male",
-  phoneNumber: "+234 (0)819 306 8691",
-  alternatePhoneNumber: "+234 (0)803 856 2070",
-};
+import { getUserData } from "../../utility/utilsGeneric";
+import FormRadioGroup from "../../components/molecules/FormRadioGroup";
+import useForm from "../../utility/hooks/useForm";
+import FormInput from "../../components/molecules/FormInput";
+import useUpdateCurrentUser from "../../hooks/mutations/users/useUpdateCurrentUser";
+import { Spinner } from "reactstrap";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
 
 const defaultPValues = {
   currentPassword: "",
@@ -25,25 +20,74 @@ export default function StudentProfile() {
   const Options = ["Account Info", "Password & Security"];
   const [option, setOption] = useState(0);
 
+  const userData = getUserData();
+  const { mutate, isLoading } = useUpdateCurrentUser();
+
+  const defaultValues = {
+    firstName: userData?.firstName,
+    middleName: userData?.middleName,
+    lastName: userData?.lastName,
+    email: userData?.email,
+    gender: userData?.gender,
+    phoneNumber: userData?.phoneNumber,
+    altPhoneNumber: userData?.altPhoneNumber,
+  };
+
   const currentPage = Options[option];
 
-  const { control, setError, handleSubmit, formState } = useForm({
-    defaultValues,
-    mode: "onChange",
-  });
-
+  //form
+  const { formData, updateForm } = useForm({ initialState: defaultValues });
   const pform = useForm({
-    defaultValues: defaultPValues,
-    mode: "onChange",
+    initialState: defaultPValues,
   });
 
-  function onSubmit() {}
+  //submit personal info
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    //find the values that were saved and update them
+    let changedValues: any = {};
+    const changed = Object.keys(formData).filter((k) => {
+      const key = k as unknown as keyof typeof formData;
+      return formData[key] !== defaultValues[key];
+    });
+
+    if (!changed.length) return;
+
+    changed.forEach((change) => {
+      const c = change as unknown as keyof typeof formData;
+      changedValues[c] = formData[c];
+    });
+
+    mutate(changedValues, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            type={"success"}
+            message={"Your profile has been updated successfully"}
+            heading={"Profile Updated"}
+          />,
+          { ...ToastContent.Config }
+        );
+      },
+      onError: (e: any) => {
+        toast.success(
+          <ToastContent
+            type={"error"}
+            message={e?.response?.data?.message}
+            heading={"Uh-oh, an error occurred"}
+          />,
+          { ...ToastContent.Config }
+        );
+      },
+    });
+  }
   function onSubmitP() {}
 
   return (
     <section className="container mt-5">
       <div className=" col-md-8 col-9 mx-auto">
         <article className="bg-white r-card px-5 py-4 mb-4 ">
+          {isLoading && <Spinner />}
           {/* Header */}
           <div role={"tabpanel"} className="d-flex px-2 gap-3 border-bottom ">
             {Options.map((o, i) => {
@@ -52,7 +96,7 @@ export default function StudentProfile() {
                 setOption(i);
               }
               return (
-                <Tab key={0} onClick={handleSelect} isSelected={isSelected}>
+                <Tab key={o} onClick={handleSelect} isSelected={isSelected}>
                   {o}
                 </Tab>
               );
@@ -63,8 +107,10 @@ export default function StudentProfile() {
           <div className="pb-2 mt-4 d-flex align-items-center gap-5 border-bottom ">
             <StudentAvatar />
             <div>
-              <h2 className="text-2xl font-bold text-blue-500">John Ade</h2>
-              <p className="text-sm ">adejohn@gmail.com</p>
+              <h2 className="text-2xl font-bold text-blue-500">
+                {userData?.firstName} {userData?.lastName}
+              </h2>
+              <p className="text-sm ">{userData?.email}</p>
             </div>
           </div>
 
@@ -72,185 +118,59 @@ export default function StudentProfile() {
           {currentPage === "Account Info" && (
             <section className="mt-5 mb-5">
               {/* Form */}
-              <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-group">
-                  <label htmlFor="firstName">First Name</label>
-                  <Controller
-                    control={control}
-                    name="firstName"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Input
-                        autoFocus
-                        type="text"
-                        placeholder="First Name"
-                        className="form-control"
-                        invalid={formState.errors.firstName && true}
-                        {...field}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="middleName">Middle Name</label>
-                  <Controller
-                    control={control}
-                    name="middleName"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Input
-                        autoFocus
-                        type="text"
-                        placeholder="Middle Name"
-                        className="form-control"
-                        invalid={formState.errors.middleName && true}
-                        {...field}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="lastName">Last Name</label>
-                  <Controller
-                    control={control}
-                    name="lastName"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Input
-                        autoFocus
-                        type="text"
-                        placeholder="Last Name"
-                        className="form-control"
-                        invalid={formState.errors.lastName && true}
-                        {...field}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </div>
+              <form className="mt-3" onSubmit={onSubmit}>
+                <FormInput
+                  label="First Name"
+                  value={formData?.firstName}
+                  onChange={(e) => updateForm("firstName", e.target.value)}
+                />
+                <FormInput
+                  label="Middle Name"
+                  value={formData?.middleName}
+                  onChange={(e) => updateForm("middleName", e.target.value)}
+                />
+                <FormInput
+                  label="Last Name"
+                  value={formData?.lastName}
+                  onChange={(e) => updateForm("lastName", e.target.value)}
+                />
 
                 <div className="form-group d-flex gap-4">
                   <div style={{ width: "60%" }}>
-                    <label htmlFor="Email">Email</label>
-                    <Controller
-                      control={control}
-                      name="email"
-                      defaultValue=""
-                      render={({ field }) => (
-                        <Input
-                          autoFocus
-                          type="email"
-                          placeholder="Email"
-                          className="form-control"
-                          invalid={formState.errors.email && true}
-                          {...field}
-                        />
-                      )}
-                      rules={{ required: true }}
+                    <FormInput
+                      type={"email"}
+                      label="Email"
+                      value={formData?.email}
+                      onChange={(e) => updateForm("email", e.target.value)}
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="Gender">Gender</label>
-                    <Controller
-                      control={control}
-                      name="gender"
-                      defaultValue=""
-                      render={({ field }) => (
-                        <div className="col-lg-6 col-md-12">
-                          <div className="form-group">
-                            <div className="d-flex">
-                              <div className="radio-box me-3">
-                                <label htmlFor="gender">Male</label>
-                                <input
-                                  type="radio"
-                                  id="gender"
-                                  value="Male"
-                                  name="gender"
-                                  checked={field.value === "male"}
-
-                                  // formControlName="gender"
-                                />
-                              </div>
-                              <div className="radio-box">
-                                <label htmlFor="gender">Female</label>
-                                <input
-                                  type="radio"
-                                  id="gender"
-                                  name="gender"
-                                  value="Female"
-                                  checked={field.value === "female"}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        // <div>
-                        //   <RadioGroup
-                        //     sx={{ display: "block" }}
-                        //     id="gender"
-                        //     defaultValue="female"
-                        //     name="gender"
-                        //   >
-                        //     <FormControlLabel
-                        //       control={<Radio />}
-                        //       label="Male"
-                        //       {...field}
-                        //     />
-                        //     <FormControlLabel
-                        //       control={<Radio />}
-                        //       label="Female"
-                        //       {...field}
-                        //     />
-                        //   </RadioGroup>
-                        // </div>
-                      )}
-                      rules={{ required: true }}
+                    <FormRadioGroup
+                      label="Gender"
+                      options={["MALE", "FEMALE"]}
+                      onChange={(e) => updateForm("gender", e.target.value)}
                     />
                   </div>
                 </div>
 
                 <div className="form-group d-flex gap-4">
                   <div style={{ width: "100%" }}>
-                    <label htmlFor="Phone Number">Phone Number</label>
-                    <Controller
-                      control={control}
-                      name="phoneNumber"
-                      defaultValue=""
-                      render={({ field }) => (
-                        <Input
-                          autoFocus
-                          type="text"
-                          placeholder="Phone Number"
-                          className="form-control"
-                          invalid={formState.errors.phoneNumber && true}
-                          {...field}
-                        />
-                      )}
-                      rules={{ required: true }}
+                    <FormInput
+                      label="Phone Number"
+                      value={formData?.phoneNumber}
+                      onChange={(e) =>
+                        updateForm("phoneNumber", e.target.value)
+                      }
                     />
                   </div>
                   <div style={{ width: "100%" }}>
-                    <label htmlFor="Phone Number">Alternate Phone Number</label>
-                    <Controller
-                      control={control}
-                      name="alternatePhoneNumber"
-                      defaultValue=""
-                      render={({ field }) => (
-                        <Input
-                          autoFocus
-                          type="text"
-                          placeholder="Alternate Phone Number"
-                          className="form-control"
-                          invalid={
-                            formState.errors.alternatePhoneNumber && true
-                          }
-                          {...field}
-                        />
-                      )}
-                      rules={{ required: true }}
+                    <FormInput
+                      label="Alternate Phone Number"
+                      value={formData?.altPhoneNumber}
+                      onChange={(e) =>
+                        updateForm("altPhoneNumber", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -258,7 +178,6 @@ export default function StudentProfile() {
                 <button
                   className="btn btn-blue-800 btn-lg w-100 my-5"
                   type="submit"
-                  disabled={!formState.isValid}
                 >
                   Save Changes
                 </button>
@@ -269,66 +188,33 @@ export default function StudentProfile() {
           {/* Password and Sceurity */}
           {currentPage === "Password & Security" && (
             <section className="mt-5 mb-5">
-              <form className="mt-3" onSubmit={handleSubmit(onSubmitP)}>
-                <div className="form-group">
-                  <label htmlFor="currentPassword">Current Password</label>
-                  <Controller
-                    control={pform.control}
-                    name="currentPassword"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Input
-                        autoFocus
-                        type="password"
-                        placeholder="Enter Current Password"
-                        className="form-control"
-                        {...field}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="newPassword">New Password</label>
-                  <Controller
-                    control={pform.control}
-                    name="newPassword"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Input
-                        autoFocus
-                        type="password"
-                        placeholder="Enter New Password"
-                        className="form-control"
-                        {...field}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm Password</label>
-                  <Controller
-                    control={pform.control}
-                    name="confirmPassword"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Input
-                        autoFocus
-                        type="password"
-                        placeholder="Re-type Password"
-                        className="form-control"
-                        {...field}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </div>
+              <form className="mt-3" onSubmit={onSubmitP}>
+                <FormInput
+                  type={"password"}
+                  label="Current Password"
+                  onChange={(e) =>
+                    pform.updateForm("currentPassword", e.target.value)
+                  }
+                />
+                <FormInput
+                  type={"password"}
+                  label="New Password"
+                  onChange={(e) =>
+                    pform.updateForm("newPassword", e.target.value)
+                  }
+                />
 
+                <FormInput
+                  label="Confirm Password"
+                  type={"password"}
+                  onChange={(e) =>
+                    pform.updateForm("confirmPassword", e.target.value)
+                  }
+                />
                 <button
                   className="btn btn-blue-800 btn-lg w-100 my-5"
                   type="submit"
-                  disabled={!pform.formState.isValid}
+                  disabled={!pform.formIsValid}
                 >
                   Save
                 </button>

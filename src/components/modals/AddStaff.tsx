@@ -1,16 +1,11 @@
-import useToggle from "../../utility/hooks/useToggle";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import { Input } from "reactstrap";
-import { useForm, Controller } from "react-hook-form";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
+import FormDropdown from "../molecules/FormDropdown";
+import useRoles from "../../hooks/queries/useRoles";
+import { FormEvent } from "react";
+import useForm from "../../utility/hooks/useForm";
+import { Autocomplete, TextField } from "@mui/material";
+import { UserDto } from "../../types/dto";
+import useAllUsers from "../../hooks/queries/useAllUsers";
 
 interface AddStaffProps {
   toggle: VoidFunction;
@@ -18,29 +13,30 @@ interface AddStaffProps {
 }
 
 export default function AddStaff({ toggle, visibility }: AddStaffProps) {
-  const [privilegeOpen, togglePrivilege] = useToggle();
-  const [roleOpen, toggleRole] = useToggle();
-  const [stateOpen, toggleState] = useToggle();
-  const [cityOpen, toggleCity] = useToggle();
-
-  const defaultValues = {
+  const initialState = {
+    userId: "",
     name: "",
-    email: "",
-    phone: "",
-    gender: "",
-    role: "",
-    privilege: "",
-    birthDate: "",
-    state: "",
-    city: "",
+    priviledge: "",
   };
 
-  const { control, setError, handleSubmit, formState } = useForm({
-    defaultValues,
-    mode: "onChange",
-  });
+  const { formData, updateForm } = useForm({ initialState });
 
-  function onSubmit() {}
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    console.log(formData);
+  }
+
+  const { data, isLoading } = useRoles();
+  const roleOptions = data?.roles?.map((d: any) => ({ children: d?.name }));
+
+  const { data: userData, isLoading: usersLoading } = useAllUsers();
+  const users = userData?.users?.nodes as UserDto[];
+  const userOptions = users?.map((u) => ({
+    label: `${u?.firstName} ${u?.lastName} (${u?.email})`,
+    id: u?.email,
+  }));
+
+  const loading = isLoading || usersLoading;
 
   return (
     <div>
@@ -48,233 +44,40 @@ export default function AddStaff({ toggle, visibility }: AddStaffProps) {
       <Modal centered isOpen={visibility} toggle={toggle} id="studentModal">
         <ModalHeader toggle={toggle}>Staff Details</ModalHeader>
         <ModalBody>
-          <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
+          {loading && <Spinner />}
+          <form className="mt-3" onSubmit={onSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <Controller
-                control={control}
-                name="name"
-                defaultValue=""
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="text"
-                    placeholder="First Name"
-                    className="form-control"
-                    invalid={formState.errors.name && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="Email">Email</label>
-              <Controller
-                control={control}
-                name="email"
-                defaultValue=""
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="text"
-                    placeholder="Email"
-                    className="form-control"
-                    invalid={formState.errors.email && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
-              />
-            </div>
-
-            <div className="form-group d-flex gap-4">
-              <div style={{ width: "60%" }}>
-                <label htmlFor="birthDate">Birth Date</label>
-                <Controller
-                  control={control}
-                  name="birthDate"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <Input
-                      autoFocus
-                      type="date"
-                      placeholder="birth Date"
-                      className="form-control"
-                      invalid={formState.errors.birthDate && true}
-                      {...field}
+              <label htmlFor="Search Staff">Search Staff</label>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="Search Staff"
+                loading={loading}
+                options={userOptions}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      placeholder="Search Staff"
+                      className="form-control "
                     />
-                  )}
-                  rules={{ required: true }}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="Gender">Gender</label>
-                <Controller
-                  control={control}
-                  name="gender"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <div>
-                      <RadioGroup
-                        sx={{ display: "block" }}
-                        id="gender"
-                        defaultValue="female"
-                        name="gender"
-                      >
-                        <FormControlLabel
-                          control={<Radio />}
-                          label="Male"
-                          {...field}
-                        />
-                        <FormControlLabel
-                          control={<Radio />}
-                          label="Female"
-                          {...field}
-                        />
-                      </RadioGroup>
-                    </div>
-                  )}
-                  rules={{ required: true }}
-                />
-              </div>
-            </div>
-
-            <div className="form-group ">
-              <label htmlFor="Phone Number">Phone Number</label>
-              <Controller
-                control={control}
-                name="phone"
-                defaultValue=""
-                render={({ field }) => (
-                  <Input
-                    autoFocus
-                    type="text"
-                    placeholder="Phone Number"
-                    className="form-control"
-                    invalid={formState.errors.phone && true}
-                    {...field}
-                  />
-                )}
-                rules={{ required: true }}
+                  );
+                }}
+                onChange={(e, value) => {
+                  console.log(value);
+                }}
               />
             </div>
 
             <div className="form-group d-flex gap-4">
+              {/* <div style={{ width: "100%" }}>
+                <FormDropdown title="Role" options={[{ children: "Haha" }]} />
+              </div> */}
               <div style={{ width: "100%" }}>
-                <label htmlFor="Role">Role</label>
-                <Controller
-                  control={control}
-                  name="role"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <Dropdown
-                      className="form-control"
-                      {...field}
-                      isOpen={roleOpen}
-                      toggle={toggleRole}
-                    >
-                      <DropdownToggle
-                        className="text-lg w-100 text-left shadow-none"
-                        caret
-                      >
-                        Role
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem>Role 1</DropdownItem>
-                        <DropdownItem>Role 2</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
-                  rules={{ required: true }}
-                />
-              </div>
-              <div style={{ width: "100%" }}>
-                <label htmlFor="privilege">Privilege</label>
-                <Controller
-                  control={control}
-                  name="privilege"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <Dropdown
-                      className="form-control"
-                      {...field}
-                      isOpen={privilegeOpen}
-                      toggle={togglePrivilege}
-                    >
-                      <DropdownToggle
-                        className="text-lg w-100 text-left shadow-none"
-                        caret
-                      >
-                        Privilege
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem>Privilege 1</DropdownItem>
-                        <DropdownItem>Privilege 2</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
-                  rules={{ required: true }}
-                />
-              </div>
-            </div>
-
-            <div className="form-group d-flex gap-4">
-              <div style={{ width: "100%" }}>
-                <label htmlFor="State">State</label>
-                <Controller
-                  control={control}
-                  name="state"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <Dropdown
-                      className="form-control"
-                      {...field}
-                      isOpen={stateOpen}
-                      toggle={toggleState}
-                    >
-                      <DropdownToggle
-                        className="text-lg w-100 text-left shadow-none"
-                        caret
-                      >
-                        State
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem>Lagos</DropdownItem>
-                        <DropdownItem>Abuja</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
-                  rules={{ required: true }}
-                />
-              </div>
-              <div style={{ width: "100%" }}>
-                <label htmlFor="city">City</label>
-                <Controller
-                  control={control}
-                  name="city"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <Dropdown
-                      className="form-control"
-                      {...field}
-                      isOpen={cityOpen}
-                      toggle={toggleCity}
-                    >
-                      <DropdownToggle
-                        className="text-lg w-100 text-left shadow-none"
-                        caret
-                      >
-                        City
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem>Ikeja</DropdownItem>
-                        <DropdownItem>Jabi</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
-                  rules={{ required: true }}
+                <FormDropdown
+                  onChange={(e) => updateForm("priviledge", e.target.value)}
+                  title="Privilege"
+                  options={roleOptions}
                 />
               </div>
             </div>
@@ -282,7 +85,6 @@ export default function AddStaff({ toggle, visibility }: AddStaffProps) {
             <button
               className="btn btn-blue-800 btn-lg w-100 my-5"
               type="submit"
-              disabled={!formState.isValid}
             >
               Add Staff
             </button>

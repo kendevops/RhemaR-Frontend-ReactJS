@@ -17,6 +17,7 @@ import { UpdateLoggedInUserAbility } from "../../utility/utilsGeneric";
 import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
 import userRoles from "../../utility/userRoles";
+import handleError from "../../utils/handleError";
 
 const defaultValues = {
   password: "helloWorld1",
@@ -59,6 +60,7 @@ const AuthLoginPage = () => {
 
           dispatch(handleLogin(data));
           UpdateLoggedInUserAbility(userRole, ability);
+
           history.push(getHomeRouteForLoggedInUser(userRole));
 
           const successMsg = "Welcome " + data?.firstName;
@@ -79,22 +81,7 @@ const AuthLoginPage = () => {
         })
         .catch((err) => {
           toggleLoading();
-          const errMsg = "Unsuccesful login attempt. " + err.message;
-          toast.error(
-            <ToastContent
-              heading={"Login Error!"}
-              message={errMsg}
-              type={"danger"}
-            />,
-            {
-              icon: false,
-              transition: Slide,
-              hideProgressBar: false,
-              autoClose: 6000,
-              position: toast.POSITION.BOTTOM_RIGHT,
-            }
-          );
-          console.log(err.message);
+          handleError(err, data);
         });
     } else {
       for (const key in data) {
@@ -185,7 +172,7 @@ const AuthLoginPage = () => {
                   <button
                     className="btn btn-blue-800 btn-lg w-100 mb-5"
                     type="submit"
-                    disabled={!formState.isValid}
+                    disabled={!formState.isValid || loading}
                   >
                     Login
                   </button>

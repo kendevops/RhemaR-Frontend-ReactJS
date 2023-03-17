@@ -1,30 +1,26 @@
-import typography from "../../assets/img/Typography";
+import CardHeader from "../../components/atoms/CardHeader";
+import ResourcesIcon from "../../assets/img/resourcesIcon.svg";
 import SearchBar from "../../components/general/searchBar";
 import UploadResourceModal from "../../components/modals/UploadResource";
 import FileCard, { FileCardProps } from "../../components/molecules/FileCard";
 import CardWrapper from "../../components/students/CardWrapper";
-import { resourcesData } from "../../data/Resources";
+// import { resourcesData } from "../../data/Resources";
 import useToggle from "../../utility/hooks/useToggle";
+import useResources from "../../hooks/queries/classes/useResources";
+import { Spinner } from "reactstrap";
+import getFileType from "../../utils/getFileType";
 
 export default function Resources() {
   const [isUploading, toggleUploading] = useToggle();
 
-  const data = resourcesData;
+  const { data, isLoading } = useResources();
+  const resourcesData = data?.nodes;
+  // title, type, url
 
   return (
     <>
       {/* Card Header */}
-      <div className="relative mt-3 mb-5">
-        <h1
-          style={{
-            fontSize: typography.h1,
-          }}
-          className="fw-bold resources-text"
-        >
-          Resources
-        </h1>
-        <img className="w-100" src={`/resources.png`} alt="Resources" />
-      </div>
+      <CardHeader heading="resources" imgSrc={ResourcesIcon} />
 
       {/* Search Row */}
       <article className="d-flex gap-5 ">
@@ -43,15 +39,23 @@ export default function Resources() {
 
       {/* Resources Card */}
       <CardWrapper>
-        <ul className="row mt-4">
-          {data.map((res: FileCardProps, i: number) => {
-            return (
-              <li className="col-sm-3" key={i.toString()}>
-                <FileCard {...res} />
-              </li>
-            );
-          })}
-        </ul>
+        {isLoading && <Spinner />}
+        {resourcesData && (
+          <ul className="row mt-4">
+            {resourcesData.map((res: any, i: number) => {
+              const props = {
+                ...res,
+                type: getFileType(res?.material?.type),
+                url: res?.material?.path,
+              };
+              return (
+                <li className="col-sm-3" key={i.toString()}>
+                  <FileCard {...props} />
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </CardWrapper>
     </>
   );

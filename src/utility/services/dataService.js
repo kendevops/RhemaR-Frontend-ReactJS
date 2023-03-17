@@ -1,8 +1,7 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
-import dataService from "../hooks/useDataservice";
 
-const API_ENDPOINT = process.env.API_ENDPOINT;
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
 
 export default class DataService {
   jwtConfig = { ...jwtDefaultConfig };
@@ -97,15 +96,11 @@ export default class DataService {
   }
 
   static get(path = "") {
-    return axios.get({
-      method: "GET",
-      url: `${path}`,
-    });
+    return axios.get(path);
   }
 
   static post(path = "", data = {}) {
     return axios.post({
-      method: "POST",
       url: `${path}`,
       data,
     });
@@ -113,7 +108,6 @@ export default class DataService {
 
   static patch(path = "", data = {}) {
     return axios.patch({
-      method: "PATCH",
       url: `${path}`,
       data: JSON.stringify(data),
     });
@@ -121,7 +115,6 @@ export default class DataService {
 
   static put(path = "", data = {}) {
     return axios.put({
-      method: "PUT",
       url: `${path}`,
       data: JSON.stringify(data),
     });

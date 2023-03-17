@@ -13,7 +13,7 @@ const searchButtonStyle = {
 };
 
 const SearchBar = (props) => {
-  const { onSearch, inputOnChange } = props;
+  const { onSearch, inputOnChange, placeholder } = props;
 
   return (
     <>
@@ -26,7 +26,7 @@ const SearchBar = (props) => {
         <input
           type="text"
           className="form-control"
-          placeholder="Enter Your Search Key"
+          placeholder={placeholder? placeholder : "Enter Your Search Key"}
           style={searchBarStyle}
           onChange={inputOnChange}
           aria-label="Recipient's username"

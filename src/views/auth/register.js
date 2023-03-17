@@ -3,8 +3,9 @@ import useJwt from "@hooks/useJwt";
 import { toast, Slide } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
-import SpinnerComponent from "../../components/spinner/Fallback-spinner";
 import { useHistory } from "react-router-dom";
+import { Spinner } from "reactstrap";
+import handleError from "../../utils/handleError";
 
 const AuthRegistrationPage = () => {
   const initialState = {
@@ -19,7 +20,8 @@ const AuthRegistrationPage = () => {
     confirmPassword: "",
   };
 
-  const { formData, formIsValid, updateForm } = useForm({ initialState });
+  const { formData, formIsValid, updateForm, formErrors, toggleError } =
+    useForm({ initialState });
   const [loading, toggleLoading] = useToggle();
   const history = useHistory();
 
@@ -50,15 +52,7 @@ const AuthRegistrationPage = () => {
       })
       .catch((e) => {
         toggleLoading();
-        console.log(e);
-        toast.error(
-          <ToastContent
-            heading={"An error occurred"}
-            message={e?.message}
-            type={"error"}
-          />,
-          { ...ToastContent.Config }
-        );
+        handleError(e, formData, toggleError);
       })
       .finally(() => console.log(data));
   }
@@ -112,7 +106,7 @@ const AuthRegistrationPage = () => {
 
                 <div className="alert alert-danger"></div>
 
-                {loading && <SpinnerComponent />}
+                {loading && <Spinner />}
 
                 <form onSubmit={submitForm}>
                   <div className="row">
@@ -210,12 +204,20 @@ const AuthRegistrationPage = () => {
                         <label>Phone Number</label>
                         <input
                           type="tel"
-                          placeholder="WhatsApp & Telegram"
+                          placeholder="+2348012340000"
                           className="form-control"
                           formControlName="phoneNumber"
-                          onChange={(e) =>
-                            updateForm("phoneNumber", e.target.value)
-                          }
+                          onChange={(e) => {
+                            updateForm("phoneNumber", e.target.value);
+                            formErrors?.phoneNumber &&
+                              toggleError("phoneNumber");
+                          }}
+                          style={{
+                            borderColor: formErrors?.phoneNumber ? "red" : "",
+                            borderStyle: formErrors?.phoneNumber
+                              ? "solid"
+                              : "none",
+                          }}
                         />
                       </div>
                     </div>
@@ -224,12 +226,20 @@ const AuthRegistrationPage = () => {
                         <label>Alternate Phone Number</label>
                         <input
                           type="tel"
-                          placeholder="Enter Alternate Phone Number"
+                          placeholder="+2348012340000"
                           className="form-control"
                           formControlName="altPhoneNumber"
                           onChange={(e) =>
                             updateForm("alternatePhoneNumber", e.target.value)
                           }
+                          style={{
+                            borderColor: formErrors?.altPhoneNumber
+                              ? "red"
+                              : "",
+                            borderStyle: formErrors?.altPhoneNumber
+                              ? "solid"
+                              : "none",
+                          }}
                         />
                       </div>
                     </div>

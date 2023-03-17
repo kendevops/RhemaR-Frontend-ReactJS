@@ -37,6 +37,14 @@ export const UpdateLoggedInUserAbility = (userRole, ability) => {
       },
     ]);
   }
+  if (userRole === userRoles.STUDENT) {
+    ability.update([
+      {
+        action: "read",
+        subject: "Students",
+      },
+    ]);
+  }
   if (userRole === "Level1Student") {
     ability.update([
       {

@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
 export type TableColumns<T> = {
-  title: string;
+  title?: string;
   key: string;
-  render: (data: T) => JSX.Element;
+  render: (data: T, index: number) => JSX.Element;
 };
 
 export type TableProps<T = any> = {
@@ -22,11 +22,11 @@ export default function Table({ columns, data }: TableProps) {
   ));
 
   //** TableBody */
-  const tabData = data.map((data, i) => {
+  const tabData = data?.map((data, i) => {
     return (
       <tr key={`column${i}`}>
-        {columns.map(({ render }, i2) => (
-          <td key={`data${i}${i2}`}>{render(data)}</td>
+        {columns?.map(({ render }, i2) => (
+          <td key={`data${i}${i2}`}>{render(data, i2)}</td>
         ))}
       </tr>
     );

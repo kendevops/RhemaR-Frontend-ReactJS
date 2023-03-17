@@ -33,7 +33,7 @@ export default function UpdatePrivilege({ data }: UpdatePrivilegeProps) {
 
       {/* Modal */}
       <Modal centered isOpen={visibility} toggle={toggle} id="studentModal">
-        <ModalHeader toggle={toggle}>Staff Details</ModalHeader>
+        <ModalHeader toggle={toggle}>Update Priviledge</ModalHeader>
         <ModalBody>
           <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
@@ -61,7 +61,7 @@ export default function UpdatePrivilege({ data }: UpdatePrivilegeProps) {
               type="submit"
               disabled={!formState.isValid}
             >
-              Add Privilege
+              Updaye Privilege
             </button>
           </form>
         </ModalBody>

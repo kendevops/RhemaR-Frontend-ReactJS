@@ -2,9 +2,10 @@ import React, { CSSProperties } from "react";
 import { Download } from "react-feather";
 import downloadFile from "../../utils/downloadFile";
 import { AudioIcon, PdfIcon, VideoIcon } from "../icons/FIleCard";
+import { Icon } from "@iconify/react";
 
 export type FileCardProps = {
-  type: "video" | "audio" | "pdf";
+  type: "video" | "audio" | "pdf" | "photo";
   title: string;
   url: string;
 };
@@ -23,6 +24,10 @@ export default function FileCard({ type, title, url }: FileCardProps) {
   };
 
   switch (type) {
+    case "photo":
+      backgroundColor = "#E8E8E8";
+      icon = <Icon fontSize={24} icon={"ic:outline-image"} color="blue" />;
+      break;
     case "audio":
       backgroundColor = "#F7EDFA";
       icon = AudioIcon;
@@ -31,6 +36,11 @@ export default function FileCard({ type, title, url }: FileCardProps) {
     case "video":
       backgroundColor = "#EDFAF0";
       icon = VideoIcon;
+      break;
+
+    case "pdf":
+      backgroundColor = "#EDFAF0";
+      icon = PdfIcon;
       break;
   }
 
