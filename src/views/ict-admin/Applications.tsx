@@ -52,14 +52,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
         );
       },
       onError: (e: any) => {
-        toast.error(
-          <ToastContent
-            heading={"An Error Occurred"}
-            message={e?.response?.data?.error?.message?.toString()}
-            type={"error"}
-          />,
-          { ...ToastContent.Config }
-        );
+        handleError(e);
       },
     });
   }

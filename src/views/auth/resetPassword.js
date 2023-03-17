@@ -4,6 +4,10 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import useToggle from "../../utility/hooks/useToggle";
 import { useMutation } from "@tanstack/react-query";
 import useForm from "../../utility/hooks/useForm";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
+import { Spinner } from "reactstrap";
 
 const AuthResetPasswordPage = () => {
   const param = useParams();
@@ -27,8 +31,8 @@ const AuthResetPasswordPage = () => {
       return;
     }
 
-    toggleValidUrl();
-  }, [id, history, toggleValidUrl]);
+    !validUrl && toggleValidUrl();
+  }, [id, history, toggleValidUrl, validUrl]);
 
   const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
 
@@ -37,20 +41,41 @@ const AuthResetPasswordPage = () => {
 
     if (!formData?.password) {
       alert("You must enter a password");
+      return;
     }
 
     if (formData?.password !== formData?.confirmPassword) {
       alert("Passwords must match");
+      return;
     }
 
-    mutate({
-      token: id,
-      password: formData?.password,
-    });
+    mutate(
+      {
+        token: id,
+        password: formData?.password,
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              heading={"Success"}
+              type={"success"}
+              message={"Password changed successfully"}
+            />,
+            { ...ToastContent.Config }
+          );
+          history.go("/login");
+        },
+        onError: (e) => {
+          handleError(e, formData, toggleError);
+        },
+      }
+    );
   }
 
   return (
     <Fragment>
+      {isLoading && <Spinner />}
       {validUrl ? (
         <div className="container mt-5">
           <div className="auth-wrapper">
