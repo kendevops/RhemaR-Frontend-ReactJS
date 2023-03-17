@@ -1,7 +1,6 @@
 // ** Icons Import
 //import { Home, Circle, Mail, MessageSquare } from "react-feather";
-import { Icon } from '@iconify/react';
-
+import { Icon } from "@iconify/react";
 
 export default [
   {
@@ -9,7 +8,7 @@ export default [
   },
   {
     id: "dashboards",
-    title: "Dashboards",
+    title: "Dashboard",
     icon: <Icon icon="ep:menu" />,
     navLink: "/alumni-admin/dashborad",
   },
@@ -21,7 +20,7 @@ export default [
   },
   {
     id: "alumniConnect",
-    title: "alumni Connect",
+    title: "Alumni Connect",
     icon: <Icon icon="ion:school-sharp" />,
     navLink: "/alumni-admin/alumni-connect",
   },
@@ -45,25 +44,25 @@ export default [
   },
 
   //{
-    //id: "dashboards",
-    //title: "Dashboards",
-    //icon: <Icon icon="ep:menu" />,
-    //badge: "light-warning",
-    //badgeText: "2",
-    //children: [
-      //{
-        //id: "analyticsDash",
-        //title: "Analytics",
-        //icon: <Circle size={12} />,
-        //navLink: "/student/courses",
-      //},
-      //{
-        //id: "eCommerceDash",
-        //title: "eCommerce",
-        //icon: <Circle size={12} />,
-        //navLink: "/student/courses",
-      //},
-    //],
+  //id: "dashboards",
+  //title: "Dashboards",
+  //icon: <Icon icon="ep:menu" />,
+  //badge: "light-warning",
+  //badgeText: "2",
+  //children: [
+  //{
+  //id: "analyticsDash",
+  //title: "Analytics",
+  //icon: <Circle size={12} />,
+  //navLink: "/student/courses",
+  //},
+  //{
+  //id: "eCommerceDash",
+  //title: "eCommerce",
+  //icon: <Circle size={12} />,
+  //navLink: "/student/courses",
+  //},
+  //],
   //},
   {
     header: "Partners",

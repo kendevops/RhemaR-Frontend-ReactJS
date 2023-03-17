@@ -29,7 +29,7 @@ export default [
   },
   {
     id: "tution&clearance",
-    title: "Tution & Clearance",
+    title: "Tuition & Clearance",
     icon: <Icon icon="fa-regular:credit-card" />,
     navLink: "/student/tuition-clearance",
     action: "read",
