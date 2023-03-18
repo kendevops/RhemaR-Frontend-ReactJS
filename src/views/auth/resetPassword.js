@@ -76,7 +76,6 @@ const AuthResetPasswordPage = () => {
 
   return (
     <Fragment>
-      {isLoading && <Spinner />}
       {validUrl ? (
         <div className="container mt-5">
           <div className="auth-wrapper">
@@ -88,6 +87,8 @@ const AuthResetPasswordPage = () => {
 
                 <div className="bg-white shadow rounded-2 p-5">
                   <div className="text-center mb-5">
+                    {isLoading && <Spinner />}
+
                     <h3 className="title mb-4">Reset Password</h3>
                     <p
                       className="mx-auto"

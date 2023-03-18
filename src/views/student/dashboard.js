@@ -4,17 +4,24 @@ import CourseSchedule from "../../components/students/CourseSchedule";
 import upcoming from "../../assets/img/upcoming-event.svg";
 import useClasses from "../../hooks/queries/classes/useClasses";
 import { Spinner } from "reactstrap";
-import getMonth from "../../utils/getMonth";
+import getMonth, { months } from "../../utils/getMonth";
 import getTimeString from "../../utils/getTimeString";
 import { Link } from "react-router-dom";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
+import useAllEvents from "../../hooks/queries/events/useAllEvents";
 
 const StudentDashboardPage = () => {
   const { data, isLoading } = useClasses({
     startTime: "2022-12-01T21:56:53.900Z",
   });
   const lectures = data?.classes?.nodes;
+
+  const { data: eventsData, isLoading: eventsLoading } = useAllEvents();
+
+  const upcomingEvent = eventsData
+    ? eventsData?.nodes?.find((e) => e?.status !== "live")
+    : undefined;
 
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
   const courses = coursesData?.courses;
@@ -31,7 +38,10 @@ const StudentDashboardPage = () => {
     ? userData?.applications[userData?.applications?.length - 1]
     : {};
   const feesPaid = application?.feePayment?.amount;
-  const paymentCompletion = (feesPaid / 80000) * 100;
+  const totalAmountRequired = application?.feePayment?.amount * 8;
+  const paymentCompletion = (feesPaid / totalAmountRequired) * 100;
+
+  const payUrl = application?.feePayment?.paymentUrl;
 
   return (
     <div className="container my-5">
@@ -150,12 +160,14 @@ const StudentDashboardPage = () => {
             ></div>
 
             {/* right */}
-            {feesPaid < 80000 ? (
+            {feesPaid < totalAmountRequired ? (
               <div className="text-center mx-auto">
                 <p className="text-xl">Next Payment</p>
-                <p className="next-payment">N10,000</p>
+                <p className="next-payment">N{feesPaid}</p>
                 <p className="mb-0 text-lg click">
-                  <u>Make Payment</u>
+                  <u>
+                    <a href={payUrl}>Make Payment</a>
+                  </u>
                 </p>
               </div>
             ) : (
@@ -178,6 +190,7 @@ const StudentDashboardPage = () => {
         {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           <div className="bg-white r-card px-5 py-4 mb-4">
+            {eventsLoading && <Spinner />}
             <div className="bg-blue-200 rounded-2 py-2 px-4 d-flex justify-content-between align-items-center mt-3 mb-4">
               <h2 className="r-card-title me-3">Upcoming Events</h2>
               <div>
@@ -186,28 +199,39 @@ const StudentDashboardPage = () => {
             </div>
 
             {/* Event */}
-            <div className="border p-4 rounded-2 mb-3">
-              <div className="d-flex align-items-center">
-                <div className="bg-blue-200 p-3 me-4 rounded-2 text-center">
-                  <div className="text-lg font-medium lh-1 mb-1">10 - 12</div>
-                  <div className="text-xxl font-bold lh-1">Oct</div>
-                </div>
-                <div className="text-text-body">
-                  <div className="text-xl">Christ the Healer</div>
-                  <div className="text-sm">
-                    <span className="me-1">
-                      <span
-                        className="iconify"
-                        data-icon="bi:clock-fill"
-                      ></span>
-                    </span>
-                    <span> 9:00AM - 5:00PM </span>
+            {upcomingEvent && (
+              <div className="border p-4 rounded-2 mb-3">
+                <div className="d-flex align-items-center">
+                  <div className="bg-blue-200 p-3 me-4 rounded-2 text-center">
+                    <h2 className="text-lg font-medium lh-1 mb-1">
+                      {new Date(upcomingEvent?.startTime)?.getDate()} -{" "}
+                      {new Date(upcomingEvent?.endTime)?.getDate()}
+                    </h2>
+                    <p className="text-xxl font-bold lh-1">
+                      {months[new Date(upcomingEvent?.startTime).getMonth()]}
+                    </p>
+                  </div>
+                  <div className="text-text-body">
+                    <p className="text-xl">{upcomingEvent?.name}</p>
+                    <div className="text-sm">
+                      <time>
+                        {getTimeString({
+                          date: new Date(upcomingEvent?.startTime),
+                        })}{" "}
+                        -{" "}
+                        {getTimeString({
+                          date: new Date(upcomingEvent?.endTime),
+                        })}
+                      </time>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
             <div className="text-center text-xl click my-3">
-              <u> Show all</u>
+              <u>
+                <Link to={"/student/events"}> Show all</Link>
+              </u>
             </div>
           </div>
         </div>

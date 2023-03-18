@@ -26,19 +26,21 @@ const TuitionAndClearancePage = () => {
   const applications = userData?.applications;
   const application = applications?.length ? applications[0] : undefined;
 
+  console?.log(application);
+
   const dash = [
     {
       title: "Application Fee",
-      ...application?.feePayment,
+      ...application?.initialPayment,
     },
     {
       title: "Initial Payment",
-      ...application?.initialPayment,
+      ...application?.feePayment,
     },
     {
       title: "Monthly Installment",
       installments: application?.installments,
-      amount: 80000,
+      amount: application?.feePayment?.amount * 8,
       paidAt: application?.installments?.length === 8,
     },
   ];

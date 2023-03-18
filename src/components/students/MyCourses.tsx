@@ -14,7 +14,7 @@ import { Spinner } from "reactstrap";
 
 Chart.register(ArcElement);
 
-const TabOptions = ["Course Completion", "Missed Courses"];
+const TabOptions = ["Course Completion", "Missed Classes"];
 const courseColumns: TableColumns<any>[] = [
   {
     key: "Course Title",

@@ -25,7 +25,7 @@ export default function useForm<T>({ initialState }: useFormProps<T>) {
 
   function updateForm(key: keyof T, value: any) {
     setFormData((p) => ({ ...p, [key]: value }));
-    errObj[key] && toggleError(key);
+    formErrors[key] && toggleError(key);
   }
 
   const formIsValid = Object.values(formData as object).every((v) => v > "");

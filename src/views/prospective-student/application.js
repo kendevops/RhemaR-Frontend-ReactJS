@@ -15,6 +15,10 @@ import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import handleError from "../../utils/handleError";
 import countries from "../../data/Countries";
 import TextArea from "../../components/molecules/TextArea";
+import { getUserData } from "../../utility/utilsGeneric";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { handleLogout } from "../../redux/slices/authSlice";
 
 function ApplicationPage(props) {
   const { setHasApplied } = props;
@@ -25,17 +29,14 @@ function ApplicationPage(props) {
 
   const initialState = {
     title: "",
-    // classes: "",
-    // campus: "",
-    // whatsAppNo: "",
-    // selectedDate: "",
+    campus: "",
     session: "",
-    // referralSource: "direct",
-    // classAttendanceMethod: "",
-    // churchDetails: "",
-    // churchPastorName: "",
-    // churchPastorPhoneNumber: "",
-    // affirmationAndSubmissions: "",
+    referralSource: "direct",
+    classAttendanceMethod: "",
+    churchDetails: "",
+    churchPastorName: "",
+    churchPastorPhoneNumber: "",
+    affirmationAndSubmissions: "",
     address: "",
     dateOfBirth: "",
     nationality: "Nigerian",
@@ -99,9 +100,9 @@ function ApplicationPage(props) {
     };
 
     if (!Object.values(body).every((v) => v > "")) {
-      // alert("Please fill in all fields");
+      alert("Please fill in all fields");
       console.log({ body });
-      // return;
+      return;
     }
 
     mutate(body, {
@@ -183,7 +184,9 @@ function ApplicationPage(props) {
           <FormRadioGroup
             label="How will you attend your classes"
             options={["Onsite", "Online"]}
-            onChange={(e) => updateForm("classes", e.target.value)}
+            onChange={(e) =>
+              updateForm("classAttendanceMethod", e.target.value)
+            }
           />
 
           <FormInput
@@ -238,19 +241,10 @@ function ApplicationPage(props) {
           />
 
           <FormInput
-            label="Whatsapp Number"
-            placeholder="+2348012340000"
-            onChange={(e) => updateForm("whatsAppNo", e.target.value)}
-            hasErrors={formErrors?.whatsAppNo}
-          />
-
-          <FormInput
-            label="Pick a date"
-            onChange={(e) =>
-              updateForm("selectedDate", new Date(e.target.value).toISOString())
-            }
-            hasErrors={formErrors?.selectedDate}
-            type="date"
+            label="Referral source"
+            placeholder="How did you find out about us?"
+            onChange={(e) => updateForm("referralSource", e.target.value)}
+            hasErrors={formErrors?.referralSource}
           />
 
           <FormInput
@@ -258,6 +252,12 @@ function ApplicationPage(props) {
             placeholder="Enter Church Name"
             onChange={(e) => updateForm("churchName", e.target.value)}
             hasErrors={formErrors?.churchName}
+          />
+          <FormInput
+            label="Church Details"
+            placeholder="Enter Church Details"
+            onChange={(e) => updateForm("churchDetails", e.target.value)}
+            hasErrors={formErrors?.churchDetails}
           />
           <FormInput
             label="Church Pastor's Name"
@@ -333,11 +333,20 @@ const ProspectiveStudentApplicationPage = () => {
   const [pendingPayment, setPendingPayment] = useState(false);
   const { data, isLoading } = useCurrentUser();
 
+  const dispatch = useDispatch();
+  const currentUser = getUserData();
+  const history = useHistory();
+
   function makePayment() {
     const application = data?.applications[0];
     const paymentUrl = application?.initialPayment?.paymentUrl;
     window?.open(paymentUrl);
     window.location?.reload();
+  }
+
+  function loginAsStudent() {
+    dispatch(handleLogout(currentUser));
+    history.replace("/login");
   }
 
   function makeDepositPayment() {
@@ -429,12 +438,15 @@ const ProspectiveStudentApplicationPage = () => {
                     </section>
 
                     {data?.applications[0] &&
-                      data?.applications[0]?.feePayment?.status ===
-                        "PENDING" && (
-                        <button type="button" onClick={makeDepositPayment}>
-                          Complete Fee Payment
-                        </button>
-                      )}
+                    data?.applications[0]?.feePayment?.status === "PENDING" ? (
+                      <button type="button" onClick={makeDepositPayment}>
+                        Complete Fee Payment
+                      </button>
+                    ) : (
+                      <button type="button" onClick={loginAsStudent}>
+                        Login to your student account
+                      </button>
+                    )}
                   </>
                 )}
 
