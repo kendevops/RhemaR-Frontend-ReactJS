@@ -110,7 +110,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
           <div className="d-flex justify-content-between">
             <button
               onClick={reject}
-              className="btn danger btn-blue-800 btn-lg w-25"
+              className="btn danger btn-red-800 btn-lg w-25"
             >
               Reject
             </button>

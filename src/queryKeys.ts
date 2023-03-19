@@ -19,6 +19,7 @@ const queryKeys = {
   notifications: "notifications",
   faqs: "all-faqs",
   resources: "all-resources",
+  pmr: "pmr",
 };
 
 export default queryKeys;

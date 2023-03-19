@@ -9,6 +9,8 @@ import {
 import colors from "../../assets/img/Colors";
 import downloadFile from "../../utils/downloadFile";
 import { months } from "../../utils/getMonth";
+import useAllClasses from "../../hooks/queries/classes/useAllClasses";
+import { Spinner } from "reactstrap";
 
 export default function CourseTimetable() {
   const [viewing, setViewing] = useState(0);
@@ -16,10 +18,14 @@ export default function CourseTimetable() {
   const data = [];
   const events = []; //find the data that corresponds to the current month
 
-  //download
-  const url =
-    "https://images.unsplash.com/photo-1664574653790-cee0e10a4242?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
-  const attributes = downloadFile(url, "TimeTable");
+  const { isLoading, data: classesData } = useAllClasses({
+    status: "ongoing",
+    startTime: "2022-12-06T21:56:53.900Z",
+  });
+
+  const DATA = classesData?.nodes;
+
+  console.log({ DATA });
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -33,6 +39,7 @@ export default function CourseTimetable() {
 
   return (
     <>
+      {isLoading && <Spinner />}
       {/* Header */}
       <section className="d-flex border-bottom pb-3 justify-content-between">
         <article className="mb-3 d-flex gap-4">
@@ -64,35 +71,14 @@ export default function CourseTimetable() {
             </button>
           </div>
         </article>
-
+        {/* 
         <a
           className="d-flex w-25 gap-2 btn btn-blue-800 btn-lg"
           {...attributes}
         >
           Download <DownloadCloud />
-        </a>
+        </a> */}
       </section>
-
-      {/* Timetable */}
-      {/* <TimeTable
-        events={{
-          //tap from events in prod
-          monday: [
-            {
-              id: 1,
-              name: "Custom Event 1",
-              type: "custom",
-              startTime: new Date("2018-02-23T11:30:00"),
-              endTime: new Date("2018-02-23T13:30:00"),
-            },
-          ],
-          tuesday: [],
-          wednesday: [],
-          thursday: [],
-          friday: [],
-        }}
-        style={{ height: "500px", width: "100%" }}
-      /> */}
     </>
   );
 }

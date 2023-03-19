@@ -9,6 +9,7 @@ import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
 import useCreateExam from "../../hooks/mutations/classes/useCreateExam";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
+import handleError from "../../utils/handleError";
 
 type CreateExamModalProps = {
   defaultValues?: any;
@@ -42,17 +43,21 @@ export default function CreateExamModal({
     score: 100,
   };
 
-  const { formData: basicInformation, updateForm: updateBasicInformation } =
-    useForm({
-      initialState: {
-        name: initialState?.name,
-        course: initialState?.course,
-        duration: initialState?.duration,
-        endsAt: initialState?.endsAt,
-        startsAt: initialState?.startsAt,
-        score: initialState?.score,
-      },
-    });
+  const {
+    formData: basicInformation,
+    updateForm: updateBasicInformation,
+    toggleError,
+    formErrors,
+  } = useForm({
+    initialState: {
+      name: initialState?.name,
+      course: initialState?.course,
+      duration: initialState?.duration,
+      endsAt: initialState?.endsAt,
+      startsAt: initialState?.startsAt,
+      score: initialState?.score,
+    },
+  });
 
   const [questions, setQuestions] = useState(
     defaultValues?.questions ??
@@ -89,15 +94,7 @@ export default function CreateExamModal({
           );
         },
         onError: (e: any) => {
-          console.log(e);
-          toast.error(
-            <ToastContent
-              heading={"Error"}
-              message={e?.response?.data?.error?.message?.toString()}
-              type={"error"}
-            />,
-            ToastContent.Config
-          );
+          handleError(e, basicInformation, toggleError);
         },
       });
     }
@@ -134,6 +131,7 @@ export default function CreateExamModal({
                   label="Name"
                   placeholder="Name of this exam"
                   value={basicInformation?.name}
+                  hasErrors={formErrors.name}
                   onChange={(e) =>
                     updateBasicInformation("name", e?.target?.value)
                   }
@@ -153,6 +151,7 @@ export default function CreateExamModal({
                           {...params}
                           placeholder="Search courses"
                           className="form-control "
+                          error={formErrors?.course}
                         />
                       );
                     }}
@@ -165,6 +164,7 @@ export default function CreateExamModal({
                   label="Duration (minutes)"
                   placeholder="Duration in minutes e.g. 60"
                   value={basicInformation?.duration}
+                  hasErrors={formErrors.duration}
                   type={"number"}
                   onChange={(e) =>
                     updateBasicInformation("duration", e?.target?.valueAsNumber)
@@ -173,6 +173,7 @@ export default function CreateExamModal({
                 <FormInput
                   label="Start Date"
                   type={"date"}
+                  hasErrors={formErrors.startsAt}
                   onChange={(e) =>
                     updateBasicInformation(
                       "startsAt",
@@ -183,6 +184,7 @@ export default function CreateExamModal({
                 <FormInput
                   label="End Date"
                   type={"date"}
+                  hasErrors={formErrors.endsAt}
                   onChange={(e) =>
                     updateBasicInformation(
                       "endsAt",

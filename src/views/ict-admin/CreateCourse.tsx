@@ -176,7 +176,7 @@ export default function CreateCourse() {
       {currentOption === Options[1] && (
         <CardWrapper>
           <div className="d-flex justify-content-between align-items-center">
-            <h1>Sections ({sectionsData?.length?.toString()})</h1>
+            <h1>Sessions ({sectionsData?.length?.toString()})</h1>
 
             <CreateSectionModal
               toggle={toggleAddSection}

@@ -166,7 +166,7 @@ export default function StudentProfile() {
                   </div>
                   <div style={{ width: "100%" }}>
                     <FormInput
-                      label="Alternate Phone Number (Whatsapp number)"
+                      label="Alternate Phone Number (Whatsapp)"
                       value={formData?.altPhoneNumber}
                       onChange={(e) =>
                         updateForm("altPhoneNumber", e.target.value)
