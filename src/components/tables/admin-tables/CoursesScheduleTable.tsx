@@ -85,6 +85,8 @@ export default function CoursesScheduleTable() {
     },
   ];
 
+  // Add filter to group by campus
+
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}
