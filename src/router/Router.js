@@ -16,6 +16,7 @@ import {
   Route,
   Switch,
   Redirect,
+  useHistory,
 } from "react-router-dom";
 
 // ** Routes & Default Routes
@@ -33,6 +34,10 @@ import {
 } from "../utility/utilsGeneric";
 import userRoles from "../utility/userRoles";
 import useCurrentUser from "../hooks/queries/users/useCurrentUser";
+import getToken from "../utils/getToken";
+import parseJwt from "../utils/parseJwt";
+import { handleLogout } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const Router = () => {
   // ** ACL Ability Context
@@ -42,6 +47,20 @@ const Router = () => {
   const { data: userData } = useCurrentUser();
   const loggedIn = isUserLoggedIn();
   const data = getUserData();
+
+  const accessToken = getToken("accessToken");
+  const decodedJwt = parseJwt(accessToken);
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  // logout after access expired
+  useEffect(() => {
+    if (decodedJwt?.exp * 1000 < Date.now()) {
+      dispatch(handleLogout(getUserData()));
+      window.location.href("/login");
+    }
+  }, [decodedJwt?.exp, dispatch, history]);
 
   useEffect(() => {
     if (loggedIn) {

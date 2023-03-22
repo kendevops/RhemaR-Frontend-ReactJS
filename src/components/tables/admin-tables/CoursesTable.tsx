@@ -38,7 +38,17 @@ export default function CoursesTable() {
                 key: "Action",
                 title: "Action",
                 render: (d) => {
-                  function handleDelete() {}
+                  function handleDelete() {
+                    // confirmAlert({
+                    //   title: "Delete Course",
+                    //   message:
+                    //     "Are you sure you want to delete this course? It cannot be undone",
+                    //   buttons: [
+                    //     { label: "Yes", onClick: () => {} },
+                    //     { label: "No" },
+                    //   ],
+                    // });
+                  }
 
                   return (
                     <div className="d-flex gap-4">

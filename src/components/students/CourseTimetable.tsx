@@ -18,14 +18,12 @@ export default function CourseTimetable() {
   const data = [];
   const events = []; //find the data that corresponds to the current month
 
-  const { isLoading, data: classesData } = useAllClasses({
-    status: "ongoing",
-    startTime: "2022-12-06T21:56:53.900Z",
-  });
+  //use current user classes
+  // const { isLoading, data: classesData } =
 
-  const DATA = classesData?.nodes;
+  // const DATA = classesData?.nodes;
 
-  console.log({ DATA });
+  // console.log({ DATA });
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -39,7 +37,7 @@ export default function CourseTimetable() {
 
   return (
     <>
-      {isLoading && <Spinner />}
+      {/* {isLoading && <Spinner />} */}
       {/* Header */}
       <section className="d-flex border-bottom pb-3 justify-content-between">
         <article className="mb-3 d-flex gap-4">
