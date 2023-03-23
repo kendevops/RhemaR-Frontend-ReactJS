@@ -7,7 +7,12 @@ export default function useDeleteCourseSection(sectionId: string) {
   const { course, courses, allCourses } = queryKeys;
 
   return useMutation(
-    () => api.delete(`/courses/${sectionId}/sections/delete`),
+    (sectionName: string) =>
+      api.delete(`/courses/${sectionId}/sections/delete`, {
+        data: {
+          sectionName,
+        },
+      }),
     {
       onSuccess: () => {
         q.invalidateQueries([course, allCourses, courses]);

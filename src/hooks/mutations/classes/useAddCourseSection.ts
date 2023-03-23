@@ -2,17 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import queryKeys from "../../../queryKeys";
 import api from "../../../api";
 
-interface Data {
-  sectionName: string;
-  section: any;
-}
-
-export default function useUpdateCourseSection(sectionId: string) {
+export default function useAddCourseSection(courseId: string) {
   const q = useQueryClient();
   const { course, courses, allCourses } = queryKeys;
 
   return useMutation(
-    (data: Data) => api.patch(`/courses/${sectionId}/sections/update`, data),
+    (data: any) => api.post(`/courses/${courseId}/sections/create`, data),
     {
       onSuccess: () => {
         q.invalidateQueries([course, allCourses, courses]);

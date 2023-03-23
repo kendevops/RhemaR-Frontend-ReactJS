@@ -9,6 +9,7 @@ import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
 import useCreateResources from "../../hooks/mutations/classes/useCreateResources";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
+import handleError from "../../utils/handleError";
 
 type UploadResourceModalProps = {
   toggle: VoidFunction;
@@ -57,24 +58,13 @@ export default function UploadResourceModal({
         );
       },
       onError: (e: any) => {
-        console.log(e);
-        toast.error(
-          <ToastContent
-            heading={"An error occurred"}
-            type={"error"}
-            message={JSON.stringify(
-              e?.response?.data?.error?.message ?? e?.message
-            )}
-          />,
-          { ...ToastContent.Config }
-        );
+        handleError(e);
       },
     });
   }
 
   const { isLoading, startUpload } = useUploadFile({
     file: file!,
-    format: getFileFormat(file?.name),
     onSuccess: handleSubmit,
   });
 

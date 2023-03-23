@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import BackButton from "../../components/molecules/BackButton";
 import typography from "../../assets/img/Typography";
 import Tab from "../../components/atoms/Tab";
@@ -14,18 +14,25 @@ import useCreateCourse from "../../hooks/mutations/classes/useCreateCourse";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import { useHistory } from "react-router-dom";
+import handleError from "../../utils/handleError";
+import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
+import TextArea from "../../components/molecules/TextArea";
+import FormDropdown from "../../components/molecules/FormDropdown";
+import { levels } from "../../data/Levels";
 
 const initialBasicInfo = {
   code: "",
   desc: "",
-  level: "",
+  level: "LEVEL_1",
   title: "",
-  bannerUrl:
-    "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
+  bannerUrl: "",
 };
 
+const defaultUrl =
+  "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4";
+
 export default function CreateCourse() {
-  const Options = ["Basic Information", "Sections"];
+  const Options = ["Basic Information", "Sessions"];
   const [option, setOption] = useState(0);
   const currentOption = Options[option];
   const [isAddingSection, toggleAddSection] = useToggle();
@@ -41,13 +48,50 @@ export default function CreateCourse() {
   } = useForm({
     initialState: initialBasicInfo,
   });
-  const { onChangeFile } = useFileReader({
-    onComplete: (file) =>
-      updateBasicInfo(
-        "bannerUrl",
-        "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4"
-      ),
+
+  const { onChangeFile, file } = useFileReader({});
+
+  function completeFormSubmission(e: any) {
+    updateBasicInfo("bannerUrl", e?.fileUrl ?? defaultUrl);
+
+    if (!basicInfoIsValid) {
+      console.log(basicInfoData);
+      console.log(e);
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const data = {
+      ...basicInfoData,
+      sections: sectionsData,
+    };
+
+    mutate(data, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            heading={"Course created successfully"}
+            type={"success"}
+            message={`${basicInfoData?.title} has been created successfully`}
+          />,
+          ToastContent.Config
+        );
+
+        history.replace("/ict-admin/create-course");
+      },
+
+      onError: (e: any) => {
+        handleError(e);
+      },
+    });
+  }
+
+  const uploadFile = useUploadFile({
+    file: file!,
+    onSuccess: completeFormSubmission,
   });
+
+  const loading = isLoading || uploadFile.isLoading;
 
   function onDeleteSection(name: string) {
     setSectionsData((p) => {
@@ -68,37 +112,9 @@ export default function CreateCourse() {
   }
 
   function handleSubmit() {
-    const data = {
-      ...basicInfoData,
-      sections: sectionsData,
-    };
+    // Upload files and get their urls first
 
-    mutate(data, {
-      onSuccess: () => {
-        toast.success(
-          <ToastContent
-            heading={"Course created successfully"}
-            type={"success"}
-            message={`${basicInfoData?.title} has been created successfully`}
-          />,
-          ToastContent.Config
-        );
-
-        history.push("/ict-admin/create-course");
-      },
-
-      onError: (e: any) => {
-        console.log({ e, data });
-        toast.error(
-          <ToastContent
-            heading={`An error occurred while creating ${basicInfoData?.title}`}
-            type={"error"}
-            message={e?.response?.data?.error?.message?.toString()}
-          />,
-          ToastContent.Config
-        );
-      },
-    });
+    uploadFile.startUpload();
   }
 
   return (
@@ -126,7 +142,7 @@ export default function CreateCourse() {
             })}
           </Tab.Wrapper>
 
-          {isLoading ? (
+          {loading ? (
             <Spinner />
           ) : (
             <button
@@ -157,12 +173,18 @@ export default function CreateCourse() {
             value={basicInfoData?.title}
             required
           />
-          <FormInput
-            label="Level"
-            placeholder="Enter level"
+          <FormDropdown
+            title="Level"
+            options={levels.map((v) => ({ children: v }))}
             onChange={(e) => updateBasicInfo("level", e?.target?.value)}
             value={basicInfoData?.level}
             required
+          />
+          <TextArea
+            label="Description"
+            placeholder="Describe the course"
+            onChange={(e) => updateBasicInfo("desc", e?.target?.value)}
+            value={basicInfoData?.desc}
           />
           <FormInput
             label="Banner Url (1200px by 200px)"

@@ -2,19 +2,18 @@ import { toast } from "react-toastify";
 import useCreateUploadUrl from "./useCreateUploadUrl";
 import usePutFile from "./usePutFile";
 import ToastContent from "../../../components/molecules/ToastContent";
+import getFileFormat from "../../../utils/getFileFormat";
 
 type UseUploadFileParams = {
-  format: string;
   file: File;
   onSuccess?: (d: any) => void;
 };
 
 export default function useUploadFile({
-  format,
   file,
   onSuccess,
 }: UseUploadFileParams) {
-  const createUploadUrl = useCreateUploadUrl(format);
+  const createUploadUrl = useCreateUploadUrl(getFileFormat(file?.name));
   const putFile = usePutFile();
 
   const data = putFile.data;

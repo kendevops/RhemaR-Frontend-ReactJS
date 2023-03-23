@@ -56,6 +56,7 @@ const Router = () => {
 
   // logout after access expired
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (decodedJwt?.exp * 1000 < Date.now()) {
       dispatch(handleLogout(getUserData()));
       window.location.href("/login");
