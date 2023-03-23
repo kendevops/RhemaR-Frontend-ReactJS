@@ -51,14 +51,14 @@ export default function CourseSchedule() {
       {isLoading && <Spinner />}
       {/* Header */}
       <section className="mb-3 d-flex justify-content-between">
-        <div className="d-flex gap-3 align-items-center">
+        {/* <div className="d-flex gap-3 align-items-center">
           <Calendar color={colors.primary} />
           <h6 className="text-lg font-bold text-blue-600">
             {`${months[viewing]} ${new Date().getFullYear()}`}
           </h6>
-        </div>
+        </div> */}
 
-        <div className="d-flex gap-3">
+        {/* <div className="d-flex gap-3">
           <button
             className="btn-sm p-2 rounded-2 border-0"
             style={{
@@ -77,7 +77,7 @@ export default function CourseSchedule() {
           >
             <ChevronRight color="white" />
           </button>
-        </div>
+        </div> */}
       </section>
 
       {/* Classes */}
@@ -101,16 +101,18 @@ export default function CourseSchedule() {
         {/* Class List */}
         <div>
           {classes ? (
-            classes?.map((clas: any, i: number) => {
-              return (
-                <UpcomingEvent
-                  title={clas?.name}
-                  key={i}
-                  endDate={new Date(clas?.endTime)}
-                  startDate={new Date(clas?.startTime)}
-                />
-              );
-            })
+            classes
+              ?.filter?.((c: any, i: number) => i <= 4)
+              .map((clas: any, i: number) => {
+                return (
+                  <UpcomingEvent
+                    title={clas?.name}
+                    key={i}
+                    endDate={new Date(clas?.endTime)}
+                    startDate={new Date(clas?.startTime)}
+                  />
+                );
+              })
           ) : (
             <p>No Classes yet...</p>
           )}

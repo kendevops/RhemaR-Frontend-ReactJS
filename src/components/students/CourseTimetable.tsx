@@ -11,6 +11,8 @@ import downloadFile from "../../utils/downloadFile";
 import { months } from "../../utils/getMonth";
 import useAllClasses from "../../hooks/queries/classes/useAllClasses";
 import { Spinner } from "reactstrap";
+import useClasses from "../../hooks/queries/classes/useClasses";
+import UpcomingEvent from "../molecules/UpcomingEvent";
 
 export default function CourseTimetable() {
   const [viewing, setViewing] = useState(0);
@@ -19,11 +21,9 @@ export default function CourseTimetable() {
   const events = []; //find the data that corresponds to the current month
 
   //use current user classes
-  // const { isLoading, data: classesData } =
+  const { isLoading, data: classesData } = useClasses();
 
-  // const DATA = classesData?.nodes;
-
-  // console.log({ DATA });
+  const DATA = classesData?.classes?.nodes;
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -37,38 +37,10 @@ export default function CourseTimetable() {
 
   return (
     <>
-      {/* {isLoading && <Spinner />} */}
+      {isLoading && <Spinner />}
       {/* Header */}
       <section className="d-flex border-bottom pb-3 justify-content-between">
-        <article className="mb-3 d-flex gap-4">
-          <div className="d-flex gap-3 align-items-center">
-            <Calendar color={colors.primary} />
-            <h6 className="text-lg font-bold text-blue-600">
-              {`${months[viewing]} ${new Date().getFullYear()}`}
-            </h6>
-          </div>
-
-          <div className="d-flex gap-3">
-            <button
-              className="btn-sm p-2 rounded-2 border-0"
-              style={{
-                backgroundColor: colors.primary,
-              }}
-              onClick={() => handleViewing("prev")}
-            >
-              <ChevronLeft color="white" />
-            </button>
-            <button
-              className="btn-sm p-2 rounded-2 border-0"
-              style={{
-                backgroundColor: colors.primary,
-              }}
-              onClick={() => handleViewing("next")}
-            >
-              <ChevronRight color="white" />
-            </button>
-          </div>
-        </article>
+        <h1>Classes</h1>
         {/* 
         <a
           className="d-flex w-25 gap-2 btn btn-blue-800 btn-lg"
@@ -76,6 +48,24 @@ export default function CourseTimetable() {
         >
           Download <DownloadCloud />
         </a> */}
+      </section>
+
+      {/* Classes */}
+      <section>
+        {DATA && (
+          <div>
+            {DATA?.map((clas: any, i: number) => {
+              return (
+                <UpcomingEvent
+                  title={clas?.name}
+                  key={i}
+                  endDate={new Date(clas?.endTime)}
+                  startDate={new Date(clas?.startTime)}
+                />
+              );
+            })}
+          </div>
+        )}
       </section>
     </>
   );

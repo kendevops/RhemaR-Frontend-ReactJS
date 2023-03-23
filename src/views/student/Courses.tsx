@@ -102,7 +102,7 @@ export default function StudentCourses() {
                 My Course Schedule
               </h2>
 
-              <Link to={"/student/all-courses"}>
+              <Link to={"/student/downloads"}>
                 <small className="text-decoration-underline">Show All</small>
               </Link>
             </div>
