@@ -8,6 +8,8 @@ interface Props {
 export default function SocketWrapper({ children }: Props) {
   const accessToken = getToken("accessToken");
 
+  console.log({ accessToken });
+
   useEffect(() => {
     if (!!accessToken) {
       socket.connect();

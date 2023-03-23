@@ -11,9 +11,66 @@ import CardWrapper from "../../components/students/CardWrapper";
 import Table from "../../components/general/table/Table";
 import CourseMaterials from "../../components/molecules/CourseMaterials";
 import useFileReader from "../../utility/hooks/useFileReader";
+import CreateSectionModal from "../../components/modals/CreateSectionModal";
+import useDeleteCourseSection from "../../hooks/mutations/classes/useDeleteCourse";
+import handleError from "../../utils/handleError";
+import useUpdateCourseSection from "../../hooks/mutations/classes/useUpdateSection";
+import useAddCourseSection from "../../hooks/mutations/classes/useAddCourseSection";
 
 interface Params {
   id: string;
+}
+
+function SectionAction(props: any) {
+  const [isEditingSection, toggleEditSection] = useToggle();
+
+  const deleteSect = useDeleteCourseSection(props?.courseId);
+  const updateSect = useUpdateCourseSection(props?.courseId);
+
+  function handleDelete() {
+    deleteSect.mutate(props?.name, {
+      onSuccess: () => {
+        props.refetch();
+      },
+      onError: (err) => handleError(err),
+    });
+  }
+
+  function handleEdit(data: any) {
+    updateSect.mutate(
+      {
+        sectionName: props?.name,
+        section: data,
+      },
+      {
+        onSuccess: () => toggleEditSection(),
+        onError: (err) => handleError(err),
+      }
+    );
+  }
+
+  return (
+    <div className="d-flex gap-4">
+      {/* Edit */}
+      <div>
+        <CreateSectionModal
+          defaultValues={props}
+          isLoading={updateSect?.isLoading}
+          isOpen={isEditingSection}
+          onCreate={handleEdit}
+          toggle={toggleEditSection}
+        />
+        <u onClick={toggleEditSection}>Edit</u>
+      </div>
+
+      {/* Delete */}
+      {deleteSect.isLoading ? (
+        <Spinner />
+      ) : (
+        <u onClick={handleDelete}>Delete</u>
+      )}
+    </div>
+  );
 }
 
 export default function Course() {
@@ -22,11 +79,20 @@ export default function Course() {
   const { img, onChangeFile, status } = useFileReader();
   const [isAddingSection, toggleAddSection] = useToggle();
 
+  const addSection = useAddCourseSection(id);
+
+  function handleAddSection(data: any) {
+    addSection.mutate(data, {
+      onSuccess: () => toggleAddSection(),
+      onError: (e) => handleError(e),
+    });
+  }
+
   useEffect(() => {
     if (!id) history.push("/");
   }, [id, history]);
 
-  const { data, isLoading } = useCourse(id);
+  const { data, isLoading, refetch } = useCourse(id);
   const sectionsData = data?.sections;
   const [courseMaterials, setCourseMaterials] = useState<any[]>([]);
   const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
@@ -66,7 +132,7 @@ export default function Course() {
                 {data?.title}
               </h2>
 
-              <div className="d-flex gap-5">
+              {/* <div className="d-flex gap-5">
                 <div>
                   <label htmlFor="banner">
                     <u>Change Banner</u>
@@ -75,12 +141,11 @@ export default function Course() {
                     onChange={onChangeFile}
                     id="banner"
                     type={"file"}
-                    accept="*/image"
                     hidden
                   />
                 </div>
                 <u>Edit Course Name</u>
-              </div>
+              </div> */}
             </div>
 
             <div
@@ -107,7 +172,7 @@ export default function Course() {
         <ColWrapper lg="7">
           <CardWrapper className="h-100">
             <div className="d-flex justify-content-between align-items-center">
-              <h1>Sections</h1>
+              <h1>Sessions</h1>
 
               <button
                 className="btn btn-lg btn-blue-800 w-25"
@@ -115,6 +180,13 @@ export default function Course() {
               >
                 Add
               </button>
+
+              <CreateSectionModal
+                isOpen={isAddingSection}
+                isLoading={addSection.isLoading}
+                onCreate={handleAddSection}
+                toggle={toggleAddSection}
+              />
             </div>
 
             <Table.Wrapper>
@@ -136,10 +208,7 @@ export default function Course() {
                     title: "Action",
                     render: (d) => {
                       return (
-                        <div className="d-flex gap-4">
-                          <u>Edit</u>
-                          <u>Delete</u>
-                        </div>
+                        <SectionAction refetch={refetch} courseId={id} {...d} />
                       );
                     },
                   },

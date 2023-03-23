@@ -1,16 +1,18 @@
 import { FormEvent, useState } from "react";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
 import FormInput from "../molecules/FormInput";
 import CardWrapper from "../students/CardWrapper";
 import useFileReader from "../../utility/hooks/useFileReader";
 import FileTypeIcon from "../atoms/FIleTypeIcon";
+import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
 
 type CreateSectionModalProps = {
   isOpen: boolean;
   toggle: VoidFunction;
   defaultValues?: any;
   onCreate: (data: any) => void;
+  isLoading?: boolean;
 };
 
 type FileType = {
@@ -25,6 +27,7 @@ export default function CreateSectionModal({
   isOpen,
   onCreate,
   toggle,
+  isLoading,
 }: CreateSectionModalProps) {
   const { formData, updateForm } = useForm({
     initialState: {
@@ -40,20 +43,6 @@ export default function CreateSectionModal({
     defaultValues?.assignments ?? []
   );
 
-  const {
-    img: material,
-    onChangeFile: onChangeMaterial,
-    status: materialStatus,
-    file: materialFile,
-  } = useFileReader();
-
-  const {
-    img: assignment,
-    onChangeFile: onChangeAssignment,
-    status: assignmentStatus,
-    file: assignmentFile,
-  } = useFileReader();
-
   function handleAdd(type: "material" | "assignment", file: FileType) {
     if (type === "material") {
       setMaterials((p) => {
@@ -66,6 +55,47 @@ export default function CreateSectionModal({
       });
     }
   }
+
+  const { file, onChangeFile } = useFileReader();
+
+  const {
+    onChangeFile: onChangeMaterial,
+    status: materialStatus,
+    file: materialFile,
+  } = useFileReader();
+
+  const uploadMaterial = useUploadFile({
+    file: materialFile!,
+    onSuccess: (d) => {
+      console.log({ d });
+
+      handleAdd("material", {
+        name: materialFile?.name ?? Date?.now?.toString(),
+        path: d?.fileUrl,
+        size: materialFile?.size ?? 1024,
+        type: materialFile?.type ?? "unknown",
+      });
+    },
+  });
+
+  const {
+    onChangeFile: onChangeAssignment,
+    status: assignmentStatus,
+    file: assignmentFile,
+  } = useFileReader();
+
+  const UploadAssignment = useUploadFile({
+    file: assignmentFile!,
+    onSuccess: (d) => {
+      console.log({ d });
+      handleAdd("assignment", {
+        name: assignmentFile?.name ?? Date?.now?.toString(),
+        path: d?.fileUrl,
+        size: assignmentFile?.size ?? 1024,
+        type: assignmentFile?.type ?? "unknown",
+      });
+    },
+  });
 
   function handleDelete(type: "material" | "assignment", index: number) {
     if (type === "material") {
@@ -80,23 +110,18 @@ export default function CreateSectionModal({
     }
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit(e: any) {
     onCreate({
       ...formData,
-      videoUrl:
-        "https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
-      materials: materials?.map((m) => ({
-        ...m,
-        path: "https://rhema-course-uploads-bucket.s3.amazonaws.com/2181a670922ea04e097a72164fad0900.jpg",
-      })),
-      assignments: assignments?.map((m) => ({
-        ...m,
-        path: "https://rhema-course-uploads-bucket.s3.amazonaws.com/2181a670922ea04e097a72164fad0900.jpg",
-      })),
+      videoUrl: e?.fileUrl, //"https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
+      materials,
+      assignments,
     });
     toggle();
   }
+
+  const uploadVideo = useUploadFile({ file: file!, onSuccess: handleSubmit });
+  const loading = isLoading || uploadVideo.isLoading;
 
   return (
     <>
@@ -110,7 +135,12 @@ export default function CreateSectionModal({
           {!!defaultValues ? "Modify Section" : "Create Section"}
         </ModalHeader>
         <ModalBody>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              uploadVideo.startUpload();
+            }}
+          >
             <FormInput
               label="Name"
               onChange={(e) => updateForm("name", e?.target?.value)}
@@ -124,10 +154,9 @@ export default function CreateSectionModal({
               required
             />
             <FormInput
-              label="Video Url"
-              onChange={(e) => updateForm("videoUrl", e?.target?.value)}
-              placeholder={defaultValues?.videoUrl}
-              required
+              label="Upload Video"
+              type={"file"}
+              onChange={onChangeFile}
             />
 
             {/* Course Materials */}
@@ -142,19 +171,14 @@ export default function CreateSectionModal({
                     onChange={(e) => {
                       onChangeMaterial(e);
                       if (materialStatus?.success) {
-                        console.log({ material, materialFile });
-                        handleAdd("material", {
-                          name: materialFile?.name ?? Date?.now?.toString(),
-                          path: material,
-                          size: materialFile?.size ?? 1024,
-                          type: materialFile?.type ?? "unknown",
-                        });
+                        uploadMaterial.startUpload();
                       }
                     }}
                     id="Upload"
                     type={"file"}
                     hidden
                   />
+                  {uploadMaterial.isLoading && <Spinner />}
                 </div>
               </div>
 
@@ -200,19 +224,16 @@ export default function CreateSectionModal({
                     onChange={(e) => {
                       onChangeAssignment(e);
                       if (assignmentStatus?.success) {
-                        console.log({ assignment, assignmentFile });
-                        handleAdd("assignment", {
-                          name: assignmentFile?.name ?? Date?.now?.toString(),
-                          path: assignment,
-                          size: assignmentFile?.size ?? 1024,
-                          type: assignmentFile?.type ?? "unknown",
-                        });
+                        UploadAssignment.startUpload();
+                        // console.log({ assignment, assignmentFile });
                       }
                     }}
                     id="UploadAssignment"
                     type={"file"}
                     hidden
                   />
+
+                  {UploadAssignment.isLoading && <Spinner />}
                 </div>
               </div>
 
@@ -234,9 +255,13 @@ export default function CreateSectionModal({
                 })}
               </ul>
             </CardWrapper>
-            <button type="submit" className="btn btn-lg  btn-blue-800">
-              {!!defaultValues ? "Modify Section" : "Create Section"}
-            </button>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <button type="submit" className="btn btn-lg  btn-blue-800">
+                {!!defaultValues ? "Modify Section" : "Create Section"}
+              </button>
+            )}
           </form>
         </ModalBody>
       </Modal>

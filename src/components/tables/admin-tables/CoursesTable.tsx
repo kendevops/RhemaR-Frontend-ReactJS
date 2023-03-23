@@ -34,19 +34,29 @@ export default function CoursesTable() {
                 title: "Date Created",
                 render: (d) => <p>{new Date(d?.createdAt)?.toDateString()}</p>,
               },
-              {
-                key: "Action",
-                title: "Action",
-                render: (d) => {
-                  function handleDelete() {}
+              // {
+              //   key: "Action",
+              //   title: "Action",
+              //   render: (d) => {
+              //     function handleDelete() {
+              //       // confirmAlert({
+              //       //   title: "Delete Course",
+              //       //   message:
+              //       //     "Are you sure you want to delete this course? It cannot be undone",
+              //       //   buttons: [
+              //       //     { label: "Yes", onClick: () => {} },
+              //       //     { label: "No" },
+              //       //   ],
+              //       // });
+              //     }
 
-                  return (
-                    <div className="d-flex gap-4">
-                      <u onClick={handleDelete}>Delete</u>
-                    </div>
-                  );
-                },
-              },
+              //     return (
+              //       <div className="d-flex gap-4">
+              //         <u onClick={handleDelete}>Delete</u>
+              //       </div>
+              //     );
+              //   },
+              // },
             ],
           }}
         />

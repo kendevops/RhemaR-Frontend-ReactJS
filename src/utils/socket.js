@@ -3,8 +3,7 @@ import getToken from "./getToken";
 
 const URL = `${process.env.REACT_APP_API_ENDPOINT}/chats`;
 
-const accessToken = getToken("accessToken");
-const token = `Bearer ${accessToken}`;
+const token = getToken("accessToken");
 
 const socket = io({
   auth: {
