@@ -78,12 +78,16 @@ export default function Course() {
   const history = useHistory();
   const { img, onChangeFile, status } = useFileReader();
   const [isAddingSection, toggleAddSection] = useToggle();
+  const { data, isLoading, refetch } = useCourse(id);
 
   const addSection = useAddCourseSection(id);
 
   function handleAddSection(data: any) {
     addSection.mutate(data, {
-      onSuccess: () => toggleAddSection(),
+      onSuccess: () => {
+        refetch();
+        isAddingSection && toggleAddSection();
+      },
       onError: (e) => handleError(e),
     });
   }
@@ -92,7 +96,6 @@ export default function Course() {
     if (!id) history.push("/");
   }, [id, history]);
 
-  const { data, isLoading, refetch } = useCourse(id);
   const sectionsData = data?.sections;
   const [courseMaterials, setCourseMaterials] = useState<any[]>([]);
   const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
