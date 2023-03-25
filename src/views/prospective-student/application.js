@@ -58,7 +58,7 @@ function ApplicationPage(props) {
 
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const academicOptions = data?.nodes?.map((d) => d?.name);
-  const maritalOptions = ["Single", "Married"];
+  const maritalOptions = ["single", "married"];
   const [campusFee, setCampusFee] = useState("30000");
 
   useEffect(() => {
@@ -254,8 +254,8 @@ function ApplicationPage(props) {
             hasErrors={formErrors?.churchName}
           />
           <FormInput
-            label="Church Details"
-            placeholder="Enter Church Details"
+            label="Church Address"
+            placeholder="Enter Church Address"
             onChange={(e) => updateForm("churchDetails", e.target.value)}
             hasErrors={formErrors?.churchDetails}
           />
@@ -299,13 +299,16 @@ function ApplicationPage(props) {
             hasErrors={formErrors?.isBaptized}
           />
 
-          <TextArea
-            label="Affirmations & Submissions"
-            onChange={(e) =>
-              updateForm("affirmationAndSubmissions", e?.target?.value)
-            }
+          <FormRadioGroup
+            label="Affirmations and Submissions"
+            options={["Yes", "No"]}
+            onChange={(e) => {
+              updateForm("isBaptized", e.target.value );
+            }}
             hasErrors={formErrors?.affirmationAndSubmissions}
           />
+
+
         </div>
 
         <div className="py-4 border-top">
