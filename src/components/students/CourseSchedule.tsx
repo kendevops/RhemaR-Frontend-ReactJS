@@ -7,6 +7,7 @@ import useClasses from "../../hooks/queries/classes/useClasses";
 import { months } from "../../utils/getMonth";
 import Tab from "../atoms/Tab";
 import UpcomingEvent from "../molecules/UpcomingEvent";
+import { Link } from "react-router-dom";
 
 const classTabs = ["All", "Weekend Classes", "Night Classes"];
 
@@ -105,12 +106,13 @@ export default function CourseSchedule() {
               ?.filter?.((c: any, i: number) => i <= 4)
               .map((clas: any, i: number) => {
                 return (
-                  <UpcomingEvent
-                    title={clas?.name}
-                    key={i}
-                    endDate={new Date(clas?.endTime)}
-                    startDate={new Date(clas?.startTime)}
-                  />
+                  <Link key={i} to={`/student/lecture/${clas?.id}`}>
+                    <UpcomingEvent
+                      title={clas?.name}
+                      endDate={new Date(clas?.endTime)}
+                      startDate={new Date(clas?.startTime)}
+                    />
+                  </Link>
                 );
               })
           ) : (

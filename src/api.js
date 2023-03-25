@@ -52,8 +52,8 @@ const refreshAccessToken = async (failedRequest) => {
   return Promise.resolve();
 };
 
-createAuthRefreshInterceptor(api, refreshAccessToken, {
-  statusCodes: [401, 403],
-});
+// createAuthRefreshInterceptor(api, refreshAccessToken, {
+//   statusCodes: [401, 403],
+// });
 
 export default api;

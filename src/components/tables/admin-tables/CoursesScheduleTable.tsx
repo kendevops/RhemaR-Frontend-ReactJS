@@ -50,8 +50,7 @@ function EditSchedule({ data }: EditScheduleProps) {
 
 export default function CoursesScheduleTable() {
   const { isLoading, data: classesData } = useAllClasses({
-    status: "ongoing",
-    startTime: "2022-12-06T21:56:53.900Z",
+    // status: "ongoing",
   });
 
   const data = classesData?.nodes;

@@ -9,6 +9,7 @@ import useAllCourses from "../../hooks/queries/classes/useAllCourses";
 import TextArea from "../molecules/TextArea";
 import handleError from "../../utils/handleError";
 import FormInput from "../molecules/FormInput";
+import useCourses from "../../hooks/queries/classes/useCourses";
 
 interface props {
   toggle: VoidFunction;
@@ -19,12 +20,13 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
   const { mutate, isLoading } = useSubmitProject();
 
   const initialState = {
+    title: "",
     courseId: "",
     desc: "",
   };
 
-  const { data: coursesData, isLoading: coursesLoading } = useAllCourses();
-  const coursesOptions = coursesData?.nodes?.map((cours: any) => ({
+  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const coursesOptions = coursesData?.courses?.map((cours: any) => ({
     label: cours?.title,
     id: cours?.id,
   }));
@@ -40,6 +42,7 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
         courseId: formData.courseId,
         desc: formData.desc,
         files,
+        title: formData.title,
       },
       {
         onSuccess: () => {
@@ -82,29 +85,37 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
       <ModalHeader toggle={toggle}>Submit Project</ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="Search courses">Course</label>
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="Search courses"
-              loading={coursesLoading}
-              options={coursesOptions}
-              renderInput={(params) => {
-                return (
-                  <TextField
-                    {...params}
-                    placeholder="Search courses"
-                    className="form-control "
-                    error={formErrors?.courseId}
-                  />
-                );
-              }}
-              onChange={(e, value: any) => {
-                updateForm("courseId", value?.id);
-              }}
-            />
-          </div>
+          {!!coursesOptions && (
+            <div className="form-group">
+              <label htmlFor="Search courses">Course</label>
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="Search courses"
+                loading={coursesLoading}
+                options={coursesOptions}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...params}
+                      placeholder="Search courses"
+                      className="form-control "
+                      error={formErrors?.courseId}
+                    />
+                  );
+                }}
+                onChange={(e, value: any) => {
+                  updateForm("courseId", value?.id);
+                }}
+              />
+            </div>
+          )}
+
+          <FormInput
+            label="Title"
+            hasErrors={formErrors.title}
+            onChange={(e) => updateForm("title", e.target.value)}
+          />
 
           <TextArea
             value={formData.desc}

@@ -25,7 +25,7 @@ const questions = [
   },
   {
     title: "DELIVERY OF CONTENT",
-    question: "Clarity and precision in delivery of relevant content.  ",
+    question: "Clarity and precision in delivery of relevant content.",
   },
   {
     title: "APPLICABILITY TO LIFE AND MINISTRY",

@@ -9,6 +9,9 @@ export default function StudentPmrs() {
   const [tab, setTab] = useState(0);
   const currentTab = tabs[tab];
 
+  const hours = 2;
+  const canFinalise = hours >= 100;
+
   return (
     <>
       <Tab.Wrapper>
@@ -16,7 +19,17 @@ export default function StudentPmrs() {
           return (
             <Tab
               key={t}
-              onClick={() => setTab(i)}
+              onClick={() => {
+                if (i !== 1) {
+                  setTab(i);
+                  return;
+                }
+                canFinalise
+                  ? setTab(i)
+                  : alert(
+                      "You need to have done at least 100 hours in practical ministry before the final assessment "
+                    );
+              }}
               tabColor="#289483"
               isSelected={currentTab === t}
             >

@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "../../../api";
 
 type Data = {
+  title: string;
   courseId: string;
   desc: string;
   files: any[];
