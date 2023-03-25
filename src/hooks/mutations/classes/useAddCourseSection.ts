@@ -7,7 +7,8 @@ export default function useAddCourseSection(courseId: string) {
   const { course, courses, allCourses } = queryKeys;
 
   return useMutation(
-    (data: any) => api.post(`/courses/${courseId}/sections/create`, data),
+    (data: any) =>
+      api.post(`/courses/${courseId}/sections/create`, { section: data }),
     {
       onSuccess: () => {
         q.invalidateQueries([course, allCourses, courses]);

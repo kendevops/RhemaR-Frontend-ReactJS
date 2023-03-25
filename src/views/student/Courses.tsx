@@ -15,6 +15,8 @@ import getTimeString from "../../utils/getTimeString";
 import { announcement } from "../ict-admin/MessageBoard";
 import useNotifications from "../../hooks/queries/notifications/useNotifications";
 import Announcement from "../../components/molecules/Announcement";
+import SubmitProjectModal from "../../components/modals/SubmitProjectModal";
+import useToggle from "../../utility/hooks/useToggle";
 
 export default function StudentCourses() {
   const { data, isLoading } = useClasses({
@@ -26,6 +28,8 @@ export default function StudentCourses() {
     useNotifications();
 
   const notifications = notificationsData?.nodes as announcement[];
+
+  const [projectOpen, toggleProject] = useToggle();
 
   return (
     <section className="container my-5">
@@ -134,7 +138,9 @@ export default function StudentCourses() {
                 <MyCourses />
               </CardWrapper>
 
+              <SubmitProjectModal isOpen={projectOpen} toggle={toggleProject} />
               <button
+                onClick={toggleProject}
                 className="btn mt-4 btn-blue-800 btn-lg w-100 mb-5"
                 type="button"
               >
