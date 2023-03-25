@@ -4,6 +4,7 @@ import useForm from "../../utility/hooks/useForm";
 import handleError from "../../utils/handleError";
 import FormInput from "../molecules/FormInput";
 import { Spinner } from "reactstrap";
+
 const initialState = {
   area: "",
   church: "",
