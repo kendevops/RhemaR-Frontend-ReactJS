@@ -63,7 +63,7 @@ export default function CreateExamModal({
     defaultValues?.questions ??
       Array.from(Array(26).keys())?.map((val, ind) => {
         return {
-          text: "question",
+          text: "question" + Date.now + `${ind}`,
           score: 1,
           isActive: true,
           answer: "a",

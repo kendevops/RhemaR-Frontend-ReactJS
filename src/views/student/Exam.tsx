@@ -8,6 +8,9 @@ import Timer from "../../components/molecules/Timer";
 import ColWrapper from "../../components/students/ColWrapper";
 import { demoExamData } from "../../data/Exam";
 import usePagination from "../../utility/hooks/usePagination";
+import useExam from "../../hooks/queries/classes/useExam";
+import { Spinner } from "reactstrap";
+import useSubmitExam from "../../hooks/mutations/classes/useSubmitExam";
 
 interface ExamParams {
   id: string;
@@ -16,16 +19,19 @@ interface ExamParams {
 export default function Exam() {
   const router = useHistory();
   const params = useParams<ExamParams>();
-  const {
-    page,
-    pages,
-    paginatedData: data,
-    setPage,
-  } = usePagination(demoExamData, 6);
+
+
 
   useEffect(() => {
     params?.id ? console.log(params?.id) : router?.goBack();
   }, [params?.id, router]);
+
+
+  const {data, isLoading} = useExam(params?.id)
+  const submitExam  = useSubmitExam(params?.id)
+
+  console.log(data)
+
 
   function endExam() {}
 
@@ -45,20 +51,14 @@ export default function Exam() {
           <div className="mt-3 d-flex gap-4 justify-content-center">
             <Timer onEnd={endExam} />
 
-            <Pagination
-              count={pages?.length}
-              page={page}
-              variant="outlined"
-              className="rounded-4"
-              shape="rounded"
-              onChange={(e, p) => setPage(p)}
-            />
+           
           </div>
         </div>
       </section>
 
       <Row>
         <ColWrapper className="mx-auto" lg="9">
+          {isLoading && <Spinner /> }
           {/* Questions */}
           <ul
             className="no-padding-left"
@@ -66,7 +66,7 @@ export default function Exam() {
               paddingTop: "12rem",
             }}
           >
-            {data?.map((d, index) => {
+            {/* {data?.map((d, index) => {
               const props = {
                 ...d,
                 index,
@@ -77,7 +77,7 @@ export default function Exam() {
                   <Question {...props} />
                 </li>
               );
-            })}
+            })} */}
           </ul>
         </ColWrapper>
       </Row>

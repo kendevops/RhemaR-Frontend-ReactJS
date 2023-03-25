@@ -117,7 +117,7 @@ export default function Lecture() {
             </Tab.Wrapper>
 
             {currentTab === "Course Overview" && (
-              <CourseOverview course={params?.id} />
+              <CourseOverview course={course} />
             )}
             {/* {currentTab === "Class Discussion" && (
               <ClassDiscussion course={params?.id} />
@@ -268,7 +268,7 @@ export default function Lecture() {
                 <Checkbox />
               </div>
               <Link
-                to={`/student/exam/${params?.id}`}
+                to={`/student/exam/${course?.id}`}
                 className="btn btn-blue-800 btn-lg w-100 mb-5 d-flex align-items-center justify-content-between"
               >
                 <div className={className}>
