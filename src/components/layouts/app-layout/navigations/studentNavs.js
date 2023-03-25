@@ -20,6 +20,14 @@ export default [
     resource: "Students",
   },
   {
+    id: "pmr",
+    title: "PMR",
+    icon: <Icon icon="bi:collection-fill" />,
+    navLink: "/student/pmr",
+    action: "read",
+    resource: "Students",
+  },
+  {
     id: "downloads",
     title: "Downloads",
     icon: <Icon icon="akar-icons:download" />,

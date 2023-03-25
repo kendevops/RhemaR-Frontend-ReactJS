@@ -34,6 +34,14 @@ const StudentRoutes = [
     },
   },
   {
+    path: "/student/pmr",
+    component: lazy(() => import("../../views/student/pmrs")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+  {
     path: "/student/all-courses",
     component: lazy(() => import("../../views/student/AllCourses")),
     meta: {
