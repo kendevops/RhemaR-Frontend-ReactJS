@@ -40,7 +40,7 @@ function ApplicationPage(props) {
     address: "",
     dateOfBirth: "",
     nationality: "Nigerian",
-    maritalStatus: "Single",
+    maritalStatus: "single",
     churchName: "",
     isBornAgain: "",
     longBornAgain: "",
@@ -183,7 +183,7 @@ function ApplicationPage(props) {
           )}
           <FormRadioGroup
             label="How will you attend your classes"
-            options={["Onsite", "Online"]}
+            options={["onsite", "online"]}
             onChange={(e) =>
               updateForm("classAttendanceMethod", e.target.value)
             }
@@ -303,7 +303,7 @@ function ApplicationPage(props) {
             label="Affirmations and Submissions"
             options={["Yes", "No"]}
             onChange={(e) => {
-              updateForm("isBaptized", e.target.value );
+              updateForm("affirmationAndSubmissions", e.target.value );
             }}
             hasErrors={formErrors?.affirmationAndSubmissions}
           />
