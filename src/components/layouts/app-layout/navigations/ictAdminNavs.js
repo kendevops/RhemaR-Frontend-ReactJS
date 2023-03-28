@@ -100,14 +100,14 @@ export default [
     action: "read",
     resource: "Admins",
   },
-  {
-    id: "chat",
-    title: "Chat",
-    icon: <Icon icon="heroicons-solid:chat-alt-2" />,
-    navLink: "/ict-admin/chat",
-    action: "read",
-    resource: "Admins",
-  },
+  // {
+  //   id: "chat",
+  //   title: "Chat",
+  //   icon: <Icon icon="heroicons-solid:chat-alt-2" />,
+  //   navLink: "/ict-admin/chat",
+  //   action: "read",
+  //   resource: "Admins",
+  // },
   {
     id: "events",
     title: "Events",

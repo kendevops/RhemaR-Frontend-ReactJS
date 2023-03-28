@@ -11,6 +11,8 @@ import usePagination from "../../utility/hooks/usePagination";
 import useExam from "../../hooks/queries/classes/useExam";
 import { Spinner } from "reactstrap";
 import useSubmitExam from "../../hooks/mutations/classes/useSubmitExam";
+import useCourse from "../../hooks/queries/classes/useCourse";
+import useAttendClass from "../../hooks/mutations/classes/useAttendClass";
 
 interface ExamParams {
   id: string;
@@ -20,18 +22,14 @@ export default function Exam() {
   const router = useHistory();
   const params = useParams<ExamParams>();
 
-
-
   useEffect(() => {
     params?.id ? console.log(params?.id) : router?.goBack();
   }, [params?.id, router]);
 
+  const { data, isLoading } = useAttendClass(params?.id);
+  const submitExam = useSubmitExam(params?.id);
 
-  const {data, isLoading} = useExam(params?.id)
-  const submitExam  = useSubmitExam(params?.id)
-
-  console.log(data)
-
+  console.log(data);
 
   function endExam() {}
 
@@ -50,15 +48,13 @@ export default function Exam() {
           <BackButton />
           <div className="mt-3 d-flex gap-4 justify-content-center">
             <Timer onEnd={endExam} />
-
-           
           </div>
         </div>
       </section>
 
       <Row>
         <ColWrapper className="mx-auto" lg="9">
-          {isLoading && <Spinner /> }
+          {isLoading && <Spinner />}
           {/* Questions */}
           <ul
             className="no-padding-left"

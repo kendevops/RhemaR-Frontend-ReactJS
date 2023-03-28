@@ -9,7 +9,7 @@ export default function StudentPmrs() {
   const [tab, setTab] = useState(0);
   const currentTab = tabs[tab];
 
-  const hours = 2;
+  const hours = 100;
   const canFinalise = hours >= 100;
 
   return (

@@ -303,15 +303,20 @@ function ApplicationPage(props) {
             label="Affirmations and Submissions"
             options={["Yes", "No"]}
             onChange={(e) => {
-              updateForm("affirmationAndSubmissions", e.target.value );
+              updateForm("affirmationAndSubmissions", e.target.value);
             }}
             hasErrors={formErrors?.affirmationAndSubmissions}
           />
-
-
         </div>
 
         <div className="py-4 border-top">
+
+          <p style={{
+            color: "red"
+          }}>
+            You selected ${formData.campus} Campus, once you click proceed, it
+            cannot be changed
+          </p>
           <p>
             You are to pay an application fee of N{campusFee ?? "30000"} to
             proceed with your application

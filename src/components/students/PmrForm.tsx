@@ -105,7 +105,6 @@ export default function PMRForm() {
             <article key={i.toString()}>
               <FormInput
                 hasErrors={formErrors.studentData}
-                value={v?.accomplishedMinistryDesc}
                 label="Description of Ministry Accomplished"
                 onChange={(e) =>
                   updateData(i, "accomplishedMinistryDesc", e.target.value)
@@ -127,7 +126,6 @@ export default function PMRForm() {
                 />
                 <FormInput
                   hasErrors={formErrors.studentData}
-                  value={v?.timeCompleted?.toString()}
                   label="Time Completed"
                   type="number"
                   onChange={(e) =>
