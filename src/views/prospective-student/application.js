@@ -303,7 +303,9 @@ function ApplicationPage(props) {
             label="Affirmations and Submissions"
             options={["Yes", "No"]}
             onChange={(e) => {
+
               updateForm("affirmationAndSubmissions", e.target.value);
+
             }}
             hasErrors={formErrors?.affirmationAndSubmissions}
           />
