@@ -44,9 +44,7 @@ export default function Lecture() {
   const [watching, setWatching] = useState("");
   const currentSession = sessions?.find((s: any) => s?.videoUrl === watching);
 
-  console.log({
-    currentSession,
-  });
+  const classId = data?.class?.id;
 
   const [isOpen, toggle] = useToggle();
   const formValues = {
@@ -267,17 +265,19 @@ export default function Lecture() {
                 Mark course attendance
                 <Checkbox />
               </div>
-              <Link
-                to={`/student/exam/${course?.id}`}
-                className="btn btn-blue-800 btn-lg w-100 mb-5 d-flex align-items-center justify-content-between"
-              >
-                <div className={className}>
-                  <Edit2 color="#fff" />
-                  <p>Take Exam</p>
-                </div>
+              {!!course?.exams && (
+                <Link
+                  to={`/student/exam/${params?.id}`}
+                  className="btn btn-blue-800 btn-lg w-100 mb-5 d-flex align-items-center justify-content-between"
+                >
+                  <div className={className}>
+                    <Edit2 color="#fff" />
+                    <p>Take Exam</p>
+                  </div>
 
-                <ArrowRight color="#fff" />
-              </Link>
+                  <ArrowRight color="#fff" />
+                </Link>
+              )}
 
               {/* Student feedback modal */}
               <div>
@@ -287,7 +287,9 @@ export default function Lecture() {
                 >
                   Give Feedback <Feedback fill="#fff" />
                 </button>
-                <StudentFeedbackModal {...{ formValues, isOpen, toggle }} />
+                <StudentFeedbackModal
+                  {...{ formValues, isOpen, toggle, courseId: classId }}
+                />
               </div>
             </article>
           </CardWrapper>

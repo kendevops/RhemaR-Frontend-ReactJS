@@ -1,11 +1,15 @@
-import { FormEvent } from "react";
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import { FormEvent, useState } from "react";
+import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import FormRadioGroup from "../molecules/FormRadioGroup";
 import CardWrapper from "../students/CardWrapper";
+import useForm from "../../utility/hooks/useForm";
+import useSubmitFeedback from "../../hooks/mutations/classes/useSubmitFeedback";
+import handleError from "../../utils/handleError";
 
 interface StudentFeedbackModalProps {
   isOpen: boolean;
   toggle: VoidFunction;
+  courseId: string;
   formValues: {
     level: string;
     course: string;
@@ -17,34 +21,66 @@ interface StudentFeedbackModalProps {
 //options
 const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((o) => o.toString());
 
-//feedback questions
-const questions = [
+// questions
+const q = [
   {
     title: "AVAILABILITY OF RELEVANT FACTS",
     question: "Presentation of facts relevant and related to the course.",
+    rating: 0,
+    comment: "",
   },
   {
     title: "DELIVERY OF CONTENT",
     question: "Clarity and precision in delivery of relevant content.",
+    rating: 0,
+    comment: "",
   },
   {
     title: "APPLICABILITY TO LIFE AND MINISTRY",
     question:
       "Presentation of course content with illustrations to show relevance to everyday life and ministry.  ",
+    rating: 0,
+    comment: "",
   },
   {
     title: "INTERACTION WITH CLASS",
     question: "Opportunity for class interaction with feedback and questions.",
+    rating: 0,
+    comment: "",
   },
 ];
 
 export default function StudentFeedbackModal({
   isOpen,
   toggle,
+  courseId,
 }: StudentFeedbackModalProps) {
+  const [questions, setQuestions] = useState(q);
+
+  const { formData, formErrors, toggleError, updateForm } = useForm({
+    initialState: {
+      message: "",
+    },
+  });
+
+  const { mutate, isLoading } = useSubmitFeedback(courseId);
+
   //When form is submitted
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    const data = {
+      message: formData.message,
+      survey: questions.map(({ title, ...others }) => ({ ...others })),
+    };
+
+    mutate(data, {
+      onSuccess: () => {
+        alert("Feedback Submitted");
+        isOpen && toggle();
+      },
+      onError: (e) => handleError(e, formData, toggleError),
+    });
   }
 
   return (
@@ -63,6 +99,13 @@ export default function StudentFeedbackModal({
               return (
                 <CardWrapper key={question}>
                   <FormRadioGroup
+                    onChange={(e) => {
+                      setQuestions((p) => {
+                        const slot = p.findIndex((e) => e.title === title);
+                        p[slot].rating = parseInt(e.target.value);
+                        return p;
+                      });
+                    }}
                     label={question}
                     customLabel={
                       <label className="mb-3" htmlFor={question}>
@@ -79,6 +122,13 @@ export default function StudentFeedbackModal({
                       className="form-control"
                       id={`comment ${question}`}
                       placeholder="Your answer"
+                      onChange={(e) => {
+                        setQuestions((p) => {
+                          const slot = p.findIndex((e) => e.title === title);
+                          p[slot].comment = e.target.value;
+                          return p;
+                        });
+                      }}
                     />
                   </div>
                 </CardWrapper>
@@ -91,6 +141,7 @@ export default function StudentFeedbackModal({
                 className="form-control"
                 id={`Other Comment`}
                 placeholder="Your answer"
+                onChange={(e) => updateForm("message", e.target.value)}
               />
             </CardWrapper>
 
@@ -100,12 +151,16 @@ export default function StudentFeedbackModal({
               questions.
             </p>
 
-            <button
-              className="btn btn-blue-800 btn-lg w-100 my-5"
-              type="submit"
-            >
-              Submit
-            </button>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <button
+                className="btn btn-blue-800 btn-lg w-100 my-5"
+                type="submit"
+              >
+                Submit
+              </button>
+            )}
           </form>
         </ModalBody>
       </Modal>
