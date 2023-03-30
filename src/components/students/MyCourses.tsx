@@ -11,6 +11,7 @@ import { Chart, ArcElement } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import { Spinner } from "reactstrap";
+import useClasses from "../../hooks/queries/classes/useClasses";
 
 Chart.register(ArcElement);
 
@@ -63,16 +64,16 @@ const missedColumns: TableColumns<MissedCourse>[] = [
     render: (d) => <p>{d?.title}</p>,
     title: "Course Title",
   },
-  {
-    key: "Next Available Date",
-    render: (d) => <p>{d?.nextAvailableDate?.toDateString()}</p>,
-    title: "Next Available Date",
-  },
-  {
-    key: "Action",
-    render: (d) => <u>Re-sit Course</u>,
-    title: "Action",
-  },
+  // {
+  //   key: "Next Available Date",
+  //   render: (d) => <p>{d?.nextAvailableDate?.toDateString()}</p>,
+  //   title: "Next Available Date",
+  // },
+  // {
+  //   key: "Action",
+  //   render: (d) => <u>Re-sit Course</u>,
+  //   title: "Action",
+  // },
 ];
 
 export default function MyCourses() {
@@ -80,6 +81,11 @@ export default function MyCourses() {
   const [missedCourses, setMissedCourses] = useState(false);
 
   let data: any[] = courses?.courses;
+
+  // for missed classes, set the start time to a previous date
+  const { data: missedData, isLoading: missedLoading } = useClasses({
+    status: "ended",
+  });
 
   if (missedCourses) {
     data = missed;

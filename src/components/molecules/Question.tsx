@@ -4,14 +4,22 @@ import typography from "../../assets/img/Typography";
 import CardWrapper from "../students/CardWrapper";
 
 export type QuestionProps = {
+  id: string;
   index: number;
-  question: string;
+  text: string;
   options: string[];
+  onSelect?: (answer: string, id: string) => void;
 };
 
 const letters = ["A", "B", "C", "D", "E"];
 
-export default function Question({ index, options, question }: QuestionProps) {
+export default function Question({
+  index,
+  options,
+  text,
+  onSelect,
+  id,
+}: QuestionProps) {
   const [selected, setSelected] = useState(-1);
 
   return (
@@ -24,7 +32,7 @@ export default function Question({ index, options, question }: QuestionProps) {
             fontSize: typography.h2,
           }}
         >
-          {question}
+          {text}
         </h2>
       </div>
 
@@ -35,6 +43,7 @@ export default function Question({ index, options, question }: QuestionProps) {
 
           function handleClick() {
             setSelected(i);
+            onSelect && onSelect(o, id);
           }
 
           return (

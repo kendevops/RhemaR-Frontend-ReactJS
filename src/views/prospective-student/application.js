@@ -366,6 +366,9 @@ const ProspectiveStudentApplicationPage = () => {
     window.location?.reload();
   }
 
+
+  console.log(data?.applications[0])
+
   useEffect(() => {
     if (!data) return;
     if (!data?.applications?.length) return;
@@ -427,7 +430,7 @@ const ProspectiveStudentApplicationPage = () => {
 
                         {data?.applications[0] &&
                         data?.applications[0]?.feePayment?.status ===
-                          "PENDING" ? (
+                          "pending" ? (
                           <div>
                             <h2 className="text-bold"> Application Pending </h2>
                             <p className="mb-3">
@@ -448,12 +451,12 @@ const ProspectiveStudentApplicationPage = () => {
                     </section>
 
                     {data?.applications[0] &&
-                    data?.applications[0]?.feePayment?.status === "PENDING" ? (
-                      <button type="button" onClick={makeDepositPayment}>
+                    data?.applications[0]?.feePayment?.status === "pending" ? (
+                      <button className="btn btn-blue-800 btn-lg w-100" type="button" onClick={makeDepositPayment}>
                         Complete Fee Payment
                       </button>
                     ) : (
-                      <button type="button" onClick={loginAsStudent}>
+                      <button className="btn btn-blue-800 btn-lg w-100"  type="button" onClick={loginAsStudent}>
                         Login to your student account
                       </button>
                     )}

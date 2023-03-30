@@ -11,10 +11,12 @@ import ToastContent from "../../components/molecules/ToastContent";
 import handleError from "../../utils/handleError";
 
 interface ViewApplicationProps {
+  status?: any;
   data: any;
+  refetch: VoidFunction;
 }
 
-function ViewApplicationModal({ data }: ViewApplicationProps) {
+function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
   const [isOpen, toggle] = useToggle();
   const id = data?.id;
 
@@ -22,6 +24,8 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
   const rejectApplication = useRejectApplication(id);
   const isLoading =
     approveApplication?.isLoading || rejectApplication?.isLoading;
+
+  const isApproved = status === "APPROVED";
 
   const applicationData = [
     {
@@ -50,6 +54,8 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
           />,
           { ...ToastContent.Config }
         );
+        toggle();
+        refetch();
       },
       onError: (e: any) => {
         handleError(e);
@@ -68,6 +74,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
           />,
           { ...ToastContent.Config }
         );
+        toggle();
       },
       onError: (e: any) => {
         handleError(e);
@@ -107,20 +114,22 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
               </article>
             );
           })}
-          <div className="d-flex justify-content-between">
-            <button
-              onClick={reject}
-              className="btn danger btn-red-800 btn-lg w-25"
-            >
-              Reject
-            </button>
-            <button
-              onClick={accept}
-              className="btn success btn-blue-800 btn-lg w-25"
-            >
-              Approve
-            </button>
-          </div>
+          {!isApproved && (
+            <div className="d-flex justify-content-between">
+              <button
+                onClick={reject}
+                className="btn danger btn-red-800 btn-lg w-25"
+              >
+                Reject
+              </button>
+              <button
+                onClick={accept}
+                className="btn success btn-blue-800 btn-lg w-25"
+              >
+                Approve
+              </button>
+            </div>
+          )}
         </ModalBody>
       </Modal>
     </>
@@ -128,11 +137,7 @@ function ViewApplicationModal({ data }: ViewApplicationProps) {
 }
 
 export default function Applications() {
-  const { data, isLoading } = useApplications();
-
-  console.log({
-    app: data?.nodes,
-  });
+  const { data, isLoading, refetch } = useApplications();
 
   return (
     <section>
@@ -179,7 +184,13 @@ export default function Applications() {
               },
               {
                 key: "action",
-                render: (d) => <ViewApplicationModal data={d} />,
+                render: (d) => (
+                  <ViewApplicationModal
+                    refetch={refetch}
+                    status={d?.status}
+                    data={d}
+                  />
+                ),
               },
             ]}
           />

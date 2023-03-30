@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import useAllEvents from "../../hooks/queries/events/useAllEvents";
+import UpcomingEvent from "../../components/molecules/UpcomingEvent";
 
 const StudentDashboardPage = () => {
   const { data, isLoading } = useClasses({
@@ -84,47 +85,14 @@ const StudentDashboardPage = () => {
             </div>
             <hr />
             {lectures ? (
-              <article className="d-flex align-items-center justify-content-between mt-4">
-                <div className="d-flex align-items-center">
-                  <div className="bg-blue-200 p-3 me-4 rounded-2 text-center">
-                    <time className="text-lg font-medium lh-1 mb-1">
-                      {new Date(lectures[0]?.startTime)?.getDate() ===
-                      new Date(lectures[0]?.endTime)?.getDate()
-                        ? new Date(lectures[0]?.startTime)?.getDate()
-                        : `${new Date(
-                            lectures[0]?.startTime
-                          )?.getDate()} - ${new Date(
-                            lectures[0]?.endTime
-                          )?.getDate()} `}
-                    </time>
-                    <div className="text-xxl font-bold lh-1">
-                      {getMonth(new Date(lectures[0]?.startTime))}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">{lectures[0]?.name}</p>
-                    <div className="text-sm">
-                      <span className="me-1">
-                        <span
-                          className="iconify"
-                          data-icon="bi:clock-fill"
-                        ></span>
-                      </span>
-                      <time>
-                        {getTimeString({
-                          date: new Date(lectures[0]?.startTime),
-                        })}{" "}
-                        -{" "}
-                        {getTimeString({
-                          date: new Date(lectures[0]?.endTime),
-                        })}
-                      </time>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-blue-200 py-3 px-4 rounded-2 ms-4 text-lg lh-1 click">
-                  <span className="iconify" data-icon="fa:angle-right"></span>
-                </div>
+              <article className="">
+                <Link to={`/student/lecture/${lectures[0]?.id}`}>
+                  <UpcomingEvent
+                    title={lectures[0]?.name}
+                    endDate={new Date(lectures[0]?.endTime)}
+                    startDate={new Date(lectures[0]?.startTime)}
+                  />
+                </Link>
               </article>
             ) : (
               <p className="text-xl font-bold">No Upcoming Lectures</p>

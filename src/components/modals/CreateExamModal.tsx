@@ -63,7 +63,7 @@ export default function CreateExamModal({
     defaultValues?.questions ??
       Array.from(Array(26).keys())?.map((val, ind) => {
         return {
-          text: "question" + Date.now + `${ind}`,
+          text: "questiontest2" + Date.now + `${ind}`,
           score: 1,
           isActive: true,
           answer: "a",
@@ -92,6 +92,7 @@ export default function CreateExamModal({
             />,
             ToastContent.Config
           );
+          toggle();
         },
         onError: (e: any) => {
           handleError(e, basicInformation, toggleError);
