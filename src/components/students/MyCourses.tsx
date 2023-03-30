@@ -58,10 +58,10 @@ const courseColumns: TableColumns<any>[] = [
   },
 ];
 
-const missedColumns: TableColumns<MissedCourse>[] = [
+const missedColumns: TableColumns<any>[] = [
   {
     key: "Course Title",
-    render: (d) => <p>{d?.title}</p>,
+    render: (d) => <p>{d?.name}</p>,
     title: "Course Title",
   },
   // {
@@ -80,16 +80,16 @@ export default function MyCourses() {
   const { data: courses, isLoading } = useCourses();
   const [missedCourses, setMissedCourses] = useState(false);
 
-  let data: any[] = courses?.courses;
+  let coursesData: any[] = courses?.courses;
 
   // for missed classes, set the start time to a previous date
-  const { data: missedData, isLoading: missedLoading } = useClasses({
+  const { data, isLoading: missedLoading } = useClasses({
     status: "ended",
   });
 
-  if (missedCourses) {
-    data = missed;
-  }
+  const missedData = data?.classes?.nodes;
+
+  const dataLoaded = !!missedData && !!coursesData;
 
   // Toggle missed course
   function toggleCourse() {
@@ -119,11 +119,13 @@ export default function MyCourses() {
 
       <div className="rounded-3 border-1 mt-3">
         <Table.Wrapper>
-          {isLoading && <Spinner />}
-          <Table
-            columns={missedCourses ? missedColumns : courseColumns}
-            data={data}
-          />
+          {(isLoading || missedLoading) && <Spinner />}
+          {dataLoaded && (
+            <Table
+              columns={missedCourses ? missedColumns : courseColumns}
+              data={missedCourses ? missedData : coursesData}
+            />
+          )}
         </Table.Wrapper>
       </div>
     </>
