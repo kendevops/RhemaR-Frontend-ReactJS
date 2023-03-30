@@ -10,6 +10,7 @@ import useCreateExam from "../../hooks/mutations/classes/useCreateExam";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
+import FormDropdown from "../molecules/FormDropdown";
 
 type CreateExamModalProps = {
   defaultValues?: any;
@@ -38,6 +39,7 @@ export default function CreateExamModal({
     name: "",
     course: "",
     duration: 0,
+    session: "",
     endsAt: "",
     startsAt: "",
     score: 100,
@@ -56,6 +58,7 @@ export default function CreateExamModal({
       endsAt: initialState?.endsAt,
       startsAt: initialState?.startsAt,
       score: initialState?.score,
+      session: initialState?.session,
     },
   });
 
@@ -161,6 +164,15 @@ export default function CreateExamModal({
                     }}
                   />
                 </div>
+                <FormDropdown
+                  title="Session"
+                  options={["2022/2023", "2023/2024"]?.map((a) => ({
+                    children: a,
+                  }))}
+                  onChange={(e) =>
+                    updateBasicInformation("session", e.target.value)
+                  }
+                />
                 <FormInput
                   label="Duration (minutes)"
                   placeholder="Duration in minutes e.g. 60"
