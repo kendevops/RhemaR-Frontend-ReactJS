@@ -63,10 +63,10 @@ export default function AdminCourses() {
             <h2 className="text-xl font-bold text-blue-600">
               Browse List of Students Progress
             </h2>
-
+            {/* 
             <article className="d-flex gap-5 m-5">
               <SearchBarAutocomplete />
-            </article>
+            </article> */}
           </div>
 
           <article>

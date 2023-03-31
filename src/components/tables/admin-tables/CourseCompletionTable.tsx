@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 //import DataTable from '../../tables/data-table/DataTableBase';
 import DataTable, { TableColumn } from "react-data-table-component";
 import StudentProgress from "../../modals/StudentProgress";
+import Table from "../../general/table/Table";
 
 //TODO: Implement CSV Export
 //TODO: Call student progree modal
@@ -70,67 +71,8 @@ const columns: TableColumn<StudentProgressData>[] = [
   },
 ];
 
-//Backend Engr. refer to comment at bottom
-function CourseCompletionComponent(): JSX.Element {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
-
-  const fetchUsers = async (page: number) => {
-    setLoading(true);
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`
-    );
-
-    setData(response.data.data);
-    setTotalRows(response.data.total);
-    setLoading(false);
-  };
-
-  const handlePageChange = (page: any) => {
-    fetchUsers(page);
-  };
-
-  const handlePerRowsChange = async (
-    newPerPage: React.SetStateAction<number>,
-    page: any
-  ) => {
-    setLoading(true);
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${newPerPage}&delay=1`
-    );
-
-    setData(response.data.data);
-    setPerPage(newPerPage);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchUsers(1); // fetch page 1 of users
-  }, []); //ignore warning
-
-  return (
-    <DataTable
-      title="Students"
-      columns={columns}
-      data={data}
-      progressPending={loading}
-      pagination
-      paginationServer
-      paginationTotalRows={totalRows}
-      onChangeRowsPerPage={handlePerRowsChange}
-      onChangePage={handlePageChange}
-      selectableRows
-      //expandableRows
-    />
-  );
+function CourseCompletionComponent() {
+  return <Table.Wrapper>{}</Table.Wrapper>;
 }
 
 export default CourseCompletionComponent;
-
-// To enable remote/manual pagination you'll need to add the paginationServer property and ensure the remote API you are using supports pagination metadata.
-// You'll also need to implement the onChangeRowsPerPage, and onChangePage callbacks.
-// Finally, you'll need to keep track of your total rows using paginationTotalRows. This should be obtained from the remote API you are calling from to get the pagnination records.
