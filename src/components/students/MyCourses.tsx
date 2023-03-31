@@ -11,6 +11,7 @@ import { Chart, ArcElement } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import { Spinner } from "reactstrap";
+import useClasses from "../../hooks/queries/classes/useClasses";
 
 Chart.register(ArcElement);
 
@@ -57,33 +58,38 @@ const courseColumns: TableColumns<any>[] = [
   },
 ];
 
-const missedColumns: TableColumns<MissedCourse>[] = [
+const missedColumns: TableColumns<any>[] = [
   {
     key: "Course Title",
-    render: (d) => <p>{d?.title}</p>,
+    render: (d) => <p>{d?.name}</p>,
     title: "Course Title",
   },
-  {
-    key: "Next Available Date",
-    render: (d) => <p>{d?.nextAvailableDate?.toDateString()}</p>,
-    title: "Next Available Date",
-  },
-  {
-    key: "Action",
-    render: (d) => <u>Re-sit Course</u>,
-    title: "Action",
-  },
+  // {
+  //   key: "Next Available Date",
+  //   render: (d) => <p>{d?.nextAvailableDate?.toDateString()}</p>,
+  //   title: "Next Available Date",
+  // },
+  // {
+  //   key: "Action",
+  //   render: (d) => <u>Re-sit Course</u>,
+  //   title: "Action",
+  // },
 ];
 
 export default function MyCourses() {
   const { data: courses, isLoading } = useCourses();
   const [missedCourses, setMissedCourses] = useState(false);
 
-  let data: any[] = courses?.courses;
+  let coursesData: any[] = courses?.courses;
 
-  if (missedCourses) {
-    data = missed;
-  }
+  // for missed classes, set the start time to a previous date
+  const { data, isLoading: missedLoading } = useClasses({
+    status: "ended",
+  });
+
+  const missedData = data?.classes?.nodes;
+
+  const dataLoaded = !!missedData && !!coursesData;
 
   // Toggle missed course
   function toggleCourse() {
@@ -113,11 +119,13 @@ export default function MyCourses() {
 
       <div className="rounded-3 border-1 mt-3">
         <Table.Wrapper>
-          {isLoading && <Spinner />}
-          <Table
-            columns={missedCourses ? missedColumns : courseColumns}
-            data={data}
-          />
+          {(isLoading || missedLoading) && <Spinner />}
+          {dataLoaded && (
+            <Table
+              columns={missedCourses ? missedColumns : courseColumns}
+              data={missedCourses ? missedData : coursesData}
+            />
+          )}
         </Table.Wrapper>
       </div>
     </>

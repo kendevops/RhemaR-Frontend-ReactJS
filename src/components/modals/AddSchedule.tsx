@@ -9,6 +9,11 @@ import ToastContent from "../molecules/ToastContent";
 import FormInput from "../molecules/FormInput";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import userRoles from "../../utility/userRoles";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
+import FormDropdown from "../molecules/FormDropdown";
+import handleError from "../../utils/handleError";
+import useCampuses from "../../hooks/queries/classes/useCampuses";
+import useAllClasses from "../../hooks/queries/classes/useAllClasses";
 
 type AddScheduleProps = {
   toggle: VoidFunction;
@@ -19,6 +24,8 @@ type AddScheduleProps = {
     endTime: string;
     startTime: string;
     instructorEmail: string;
+    campus: string;
+    session: string;
   };
 };
 
@@ -27,12 +34,16 @@ export default function AddSchedule({
   visibility,
   defaultValues: defValues,
 }: AddScheduleProps) {
+  const { refetch } = useAllClasses();
+
   const defaultValues = defValues ?? {
     name: "",
     course: "",
     endTime: "",
     startTime: "",
     instructorEmail: "",
+    campus: "Abuja",
+    session: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
   };
 
   const { data: coursesData, isLoading: coursesLoading } = useAllCourses();
@@ -50,10 +61,17 @@ export default function AddSchedule({
       id: u?.email,
     }));
 
+  const { data: sessionsData, isLoading: sessionsLoading } =
+    useAcademicSessions();
+  const { data: campusesData } = useCampuses();
+
+  const campusOptions = campusesData?.nodes?.map((d: any) => d?.name);
+
   const { mutate, isLoading: isScheduling } = useScheduleClass();
-  const { formData, updateForm, formIsValid } = useForm({
-    initialState: defaultValues,
-  });
+  const { formData, updateForm, formIsValid, toggleError, formErrors } =
+    useForm({
+      initialState: defaultValues,
+    });
 
   function onSubmit(e: FormEvent) {
     e?.preventDefault();
@@ -69,20 +87,11 @@ export default function AddSchedule({
               />,
               ToastContent.Config
             );
-
+            refetch();
             toggle();
           },
           onError: (e: any) => {
-            toast.error(
-              <ToastContent
-                type={"error"}
-                heading={"An Error Occurred"}
-                message={e?.response?.data?.error?.message?.toString()}
-              />,
-              ToastContent.Config
-            );
-
-            console.log({ e, formData });
+            handleError(e, formData, toggleError);
           },
         })
       : alert("Please fill in all fields");
@@ -93,6 +102,7 @@ export default function AddSchedule({
       <Modal centered isOpen={visibility} toggle={toggle} id="scheduleModal">
         <ModalHeader toggle={toggle}>Add Course</ModalHeader>
         <ModalBody>
+          {sessionsLoading && <Spinner />}
           <form className="mt-3" onSubmit={onSubmit}>
             <FormInput
               label="name"
@@ -124,6 +134,28 @@ export default function AddSchedule({
                 }}
               />
             </div>
+
+            {!!sessionsData && (
+              <FormDropdown
+                title="Session"
+                options={sessionsData?.nodes?.map((sess: any) => ({
+                  children: sess?.name,
+                }))}
+                onChange={(e) => updateForm("session", e.target.value)}
+              />
+            )}
+
+            {campusOptions && (
+              <FormDropdown
+                onChange={(e) => {
+                  updateForm("campus", e?.target?.value);
+                }}
+                options={campusOptions.map((o: any) => ({
+                  children: o,
+                }))}
+                title={"Campus"}
+              />
+            )}
 
             <div className="form-group">
               <label htmlFor="Search instructors">Instructor</label>

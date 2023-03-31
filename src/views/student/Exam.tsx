@@ -1,18 +1,14 @@
-import { Pagination } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Row from "../../components/layouts/Row";
 import BackButton from "../../components/molecules/BackButton";
 import Question from "../../components/molecules/Question";
 import Timer from "../../components/molecules/Timer";
 import ColWrapper from "../../components/students/ColWrapper";
-import { demoExamData } from "../../data/Exam";
-import usePagination from "../../utility/hooks/usePagination";
 import useExam from "../../hooks/queries/classes/useExam";
 import { Spinner } from "reactstrap";
 import useSubmitExam from "../../hooks/mutations/classes/useSubmitExam";
-import useCourse from "../../hooks/queries/classes/useCourse";
-import useAttendClass from "../../hooks/mutations/classes/useAttendClass";
+import handleError from "../../utils/handleError";
 
 interface ExamParams {
   id: string;
@@ -23,15 +19,32 @@ export default function Exam() {
   const params = useParams<ExamParams>();
 
   useEffect(() => {
-    params?.id ? console.log(params?.id) : router?.goBack();
+    params?.id ? console.log("") : router?.goBack();
   }, [params?.id, router]);
 
-  const { data, isLoading } = useAttendClass(params?.id);
+  const [submissions, setSubmissions] = useState<
+    { answer: string; questionId: string }[]
+  >([]);
+
+  const { data, isLoading } = useExam(params?.id);
   const submitExam = useSubmitExam(params?.id);
 
   console.log(data);
 
-  function endExam() {}
+  function endExam() {
+    submitExam.mutate(
+      { submissions },
+      {
+        onSuccess: () => {
+          alert("Exam successfully taken");
+          router.push("/student/courses");
+        },
+        onError: (e) => {
+          handleError(e);
+        },
+      }
+    );
+  }
 
   const style = {
     marginTop: "6rem",
@@ -46,15 +59,19 @@ export default function Exam() {
       >
         <div className="exam-header">
           <BackButton />
-          <div className="mt-3 d-flex gap-4 justify-content-center">
-            <Timer onEnd={endExam} />
-          </div>
+
+          {isLoading && <Spinner />}
+
+          {data && (
+            <div className="mt-3 d-flex gap-4 justify-content-center">
+              <Timer onEnd={endExam} />
+            </div>
+          )}
         </div>
       </section>
 
       <Row>
         <ColWrapper className="mx-auto" lg="9">
-          {isLoading && <Spinner />}
           {/* Questions */}
           <ul
             className="no-padding-left"
@@ -62,18 +79,26 @@ export default function Exam() {
               paddingTop: "12rem",
             }}
           >
-            {/* {data?.map((d, index) => {
+            {data?.questions?.map((d: any, index: number) => {
               const props = {
                 ...d,
                 index,
+                onSelect: (answer: string, id: string) => {
+                  setSubmissions((p) => {
+                    const restArr = p?.filter(
+                      ({ questionId }) => questionId !== id
+                    );
+                    return [...restArr, { answer, questionId: id }];
+                  });
+                },
               };
 
               return (
-                <li key={index}>
+                <li key={d?.id}>
                   <Question {...props} />
                 </li>
               );
-            })} */}
+            })}
           </ul>
         </ColWrapper>
       </Row>

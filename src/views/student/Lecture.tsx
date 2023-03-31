@@ -148,14 +148,28 @@ export default function Lecture() {
                           className="d-flex align-items-center justify-content-between"
                           key={s?.name}
                         >
-                          <u
-                            style={{
-                              cursor: "pointer",
-                            }}
-                            onClick={handleWatch}
-                          >
-                            {s?.name}
-                          </u>
+                          {s?.name === currentSession?.name ? (
+                            <p
+                              className="my-3"
+                              style={{
+                                color:
+                                  s?.name === currentSession?.name
+                                    ? "green"
+                                    : "",
+                              }}
+                            >
+                              {s?.name}
+                            </p>
+                          ) : (
+                            <u
+                              style={{
+                                cursor: "pointer",
+                              }}
+                              onClick={handleWatch}
+                            >
+                              {s?.name}
+                            </u>
+                          )}
 
                           <div className="progress w-25">
                             <div
@@ -259,25 +273,36 @@ export default function Lecture() {
               </div>
             </article>
 
-            {/* Exams and Attendance */}
+            {/* Course Exams */}
+            <article {...{ className }}>
+              <Timeline />
+              <div className="w-100">
+                <h2 className="text-xl font-bold text-blue-600">Exams</h2>
+                <ul className="no-padding-left">
+                  {!!course?.exams &&
+                    course?.exams?.map((ex: any) => {
+                      return (
+                        <li
+                          className="d-flex align-items-center justify-content-between"
+                          key={ex?.id}
+                        >
+                          <h3>{ex?.name}</h3>
+                          <Link to={`/student/exam/${ex?.id}`}>
+                            <u>Take Exam</u>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            </article>
+
+            {/* Feedback and Attendance */}
             <article>
-              <div className="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3 bg-blue-200 ">
+              {/* <div className="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3 bg-blue-200 ">
                 Mark course attendance
                 <Checkbox />
-              </div>
-              {!!course?.exams && (
-                <Link
-                  to={`/student/exam/${params?.id}`}
-                  className="btn btn-blue-800 btn-lg w-100 mb-5 d-flex align-items-center justify-content-between"
-                >
-                  <div className={className}>
-                    <Edit2 color="#fff" />
-                    <p>Take Exam</p>
-                  </div>
-
-                  <ArrowRight color="#fff" />
-                </Link>
-              )}
+              </div> */}
 
               {/* Student feedback modal */}
               <div>

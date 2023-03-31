@@ -10,6 +10,8 @@ import useCreateExam from "../../hooks/mutations/classes/useCreateExam";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
+import FormDropdown from "../molecules/FormDropdown";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 
 type CreateExamModalProps = {
   defaultValues?: any;
@@ -38,6 +40,7 @@ export default function CreateExamModal({
     name: "",
     course: "",
     duration: 0,
+    session: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
     endsAt: "",
     startsAt: "",
     score: 100,
@@ -56,6 +59,7 @@ export default function CreateExamModal({
       endsAt: initialState?.endsAt,
       startsAt: initialState?.startsAt,
       score: initialState?.score,
+      session: initialState?.session,
     },
   });
 
@@ -63,7 +67,7 @@ export default function CreateExamModal({
     defaultValues?.questions ??
       Array.from(Array(26).keys())?.map((val, ind) => {
         return {
-          text: "question" + Date.now + `${ind}`,
+          text: "questiontest2" + Date.now + `${ind}`,
           score: 1,
           isActive: true,
           answer: "a",
@@ -71,6 +75,9 @@ export default function CreateExamModal({
         };
       })
   );
+
+  const { data: sessionsData, isLoading: sessionsLoading } =
+    useAcademicSessions();
 
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
@@ -92,6 +99,7 @@ export default function CreateExamModal({
             />,
             ToastContent.Config
           );
+          toggle();
         },
         onError: (e: any) => {
           handleError(e, basicInformation, toggleError);
@@ -123,7 +131,7 @@ export default function CreateExamModal({
           </Tab.Wrapper>
 
           <form onSubmit={handleSubmit}>
-            {isCreating && <Spinner />}
+            {(isCreating || sessionsLoading) && <Spinner />}
             {/* Basic Information */}
             {currentOption === Options[0] && (
               <div>
@@ -160,6 +168,17 @@ export default function CreateExamModal({
                     }}
                   />
                 </div>
+                {!!sessionsData && (
+                  <FormDropdown
+                    title="Session"
+                    options={sessionsData?.nodes?.map((sess: any) => ({
+                      children: sess?.name,
+                    }))}
+                    onChange={(e) =>
+                      updateBasicInformation("session", e.target.value)
+                    }
+                  />
+                )}
                 <FormInput
                   label="Duration (minutes)"
                   placeholder="Duration in minutes e.g. 60"

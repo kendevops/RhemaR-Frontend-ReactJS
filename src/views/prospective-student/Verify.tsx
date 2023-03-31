@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { Spinner } from "reactstrap";
 import ToastContent from "../../components/molecules/ToastContent";
 import useResendVerification from "../../hooks/mutations/useResendVerification";
+import handleError from "../../utils/handleError";
 
 export default function Verify() {
   const { mutate, isLoading } = useResendVerification();
@@ -18,14 +19,7 @@ export default function Verify() {
           { ...ToastContent.Config }
         ),
       onError: (e: any) => {
-        toast.error(
-          <ToastContent
-            heading={"Uh-oh an error occurred!"}
-            message={e?.response?.data?.error?.message?.toString()}
-            type={"error"}
-          />,
-          { ...ToastContent.Config }
-        );
+        handleError(e);
       },
     });
   }
