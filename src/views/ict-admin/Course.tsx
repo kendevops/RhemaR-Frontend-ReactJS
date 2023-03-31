@@ -16,6 +16,10 @@ import useDeleteCourseSection from "../../hooks/mutations/classes/useDeleteCours
 import handleError from "../../utils/handleError";
 import useUpdateCourseSection from "../../hooks/mutations/classes/useUpdateSection";
 import useAddCourseSection from "../../hooks/mutations/classes/useAddCourseSection";
+import useAllCourseProjects from "../../hooks/queries/classes/useAllCourseProjects";
+import downloadFile from "../../utils/downloadFile";
+import FileTypeIcon from "../../components/atoms/FIleTypeIcon";
+import trimText from "../../utils/trimText";
 
 interface Params {
   id: string;
@@ -96,6 +100,11 @@ export default function Course() {
     if (!id) history.push("/");
   }, [id, history]);
 
+  const { data: projectsData, isLoading: projectsLoading } =
+    useAllCourseProjects(id);
+
+  const projects = projectsData?.projects?.nodes;
+
   const sectionsData = data?.sections;
   const [courseMaterials, setCourseMaterials] = useState<any[]>([]);
   const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
@@ -173,7 +182,7 @@ export default function Course() {
       <Row style={{ marginTop: "3rem" }}>
         {/* Left */}
         <ColWrapper lg="7">
-          <CardWrapper className="h-100">
+          <CardWrapper className="">
             <div className="d-flex justify-content-between align-items-center">
               <h1>Sessions</h1>
 
@@ -217,6 +226,52 @@ export default function Course() {
                   },
                 ]}
               />
+            </Table.Wrapper>
+          </CardWrapper>
+
+          <CardWrapper className="">
+            <div className="d-flex justify-content-between align-items-center">
+              <h1>Project Submissions</h1>
+              {projectsLoading && <Spinner />}
+            </div>
+            <Table.Wrapper>
+              {projectsData && (
+                <Table
+                  data={projects}
+                  columns={[
+                    {
+                      key: "Title",
+                      title: "Title",
+                      render: (d) => <p>{d?.title}</p>,
+                    },
+                    {
+                      key: "Student",
+                      title: "Student",
+                      render: (d) => <p>{d?.user?.email}</p>,
+                    },
+                    {
+                      key: "Files",
+                      title: "Files",
+                      render: (d) => {
+                        return (
+                          <ul className="no-padding-left">
+                            {d?.files?.map((f: any) => {
+                              const attributes = downloadFile(f?.path, f?.name);
+
+                              return (
+                                <li key={f?.name} className="d-flex gap-4">
+                                  <FileTypeIcon {...f} />
+                                  <a {...attributes}>{trimText(12, f?.name)}</a>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        );
+                      },
+                    },
+                  ]}
+                />
+              )}
             </Table.Wrapper>
           </CardWrapper>
         </ColWrapper>

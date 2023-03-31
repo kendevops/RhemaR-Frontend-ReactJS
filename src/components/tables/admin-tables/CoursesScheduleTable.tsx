@@ -11,6 +11,8 @@ type CourseSchedule = {
   status: string;
   endTime: string;
   startTime: string;
+  session: string;
+  campus: string;
   createdAt: string;
   course: {
     id: string;
@@ -35,6 +37,8 @@ function EditSchedule({ data }: EditScheduleProps) {
     endTime: data?.endTime,
     startTime: data?.startTime,
     instructorEmail: data?.instructor?.email,
+    session: data?.session,
+    campus: data?.campus,
   };
 
   return (

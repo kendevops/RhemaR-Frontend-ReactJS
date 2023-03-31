@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import FormDropdown from "../molecules/FormDropdown";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 
 type CreateExamModalProps = {
   defaultValues?: any;
@@ -39,7 +40,7 @@ export default function CreateExamModal({
     name: "",
     course: "",
     duration: 0,
-    session: "",
+    session: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
     endsAt: "",
     startsAt: "",
     score: 100,
@@ -74,6 +75,9 @@ export default function CreateExamModal({
         };
       })
   );
+
+  const { data: sessionsData, isLoading: sessionsLoading } =
+    useAcademicSessions();
 
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
@@ -127,7 +131,7 @@ export default function CreateExamModal({
           </Tab.Wrapper>
 
           <form onSubmit={handleSubmit}>
-            {isCreating && <Spinner />}
+            {(isCreating || sessionsLoading) && <Spinner />}
             {/* Basic Information */}
             {currentOption === Options[0] && (
               <div>
@@ -164,15 +168,17 @@ export default function CreateExamModal({
                     }}
                   />
                 </div>
-                <FormDropdown
-                  title="Session"
-                  options={["2022/2023", "2023/2024"]?.map((a) => ({
-                    children: a,
-                  }))}
-                  onChange={(e) =>
-                    updateBasicInformation("session", e.target.value)
-                  }
-                />
+                {!!sessionsData && (
+                  <FormDropdown
+                    title="Session"
+                    options={sessionsData?.nodes?.map((sess: any) => ({
+                      children: sess?.name,
+                    }))}
+                    onChange={(e) =>
+                      updateBasicInformation("session", e.target.value)
+                    }
+                  />
+                )}
                 <FormInput
                   label="Duration (minutes)"
                   placeholder="Duration in minutes e.g. 60"
