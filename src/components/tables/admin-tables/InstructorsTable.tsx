@@ -50,9 +50,13 @@ export default function InstructorsTable({ shouldRefetch }: Props) {
     if (shouldRefetch) refetch();
   }, [shouldRefetch, refetch]);
 
+  //userRoles?.includes
   const users = usersData?.users?.nodes;
+
   const instrsData = users
-    ?.filter((user: any) => user?.roles[0]?.name === userRoles.INSTRUCTOR)
+    ?.filter((user: any) =>
+      user?.roles?.map((r: any) => r?.name)?.includes(userRoles.INSTRUCTOR)
+    )
     .map((user: any) => {
       return {
         name: user?.firstName + " " + user?.lastName,

@@ -61,6 +61,7 @@ export default function AssignInstructorModal({
               );
               onAssign && onAssign();
               toggle();
+              window.location.reload();
             },
             onError: (e: any) => {
               toast.error(

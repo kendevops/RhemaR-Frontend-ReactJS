@@ -64,7 +64,7 @@ export default function StudentsManagementTable() {
     {
       key: "Action",
       title: "Action",
-      render: (data) => <ViewStaff data={data} />,
+      render: (data) => <ViewStaff data={data} isStudent />,
     },
   ];
 
