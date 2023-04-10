@@ -8,6 +8,7 @@ import { months } from "../../utils/getMonth";
 import Tab from "../atoms/Tab";
 import UpcomingEvent from "../molecules/UpcomingEvent";
 import { Link } from "react-router-dom";
+import isWithinCurrentDateRange from "../../utils/isWithinDateRange";
 
 export default function CourseSchedule() {
   const [viewing, setViewing] = useState(0);
@@ -111,13 +112,26 @@ export default function CourseSchedule() {
               ?.filter?.((c: any, i: number) => i <= 4)
               .map((clas: any, i: number) => {
                 return (
-                  <Link key={i} to={`/student/lecture/${clas?.id}`}>
-                    <UpcomingEvent
-                      title={clas?.name}
-                      endDate={new Date(clas?.endTime)}
-                      startDate={new Date(clas?.startTime)}
-                    />
-                  </Link>
+                  <>
+                    {isWithinCurrentDateRange(
+                      clas?.startTime,
+                      clas?.endTime
+                    ) ? (
+                      <Link key={i} to={`/student/lecture/${clas?.id}`}>
+                        <UpcomingEvent
+                          title={clas?.name}
+                          endDate={new Date(clas?.endTime)}
+                          startDate={new Date(clas?.startTime)}
+                        />
+                      </Link>
+                    ) : (
+                      <UpcomingEvent
+                        title={clas?.name}
+                        endDate={new Date(clas?.endTime)}
+                        startDate={new Date(clas?.startTime)}
+                      />
+                    )}
+                  </>
                 );
               })
           ) : (
