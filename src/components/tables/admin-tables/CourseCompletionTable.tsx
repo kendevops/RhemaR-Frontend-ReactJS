@@ -1,7 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 //import DataTable from '../../tables/data-table/DataTableBase';
-import DataTable, { TableColumn } from "react-data-table-component";
+// import DataTable, { TableColumn } from "react-data-table-component";
 import StudentProgress from "../../modals/StudentProgress";
 import Table from "../../general/table/Table";
 
@@ -21,55 +20,20 @@ type StudentProgressData = {
   courseAttendanceProgress: string;
 };
 
-const handleButtonClick = () => {
-  //<StudentProgress /> //TODO: Call student progree modal
-  console.log("clicked");
-};
+// name: <button onClick={handleButtonClick}>View Report</button>
 
-const columns: TableColumn<StudentProgressData>[] = [
-  {
-    cell: () => <button onClick={handleButtonClick}>View Report</button>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-    name: "View",
-  },
-  {
-    name: "Student Name",
-    selector: (row) => row.studentFullname,
-    sortable: true,
-  },
-  {
-    name: "Student ID",
-    selector: (row) => row.studentID,
-    sortable: true,
-  },
-  {
-    name: "Email",
-    selector: (row) => row.email,
-    sortable: true,
-  },
-  {
-    name: "Mobile",
-    selector: (row) => row.mobile,
-    sortable: true,
-  },
-  {
-    name: "Campus",
-    selector: (row) => row.campus,
-    sortable: true,
-  },
-  {
-    name: "Level",
-    selector: (row) => row.level,
-    sortable: true,
-  },
-  {
-    name: "Course Attendance Progress",
-    selector: (row) => row.courseAttendanceProgress,
-    sortable: true,
-  },
-];
+//     name: "Student Name",
+//     name: "Student ID",
+
+//     name: "Email",
+
+//     name: "Mobile",
+
+//     name: "Campus",
+
+//     name: "Level",
+
+//     name: "Course Attendance Progress",
 
 function CourseCompletionComponent() {
   return <Table.Wrapper>{}</Table.Wrapper>;

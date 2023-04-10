@@ -9,11 +9,12 @@ import Tab from "../atoms/Tab";
 import UpcomingEvent from "../molecules/UpcomingEvent";
 import { Link } from "react-router-dom";
 
-const classTabs = ["All", "Weekend Classes", "Night Classes"];
-
 export default function CourseSchedule() {
   const [viewing, setViewing] = useState(0);
   const [clas, setClas] = useState(0);
+
+  let classTabs = ["All"];
+
   const currentClass = classTabs[clas];
 
   const monthParam = viewing + 1 < 10 ? `0${viewing + 1}` : viewing + 1;
@@ -25,11 +26,15 @@ export default function CourseSchedule() {
   const allClasses = data?.classes?.nodes;
   let classes = allClasses;
 
-  if (currentClass === classTabs[1]) {
+  if (classes[0]?.campus?.name === "Abuja") {
+    classTabs = ["Weekend Classes", "Night Classes"];
+  }
+
+  if (currentClass === "Weekend Classes") {
     classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
   }
 
-  if (currentClass === classTabs[2]) {
+  if (currentClass === "Night Classes") {
     classes = allClasses?.filter((clas: any) => clas?.type === "night");
   }
 
