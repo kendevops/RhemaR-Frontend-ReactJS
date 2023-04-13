@@ -178,6 +178,11 @@ export default function Applications() {
                 render: (d) => <p>{d?.initialPayment?.status}</p>,
               },
               {
+                key: "date",
+                title: "Date",
+                render: (d) => <p>{new Date(d?.date)?.toDateString()}</p>,
+              },
+              {
                 key: "feePayment",
                 title: "Fee Payment",
                 render: (d) => <p>{d?.feePayment?.status}</p>,
