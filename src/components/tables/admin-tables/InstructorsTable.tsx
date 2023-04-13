@@ -9,6 +9,10 @@ import useAllUsers from "../../../hooks/queries/useAllUsers";
 import { Spinner } from "reactstrap";
 import userRoles from "../../../utility/userRoles";
 import { useEffect } from "react";
+import useRetractRole from "../../../hooks/mutations/roles/useRetractRole";
+import ToastContent from "../../molecules/ToastContent";
+import { toast } from "react-toastify";
+import handleError from "../../../utils/handleError";
 
 type ReassignInstructorProps = {
   data: any;
@@ -21,24 +25,43 @@ interface Props {
 Chart.register(ArcElement);
 
 function ReassignInstructor({ data }: ReassignInstructorProps) {
-  const defaultValues = {
-    name: data?.name,
-    email: data?.email,
-    phone: data?.phone,
-  };
-  const [visibility, toggle] = useToggle();
+  const retractRole = useRetractRole();
+
+  const loading = retractRole.isLoading;
+
+  function removeInstructor() {
+    const payload = [{ email: data?.email, role: userRoles.INSTRUCTOR }];
+
+    retractRole.mutate(payload, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            type={"success"}
+            heading={"Success"}
+            message={`Successfully retracted ${data?.email} as instructor`}
+          />,
+          ToastContent.Config
+        );
+        window.location.reload();
+      },
+      onError: (e) => handleError(e),
+    });
+  }
 
   return (
     <>
-      <AssignInstructorModal {...{ toggle, visibility, defaultValues }} />
-      <u
-        onClick={toggle}
-        className="text-info click"
-        data-bs-toggle="modal"
-        data-bs-target="#assignInstructorModal"
-      >
-        Reassign Instructor
-      </u>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <u
+          onClick={() => removeInstructor}
+          className="text-info click"
+          data-bs-toggle="modal"
+          data-bs-target="#assignInstructorModal"
+        >
+          Remove Instructor
+        </u>
+      )}
     </>
   );
 }
