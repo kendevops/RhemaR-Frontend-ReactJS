@@ -27,7 +27,7 @@ export default function CourseSchedule() {
   const allClasses = data?.classes?.nodes;
   let classes = allClasses;
 
-  if (classes[0]?.campus?.name === "Abuja") {
+  if (classes && classes[0]?.campus?.name === "Abuja") {
     classTabs = ["Weekend Classes", "Night Classes"];
   }
 

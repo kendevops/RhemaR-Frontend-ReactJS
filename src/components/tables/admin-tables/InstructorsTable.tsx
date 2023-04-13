@@ -124,6 +124,7 @@ export default function InstructorsTable({ shouldRefetch }: Props) {
       key: "Action",
       title: "Action",
       render: (data) => {
+        //make this "Remove instructor"
         return <ReassignInstructor data={data} />;
       },
     },
