@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Tab from "../../components/atoms/Tab";
 import UserManagementTable from "../../components/tables/admin-tables/UserManagementTable";
 import useToggle from "../../utility/hooks/useToggle";
 import SearchBar from "../../components/general/searchBar";
 import AddStaff from "../../components/modals/AddStaff";
 import StudentsManagementTable from "../../components/tables/admin-tables/StudentsManagementTable";
+import Papa from "papaparse";
 
 export default function UserManagement() {
   const Options = ["Staff", "Students"];
@@ -13,6 +14,17 @@ export default function UserManagement() {
   const currentOption = Options[option];
 
   const [modalState, toggleModal] = useToggle();
+
+  const importHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results: any) {
+        console.log(results.data);
+      },
+    });
+  };
 
   return (
     <section>
@@ -54,6 +66,18 @@ export default function UserManagement() {
             Add Staff
           </button>
         )}
+      </article>
+
+      <article className="d-flex gap-5 m-5">
+        <label>Import from CSV</label>
+        <input
+          className="form-control"
+          type="file"
+          name="file"
+          accept=".csv"
+          onChange={importHandler}
+          style={{ display: "block", margin: "10px auto" }}
+        />
       </article>
 
       {/* Table */}
