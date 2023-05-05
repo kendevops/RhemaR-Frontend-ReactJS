@@ -14,7 +14,6 @@ import useCampuses from "../../hooks/queries/classes/useCampuses";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import handleError from "../../utils/handleError";
 import countries from "../../data/Countries";
-import TextArea from "../../components/molecules/TextArea";
 import { getUserData } from "../../utility/utilsGeneric";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -25,7 +24,7 @@ function ApplicationPage(props) {
 
   const [success, toggleSuccess] = useToggle();
 
-  const countriesOptions = countries?.map((c) => c?.nationality);
+  const countriesOptions = countries?.map((c) => c?.en_short_name);
 
   const initialState = {
     title: "",
@@ -303,19 +302,18 @@ function ApplicationPage(props) {
             label="Affirmations and Submissions"
             options={["Yes", "No"]}
             onChange={(e) => {
-
               updateForm("affirmationAndSubmissions", e.target.value);
-
             }}
             hasErrors={formErrors?.affirmationAndSubmissions}
           />
         </div>
 
         <div className="py-4 border-top">
-
-          <p style={{
-            color: "red"
-          }}>
+          <p
+            style={{
+              color: "red",
+            }}
+          >
             You selected ${formData.campus} Campus, once you click proceed, it
             cannot be changed
           </p>
@@ -366,8 +364,7 @@ const ProspectiveStudentApplicationPage = () => {
     window.location?.reload();
   }
 
-
-  console.log(data?.applications[0])
+  console.log(data?.applications[0]);
 
   useEffect(() => {
     if (!data) return;
@@ -452,11 +449,19 @@ const ProspectiveStudentApplicationPage = () => {
 
                     {data?.applications[0] &&
                     data?.applications[0]?.feePayment?.status === "pending" ? (
-                      <button className="btn btn-blue-800 btn-lg w-100" type="button" onClick={makeDepositPayment}>
+                      <button
+                        className="btn btn-blue-800 btn-lg w-100"
+                        type="button"
+                        onClick={makeDepositPayment}
+                      >
                         Complete Fee Payment
                       </button>
                     ) : (
-                      <button className="btn btn-blue-800 btn-lg w-100"  type="button" onClick={loginAsStudent}>
+                      <button
+                        className="btn btn-blue-800 btn-lg w-100"
+                        type="button"
+                        onClick={loginAsStudent}
+                      >
                         Login to your student account
                       </button>
                     )}
