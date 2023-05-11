@@ -56,6 +56,7 @@ export default function UserManagement() {
           function handleSelect() {
             setOption(i);
           }
+
           return (
             <Tab
               tabColor="#289483"

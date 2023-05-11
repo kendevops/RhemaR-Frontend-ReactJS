@@ -141,11 +141,18 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  if (userRole === userRoles.ICT_ADMIN) return "ict-admin/dashboard";
+  if (userRole === userRoles.ICT_ADMIN) return "/ict-admin/dashboard";
   if (userRole === "Client") return "/access-control";
   if (userRole === userRoles.PROSPECTIVE_STUDENT) return "/application";
   if (userRole === userRoles.STUDENT) return "/student/dashboard";
   return "/login";
+};
+
+export const getRoleForRoute = (route) => {
+  if (route === "/access-control") return "Client";
+  if (route === "/ict-admin/dashboard") return userRoles.ICT_ADMIN;
+  if (route === "/application") return userRoles.PROSPECTIVE_STUDENT;
+  if (route === "/student/dashboard") return userRoles.STUDENT;
 };
 
 // ** React Select Theme Colors
