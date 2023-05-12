@@ -21,6 +21,7 @@ import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
 import useSubscribeNotifications from "../../../../hooks/queries/notifications/useSubscribeNotifications";
 import { AbilityContext } from "../../../../utility/context/can";
 import RoleContext from "../../../../utility/context/roleContext";
+import AccessContext from "../../../../utility/context/accessContext";
 
 const Navbar = (props) => {
   // ** States
@@ -38,13 +39,18 @@ const Navbar = (props) => {
 
   const { data } = useCurrentUser();
 
+  const access = useContext(AccessContext);
+
   const currentUser = getUserData();
   const dispatch = useDispatch();
   const history = useHistory();
   const { data: newNotification } = useSubscribeNotifications();
 
   const checkRoleMatch = (role) => {
-    return getRoleForRoute(history.location.pathname) === role;
+    const roleForRoute = getRoleForRoute(history.location.pathname);
+    console.log({ role, roleForRoute });
+
+    return roleForRoute === role;
   };
 
   useEffect(() => {
@@ -62,27 +68,28 @@ const Navbar = (props) => {
 
   function handleRoleSwitch(role) {
     setCurrentRole(role);
-    UpdateLoggedInUserAbility(role, ability);
+    UpdateLoggedInUserAbility(role, ability, access);
     history.push(getHomeRouteForLoggedInUser(role));
   }
 
-  const rolesOptions = currentUser?.roles?.map((role) => {
-    const r = role?.name;
-    return {
-      id: r,
-      children: (
-        <p
-          className="mt-3"
-          style={{
-            color: checkRoleMatch(r) ? "green" : "",
-          }}
-        >
-          {checkRoleMatch(r) ? `Signed in as ${r}` : `Switch to ${r}`}
-        </p>
-      ),
-      onClick: () => handleRoleSwitch(r),
-    };
-  });
+  const rolesOptions =
+    currentUser?.roles?.map((role) => {
+      const r = role?.name;
+      return {
+        id: r,
+        children: (
+          <p
+            className="mt-3"
+            style={{
+              color: checkRoleMatch(r) ? "green" : "",
+            }}
+          >
+            {checkRoleMatch(r) ? `Signed in as ${r}` : `Switch to ${r}`}
+          </p>
+        ),
+        onClick: () => handleRoleSwitch(r),
+      };
+    }) ?? [];
 
   const options = [
     {

@@ -18,6 +18,7 @@ import ToastContent from "../../components/molecules/ToastContent";
 import useToggle from "../../utility/hooks/useToggle";
 import userRoles from "../../utility/userRoles";
 import handleError from "../../utils/handleError";
+import AccessContext from "../../utility/context/accessContext";
 
 const defaultValues = {
   password: "helloWorld1",
@@ -29,6 +30,7 @@ const AuthLoginPage = () => {
   const [loading, toggleLoading] = useToggle();
   const history = useHistory();
   const ability = useContext(AbilityContext);
+  const access = useContext(AccessContext);
   const { control, setError, handleSubmit, formState } = useForm({
     defaultValues,
     mode: "onChange", // onBlur
@@ -59,7 +61,7 @@ const AuthLoginPage = () => {
               : userRoles.PROSPECTIVE_STUDENT;
 
           dispatch(handleLogin(data));
-          UpdateLoggedInUserAbility(userRole, ability);
+          UpdateLoggedInUserAbility(userRole, ability, access);
 
           history.push(getHomeRouteForLoggedInUser(userRole));
 

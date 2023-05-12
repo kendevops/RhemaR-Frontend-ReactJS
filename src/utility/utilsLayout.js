@@ -1,6 +1,7 @@
 // ** React Imports
 import { useContext } from "react";
 import { AbilityContext } from "@src/utility/context/can";
+import AccessContext from "./context/accessContext";
 
 /**
  * Return which component to render based on it's data/context
@@ -112,5 +113,16 @@ export const CanViewMenuItem = (item) => {
   // });
 
   const ability = useContext(AbilityContext);
-  return ability.can(item.action, item.resource);
+
+  const access = useContext(AccessContext);
+
+  const resolve = ability.can(item.action, item.resource);
+
+  console.log({
+    action: item.action,
+    resource: item.resource,
+    resolve,
+    ability,
+  });
+  return resolve;
 };
