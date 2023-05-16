@@ -1,4 +1,7 @@
 import { ReactNode } from "react";
+import usePagination from "../../../utility/hooks/usePagination";
+import TabSelect, { TabSelectOptionProps } from "./TabSelect";
+import RightCaret, { LeftCaret } from "../../icons/caret";
 
 export type TableColumns<T> = {
   title?: string;
@@ -9,20 +12,70 @@ export type TableColumns<T> = {
 export type TableProps<T = any> = {
   columns: TableColumns<T>[];
   data: T[];
+  itemsPerPage?: number;
 };
 
 interface Props {
   children: ReactNode;
 }
 
-export default function Table({ columns, data }: TableProps) {
+export default function Table({ columns, data, itemsPerPage }: TableProps) {
+  //** Pagination */
+  const { paginatedData, page, pages, setPage } = usePagination(
+    data,
+    itemsPerPage ?? 9
+  );
+
+  const extraOptions: TabSelectOptionProps[] = pages
+    .filter((p) => p <= 3)
+    .map((p) => ({
+      element: p.toString(),
+      isActive: page === p,
+      key: p.toString(),
+      onPress: () => setPage(p),
+    }));
+
+  const moreOptions: TabSelectOptionProps[] = [];
+
+  page >= 4
+    ? moreOptions.push(
+        {
+          element: page.toString(),
+          isActive: true,
+          key: "current-page",
+        },
+        {
+          element: <RightCaret />,
+          isActive: false,
+          key: "next",
+          onPress: () => setPage(page + 1),
+        }
+      )
+    : moreOptions.push({
+        element: <RightCaret />,
+        isActive: false,
+        key: "next",
+        onPress: () => setPage(page + 1),
+      });
+
+  const tabSelctOptions: TabSelectOptionProps[] = [
+    {
+      element: <LeftCaret />,
+      isActive: false,
+      key: "previous",
+      onPress: () => setPage(page - 1),
+    },
+    ...extraOptions,
+    ...moreOptions,
+  ];
+
   //** Columns */
   const colHeaders = columns.map(({ title, key }) => (
     <th key={key}>{title}</th>
   ));
 
   //** TableBody */
-  const tabData = data?.map((data, i) => {
+  const tabData = paginatedData?.map((data, i) => {
     return (
       <tr key={`column${i}`}>
         {columns?.map(({ render }, i2) => (
@@ -33,13 +86,16 @@ export default function Table({ columns, data }: TableProps) {
   });
 
   return (
-    <table className="table caption-top text-nowrap">
-      <thead className="bg-blue-800">
-        <tr>{colHeaders}</tr>
-      </thead>
+    <section>
+      <table className="table caption-top text-nowrap">
+        <thead className="bg-blue-800">
+          <tr>{colHeaders}</tr>
+        </thead>
 
-      <tbody>{tabData}</tbody>
-    </table>
+        <tbody>{tabData}</tbody>
+      </table>
+      <TabSelect options={tabSelctOptions} />
+    </section>
   );
 }
 
