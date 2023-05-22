@@ -10,6 +10,12 @@ export default [
     navLink: "/campus-coordinator/dashboard",
   },
   {
+    id: "applications",
+    title: "Applications",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/campus-coordinator/applications",
+  },
+  {
     id: "students",
     title: "Students",
     icon: <Icon icon="teenyicons:users-solid" />,
@@ -39,6 +45,7 @@ export default [
     icon: <Icon icon="fluent:mail-24-filled" />,
     navLink: "/campus-coordinator/",
   },
+
   {
     id: "chat",
     title: "Chat",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export type useFormProps<T extends {}> = {
   initialState: T;
@@ -35,17 +35,22 @@ export default function useForm<T extends {}>({
 
   const [formErrors, setFormErrors] = useState(errObj);
 
-  function toggleError(key: keyof T) {
+  const toggleError = useCallback((key: keyof T) => {
     setFormErrors((p: any) => ({ ...p, [key]: !p[key] }));
-  }
+  }, []);
 
-  function updateForm(key: keyof T, value: any) {
-    setFormData((p) => ({ ...p, [key]: value }));
-    formErrors[key] && toggleError(key);
-  }
+  const updateForm = useCallback(
+    (key: keyof T, value: any) => {
+      setFormData((p) => ({ ...p, [key]: value }));
+      formErrors[key] && toggleError(key);
+    },
+    [formErrors, toggleError]
+  );
 
-  const formIsValid = Object.values(compulsoryFields as object).every((v) => {
-    return v > "";
-  });
+  const formIsValid = useMemo(() => {
+    return Object.values(compulsoryFields as object).every((v) => {
+      return v > "";
+    });
+  }, [compulsoryFields]);
   return { formData, updateForm, formIsValid, formErrors, toggleError };
 }

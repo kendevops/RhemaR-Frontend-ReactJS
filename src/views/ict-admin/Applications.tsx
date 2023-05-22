@@ -180,7 +180,9 @@ export default function Applications() {
               {
                 key: "date",
                 title: "Date",
-                render: (d) => <p>{new Date(d?.date)?.toDateString()}</p>,
+                render: (d) => {
+                  return <p>{new Date(d?.createdAt)?.toDateString()}</p>;
+                },
               },
               {
                 key: "feePayment",

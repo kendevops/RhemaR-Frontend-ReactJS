@@ -36,6 +36,10 @@ const CampusCoordinatorRoutes = [
     component: lazy(() => import("../../views/campus-coordinator/students")),
   },
   {
+    path: "/campus-coordinator/applications",
+    component: lazy(() => import("../../views/ict-admin/Applications")),
+  },
+  {
     path: "/campus-coordinator/tuitionClearance",
     component: lazy(() =>
       import("../../views/campus-coordinator/tuitionClearance")
