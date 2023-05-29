@@ -27,6 +27,24 @@ const Options = [
   },
 ];
 
+const defaultColumnsData: any = [
+  {
+    key: "Name",
+    title: "Name",
+    render: (data: any) => <p>{data?.firstName + " " + data?.lastName}</p>,
+  },
+  {
+    key: "Phone Number",
+    title: "Phone Number",
+    render: (data: any) => <p>{data?.phoneNumber}</p>,
+  },
+  {
+    key: "Email",
+    title: "Email",
+    render: (data: any) => <p>{data?.email}</p>,
+  },
+];
+
 const CampusCoordinatorStudents = () => {
   const [params, setParams] = useState<any>(null);
   const [option, setOption] = useState(0);
@@ -34,23 +52,7 @@ const CampusCoordinatorStudents = () => {
   const { data: userData, isLoading } = useAllUsers(params);
   const data = userData?.users?.nodes;
 
-  const columns: TableColumns<any>[] = [
-    {
-      key: "Name",
-      title: "Name",
-      render: (data) => <p>{data?.firstName + " " + data?.lastName}</p>,
-    },
-    {
-      key: "Phone Number",
-      title: "Phone Number",
-      render: (data) => <p>{data?.phoneNumber}</p>,
-    },
-    {
-      key: "Email",
-      title: "Email",
-      render: (data) => <p>{data?.email}</p>,
-    },
-  ];
+  let columns: TableColumns<any>[] = [...defaultColumnsData];
 
   return (
     <>
@@ -60,7 +62,6 @@ const CampusCoordinatorStudents = () => {
           const isSelected = i === option;
           function handleSelect() {
             setOption(i);
-
             setParams({ ...others });
           }
 
