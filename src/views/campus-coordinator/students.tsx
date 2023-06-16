@@ -6,6 +6,7 @@ import Tab from "../../components/atoms/Tab";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import Table, { TableColumns } from "../../components/general/table/Table";
 import { Spinner } from "reactstrap";
+import PromoteStudentModal from "../../components/modals/PromoteStudentModal";
 
 const Options = [
   {
@@ -23,7 +24,7 @@ const Options = [
   {
     title: "Level 2 students",
     role: `${userRoles.STUDENT}`,
-    level: "LEVEL_1",
+    level: "LEVEL_2",
   },
 ];
 
@@ -45,14 +46,79 @@ const defaultColumnsData: any = [
   },
 ];
 
+const lvlCols = [
+  {
+    key: "Courses",
+    title: "Courses",
+    render: (data: any) => <p>{}</p>,
+  },
+  {
+    key: "PMR",
+    title: "PMR",
+    render: (data: any) => <p>{}</p>,
+  },
+  {
+    key: "Exams",
+    title: "Exams",
+    render: (data: any) => <p>{}</p>,
+  },
+  // {
+  //   key: "Quiz",
+  //   title: "Quiz",
+  //   render: (data: any) => <p>{}</p>,
+  // },
+  // {
+  //   key: "Reading Assignment",
+  //   title: "Reading Assignment",
+  //   render: (data: any) => <p>{}</p>,
+  // },
+];
 const CampusCoordinatorStudents = () => {
   const [params, setParams] = useState<any>(null);
   const [option, setOption] = useState(0);
 
+  const [cols, setCols] = useState<(typeof defaultColumnsData)[0][]>([]);
+
   const { data: userData, isLoading } = useAllUsers(params);
   const data = userData?.users?.nodes;
 
-  let columns: TableColumns<any>[] = [...defaultColumnsData];
+  let columns: TableColumns<any>[] = [...defaultColumnsData, ...cols];
+
+  // Dynamic Columns handler
+  useEffect(() => {
+    // Others
+    if (option < 2) {
+      setCols([]);
+    }
+
+    // Level 1 students
+    if (option === 2) {
+      setCols([
+        ...lvlCols,
+        {
+          key: "Action",
+          render: (data: any) => (
+            <PromoteStudentModal studentLevel="1" data={data} />
+          ),
+        },
+      ]);
+    }
+
+    // Level 2 students
+    if (option === 3) {
+      setCols([
+        ...lvlCols,
+        {
+          key: "Action",
+          render: (data: any) => (
+            <PromoteStudentModal studentLevel="2" data={data} />
+          ),
+        },
+      ]);
+    }
+  }, [option]);
+
+  console.log(data);
 
   return (
     <>

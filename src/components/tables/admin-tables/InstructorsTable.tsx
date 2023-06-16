@@ -13,6 +13,7 @@ import useRetractRole from "../../../hooks/mutations/roles/useRetractRole";
 import ToastContent from "../../molecules/ToastContent";
 import { toast } from "react-toastify";
 import handleError from "../../../utils/handleError";
+import useInstructors from "../../../hooks/queries/users/useInstructors";
 
 type ReassignInstructorProps = {
   data: any;
@@ -20,6 +21,7 @@ type ReassignInstructorProps = {
 
 interface Props {
   shouldRefetch?: boolean;
+  route?: string;
 }
 
 Chart.register(ArcElement);
@@ -66,42 +68,41 @@ function ReassignInstructor({ data }: ReassignInstructorProps) {
   );
 }
 
-export default function InstructorsTable({ shouldRefetch }: Props) {
-  const { isLoading, data: usersData, refetch } = useAllUsers();
+export default function InstructorsTable({ shouldRefetch, route }: Props) {
+  // const { isLoading, data: usersData, refetch } = useAllUsers();
+
+  const { data, isLoading, refetch } = useInstructors();
+
+  const isNotAdmin = route !== "ict-admin";
 
   useEffect(() => {
     if (shouldRefetch) refetch();
   }, [shouldRefetch, refetch]);
 
   //userRoles?.includes
-  const users = usersData?.users?.nodes;
+  const users = data?.nodes;
 
-  const instrsData = users
-    ?.filter((user: any) =>
-      user?.roles?.map((r: any) => r?.name)?.includes(userRoles.INSTRUCTOR)
-    )
-    .map((user: any) => {
-      return {
-        name: user?.firstName + " " + user?.lastName,
-        rating: 56,
-        email: user?.email,
-        phome: user?.phoneNumber,
-        courses: [
-          {
-            name: "Pneumatology 1",
-            rating: 36,
-          },
-        ],
-      };
-    });
+  const instrsData = users?.map((user: any) => {
+    return {
+      id: user?.id,
+      name: user?.firstName + " " + user?.lastName,
+      rating: Math.floor(Math.random() * 100),
+      email: user?.email,
+      courses: user?.classRooms?.map((c: any) => c?.course),
+    };
+  });
 
-  const columns: TableColumns<typeof InstructorsData[0]>[] = [
+  console.log(users);
+
+  const columns: TableColumns<any[0]>[] = [
     {
       key: "Instructor Name",
       title: "Instructor Name",
       render: (data) => {
         return (
-          <Link to={`/ict-admin/instructor/${data?.name}`}>{data?.name}</Link>
+          <Link to={`/${route ?? "ict-admin"}/instructor/${data?.id}`}>
+            {data?.name}
+          </Link>
         );
       },
     },
@@ -148,7 +149,15 @@ export default function InstructorsTable({ shouldRefetch }: Props) {
       title: "Action",
       render: (data) => {
         //make this "Remove instructor"
-        return <ReassignInstructor data={data} />;
+        return isNotAdmin ? (
+          <u className="text-info click">
+            <Link to={`/${route ?? "ict-admin"}/instructor/${data?.id}`}>
+              View courses
+            </Link>
+          </u>
+        ) : (
+          <ReassignInstructor data={data} />
+        );
       },
     },
   ];

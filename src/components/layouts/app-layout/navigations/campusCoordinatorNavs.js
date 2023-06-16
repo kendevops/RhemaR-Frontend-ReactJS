@@ -43,7 +43,7 @@ export default [
     id: "message-board",
     title: "Message Board",
     icon: <Icon icon="fluent:mail-24-filled" />,
-    navLink: "/campus-coordinator/",
+    navLink: "/campus-coordinator/message-board",
   },
 
   {

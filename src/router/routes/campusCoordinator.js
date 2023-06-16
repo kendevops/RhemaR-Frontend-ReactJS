@@ -22,10 +22,12 @@ const CampusCoordinatorRoutes = [
     component: lazy(() => import("../../views/campus-coordinator/instructors")),
   },
   {
-    path: "/campus-coordinator/messageBoard",
-    component: lazy(() =>
-      import("../../views/campus-coordinator/messageBoard")
-    ),
+    path: "/campus-coordinator/instructor/:id",
+    component: lazy(() => import("../../views/ict-admin/Instructor")),
+  },
+  {
+    path: "/campus-coordinator/message-board",
+    component: lazy(() => import("../../views/ict-admin/MessageBoard")),
   },
   {
     path: "/campus-coordinator/profile",
