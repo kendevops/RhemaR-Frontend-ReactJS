@@ -18,6 +18,14 @@ const ictAdminRoutes = [
     },
   },
   {
+    path: "/ict-admin/admin-management",
+    component: lazy(() => import("../../views/ict-admin/AdminManagement")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+  {
     path: "/ict-admin/tuition-management",
     component: lazy(() => import("../../views/ict-admin/TuitionManagement")),
     meta: {

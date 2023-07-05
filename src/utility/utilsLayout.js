@@ -118,11 +118,11 @@ export const CanViewMenuItem = (item) => {
 
   const resolve = ability.can(item.action, item.resource);
 
-  console.log({
-    action: item.action,
-    resource: item.resource,
-    resolve,
-    ability,
-  });
+  // console.log({
+  //   action: item.action,
+  //   resource: item.resource,
+  //   resolve,
+  //   ability,
+  // });
   return resolve;
 };

@@ -20,6 +20,14 @@ export default [
     resource: "Admins",
   },
   {
+    id: "adminManagement",
+    title: "Admin Management",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/ict-admin/admin-management",
+    action: "read",
+    resource: "Admins",
+  },
+  {
     id: "applications",
     title: "Applications",
     icon: <Icon icon="teenyicons:users-solid" />,

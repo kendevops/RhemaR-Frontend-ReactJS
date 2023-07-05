@@ -79,7 +79,7 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
     return (
       <tr key={`column${i}`}>
         {columns?.map(({ render }, i2) => (
-          <td key={`data${i}${i2}`}>{render(data, i2)}</td>
+          <td key={`data${i}${i2}`}>{render(data, i)}</td>
         ))}
       </tr>
     );
@@ -94,7 +94,13 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
 
         <tbody>{tabData}</tbody>
       </table>
-      <TabSelect options={tabSelctOptions} />
+      <div
+        style={{
+          padding: "1rem",
+        }}
+      >
+        <TabSelect options={tabSelctOptions} />
+      </div>
     </section>
   );
 }

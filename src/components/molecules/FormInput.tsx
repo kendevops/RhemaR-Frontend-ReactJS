@@ -1,5 +1,6 @@
 import { InputHTMLAttributes } from "react";
 import FormInputWrapper from "./FormInputWrapper";
+import { Input } from "reactstrap";
 
 type FormInputProps = {
   label: string;
@@ -19,7 +20,7 @@ export default function FormInput({
   return (
     <FormInputWrapper {...{ lg, md }}>
       <label htmlFor={others?.id}>{label}</label>
-      <input
+      <Input
         className="form-control"
         placeholder={placeholder ?? label}
         {...others}
@@ -28,6 +29,8 @@ export default function FormInput({
           borderColor: hasErrors ? "red" : "",
           borderStyle: hasErrors ? "solid" : "none",
         }}
+        invalid={hasErrors}
+        type={others.type as any}
       />
     </FormInputWrapper>
   );
