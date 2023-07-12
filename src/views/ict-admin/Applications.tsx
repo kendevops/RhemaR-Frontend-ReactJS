@@ -9,6 +9,10 @@ import useRejectApplication from "../../hooks/mutations/applications/useRejectAp
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import handleError from "../../utils/handleError";
+import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
+import { useState } from "react";
+import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 
 interface ViewApplicationProps {
   status?: any;
@@ -137,16 +141,99 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
 }
 
 export default function Applications() {
+  const [filters, setFilters] = useState({});
   const { data, isLoading, refetch } = useApplications();
+  const { data: sessionsData } = useAcademicSessions();
+  const [isFiltering, toggleFiltering] = useToggle();
+
+  const { data: campusesData } = useAllCampuses();
+
+  const campusOptions = campusesData?.nodes?.map((d: any) => ({
+    children: d?.name,
+  }));
+
+  const intakeOptions = ["April", "November"].map((v) => ({
+    children: v + " intake",
+  }));
+
+  const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
+    children: sess?.name,
+  }));
+
+  const filterProps: FilterProps = {
+    params: [
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: campusOptions,
+        },
+        id: "campus",
+        name: "Campus",
+      },
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: intakeOptions,
+        },
+        id: "intake",
+        name: "Intake",
+      },
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: sessionOptions,
+        },
+        id: "session",
+        name: "Session",
+      },
+      {
+        inputType: "Text",
+        inputProps: {
+          type: "date",
+        },
+        id: "applicationDateFrom",
+        name: "Application Date (From)",
+      },
+      {
+        inputType: "Text",
+        inputProps: {
+          type: "date",
+        },
+        id: "applicationDateTo",
+        name: "Application Date (To)",
+      },
+    ],
+    isOpen: isFiltering,
+    onFilter: (params: any) => {
+      setFilters(params);
+    },
+    toggle: toggleFiltering,
+  };
 
   return (
     <section>
       {isLoading && <Spinner />}
+      <FilterModal {...filterProps} />
 
-      <div className="my-4 w-75 mx-auto">
-        <SearchBar />
-      </div>
-
+      <article className="d-flex gap-5 m-5" id="Search">
+        <div style={{ flex: 1 }}>
+          <SearchBar />
+        </div>
+        <div
+          className="d-flex gap-3 justify-content-end"
+          style={{
+            flex: 1,
+          }}
+        >
+          <button
+            className="btn btn-outline-info btn-lg "
+            style={{ width: "fit-content" }}
+            onClick={toggleFiltering}
+          >
+            Filter
+          </button>
+        </div>
+      </article>
       {data && (
         <Table.Wrapper>
           {/* Table */}

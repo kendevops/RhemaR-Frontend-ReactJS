@@ -71,7 +71,7 @@ export default function FilterModal({
           Apply filter
         </button>
         <button className="btn btn-outline-info btn-lg" onClick={handleReset}>
-          ResetFilters
+          Reset filters
         </button>
       </ModalBody>
     </Modal>
