@@ -28,7 +28,7 @@ export default function UserManagement() {
       header: true,
       skipEmptyLines: true,
       complete: function (results: any) {
-        const data = results?.data;
+        const data: any = results?.data;
         console.log(data);
         mutate(
           { users: data?.map((d: any) => ({ ...d, roles: [d?.roles] })) },

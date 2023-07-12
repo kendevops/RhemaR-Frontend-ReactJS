@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import StudentsList from "../../components/lists/students-list/index";
 import StudentsTable from "../../components/tables/students-table/index";
 import userRoles from "../../utility/userRoles";
@@ -7,6 +7,15 @@ import useAllUsers from "../../hooks/queries/useAllUsers";
 import Table, { TableColumns } from "../../components/general/table/Table";
 import { Spinner } from "reactstrap";
 import PromoteStudentModal from "../../components/modals/PromoteStudentModal";
+import SearchBar from "../../components/general/searchBar";
+import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
+import useToggle from "../../utility/hooks/useToggle";
+import AddStudentModal from "../../components/modals/AddStudentModal";
+import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
+import Papa from "papaparse";
+import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
+import handleError from "../../utils/handleError";
 
 const Options = [
   {
@@ -46,103 +55,154 @@ const defaultColumnsData: any = [
   },
 ];
 
-const lvlCols = [
-  {
-    key: "Courses",
-    title: "Courses",
-    render: (data: any) => <p>{}</p>,
-  },
-  {
-    key: "PMR",
-    title: "PMR",
-    render: (data: any) => <p>{}</p>,
-  },
-  {
-    key: "Exams",
-    title: "Exams",
-    render: (data: any) => <p>{}</p>,
-  },
-  // {
-  //   key: "Quiz",
-  //   title: "Quiz",
-  //   render: (data: any) => <p>{}</p>,
-  // },
-  // {
-  //   key: "Reading Assignment",
-  //   title: "Reading Assignment",
-  //   render: (data: any) => <p>{}</p>,
-  // },
-];
 const CampusCoordinatorStudents = () => {
-  const [params, setParams] = useState<any>(null);
-  const [option, setOption] = useState(0);
-
-  const [cols, setCols] = useState<(typeof defaultColumnsData)[0][]>([]);
-
-  const { data: userData, isLoading } = useAllUsers(params);
+  const [isAdding, toggleAdding] = useToggle();
+  const [isFiltering, toggleFiltering] = useToggle();
+  const [filters, setFilters] = useState<any>(null);
+  const { data: userData, isLoading, refetch } = useAllUsers(filters);
   const data = userData?.users?.nodes;
 
-  let columns: TableColumns<any>[] = [...defaultColumnsData, ...cols];
+  let columns: TableColumns<any>[] = [...defaultColumnsData];
 
-  // Dynamic Columns handler
-  useEffect(() => {
-    // Others
-    if (option < 2) {
-      setCols([]);
-    }
+  const { data: campusesData } = useAllCampuses();
+  const { data: sessionsData } = useAcademicSessions();
 
-    // Level 1 students
-    if (option === 2) {
-      setCols([
-        ...lvlCols,
-        {
-          key: "Action",
-          render: (data: any) => (
-            <PromoteStudentModal studentLevel="1" data={data} />
-          ),
+  const { isLoading: isUploading, mutate } = useUploadUsers();
+
+  const importHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results: any) {
+        const data: any = results?.data;
+        console.log(data);
+        mutate(
+          { users: data?.map((d: any) => ({ ...d, roles: [d?.roles] })) },
+          {
+            onSuccess: () => {
+              alert("Upload successful!");
+              refetch();
+            },
+            onError: (e) => handleError(e),
+          }
+        );
+      },
+    });
+  };
+
+  const campusOptions = campusesData?.nodes?.map((d: any) => ({
+    children: d?.name,
+  }));
+
+  const intakeOptions = ["April", "November"].map((v) => ({
+    children: v + " intake",
+  }));
+
+  const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
+    children: sess?.name,
+  }));
+
+  const filterProps: FilterProps = {
+    params: [
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: campusOptions,
         },
-      ]);
-    }
-
-    // Level 2 students
-    if (option === 3) {
-      setCols([
-        ...lvlCols,
-        {
-          key: "Action",
-          render: (data: any) => (
-            <PromoteStudentModal studentLevel="2" data={data} />
-          ),
+        id: "campus",
+        name: "Campus",
+      },
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: intakeOptions,
         },
-      ]);
-    }
-  }, [option]);
-
-  console.log(data);
+        id: "intake",
+        name: "Intake",
+      },
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: sessionOptions,
+        },
+        id: "session",
+        name: "Session",
+      },
+      {
+        inputType: "Text",
+        inputProps: {
+          type: "date",
+        },
+        id: "applicationDateFrom",
+        name: "Application Date (From)",
+      },
+      {
+        inputType: "Text",
+        inputProps: {
+          type: "date",
+        },
+        id: "applicationDateTo",
+        name: "Application Date (To)",
+      },
+    ],
+    isOpen: isFiltering,
+    onFilter: (params: any) => {
+      setFilters(params);
+    },
+    toggle: toggleFiltering,
+  };
 
   return (
     <>
-      {/* Header */}
-      <div role={"tabpanel"} className="d-flex px-2 gap-3 border-bottom ">
-        {Options.map(({ title, ...others }, i) => {
-          const isSelected = i === option;
-          function handleSelect() {
-            setOption(i);
-            setParams({ ...others });
-          }
-
-          return (
-            <Tab
-              tabColor="#289483"
-              key={title}
-              onClick={handleSelect}
-              isSelected={isSelected}
-            >
-              {title}
-            </Tab>
-          );
-        })}
+      <div id="Modals">
+        <FilterModal {...filterProps} />
+        <AddStudentModal isOpen={isAdding} toggle={toggleAdding} />
       </div>
+
+      <article className="d-flex gap-5 m-5" id="Search">
+        <div style={{ flex: 1 }}>
+          <SearchBar />
+        </div>
+        <div
+          className="d-flex gap-3 justify-content-end"
+          style={{
+            flex: 1,
+          }}
+        >
+          <button
+            className="btn btn-outline-info btn-lg "
+            style={{ width: "fit-content" }}
+            onClick={toggleFiltering}
+          >
+            Filter
+          </button>
+          <div>
+            <label
+              htmlFor="upload"
+              className="btn btn-outline-info btn-lg "
+              style={{ width: "fit-content" }}
+            >
+              Import
+            </label>
+            <input
+              id="upload"
+              type="file"
+              name="file"
+              accept=".csv"
+              onChange={importHandler}
+              hidden
+            />
+          </div>
+          <button
+            className="btn btn-blue-800 btn-lg"
+            style={{ width: "fit-content" }}
+            onClick={toggleAdding}
+          >
+            Add student
+          </button>
+        </div>
+      </article>
 
       {/* Table */}
       <Table.Wrapper>
