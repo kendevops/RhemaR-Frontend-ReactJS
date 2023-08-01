@@ -1,0 +1,77 @@
+@font-face {
+  font-family: "lato-bd";
+  src: url("../../../fonts/lato/Lato-Bold.ttf");
+}
+
+@font-face {
+  font-family: "lato-md";
+  src: url("../../../fonts/lato/Lato-Medium.ttf");
+}
+@font-face {
+  font-family: "lato-rg";
+  src: url("../../../fonts/lato/Lato-Regular.ttf");
+}
+
+@font-face {
+  font-family: "lato-italic";
+  src: url("../../../fonts/lato/Lato-Italic.ttf");
+}
+
+// Alerts
+$success: #28c76f;
+$warning: #ff9f43;
+$error: #ea5455;
+$info: #00cfe8;
+$tip: #4d4d4d;
+
+// Brand Colours
+$black-000: #000000;
+$black-700: #001533;
+$blue-800: #203864;
+$blue-200: #edf3fa;
+$blue-100:#F0F2F9;
+$green-600: #289483;
+$text-body: #475466;
+$gold-200: rgba($warning, 0.15);
+$gold-600: #dfc46d;
+$gold-400: rgba($gold-600, 0.15);
+
+// Neutrals & Shades
+$white-100: #ffffff;
+$grey-100: rgba($white-100, 0.6);
+$grey-150: #f7f7f7;
+$grey-200: #e1e6ea;
+$grey-250: rgba(#002d6b, 0.07);
+$grey-300: rgba($black-000, 0.6);
+
+$theme-colors: (
+  "success": $success,
+  "warning": $warning,
+  "error": $error,
+  "info": $info,
+  "tip": $tip,
+  "black-000": $black-000,
+  "black-700":$black-700,
+  "blue-800": $blue-800,
+  "blue-200": $blue-200,
+  "blue-100": $blue-100,
+  "white-100": $white-100,
+  "text-body": $text-body,
+  "gold-200": $gold-200,
+  "gold-400": $gold-400,
+  "gold-600": $gold-600,
+  "grey-100": $grey-100,
+  "grey-200": $grey-200,
+  "grey-250": $grey-250,
+  "grey-300": $grey-300,
+);
+
+$border-radius-sm: 0.3rem;
+$border-radius: 0.8rem;
+$border-radius-lg: 1rem;
+$box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
+
+$font-bd: "lato-bd", sans-serif;
+$font-md: "lato-md", sans-serif;
+$font-rg: "lato-rg", sans-serif;
+$font-italic: "lato-italic", sans-serif;

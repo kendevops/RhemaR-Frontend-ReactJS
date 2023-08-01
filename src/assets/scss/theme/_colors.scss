@@ -1,0 +1,13 @@
+// Core
+// ------------------------------
+
+// Import variables and mixins
+@import './mixins/hex2rgb';
+
+//box shadow for alert's heading
+@import './mixins/alert';
+
+// Color system, always load last
+// ------------------------------
+@import './colors/palette';
+@import './colors/palette-gradient.scss';

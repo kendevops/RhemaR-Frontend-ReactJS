@@ -1,0 +1,358 @@
+/* Easing */
+.ease-transition {
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5;
+}
+
+/* Tabs */
+.tab:hover {
+  background-color: "#F5F5F5";
+}
+
+/* Student Avatar */
+.student-avatar {
+  background-color: #203864;
+  width: 6rem;
+  height: 6rem;
+  overflow: hidden;
+  border-radius: 100%;
+  display: grid;
+  place-content: center;
+}
+
+.student-avatar-wrapper {
+  position: relative;
+}
+
+/* Button */
+.student-avatar-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  box-shadow: none;
+}
+
+/* Nav  */
+li.nav-item.active > a {
+  background: #3d4d65 !important;
+  border-style: solid;
+  border-right-width: 3px;
+  border-right-color: #dfc46d;
+  border-left-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  box-shadow: none !important;
+}
+
+li.nav-item.active > a > svg {
+  color: #dfc46d;
+}
+
+li {
+  list-style: none;
+}
+
+.no-padding-left {
+  padding-left: 0;
+}
+
+/* Header in exam page */
+.exam-header {
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* @media (min-width: 1280px) {
+  .exam-header {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+} */
+
+/* Avatar in Nav header */
+.avatar-dropdown {
+  position: fixed;
+  padding: 1.5rem;
+  background-color: white;
+  right: 1%;
+  top: 8%;
+}
+
+.avatar-dropdown-item {
+  cursor: pointer;
+  margin-bottom: 0.8rem;
+}
+
+.resources-text {
+  position: absolute;
+  left: 10%;
+  top: 16vh;
+  color: #ffffff;
+}
+
+.card-deck {
+  /* height: 190px; */
+  border-radius: 8px;
+  background: #355da6 url("../img/helpdesk-bg.svg") no-repeat center
+    center/cover;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  text-transform: capitalize;
+}
+
+.card-btn {
+  padding-left: 35px !important;
+  padding-right: 35px !important;
+  width: fit-content;
+  text-transform: capitalize;
+}
+
+/* helpdesk */
+.helpdesk-card ul {
+  box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
+  border-radius: 0 0 8px 8px;
+}
+
+.helpdesk-card ul li button.active {
+  border-color: #203864 !important;
+}
+
+.helpdesk-edit {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.helpdesk-edit .edit-btn {
+  background: inherit;
+  border: none;
+  color: #ffffff;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Events */
+.events-wrapper {
+  box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.1) !important;
+  border: none !important;
+}
+
+.evt-card {
+  margin-left: auto;
+  margin-right: auto;
+  width: 93%;
+  gap: 45px;
+}
+
+.evt {
+  border: 1px solid rgba(0, 45, 107, 0.1);
+  width: 100%;
+  max-width: 327px;
+}
+
+.current-date {
+  gap: 7px;
+}
+
+.current-date .formatted-date {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.header-nav {
+  gap: 16px;
+}
+
+.evt-btn {
+  width: 32px;
+  height: 32px;
+}
+
+.evt-card-top {
+  background: #edf3fa;
+  border: 1px solid rgba(0, 45, 107, 0.1);
+  height: 93px;
+}
+
+.evt-card-top .live {
+  font-size: 12px;
+}
+
+.evt-info {
+  background: #edf3fa;
+  border: 1px solid rgba(0, 45, 107, 0.1);
+  border-radius: 4px;
+
+  width: fit-content;
+  height: fit-content;
+}
+
+.evt-info .month {
+  display: block;
+}
+
+.evt-time {
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.events-back-arrow {
+  background-color: rgba(115, 130, 168, 0.25);
+  color: #1e1e1e;
+  width: max-content;
+  height: max-content;
+  padding: 10px;
+  font-size: 14px;
+  display: inline-block;
+  margin-right: 10px;
+}
+.events-back-arrow:hover {
+  background-color: rgba(62, 116, 252, 0.25);
+}
+
+.about-event {
+  box-shadow: 0px 0px 6px rgba(0, 45, 107, 0.15);
+  border: none;
+  padding: 15px;
+  flex: 2;
+}
+
+.event-resources {
+  flex: 1;
+}
+
+.about-event > h3 {
+  font-weight: 600;
+  font-size: 19px;
+}
+
+.about-event > h2 {
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #626161 !important;
+}
+
+.about-event > p {
+  line-height: 1.1;
+  font-size: 16px;
+}
+
+/* Video component */
+.video-wrapper {
+  height: 550px;
+  margin-bottom: 35px;
+}
+
+.video-style {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  background-color: rgba(255, 255, 255, 0.7);
+  height: 8px;
+  border-width: 2px;
+  border-radius: 6px;
+  width: 98%;
+  margin: 0 auto 24px;
+}
+
+.progress-bar .progress-innerbar {
+  background-color: #e31717;
+  width: 0%;
+  height: 100%;
+}
+
+.progress-innerbar-animate {
+  animation: animate-bar linear forwards;
+  animation-play-state: paused;
+}
+@keyframes animate-bar {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+/* React Timetable */
+.styles-module_day_title__cc17c,
+.styles-module_hour__TLyj9 {
+  background-color: #ffffff !important;
+  color: #203864 !important;
+}
+
+.styles-module_event__28gBZ.undefined {
+  background-color: #edf3fa !important;
+  color: #203864 !important;
+}
+
+/* MUI Autocomplete */
+.css-1ghykbv-MuiAutocomplete-root.MuiOutlinedInput-root.MuiAutocomplete-input {
+  font-size: 1.3rem;
+}
+
+/* Receipt Header lines */
+.receipt-first {
+  height: 1.1rem;
+  background-color: #203864;
+}
+
+.receipt-second {
+  height: 0.4rem;
+  background-color: #dfc46d;
+}
+
+.receipt-third {
+  height: 0.7rem;
+  background-color: #203864;
+  margin-bottom: 0.2rem;
+}
+
+.receipt-fourth {
+  height: 0.2rem;
+  background-color: #203864;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.mobile-nav-wrapper {
+}
+
+.mobile-nav-top {
+  background-color: #289483;
+  padding: 6%;
+  color: white;
+}
+
+.mobile-nav-bottom {
+  background-color: #203864;
+  padding: 6%;
+  color: white;
+  display: block !important;
+}
+
+.mobile-nav-bottom a {
+  font-size: 2.5rem;
+}
+
+.mobile-nav-items {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .mobile-nav-wrapper {
+    display: none;
+  }
+}

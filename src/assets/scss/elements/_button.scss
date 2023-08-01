@@ -1,0 +1,29 @@
+// @import "./variables";
+.btn {
+  font-weight: bold;
+  font-family: $font-rg;
+  box-shadow: 0px 4px 8px -1px rgba(0, 56, 133, 0.2);
+  border-radius: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-outline-grey {
+  border: 0.1rem solid rgba($color: $black-000, $alpha: 0.2);
+  color: $blue-800;
+}
+.btn-lg {
+  min-height: 4.6rem;
+  font-family: $font-bd;
+  width: 100%;
+  font-size: 1.8rem;
+  padding: 1rem;
+}
+.btn-md {
+  padding: 0.7rem;
+  min-width: 12.2rem;
+  font-size: 1.8rem;
+}
+.btn-sm {
+  min-height: 2rem;
+}
