@@ -1,7 +1,6 @@
-@import '~react-toastify/dist/ReactToastify.css';
+@import "react-toastify/dist/ReactToastify.css";
 @import "../theme/bootstrap-extended/_variables";
 @import "../theme/colors/palette-variables.scss";
-
 
 // Toasts
 
@@ -16,7 +15,6 @@ $toast-box-shadow: 0 2px 20px 0 rgba($black, 0.08) !default;
 
 $toast-header-color: $body-color !default;
 $toast-header-background-color: $white !default;
-
 
 .Toastify__toast {
   background-color: $white;
@@ -91,7 +89,7 @@ $toast-header-background-color: $white !default;
 
   @each $color_name, $color in $colors {
     @each $color_type, $color_value in $color {
-      @if $color_type== 'base' {
+      @if $color_type== "base" {
         &.Toastify__toast {
           // border-left: 3px solid $color_value;
         }

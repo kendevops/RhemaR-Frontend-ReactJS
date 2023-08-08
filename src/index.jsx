@@ -36,13 +36,14 @@ import * as serviceWorker from "./serviceWorker";
 
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"));
+import App from "./App";
 
 ReactDOM.render(
   <Provider store={store}>
     <Suspense fallback={<Spinner />}>
       <AbilityContext.Provider value={ability}>
         <ThemeContext>
-          <LazyApp />
+          <App />
           <ToastContainer newestOnTop />
         </ThemeContext>
       </AbilityContext.Provider>
@@ -50,6 +51,8 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
+
+console.log("Working");
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

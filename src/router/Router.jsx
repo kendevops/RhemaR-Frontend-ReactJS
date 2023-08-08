@@ -2,7 +2,7 @@
 import { Suspense, useContext, lazy, Fragment, useEffect } from "react";
 
 // ** Utils
-import { isUserLoggedIn } from "@utils/utilsGeneric.js";
+import { isUserLoggedIn } from "@utils/utilsGeneric.jsx";
 import { useLayout } from "@hooks/useLayout";
 import { AbilityContext } from "@context/can";
 import { useRouterTransition } from "@hooks/useRouterTransition";

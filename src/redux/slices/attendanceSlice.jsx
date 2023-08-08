@@ -4,24 +4,6 @@ import { useEffect, useRef, memo, Fragment } from "react";
 import { toast } from "react-toastify";
 import { Check } from "react-feather";
 
-import {
-  doc,
-  getDoc,
-  where,
-  startAfter,
-  endBefore,
-  increment as increaseBy,
-  query,
-  orderBy,
-  onSnapshot,
-  limit,
-  collection,
-  getDocs,
-  writeBatch,
-  Timestamp,
-} from "firebase/firestore";
-import { firebaseFirestore } from "@configs/firebaseConfig";
-
 const ToastComponent = ({ title, icon, color, fullname }) => (
   <Fragment>
     <div className="toastify-header pb-0">

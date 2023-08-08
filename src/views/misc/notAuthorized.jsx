@@ -21,7 +21,9 @@ const MiscNotAuthorized = () => {
 
   const illustration =
       skin === "dark" ? "not-authorized-dark.svg" : "not-authorized.svg",
-    source = require(`@assets/img/pages/${illustration}`).default;
+    // source = require(`@assets/img/pages/${illustration}`).default;
+    source = `@assets/img/pages/${illustration}`;
+
   return (
     <div className="misc-wrapper">
       <Link className="brand-logo" to="/">

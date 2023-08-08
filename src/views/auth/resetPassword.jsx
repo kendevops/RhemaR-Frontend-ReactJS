@@ -35,7 +35,8 @@ const AuthResetPasswordPage = () => {
     !validUrl && toggleValidUrl();
   }, [id, history, toggleValidUrl, validUrl]);
 
-  const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   function handleSubmit(e) {
     e.preventDefault();

@@ -78,7 +78,8 @@ const AuthEmailVerificationResultPage = () => {
     verifyEmailUrl();
   }, [param]);
 
-  const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <Fragment>
@@ -94,7 +95,10 @@ const AuthEmailVerificationResultPage = () => {
                 <div className="chioma">
                   <div className="text-center mb-5">
                     <h3 className="title mb-4">Email Verified Successfull</h3>
-                    <p className="mx-auto" style={{ lineHeight: "1.234", maxWidth: "80%" }}>
+                    <p
+                      className="mx-auto"
+                      style={{ lineHeight: "1.234", maxWidth: "80%" }}
+                    >
                       You have successfully verified your email
                     </p>
                   </div>
@@ -107,7 +111,6 @@ const AuthEmailVerificationResultPage = () => {
                       <small>Proceed To Login Now!</small>
                     </Link>
                   </button>
-                  
                 </div>
               </div>
             </div>
@@ -124,9 +127,15 @@ const AuthEmailVerificationResultPage = () => {
 
                 <div className="chioma">
                   <div className="text-center mb-5">
-                    <h3 className="title mb-4" style={{color: "red"}}>Email Verification Error</h3>
-                    <p className="mx-auto" style={{ lineHeight: "1.234", maxWidth: "80%" }}>
-                      If you were redirected to this page from your email, the link you clicked is invalid or has expired.
+                    <h3 className="title mb-4" style={{ color: "red" }}>
+                      Email Verification Error
+                    </h3>
+                    <p
+                      className="mx-auto"
+                      style={{ lineHeight: "1.234", maxWidth: "80%" }}
+                    >
+                      If you were redirected to this page from your email, the
+                      link you clicked is invalid or has expired.
                       <br />
                       <br />
                       And you cannot directly access this page.

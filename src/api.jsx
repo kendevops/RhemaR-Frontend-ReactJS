@@ -1,7 +1,7 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+const API_ENDPOINT = import.meta.env.REACT_APP_API_ENDPOINT;
 
 const api = axios.create({
   baseURL: API_ENDPOINT,

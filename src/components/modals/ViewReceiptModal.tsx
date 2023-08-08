@@ -15,7 +15,8 @@ interface ViewReceiptModalProps {
   };
 }
 
-const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+// const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
 export default function ViewReceiptModal({
   data: receiptData,

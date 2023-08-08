@@ -37,6 +37,8 @@ const AuthLoginPage = () => {
     // reValidateMode: "onChange",
   });
 
+  console.log("From Login");
+
   const onSubmit = (data) => {
     toggleLoading();
     if (Object.values(data).every((field) => field.length > 0)) {
@@ -96,7 +98,8 @@ const AuthLoginPage = () => {
     }
   };
 
-  const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <>

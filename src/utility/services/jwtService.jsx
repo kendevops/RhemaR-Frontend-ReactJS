@@ -1,7 +1,7 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
 
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+const API_ENDPOINT = import.meta.env.REACT_APP_API_ENDPOINT;
 export default class JwtService {
   // ** jwtConfig <= Will be used by this service
   jwtConfig = { ...jwtDefaultConfig };

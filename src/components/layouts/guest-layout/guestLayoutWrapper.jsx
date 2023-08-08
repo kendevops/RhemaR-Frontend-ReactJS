@@ -129,7 +129,8 @@ const AppLayoutWrapper = (props) => {
 
   const [mobileNavOpen, toggleMobileNav] = useToggle();
 
-  const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <main>

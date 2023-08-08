@@ -8,8 +8,10 @@ const data = {
       fullName: "John Doe",
       username: "johndoe",
       password: "admin",
-      avatar: require("@src/assets/img/avatars/female-small.png")
-        .default,
+      // avatar: require("@src/assets/img/avatars/female-small.png")
+      // .default,
+      avatar: "@src/assets/img/avatars/female-small.png",
+
       email: "admin@demo.com",
       role: "AllAdmin",
       extras: {
@@ -21,7 +23,9 @@ const data = {
       fullName: "Jane Doe",
       username: "janedoe",
       password: "client",
-      avatar: require("@src/assets/img/avatars/male-small.png").default,
+      // avatar: require("@src/assets/img/avatars/male-small.png").default,
+      avatar: "@src/assets/img/avatars/male-small.png",
+
       email: "client@demo.com",
       role: "client",
       extras: {
@@ -52,12 +56,9 @@ mock.onPost("/api/login").reply((request) => {
 
   if (user) {
     try {
-      const accessToken = jwt.sign(
-        { id: user.id },
-        jwtConfig.secret, {
-          expiresIn: jwtConfig.expireTime,
-        }
-      );
+      const accessToken = jwt.sign({ id: user.id }, jwtConfig.secret, {
+        expiresIn: jwtConfig.expireTime,
+      });
       const refreshToken = jwt.sign(
         { id: user.id },
         jwtConfig.refreshTokenSecret,
@@ -96,9 +97,7 @@ mock.onPost("/api/forgot-password").reply((request) => {
     message: ["Something went wrong"],
   };
 
-  const user = data.users.find(
-    (u) => u.email === email
-  );
+  const user = data.users.find((u) => u.email === email);
 
   if (user) {
     const response = {

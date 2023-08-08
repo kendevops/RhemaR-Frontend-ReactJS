@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 
 const AuthVerificationPage = () => {
-
-  const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
+  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <>
@@ -10,7 +10,7 @@ const AuthVerificationPage = () => {
         <div className="auth-wrapper">
           <div className="row">
             <div className="col-lg-7 col-md-9 col-12 mx-auto">
-                {/* <div className="mb-5 text-center nav-logo">
+              {/* <div className="mb-5 text-center nav-logo">
                   <img src={rhemaLogo} alt="" style={{ width: "100px" }} />
                 </div> */}
 
