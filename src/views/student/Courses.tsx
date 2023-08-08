@@ -39,7 +39,7 @@ export default function StudentCourses() {
           <section className="mb-6">
             <div className="d-flex justify-content-between">
               <h2 className="text-xl font-bold text-blue-600">
-                Upcoming Class
+                Upcoming Classes
               </h2>
 
               {isLoading && <Spinner />}

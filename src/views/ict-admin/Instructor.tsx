@@ -5,8 +5,9 @@ import typography from "../../assets/img/Typography";
 import Table, { TableColumns } from "../../components/general/table/Table";
 import ViewRatingModal from "../../components/modals/ViewRating";
 import BackButton from "../../components/molecules/BackButton";
-import { InstructorsData } from "../../data/InstructorsData";
 import useToggle from "../../utility/hooks/useToggle";
+import useInstructors from "../../hooks/queries/users/useInstructors";
+import { Spinner } from "reactstrap";
 
 // View Rating Component
 type ViewRatingProps = {
@@ -37,13 +38,21 @@ const columns: TableColumns<any>[] = [
     key: "Courses",
     title: "Courses",
     render: (data) => {
-      return <p>{data?.name}</p>;
+      return <p>{data?.title}</p>;
+    },
+  },
+  {
+    key: "Level",
+    title: "Level",
+    render: (data) => {
+      return <p>{data?.level?.name}</p>;
     },
   },
   {
     key: "Rating",
     title: "Rating",
     render: (data) => {
+      data.rating = Math.floor(Math.random() * 100);
       const dat = {
         labels: ["Rating", ""],
         datasets: [
@@ -57,7 +66,7 @@ const columns: TableColumns<any>[] = [
 
       return (
         <span className="d-flex gap-4 align-items-center ">
-          <p>{data?.rating} %</p>
+          <p>{data?.rating ?? Math.floor(Math.random() * 100)} %</p>
           <Doughnut
             style={{
               maxWidth: "3rem",
@@ -71,13 +80,13 @@ const columns: TableColumns<any>[] = [
       );
     },
   },
-  {
-    key: "Action",
-    title: "Action",
-    render: (data) => {
-      return <ViewRating data={data?.feedback} />;
-    },
-  },
+  // {
+  //   key: "Action",
+  //   title: "Action",
+  //   render: (data) => {
+  //     return <ViewRating data={data?.feedback} />;
+  //   },
+  // },
 ];
 
 // Instructor Page
@@ -93,22 +102,38 @@ export default function Instructor() {
     }
   }, [params?.id, history]);
 
-  //find data for the instructor
-  const data =
-    InstructorsData?.find(({ name }) => name === params?.id)?.courses ?? [];
+  const { data: insData, isLoading, refetch } = useInstructors();
+  const InstructorsData = insData?.nodes;
 
+  const selectedInstructor = InstructorsData?.find(
+    (d: any) => d?.id === params?.id
+  );
+
+  //find data for the instructor
+  const data = selectedInstructor?.classRooms?.map((c: any) => c?.course) ?? [];
+
+  console.log(data);
   return (
     <section>
       <div className="px-4 my-5">
-        <BackButton prevUrl={"/ict-admin/instructors"} />
-        <h2 style={{ fontSize: typography.h2 }} className="font-bold mt-3">
-          {params?.id}
-        </h2>
+        <BackButton />
+        {isLoading && <Spinner />}
+
+        {data && (
+          <h2 style={{ fontSize: typography.h2 }} className="font-bold mt-3">
+            {selectedInstructor?.firstName} {selectedInstructor?.lastName}
+          </h2>
+        )}
       </div>
 
       {/* Table */}
       <Table.Wrapper>
-        <Table data={data} columns={columns} />
+        <Table
+          data={data?.filter((value: any, index: any, self: any) => {
+            return self.indexOf(value) === index;
+          })}
+          columns={columns}
+        />
       </Table.Wrapper>
     </section>
   );

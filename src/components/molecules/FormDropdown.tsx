@@ -28,7 +28,7 @@ export default function FormDropdown({
       <label>{title}</label>
 
       <Input
-        name="title"
+        name={title}
         className="form-control"
         type="select"
         {...otherProps}
@@ -39,7 +39,7 @@ export default function FormDropdown({
         }}
       >
         <>
-          {options.map(({ children, ...others }, i) => {
+          {options?.map(({ children, ...others }, i) => {
             return (
               <option key={i.toString()} {...others}>
                 {children}

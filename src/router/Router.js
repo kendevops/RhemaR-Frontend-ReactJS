@@ -38,10 +38,16 @@ import getToken from "../utils/getToken";
 import parseJwt from "../utils/parseJwt";
 import { handleLogout } from "../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import RoleContext from "../utility/context/roleContext";
+import AccessContext from "../utility/context/accessContext";
 
 const Router = () => {
   // ** ACL Ability Context
   const ability = useContext(AbilityContext);
+
+  const access = useContext(AccessContext);
+
+  const { setCurrentRole } = useContext(RoleContext);
 
   // ** Updating Ability on Load
   const { data: userData } = useCurrentUser();
@@ -70,7 +76,8 @@ const Router = () => {
           ? data?.roles[0]?.name
           : userRoles.PROSPECTIVE_STUDENT;
 
-      UpdateLoggedInUserAbility(userRole, ability);
+      console.log("ran role change in router");
+      UpdateLoggedInUserAbility(userRole, ability, access);
 
       // Giving permissions for multiple roles
       // data?.roles?.length &&
@@ -78,7 +85,7 @@ const Router = () => {
       //     UpdateLoggedInUserAbility(role?.name, ability)
       //   );
     }
-  }, [loggedIn, ability, data, userData]);
+  }, [loggedIn]);
 
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout();

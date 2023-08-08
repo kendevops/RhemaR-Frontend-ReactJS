@@ -16,6 +16,7 @@ interface AddCampusModalProps {
   toggle: VoidFunction;
   id?: string;
   defaultValues?: any;
+  onCreate?: VoidFunction;
 }
 
 export default function AddCampusModal({
@@ -23,6 +24,7 @@ export default function AddCampusModal({
   toggle,
   defaultValues,
   id,
+  onCreate,
 }: AddCampusModalProps) {
   const isCreating = !defaultValues;
 
@@ -34,17 +36,20 @@ export default function AddCampusModal({
   const isLoading =
     createTuition.isLoading || updateTuition.isLoading || campusesLoading;
 
-  const { formData, formIsValid, updateForm } = useForm({
-    initialState: defaultValues ?? {
-      level: "",
-      campus: "",
-      total: 0,
-      dueDate: "",
-      discount: 0,
-      feePayment: 0,
-      initialPayment: 0,
-      installmentMinimum: 0,
-    },
+  const initialState = {
+    level: levels[0],
+    campus: "",
+    total: 0,
+    dueDate: "",
+    discount: 0,
+    feePayment: 0,
+    initialPayment: 0,
+    installmentMinimum: 0,
+  };
+
+  const { formData, formIsValid, updateForm } = useForm<typeof initialState>({
+    initialState: defaultValues ?? initialState,
+    optionalFields: ["discount"],
   });
 
   function handleSubmit(e: FormEvent) {
@@ -64,6 +69,7 @@ export default function AddCampusModal({
                 />,
                 ToastContent.Config
               );
+              !!onCreate && onCreate();
               toggle();
             },
             onError: (e: any) => {
@@ -88,6 +94,7 @@ export default function AddCampusModal({
           });
     } else {
       alert("Please fill in all fields");
+      console.log(formData);
     }
   }
   return (

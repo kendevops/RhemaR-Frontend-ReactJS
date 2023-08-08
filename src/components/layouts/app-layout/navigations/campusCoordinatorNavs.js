@@ -1,16 +1,19 @@
 // ** Icons Import
 //import { Home, Circle, Mail, MessageSquare } from "react-feather";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 
 export default [
-  {
-    header: "CampusCoordinator",
-  },
   {
     id: "dashboard",
     title: "Dashboard",
     icon: <Icon icon="ep:menu" />,
-    navLink: "/campus-coordinator/dahsboard",
+    navLink: "/campus-coordinator/dashboard",
+  },
+  {
+    id: "applications",
+    title: "Applications",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/campus-coordinator/applications",
   },
   {
     id: "students",
@@ -40,8 +43,9 @@ export default [
     id: "message-board",
     title: "Message Board",
     icon: <Icon icon="fluent:mail-24-filled" />,
-    navLink: "/campus-coordinator/",
+    navLink: "/campus-coordinator/message-board",
   },
+
   {
     id: "chat",
     title: "Chat",
@@ -66,28 +70,25 @@ export default [
     icon: <Icon icon="ri:customer-service-2-line" />,
     navLink: "/campus-coordinator/helpdesk",
   },
-//   {
-//     id: "dashboards",
-//     title: "Dashboards",
-//     icon: <Home size={20} />,
-//     badge: "light-warning",
-//     badgeText: "2",
-//     children: [
-//       {
-//         id: "analyticsDash",
-//         title: "Analytics",
-//         icon: <Circle size={12} />,
-//         navLink: "/student/courses",
-//       },
-//       {
-//         id: "eCommerceDash",
-//         title: "eCommerce",
-//         icon: <Circle size={12} />,
-//         navLink: "/student/courses",
-//       },
-//     ],
-//   },
-   {
-     header: "Partners",
-   },
-];
+  //   {
+  //     id: "dashboards",
+  //     title: "Dashboards",
+  //     icon: <Home size={20} />,
+  //     badge: "light-warning",
+  //     badgeText: "2",
+  //     children: [
+  //       {
+  //         id: "analyticsDash",
+  //         title: "Analytics",
+  //         icon: <Circle size={12} />,
+  //         navLink: "/student/courses",
+  //       },
+  //       {
+  //         id: "eCommerceDash",
+  //         title: "eCommerce",
+  //         icon: <Circle size={12} />,
+  //         navLink: "/student/courses",
+  //       },
+  //     ],
+  //   },
+].map((p) => ({ ...p, action: "read", resource: "CampusCoordinators" }));

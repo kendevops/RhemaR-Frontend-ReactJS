@@ -3,11 +3,11 @@ import { useState } from "react";
 export default function usePagination(data: any[], itemsPerPage: number) {
   const [page, setPageData] = useState(1);
 
-  const dataPerPage = data.length / itemsPerPage;
+  const dataPerPage = data?.length / itemsPerPage;
   const isWholeNumber = dataPerPage % 1 === 0;
   const lastPage = isWholeNumber ? dataPerPage : Math.floor(dataPerPage) + 1;
 
-  const paginatedData = data.filter(
+  const paginatedData = data?.filter(
     (_, i) => i >= (page - 1) * itemsPerPage && i <= (itemsPerPage - 1) * page
   );
 

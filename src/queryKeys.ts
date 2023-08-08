@@ -20,6 +20,7 @@ const queryKeys = {
   faqs: "all-faqs",
   resources: "all-resources",
   pmr: "pmr",
+  instructors: "instructors",
 };
 
 export default queryKeys;

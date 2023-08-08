@@ -16,7 +16,7 @@ export default function useUpdateCampusTuition(id: string) {
   const { allCampuses, campus, users } = queryKeys;
 
   return useMutation(
-    (data: Data) => api.patch(`/campuses/tuition/${id}`, data),
+    (data: Data) => api.patch(`/campuses/tuitions/${id}`, data),
     {
       onSuccess: () => q.invalidateQueries([allCampuses, campus, users]),
     }

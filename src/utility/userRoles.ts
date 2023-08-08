@@ -6,6 +6,7 @@ const userRoles = {
   ALUMNI: "ALUMNI",
   STUDENT: "STUDENT",
   INSTRUCTOR: "INSTRUCTOR",
+  STUDENT_SERVICES_ADMIN: "STUDENT_SERVICES_ADMIN",
 };
 
 export default userRoles;

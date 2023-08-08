@@ -28,7 +28,6 @@ export default function StudentsManagementTable() {
           console.log(user);
           return {
             name: user?.firstName + " " + user?.lastName,
-            rating: 56,
             email: user?.email,
             phoneNumber: user?.phoneNumber,
             role: user?.roles,

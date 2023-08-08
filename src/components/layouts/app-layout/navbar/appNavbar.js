@@ -1,12 +1,17 @@
 // ** React Imports
-import { Fragment, useState, useRef, useEffect } from "react";
+import { Fragment, useState, useRef, useEffect, useContext } from "react";
 
 // ** Config
 import themeConfig from "@configs/themeConfig";
 
 // ** Components
 import SidebarToggle from "./sidebarToggle";
-import { getUserData } from "../../../../utility/utilsGeneric";
+import {
+  UpdateLoggedInUserAbility,
+  getHomeRouteForLoggedInUser,
+  getRoleForRoute,
+  getUserData,
+} from "../../../../utility/utilsGeneric";
 import UserAvatar from "../../../atoms/UserAvatar";
 import useToggle from "../../../../utility/hooks/useToggle";
 import { handleLogout } from "../../../../redux/slices/authSlice";
@@ -14,17 +19,16 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
 import useSubscribeNotifications from "../../../../hooks/queries/notifications/useSubscribeNotifications";
-
-const options = [
-  {
-    title: "Edit Profile",
-    onClick: () => {},
-  },
-];
+import { AbilityContext } from "../../../../utility/context/can";
+import RoleContext from "../../../../utility/context/roleContext";
+import AccessContext from "../../../../utility/context/accessContext";
 
 const Navbar = (props) => {
   // ** States
   const [groupOpen, setGroupOpen] = useState([]);
+  const ability = useContext(AbilityContext);
+
+  const { currentRole, setCurrentRole } = useContext(RoleContext);
 
   // ** Avatar Dropdown
 
@@ -35,10 +39,19 @@ const Navbar = (props) => {
 
   const { data } = useCurrentUser();
 
+  const access = useContext(AccessContext);
+
   const currentUser = getUserData();
   const dispatch = useDispatch();
   const history = useHistory();
   const { data: newNotification } = useSubscribeNotifications();
+
+  const checkRoleMatch = (role) => {
+    const roleForRoute = getRoleForRoute(history.location.pathname);
+    console.log({ role, roleForRoute });
+
+    return roleForRoute === role;
+  };
 
   useEffect(() => {
     if (newNotification) {
@@ -50,6 +63,42 @@ const Navbar = (props) => {
     dispatch(handleLogout(currentUser));
     history.replace("/login");
   };
+
+  console.log(currentUser);
+
+  function handleRoleSwitch(role) {
+    setCurrentRole(role);
+    UpdateLoggedInUserAbility(role, ability, access);
+    history.push(getHomeRouteForLoggedInUser(role));
+  }
+
+  const rolesOptions =
+    currentUser?.roles?.map((role) => {
+      const r = role?.name;
+      return {
+        id: r,
+        children: (
+          <p
+            className="mt-3"
+            style={{
+              color: checkRoleMatch(r) ? "green" : "",
+            }}
+          >
+            {checkRoleMatch(r) ? `Signed in as ${r}` : `Switch to ${r}`}
+          </p>
+        ),
+        onClick: () => handleRoleSwitch(r),
+      };
+    }) ?? [];
+
+  const options = [
+    {
+      id: "Edit Profile",
+      children: <p>Edit Profile</p>,
+      onClick: () => {},
+    },
+    ...rolesOptions,
+  ];
 
   return (
     <Fragment>
@@ -119,14 +168,21 @@ const Navbar = (props) => {
                   <UserAvatar />
                   {avatarOpen && (
                     <ul className="avatar-dropdown shadow-lg rounded-2">
-                      {options?.map(({ onClick, title }) => {
+                      {options?.map(({ onClick, children, id }) => {
                         return (
-                          <li className="avatar-dropdown-item" {...{ onClick }}>
-                            {title}
+                          <li
+                            key={id}
+                            className="avatar-dropdown-item"
+                            {...{ onClick }}
+                          >
+                            {children}
                           </li>
                         );
                       })}
-                      <li className="avatar-dropdown-item" onClick={logOut}>
+                      <li
+                        className="avatar-dropdown-item mt-4"
+                        onClick={logOut}
+                      >
                         Logout
                       </li>
                     </ul>

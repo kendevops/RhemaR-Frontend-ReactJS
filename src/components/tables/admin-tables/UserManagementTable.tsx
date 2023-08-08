@@ -50,19 +50,22 @@ export default function UserManagementTable() {
       title: "Email",
       render: (data) => <p>{data?.email}</p>,
     },
+    // {
+    //   key: "Role",
+    //   title: "Role",
+    //   render: (data) => {
+    //     const roles = data?.role?.map((r: any) => r?.name.toString());
+    //     return <p>{roles}</p>;
+    //   },
+    // },
     {
       key: "Role",
       title: "Role",
       render: (data) => {
-        const roles = data?.role?.map((r: any) => r?.name.toString());
-        return <p>{roles}</p>;
-      },
-    },
-    {
-      key: "Privilege",
-      title: "Privilege",
-      render: (data) => {
-        const roles = data?.role?.map((r: any) => r?.name.toString());
+        const roles = data?.role?.map(
+          (r: any, index: number) =>
+            `${r?.name.toString()}${index === data.role.length - 1 ? "" : ", "}`
+        );
         return <p>{roles}</p>;
       },
     },

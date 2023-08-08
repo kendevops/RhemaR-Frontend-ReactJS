@@ -17,7 +17,7 @@ export default function useCreateCampusTuition() {
   const q = useQueryClient();
   const { allCampuses, campus, users } = queryKeys;
 
-  return useMutation((data: Data) => api.post(`/campuses/tuition`, data), {
+  return useMutation((data: Data) => api.post(`/campuses/tuitions`, data), {
     onSuccess: () => q.invalidateQueries([allCampuses, campus, users]),
   });
 }
