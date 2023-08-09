@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
 
 const AuthVerificationPage = () => {
   // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <>

@@ -6,34 +6,36 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import useJwt from "@hooks/useJwt";
 
 // ** Third Party Components
-import { toast, Slide } from "react-toastify";
+// import { toast, Slide } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-import {
-  Facebook,
-  Twitter,
-  Mail,
-  GitHub,
-  HelpCircle,
-  Coffee,
-} from "react-feather";
+// import {
+//   Facebook,
+//   Twitter,
+//   Mail,
+//   GitHub,
+//   HelpCircle,
+//   Coffee,
+// } from "react-feather";
 
 // ** Custom Components
 // import Avatar from "@components/avatar";
-import InputPasswordToggle from "@components/input-password-toggle";
+
+// import InputPasswordToggle from "@components/input-password-toggle";
+// import rhemaLogo from "@src/assets/img/logo/logo.svg";
 
 // ** Reactstrap Imports
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Label,
-  Alert,
-  Button,
-  CardText,
-  CardTitle,
-  UncontrolledTooltip,
-} from "reactstrap";
+// import {
+//   Row,
+//   Col,
+//   Form,
+//   Input,
+//   Label,
+//   Alert,
+//   Button,
+//   CardText,
+//   CardTitle,
+//   UncontrolledTooltip,
+// } from "reactstrap";
 
 const ToastContent = ({ name, role }) => (
   <Fragment>
@@ -79,7 +81,6 @@ const AuthEmailVerificationResultPage = () => {
   }, [param]);
 
   // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <Fragment>

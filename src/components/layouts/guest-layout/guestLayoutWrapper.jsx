@@ -10,6 +10,7 @@ import { ArrowUp } from "react-feather";
 import { Navbar, Button } from "reactstrap";
 import { Icon } from "@iconify/react";
 import useToggle from "../../../utility/hooks/useToggle";
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
 
 const hamburgerIcon = (
   <svg
@@ -130,7 +131,6 @@ const AppLayoutWrapper = (props) => {
   const [mobileNavOpen, toggleMobileNav] = useToggle();
 
   // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <main>

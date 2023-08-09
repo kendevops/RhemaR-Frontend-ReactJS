@@ -1,6 +1,7 @@
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import downloadFile from "../../utils/downloadFile";
 import getTimeString from "../../utils/getTimeString";
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
 
 interface ViewReceiptModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ interface ViewReceiptModalProps {
 }
 
 // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-const rhemaLogo = `@src/assets/img/logo/logo.svg`;
+// const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
 export default function ViewReceiptModal({
   data: receiptData,

@@ -7,8 +7,9 @@ import { Button } from "reactstrap";
 // ** Custom Hooks
 import { useSkin } from "@hooks/useSkin";
 
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
+
 // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
 const MiscErrorPage = () => {
   // ** Hooks

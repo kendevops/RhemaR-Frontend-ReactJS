@@ -1,7 +1,8 @@
 import axios from "axios";
 import jwtDefaultConfig from "@configs/jwtConfig";
 
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+// const API_ENDPOINT = "https://rhemar-backend.onrender.com";
 
 export default class DataService {
   jwtConfig = { ...jwtDefaultConfig };

@@ -1,7 +1,8 @@
 import { io } from "socket.io-client";
 import getToken from "./getToken";
 
-const URL = `${process.env.REACT_APP_API_ENDPOINT}/chats`;
+const URL = `${import.meta.env.VITE_API_ENDPOINT}/chats`;
+// const URL = `${"https://rhemar-backend.onrender.com"}/chats`;
 
 const token = getToken("accessToken");
 

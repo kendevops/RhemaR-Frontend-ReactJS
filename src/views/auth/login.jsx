@@ -20,6 +20,8 @@ import userRoles from "../../utility/userRoles";
 import handleError from "../../utils/handleError";
 import AccessContext from "../../utility/context/accessContext";
 
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
+
 const defaultValues = {
   password: "helloWorld1",
   email: "rhemar_tests@protonmail.com",
@@ -42,9 +44,12 @@ const AuthLoginPage = () => {
   const onSubmit = (data) => {
     toggleLoading();
     if (Object.values(data).every((field) => field.length > 0)) {
+      console.log("data", data.email, data.password);
       useJwt
         .login({ email: data.email, password: data.password })
         .then((res) => {
+          console.log("res", res);
+
           toggleLoading();
           console.log("LOGIN.RESPONSE", res);
           const d = res?.data?.data;
@@ -99,7 +104,6 @@ const AuthLoginPage = () => {
   };
 
   // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <>

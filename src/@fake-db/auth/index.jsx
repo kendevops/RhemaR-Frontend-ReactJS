@@ -1,5 +1,7 @@
 import mock from "../mock";
 import jwt from "jsonwebtoken";
+import avatarMale from "@src/assets/img/avatars/male-small.png";
+import avatarFemale from "@src/assets/img/avatars/female-small.png";
 
 const data = {
   users: [
@@ -10,7 +12,7 @@ const data = {
       password: "admin",
       // avatar: require("@src/assets/img/avatars/female-small.png")
       // .default,
-      avatar: "@src/assets/img/avatars/female-small.png",
+      avatar: avatarFemale,
 
       email: "admin@demo.com",
       role: "AllAdmin",
@@ -24,7 +26,7 @@ const data = {
       username: "janedoe",
       password: "client",
       // avatar: require("@src/assets/img/avatars/male-small.png").default,
-      avatar: "@src/assets/img/avatars/male-small.png",
+      avatar: avatarMale,
 
       email: "client@demo.com",
       role: "client",

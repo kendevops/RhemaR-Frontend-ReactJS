@@ -1,7 +1,8 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-const API_ENDPOINT = import.meta.env.REACT_APP_API_ENDPOINT;
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+// const API_ENDPOINT = "https://rhemar-backend.onrender.com";
 
 const api = axios.create({
   baseURL: API_ENDPOINT,

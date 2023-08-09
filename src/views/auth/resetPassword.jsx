@@ -10,6 +10,8 @@ import { Spinner } from "reactstrap";
 import FormInput from "../../components/molecules/FormInput";
 import useResetPassword from "../../hooks/mutations/users/useResetPassword";
 
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
+
 const AuthResetPasswordPage = () => {
   const param = useParams();
   const history = useHistory();
@@ -36,7 +38,6 @@ const AuthResetPasswordPage = () => {
   }, [id, history, toggleValidUrl, validUrl]);
 
   // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   function handleSubmit(e) {
     e.preventDefault();

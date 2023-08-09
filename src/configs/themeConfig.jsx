@@ -1,11 +1,12 @@
 // You can customize the template with the help of this file
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
 
 //Template config options
 const themeConfig = {
   app: {
     appName: "RHEMA Bible Training Centre, Nigeria",
     // appLogoImage: require('@src/assets/img/logo/logo.svg').default
-    appLogoImage: "@src/assets/img/logo/logo.svg",
+    appLogoImage: rhemaLogo,
   },
   layout: {
     isRTL: false,

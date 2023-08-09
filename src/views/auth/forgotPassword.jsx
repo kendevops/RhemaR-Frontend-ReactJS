@@ -8,33 +8,14 @@ import useJwt from "@hooks/useJwt";
 // ** Third Party Components
 import { toast, Slide } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-import {
-  AlertTriangle,
-  CheckCircle,
-  Facebook,
-  Twitter,
-  Mail,
-  GitHub,
-  HelpCircle,
-  Coffee,
-} from "react-feather";
+import { AlertTriangle, CheckCircle } from "react-feather";
 
 // ** Custom Components
 import Avatar from "@components/avatar";
+import rhemaLogo from "@src/assets/img/logo/logo.svg";
 
 // ** Reactstrap Imports
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Label,
-  Alert,
-  Button,
-  CardText,
-  CardTitle,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Input, Alert } from "reactstrap";
 
 const ToastContent = ({ heading, type }) => (
   <Fragment>
@@ -122,7 +103,6 @@ const AuthForgotPasswordPage = () => {
   };
 
   // const rhemaLogo = require(`@src/assets/img/logo/logo.svg`).default;
-  const rhemaLogo = `@src/assets/img/logo/logo.svg`;
 
   return (
     <>
