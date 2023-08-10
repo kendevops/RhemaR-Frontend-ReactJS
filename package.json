@@ -2,8 +2,8 @@
   "name": "rhemar-react",
   "version": "0.1.0",
   "private": true,
-   "engines": {
-    "node": ">=15 <16"
+  "engines": {
+    "node": "18.22.0"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
