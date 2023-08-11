@@ -41,7 +41,7 @@ export default function NewSession({
     e?.preventDefault();
     console.log({ formData });
 
-    // Creating
+    /// Creating
     if (!defValues) {
       createSession?.mutate(formData, {
         onSuccess: () => {
@@ -85,7 +85,7 @@ export default function NewSession({
           {isLoading && <Spinner />}
           <form className="mt-3" onSubmit={onSubmit}>
             <FormInput
-              label="Name"
+              label="Session"
               onChange={(e) => updateForm("name", e?.target?.value)}
               value={formData?.name}
             />
