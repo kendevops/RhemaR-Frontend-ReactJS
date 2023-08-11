@@ -18,7 +18,7 @@ function EditCampus({ data, id }: EditCampusProps) {
 
   return (
     <div>
-      <AddCampusModal {...{ isOpen, toggle, defaultValues, id }} />
+      {/* <AddCampusModal {...{ isOpen, toggle, defaultValues, id }} /> */}
       <u className="cursor-pointer" onClick={toggle}>
         Edit
       </u>

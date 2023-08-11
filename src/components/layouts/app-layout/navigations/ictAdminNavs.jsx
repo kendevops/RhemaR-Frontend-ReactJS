@@ -11,6 +11,7 @@ export default [
     action: "read",
     resource: "Admins",
   },
+
   {
     id: "userManagement",
     title: "User Management",
@@ -24,6 +25,15 @@ export default [
     title: "Admin Management",
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/ict-admin/admin-management",
+    action: "read",
+    resource: "Admins",
+  },
+
+  {
+    id: "academicManagement",
+    title: "Academic Management",
+    icon: <Icon icon="mdi:note-text" />,
+    navLink: "/ict-admin/academic-management",
     action: "read",
     resource: "Admins",
   },

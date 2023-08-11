@@ -25,6 +25,15 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+
+  {
+    path: "/ict-admin/academic-management",
+    component: lazy(() => import("../../views/ict-admin/AcademicManagement")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
   {
     path: "/ict-admin/student-services-admin",
     component: lazy(() => import("../../views/ict-admin/StudentServicesAdmin")),
@@ -65,6 +74,33 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+  {
+    path: "/ict-admin/create-level",
+    component: lazy(() => import("../../views/ict-admin/CreateLevel")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+
+  {
+    path: "/ict-admin/create-campus-tuition",
+    component: lazy(() => import("../../views/ict-admin/CreateCampusTuition")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+
+  // {
+  //   path: "/ict-admin/create-campus",
+  //   component: lazy(() => import("../../views/ict-admin/CreateCampus")),
+  //   meta: {
+  //     action: "read",
+  //     resource: "Admins",
+  //   },
+  // },
+
   {
     path: "/ict-admin/course/:id",
     component: lazy(() => import("../../views/ict-admin/Course")),
