@@ -7,28 +7,24 @@ import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
 
 interface defaultValues {
-  name: string;
-  startDate: string;
-  endDate: string;
+  levelNo: number;
 }
 
-type NewSessionProps = {
+type AddLevelModal = {
   toggle: VoidFunction;
   visibility: boolean;
   defaultValues?: defaultValues;
   onCreate?: VoidFunction;
 };
 
-export default function NewSession({
+export default function AddLevelModal({
   toggle,
   visibility,
   defaultValues: defValues,
   onCreate,
-}: NewSessionProps) {
+}: AddLevelModal) {
   const defaultValues = defValues ?? {
-    name: "",
-    startDate: "",
-    endDate: "",
+    levelNo: 0,
   };
 
   const { formData, updateForm, formIsValid } = useForm({
@@ -41,9 +37,9 @@ export default function NewSession({
     e?.preventDefault();
     console.log({ formData });
 
-    /// Creating
+    // Creating
     if (!defValues) {
-      createSession?.mutate(formData, {
+      createSession?.mutate(formData as any, {
         onSuccess: () => {
           toast.success(
             <ToastContent
@@ -78,33 +74,15 @@ export default function NewSession({
   return (
     <div>
       <Modal centered isOpen={visibility} toggle={toggle} id="newSessionModal">
-        <ModalHeader toggle={toggle}>
-          {defValues ? "Modify Academic Session" : "New Academic Session"}
-        </ModalHeader>
+        <ModalHeader toggle={toggle}>{"Add New Level"}</ModalHeader>
         <ModalBody>
           {isLoading && <Spinner />}
           <form className="mt-3" onSubmit={onSubmit}>
             <FormInput
-              label="Session"
-              onChange={(e) => updateForm("name", e?.target?.value)}
-              value={formData?.name}
-            />
-            <FormInput
-              label="Start Date"
-              type={"date"}
-              onChange={(e) =>
-                updateForm(
-                  "startDate",
-                  new Date(e?.target?.value)?.toISOString()
-                )
-              }
-            />
-            <FormInput
-              label="End Date"
-              type={"date"}
-              onChange={(e) =>
-                updateForm("endDate", new Date(e?.target?.value)?.toISOString())
-              }
+              label="Level"
+              type={"number"}
+              value={formData.levelNo}
+              onChange={(e) => updateForm("levelNo", e?.target?.value)}
             />
 
             <button
@@ -112,7 +90,7 @@ export default function NewSession({
               type="submit"
               // disabled={!formIsValid || isLoading}
             >
-              {defValues ? "Modify Session" : "Add Session"}
+              Add Level
             </button>
           </form>
         </ModalBody>
