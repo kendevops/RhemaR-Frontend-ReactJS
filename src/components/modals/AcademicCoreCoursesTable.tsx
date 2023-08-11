@@ -14,19 +14,19 @@ import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple"
 import { states } from "../../data/States";
 import { InstructorsData } from "../../data/InstructorsData";
 
-interface AddCampusModalProps {
+interface AcademicAddCoreCoursesModalProps {
   toggle: VoidFunction;
   visibility: boolean;
   defaultValues?: any;
   onCreate?: VoidFunction;
 }
 
-export default function AddCampusModal({
+export default function AcademicAddCoreCoursesModal({
   toggle,
   defaultValues,
   visibility,
   onCreate,
-}: AddCampusModalProps) {
+}: AcademicAddCoreCoursesModalProps) {
   const isCreating = !defaultValues;
 
   const { isLoading: campusesLoading, data } = useAllCampuses();
@@ -37,21 +37,24 @@ export default function AddCampusModal({
   const isLoading = createTuition.isLoading || campusesLoading;
 
   const initialState = {
-    level: [levels[0]],
-    fullName: "",
-    shortName: "",
-    addressStreet: "",
-    addressLGA: "",
-    addressState: states[0],
-    cordinator: "",
-    phoneNumber1: "",
-    phoneNumber2: "",
+    level: levels[0],
+    name: "",
+    option: "",
+    hours: "",
+    hasListeningAssignment: "",
+    hasQuiz: "",
   };
 
-  const { formData, formIsValid, updateForm } = useForm<typeof initialState>({
+  const { formData, formIsValid, updateForm, formErrors } = useForm<
+    typeof initialState
+  >({
     initialState: defaultValues ?? initialState,
     // optionalFields: ["discount"],
   });
+
+  const campusOptions = campusesData?.map((d: any) => ({
+    children: d?.name,
+  }));
 
   // function handleSubmit(e: FormEvent) {
   //   e.preventDefault();
@@ -101,83 +104,54 @@ export default function AddCampusModal({
 
   return (
     <Modal centered isOpen={visibility} toggle={toggle}>
-      <ModalHeader toggle={toggle}>Create Campus</ModalHeader>
+      <ModalHeader toggle={toggle}>Add Core Campus</ModalHeader>
       <ModalBody>
         <form onSubmit={() => {}}>
           <FormInput
-            label="Campus Full Name"
-            placeholder="Enter Campus Full Name"
-            onChange={(e) => updateForm("fullName", e?.target?.value)}
-            value={formData?.fullName}
+            label="Course Name"
+            placeholder="Course Name"
+            onChange={(e) => updateForm("name", e?.target?.value)}
+            value={formData?.name}
           />
 
-          <FormInput
-            label="Campus Short Name"
-            placeholder="Enter Campus Short Name"
-            onChange={(e) => updateForm("shortName", e?.target?.value)}
-            value={formData?.shortName}
-          />
-
-          {/* <FormDropdown
-              title="Campus Full Name"
-              value={formData?.campus}
-              options={campusesData?.map((d: any) => ({ children: d?.name }))}
-              onChange={(e) => updateForm("campus", e?.target?.value)}
-              disabled={!isCreating}
-            /> */}
-
-          <FormDropdownSelectMultiple
-            title="Campus Level"
-            onChange={(e) => updateForm("level", e.target.value)}
-            options={levels.map((v) => ({ children: v }))}
+          <FormDropdown
+            title="Course Level"
             value={formData?.level}
-            disabled={!isCreating}
-          />
-
-          <FormInput
-            label="Campus Address (Street)"
-            placeholder="Enter Campus Street Address"
-            onChange={(e) => updateForm("addressStreet", e?.target?.value)}
-            value={formData?.addressStreet}
-          />
-
-          <FormInput
-            label="Campus Address (LGA)"
-            placeholder="Enter Campus LGA"
-            onChange={(e) => updateForm("addressLGA", e?.target?.value)}
-            value={formData?.addressLGA}
-          />
-
-          <FormDropdown
-            title="Campus Address (State)"
-            value={formData?.addressState}
-            options={states?.map((d: any) => ({ children: d }))}
-            onChange={(e) => updateForm("addressState", e?.target?.value)}
+            options={levels?.map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("level", e?.target?.value)}
             disabled={!isCreating}
           />
 
           <FormDropdown
-            title="Campus Cordinator"
-            value={formData?.cordinator}
-            options={InstructorsData?.map((d: any) => ({ children: d?.name }))}
-            onChange={(e) => updateForm("cordinator", e?.target?.value)}
+            title="Course Option"
+            value={formData?.option}
+            options={["Core", "Eletive"].map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("option", e?.target?.value)}
             disabled={!isCreating}
           />
 
           <FormInput
-            label="Phone Number 1"
-            placeholder="Enter Phone Number"
-            onChange={(e) => updateForm("phoneNumber1", e?.target?.value)}
-            value={formData?.phoneNumber1}
+            label="Course Hour"
+            placeholder="Course Hour"
+            onChange={(e) => updateForm("hours", e?.target?.value)}
+            value={formData?.hours}
           />
 
-          <FormInput
-            label="Phone Number 2"
-            placeholder="Enter Optional 2nd number"
-            onChange={(e) => updateForm("phoneNumber2", e?.target?.value)}
-            value={formData?.phoneNumber2}
+          <FormDropdown
+            title="Has Listening Assignment"
+            value={formData?.hasListeningAssignment}
+            options={["Yes", "No"].map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("option", e?.target?.value)}
+            disabled={!isCreating}
           />
 
+          <FormDropdown
+            title="Has Quiz"
+            value={formData?.hasQuiz}
+            options={["Yes", "No"].map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("option", e?.target?.value)}
+            disabled={!isCreating}
+          />
           {isLoading ? (
             <Spinner />
           ) : (
@@ -185,7 +159,7 @@ export default function AddCampusModal({
               className="btn btn-blue-800 btn-lg w-100 my-5"
               type="submit"
             >
-              {"Create Campus"}
+              {"Create Core Course"}
             </button>
           )}
         </form>
