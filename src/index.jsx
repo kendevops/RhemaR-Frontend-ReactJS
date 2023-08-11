@@ -38,9 +38,6 @@ import * as serviceWorker from "./serviceWorker";
 // ** Fake Database
 // import './@fake-db'
 
-// ** Lazy load app
-// const LazyApp = lazy(() => import("./App"));
-import App from "./App";
 
 ReactDOM.render(
   <Provider store={store}>
