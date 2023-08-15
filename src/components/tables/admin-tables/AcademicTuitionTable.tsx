@@ -30,7 +30,7 @@ export default function AcademicTuitionTable() {
   const campusesData = data?.nodes;
 
   const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i}</p> },
+    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
       key: "Name",
       title: "Name",

@@ -71,7 +71,9 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
 
   //** Columns */
   const colHeaders = columns.map(({ title, key }) => (
-    <th key={key}>{title}</th>
+    <th className="bg-blue-800" key={key}>
+      {title}
+    </th>
   ));
 
   //** TableBody */
@@ -88,14 +90,8 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
   return (
     <section>
       <table className="table caption-top text-nowrap">
-        <thead className="">
-          <tr
-            style={{
-              color: "black",
-            }}
-          >
-            {colHeaders}
-          </tr>
+        <thead className="bg-blue-800">
+          <tr>{colHeaders}</tr>
         </thead>
 
         <tbody>{tabData}</tbody>

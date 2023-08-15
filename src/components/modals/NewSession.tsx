@@ -5,11 +5,13 @@ import FormInput from "../molecules/FormInput";
 import useCreateSession from "../../hooks/mutations/classes/useCreateSession";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
+import useEditSession from "../../hooks/mutations/classes/useEditSession";
 
 interface defaultValues {
   name: string;
   startDate: string;
   endDate: string;
+  id: string;
 }
 
 type NewSessionProps = {
@@ -31,11 +33,18 @@ export default function NewSession({
     endDate: "",
   };
 
+  console.log(defValues);
+  console.log(defaultValues);
+
   const { formData, updateForm, formIsValid } = useForm({
     initialState: defaultValues,
   });
   const createSession = useCreateSession();
   const isLoading = createSession?.isLoading;
+
+  const editSession = useEditSession(defValues?.id as string);
+
+  const editIsLoading = editSession?.isLoading;
 
   function onSubmit(e: FormEvent) {
     e?.preventDefault();
@@ -68,11 +77,43 @@ export default function NewSession({
           );
         },
       });
+      toggle();
       return;
     }
 
     // Modifying
-    if (!!defValues) return;
+
+    if (defValues) {
+      editSession?.mutate(formData, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Successful"}
+              message={"Session created successfully"}
+            />,
+            ToastContent.Config
+          );
+          !!onCreate && onCreate();
+        },
+
+        onError: (e: any) => {
+          console.log(e);
+          toast.error(
+            <ToastContent
+              type={"error"}
+              heading={"Error"}
+              message={e?.response?.data?.error?.message?.toString()}
+            />,
+            ToastContent.Config
+          );
+        },
+      });
+
+      toggle();
+      return;
+    }
+    // if (!!defValues) return;
   }
 
   return (
@@ -83,6 +124,8 @@ export default function NewSession({
         </ModalHeader>
         <ModalBody>
           {isLoading && <Spinner />}
+          {editIsLoading && <Spinner />}
+
           <form className="mt-3" onSubmit={onSubmit}>
             <FormInput
               label="Session"
@@ -110,7 +153,7 @@ export default function NewSession({
             <button
               className="btn btn-blue-800 btn-lg w-100 my-5"
               type="submit"
-              // disabled={!formIsValid || isLoading}
+              disabled={!formIsValid || isLoading}
             >
               {defValues ? "Modify Session" : "Add Session"}
             </button>

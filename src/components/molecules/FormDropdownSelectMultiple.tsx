@@ -4,6 +4,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Input,
 } from "reactstrap";
 import FormInputWrapper from "./FormInputWrapper";
 
@@ -26,9 +27,11 @@ export default function FormDropdownSelectMultiple({
   lg,
   md,
   hasErrors,
+  ...otherProps
 }: FormDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState("");
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -40,17 +43,44 @@ export default function FormDropdownSelectMultiple({
         ? prevSelected.filter((item) => item !== option)
         : [...prevSelected, option]
     );
+    setInputValue(""); // Clear input value after selecting an option
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
   return (
     <FormInputWrapper {...{ lg, md }}>
       <label>{title}</label>
 
+      <input
+        type="text"
+        value={selectedOptions.join(", ")} // Display selected options in the input
+        readOnly
+        className="form-control"
+        onClick={toggle}
+        placeholder={`Select ${title}`}
+        style={{
+          borderColor: hasErrors ? "red" : "",
+          borderStyle: hasErrors ? "solid" : "none",
+          cursor: "pointer",
+          position: "relative",
+        }}
+      />
+
       <Dropdown isOpen={isOpen} toggle={toggle}>
-        <DropdownToggle className="text-lg w-100 text-left shadow-none" caret>
-          Select {title}
-        </DropdownToggle>
-        <DropdownMenu>
+        <DropdownToggle
+          style={{ position: "absolute", right: "30px", top: "-28px" }}
+          className="text-lg text-left shadow-none"
+          caret
+        ></DropdownToggle>
+
+        <DropdownMenu
+        // style={{
+        //   width: "100%",
+        // }}
+        >
           {options.map(({ children }, i) => (
             <DropdownItem
               key={i.toString()}
@@ -61,12 +91,6 @@ export default function FormDropdownSelectMultiple({
           ))}
         </DropdownMenu>
       </Dropdown>
-      <p>
-        Selected Options:{" "}
-        {selectedOptions.map((option) => (
-          <span key={option}>{option}, </span>
-        ))}
-      </p>
     </FormInputWrapper>
   );
 }

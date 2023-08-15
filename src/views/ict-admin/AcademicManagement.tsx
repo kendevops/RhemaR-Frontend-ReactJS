@@ -26,6 +26,7 @@ const tabs = [
   "Session",
   "Core Courses",
   "Session Courses",
+  "Levels",
 ];
 
 export default function AcademicManager() {
@@ -139,6 +140,8 @@ export default function AcademicManager() {
                 ? "RN Core Courses"
                 : tab === 4
                 ? "RN Courses for each  Session (Time Table)"
+                : tab === 5
+                ? "RN Level"
                 : ""}
             </div>{" "}
           </div>
@@ -214,6 +217,26 @@ export default function AcademicManager() {
                 Add New Session Course
               </button>
             )}
+
+            {tab === 5 && (
+              <div className="d-flex gap-4 ">
+                <button
+                  className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
+                  style={{ width: "fit-content" }}
+                >
+                  <HiPlus />
+                  Export Campus List
+                </button>
+
+                <button
+                  className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
+                  style={{ width: "fit-content" }}
+                  onClick={handleAddlevelClick}
+                >
+                  Add Level
+                </button>
+              </div>
+            )}
           </div>
         </article>
       </div>
@@ -226,55 +249,15 @@ export default function AcademicManager() {
               toggle={toggle}
             />
           </main>
+        </div>
+      )}
 
-          {/* level */}
+      {/* level */}
 
-          <div className="w-100" style={{ width: "100%", margin: "20px auto" }}>
-            <article
-              className="d-flex gap-5 my-4 align-items-start w-100"
-              id="Search"
-              style={{ width: "100%" }}
-            >
-              <div className="w-50 ">
-                <div className="d-flex px-4 ">
-                  <div style={{ flex: 1 }}>
-                    <div
-                      className=""
-                      style={{ color: "black", fontWeight: 700 }}
-                    >
-                      RN Level
-                    </div>{" "}
-                  </div>
-
-                  <button
-                    className="btn btn-outline-light  btn-lg d-flex align-items-center gap-3 text-center "
-                    style={{
-                      width: "fit-content",
-                      alignItems: "center",
-                      border: "2px solid blue",
-                    }}
-                    onClick={handleAddlevelClick}
-                  >
-                    <HiPlus />
-                    Add level
-                  </button>
-                </div>
-
-                <div>
-                  <LevelTable />
-                </div>
-              </div>
-
-              <div>
-                <button
-                  className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
-                  style={{ width: "fit-content" }}
-                >
-                  <HiPlus />
-                  Export Campus List
-                </button>
-              </div>
-            </article>
+      {tab === 5 && (
+        <div className="w-100" style={{ width: "100%", margin: "20px auto" }}>
+          <div id="Table">
+            <LevelTable />
           </div>
         </div>
       )}
