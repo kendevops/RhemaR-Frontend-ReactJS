@@ -286,6 +286,8 @@ export default function AcademicManager() {
               toggle={toggle}
             />
           </main>
+        </div>
+      )}
 
           <button
             className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
