@@ -296,8 +296,8 @@ export default function AcademicManager() {
             <HiPlus />
             Export Campus List
           </button>
-        </div>
-      )}
+        </article>
+      </div>
 
       <button
         className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
