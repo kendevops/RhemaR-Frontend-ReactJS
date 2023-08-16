@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, ChangeEvent } from "react";
 import useToggle from "../../utility/hooks/useToggle";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useRoles from "../../hooks/queries/useRoles";
@@ -19,6 +19,11 @@ import AcademicCoreCoursesTable from "../../components/tables/admin-tables/Acade
 import AcademicAddCoreCoursesModal from "../../components/modals/AcademicCoreCoursesTable";
 import AcademicSessionCoursesTable from "../../components/tables/admin-tables/AcademicSessionCoursesTable";
 import AcademicAddSessionCoursesModal from "../../components/modals/AcademicAddSessionCoursesModal";
+import Papa from "papaparse";
+import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
+import useAllUsers from "../../hooks/queries/useAllUsers";
+import handleError from "../../utils/handleError";
+import { Spinner } from "reactstrap";
 
 const tabs = [
   "Campus",
@@ -39,6 +44,31 @@ export default function AcademicManager() {
 
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
+
+  const { isLoading, mutate } = useUploadUsers();
+  const { refetch } = useAllUsers();
+
+  const importHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results: any) {
+        const data: any = results?.data;
+        console.log(data);
+        mutate(
+          { users: data?.map((d: any) => ({ ...d, roles: [d?.roles] })) },
+          {
+            onSuccess: () => {
+              alert("Upload successful!");
+              refetch();
+            },
+            onError: (e) => handleError(e),
+          }
+        );
+      },
+    });
+  };
 
   const cancelModelVisibility = () => {
     setShowAddLevel(() => false);
@@ -153,14 +183,28 @@ export default function AcademicManager() {
           >
             {tab === 0 && (
               <>
-                <button
-                  className="btn btn-outline-light  btn-lg d-flex align-items-center gap-3 text-center "
-                  style={{ width: "fit-content", alignItems: "center" }}
-                  onClick={() => {}}
+                <label
+                  className="btn btn-outline-light btn-lg d-flex align-items-center gap-3 text-center"
+                  style={{
+                    width: "fit-content",
+                    alignItems: "center",
+                    position: "relative",
+                  }}
                 >
                   <HiPlus />
                   Bulk Upload
-                </button>
+                  {isLoading ? (
+                    <Spinner />
+                  ) : (
+                    <input
+                      className="form-control visually-hidden"
+                      type="file"
+                      name="file"
+                      accept=".csv"
+                      onChange={importHandler}
+                    />
+                  )}
+                </label>
                 <button
                   className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
                   style={{ width: "fit-content" }}
@@ -223,14 +267,6 @@ export default function AcademicManager() {
                 <button
                   className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
                   style={{ width: "fit-content" }}
-                >
-                  <HiPlus />
-                  Export Campus List
-                </button>
-
-                <button
-                  className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
-                  style={{ width: "fit-content" }}
                   onClick={handleAddlevelClick}
                 >
                   Add Level
@@ -249,6 +285,14 @@ export default function AcademicManager() {
               toggle={toggle}
             />
           </main>
+
+          <button
+            className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
+            style={{ width: "fit-content" }}
+          >
+            <HiPlus />
+            Export Campus List
+          </button>
         </div>
       )}
 
