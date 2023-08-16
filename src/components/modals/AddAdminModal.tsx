@@ -42,6 +42,8 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
     id: u?.email,
   }));
 
+  console.log(userOptions);
+
   const roleOptions = rolesData?.roles
     ?.filter((r: any) => r.name?.includes("ADMIN"))
     .map((d: any) => ({

@@ -1,6 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import api from "../../api";
 
+interface Data {
+  email: any;
+}
+
 export default function useResendVerification() {
-  return useMutation(() => api.post("/auth/email/resend-verification"));
+  return useMutation((data: Data) =>
+    api.post("/auth/email/resend-verification", data)
+  );
 }

@@ -24,6 +24,7 @@ import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import handleError from "../../utils/handleError";
 import { Spinner } from "reactstrap";
+import AdminCourses from "./Courses";
 
 const tabs = [
   "Campus",
@@ -141,12 +142,12 @@ export default function AcademicManager() {
 
         {tab === 2 && <NewSession visibility={visibility} toggle={toggle} />}
 
-        {tab === 3 && (
+        {/* {tab === 3 && (
           <AcademicAddCoreCoursesModal
             visibility={visibility}
             toggle={toggle}
           />
-        )}
+        )} */}
 
         {tab === 4 && (
           <AcademicAddSessionCoursesModal
@@ -173,7 +174,7 @@ export default function AcademicManager() {
                 : tab === 5
                 ? "RN Level"
                 : ""}
-            </div>{" "}
+            </div>
           </div>
           <div
             className="d-flex gap-3 justify-content-end"
@@ -242,7 +243,7 @@ export default function AcademicManager() {
               </button>
             )}
 
-            {tab === 3 && (
+            {/* {tab === 3 && (
               <button
                 className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
                 style={{ width: "fit-content" }}
@@ -250,7 +251,7 @@ export default function AcademicManager() {
               >
                 Add New Core Course
               </button>
-            )}
+            )} */}
 
             {tab === 4 && (
               <button
@@ -315,7 +316,8 @@ export default function AcademicManager() {
       {/* Academic Sessions */}
       {tab === 2 && <AcademicSessionTable />}
 
-      {tab === 3 && <AcademicCoreCoursesTable />}
+      {/* {tab === 3 && <AcademicCoreCoursesTable />} */}
+      {tab === 3 && <AdminCourses />}
 
       {tab === 4 && <AcademicSessionCoursesTable />}
     </Fragment>

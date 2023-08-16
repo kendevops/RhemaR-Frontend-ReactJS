@@ -22,7 +22,11 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
   const initialState = {
     level: data?.level,
     campus: data?.campus,
-    amount: data?.amount,
+    total: data?.total,
+    discount: data?.discount,
+    feePayment: data?.installmentMinimum,
+    initialPayment: data?.installmentMinimum,
+    installmentMinimum: data?.installmentMinimum,
   };
 
   const editTuition = useUpdateCampusTuition(data?.id);
@@ -78,18 +82,13 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
 
   return (
     <div>
-      <p
-        onClick={toggle}
-        className=" click d-flex"
-        // data-bs-toggle="modal"
-        // data-bs-target="#studentModal"
-      >
+      <p onClick={toggle} className=" click d-flex">
         Edit
       </p>
 
       {/* Modal */}
       <Modal centered isOpen={visibility} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add Tuition</ModalHeader>
+        <ModalHeader toggle={toggle}>Edit Tuition</ModalHeader>
         <ModalBody>
           <form onSubmit={onSubmit}>
             <FormDropdown
@@ -103,14 +102,43 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
               value={formData?.level}
               options={levels?.map((d: any) => ({ children: d }))}
               onChange={(e) => updateForm("level", e?.target?.value)}
-              // disabled={!isCreating}
             />
 
             <FormInput
-              label="Tuition Amount"
-              placeholder="Tuition Amount"
-              onChange={(e) => updateForm("amount", e?.target?.value)}
-              value={formData?.amount}
+              label="Application Payment"
+              placeholder="Application Payment"
+              onChange={(e) => updateForm("feePayment", e?.target?.value)}
+              value={formData?.feePayment}
+            />
+
+            <FormInput
+              label="Discount"
+              placeholder="Discount"
+              onChange={(e) => updateForm("discount", e?.target?.value)}
+              value={formData?.discount}
+            />
+
+            <FormInput
+              label="Initial Payment"
+              placeholder="Initial Payment"
+              onChange={(e) => updateForm("initialPayment", e?.target?.value)}
+              value={formData?.initialPayment}
+            />
+
+            <FormInput
+              label="Installment Minimum"
+              placeholder="Installment Minimum"
+              onChange={(e) =>
+                updateForm("installmentMinimum", e?.target?.value)
+              }
+              value={formData?.installmentMinimum}
+            />
+
+            <FormInput
+              label="Total"
+              placeholder="Total"
+              onChange={(e) => updateForm("total", e?.target?.value)}
+              value={formData?.feePayment - formData?.discount}
             />
 
             {isLoading ? (
@@ -120,7 +148,7 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
                 className="btn btn-blue-800 btn-lg w-100 my-5"
                 type="submit"
               >
-                {"Create Tuition"}
+                {"Edit Tuition"}
               </button>
             )}
           </form>

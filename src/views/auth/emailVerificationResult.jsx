@@ -8,6 +8,7 @@ import useJwt from "@hooks/useJwt";
 // ** Third Party Components
 // import { toast, Slide } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
+import ProspectiveStudentApplicationPage from "../prospective-student/application";
 // import {
 //   Facebook,
 //   Twitter,
@@ -85,39 +86,40 @@ const AuthEmailVerificationResultPage = () => {
   return (
     <Fragment>
       {validUrl ? (
-        <div className="container mt-5">
-          <div className="auth-wrapper">
-            <div className="row">
-              <div className="col-lg-7 col-md-9 col-12 mx-auto">
-                {/* <div className="mb-5 text-center nav-logo">
-                  <img src={rhemaLogo} alt="" style={{ width: "100px" }} />
-                </div> */}
-
-                <div className="chioma">
-                  <div className="text-center mb-5">
-                    <h3 className="title mb-4">Email Verified Successfull</h3>
-                    <p
-                      className="mx-auto"
-                      style={{ lineHeight: "1.234", maxWidth: "80%" }}
-                    >
-                      You have successfully verified your email
-                    </p>
-                  </div>
-
-                  <button
-                    className="btn btn-blue-800 btn-lg w-100"
-                    type="submit"
-                  >
-                    <Link to="/login">
-                      <small>Proceed To Login Now!</small>
-                    </Link>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProspectiveStudentApplicationPage />
       ) : (
+        // <div className="container mt-5">
+        //   <div className="auth-wrapper">
+        //     <div className="row">
+        //       <div className="col-lg-7 col-md-9 col-12 mx-auto">
+        //         {/* <div className="mb-5 text-center nav-logo">
+        //           <img src={rhemaLogo} alt="" style={{ width: "100px" }} />
+        //         </div> */}
+
+        //         <div className="chioma">
+        //           <div className="text-center mb-5">
+        //             <h3 className="title mb-4">Email Verified Successfull</h3>
+        //             <p
+        //               className="mx-auto"
+        //               style={{ lineHeight: "1.234", maxWidth: "80%" }}
+        //             >
+        //               You have successfully verified your email
+        //             </p>
+        //           </div>
+
+        //           <button
+        //             className="btn btn-blue-800 btn-lg w-100"
+        //             type="submit"
+        //           >
+        //             <Link to="/login">
+        //               <small>Proceed To Login Now!</small>
+        //             </Link>
+        //           </button>
+        //         </div>
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>
         <div className="container mt-5">
           <div className="auth-wrapper">
             <div className="row">
