@@ -4,6 +4,9 @@ import useToggle from "../../../utility/hooks/useToggle";
 import Table, { TableColumns } from "../../general/table/Table";
 import NewSession from "../../modals/NewSession";
 import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
+import useDeleteSession from "../../../hooks/mutations/classes/useDeleteSession";
+import { toast } from "react-toastify";
+import ToastContent from "../../molecules/ToastContent";
 
 interface Props {
   data: any;
@@ -21,7 +24,38 @@ function ModifySession({ data, onCreate }: Props) {
     id: data?.id,
   };
 
-  const handleDelete = () => {};
+  const deleteIt = useDeleteSession(defaultValues?.id as string);
+
+  const isLoading = deleteIt?.isLoading;
+
+  const deleteMutation = useDeleteSession(defaultValues?.id as string);
+
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"Session created successfully"}
+        />,
+        ToastContent.Config
+      );
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Error"}
+          message={error?.response?.data?.error?.message?.toString()}
+        />,
+        ToastContent.Config
+      );
+    }
+    toggleDeleteModal();
+  };
 
   console.log(data);
 
@@ -40,8 +74,8 @@ function ModifySession({ data, onCreate }: Props) {
       <ConfirmDeleteModal
         visibility={visibilityDeleteModal}
         toggle={toggleDeleteModal}
-        // onDelete={handleDelete}
-        defaultValues={defaultValues}
+        onDelete={handleDelete}
+        isLoading={isLoading}
       />
       <NewSession {...{ visibility, toggle, defaultValues, onCreate }} />
     </>

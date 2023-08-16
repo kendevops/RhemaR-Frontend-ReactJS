@@ -118,14 +118,6 @@ export default function AddCampusModal({
             value={formData?.shortName}
           />
 
-          {/* <FormDropdown
-              title="Campus Full Name"
-              value={formData?.campus}
-              options={campusesData?.map((d: any) => ({ children: d?.name }))}
-              onChange={(e) => updateForm("campus", e?.target?.value)}
-              disabled={!isCreating}
-            /> */}
-
           <FormDropdownSelectMultiple
             title="Campus Level"
             onChange={(e) => updateForm("level", e.target.value)}

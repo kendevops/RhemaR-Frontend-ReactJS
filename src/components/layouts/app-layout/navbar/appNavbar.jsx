@@ -48,6 +48,7 @@ const Navbar = (props) => {
 
   const checkRoleMatch = (role) => {
     const roleForRoute = getRoleForRoute(history.location.pathname);
+
     console.log({ role, roleForRoute });
 
     return roleForRoute === role;
@@ -68,6 +69,7 @@ const Navbar = (props) => {
 
   function handleRoleSwitch(role) {
     setCurrentRole(role);
+    console.log(role);
     UpdateLoggedInUserAbility(role, ability, access);
     history.push(getHomeRouteForLoggedInUser(role));
   }
@@ -75,6 +77,7 @@ const Navbar = (props) => {
   const rolesOptions =
     currentUser?.roles?.map((role) => {
       const r = role?.name;
+      console.log(r);
       return {
         id: r,
         children: (
@@ -87,7 +90,9 @@ const Navbar = (props) => {
             {checkRoleMatch(r) ? `Signed in as ${r}` : `Switch to ${r}`}
           </p>
         ),
-        onClick: () => handleRoleSwitch(r),
+        onClick: () => {
+          handleRoleSwitch(r);
+        },
       };
     }) ?? [];
 

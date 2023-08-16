@@ -54,6 +54,8 @@ const Router = () => {
   const loggedIn = isUserLoggedIn();
   const data = getUserData();
 
+  console.log(data);
+
   const accessToken = getToken("accessToken");
   const decodedJwt = parseJwt(accessToken);
 
@@ -271,7 +273,7 @@ const Router = () => {
 
   return (
     <>
-      <AppRouter basename={process.env.REACT_APP_BASENAME}>
+      <AppRouter basename={import.meta.env.REACT_APP_BASENAME}>
         <Switch>
           {/* If user is logged in Redirect user to DefaultRoute else to login */}
           <Route
