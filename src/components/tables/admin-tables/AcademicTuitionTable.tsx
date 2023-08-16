@@ -3,34 +3,63 @@ import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
 import useToggle from "../../../utility/hooks/useToggle";
 import Table, { TableColumns } from "../../general/table/Table";
 import useAllCampuses from "../../../hooks/queries/classes/useAllCampuses";
+import { toast } from "react-toastify";
+import ToastContent from "../../molecules/ToastContent";
+import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
+import useDeleteTuition from "../../../hooks/mutations/classes/useDeleteTuition";
+import EditTuitionModal from "../../modals/editModals/EditTuitionModal";
 
-type EditCampusProps = {
-  data: any;
-};
+const DeleteTuition = (id: any) => {
+  const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-type CampusesTableProps = {
-  setShowCampusDetail: any;
-  toggle: VoidFunction;
-};
+  const deleteIt = useDeleteTuition(id);
 
-function EditCampus({ data }: EditCampusProps) {
-  const [isEditing, toggleEditing] = useToggle();
+  const isDeleteLoading = deleteIt?.isLoading;
+
+  const handleDelete = async () => {
+    try {
+      await deleteIt.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"Tuition deleted successfully"}
+        />,
+        ToastContent.Config
+      );
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Error"}
+          message={error?.response?.data?.error?.message?.toString()}
+        />,
+        ToastContent.Config
+      );
+    }
+    toggleDeleteModal();
+  };
 
   return (
-    <>
-      <p onClick={toggleEditing} style={{ cursor: "pointer" }}>
-        Edit
-      </p>
-    </>
+    <ConfirmDeleteModal
+      visibility={visibilityDeleteModal}
+      toggle={toggleDeleteModal}
+      onDelete={() => handleDelete()}
+      isLoading={isDeleteLoading}
+    />
   );
-}
+};
 
 export default function AcademicTuitionTable() {
   const { isLoading, data } = useAllCampuses();
   const campusesData = data?.nodes;
 
   const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i}</p> },
+    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
       key: "Name",
       title: "Name",
@@ -53,10 +82,8 @@ export default function AcademicTuitionTable() {
       render: (data) => {
         return (
           <div className="d-flex gap-3">
-            <p className="" style={{ color: "red", cursor: "pointer" }}>
-              Delete
-            </p>
-            <EditCampus data={data} />
+            <DeleteTuition />
+            <EditTuitionModal data={data} />
           </div>
         );
       },

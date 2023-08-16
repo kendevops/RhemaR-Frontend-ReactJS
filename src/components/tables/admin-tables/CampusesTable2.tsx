@@ -3,27 +3,64 @@ import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
 import useToggle from "../../../utility/hooks/useToggle";
 import Table, { TableColumns } from "../../general/table/Table";
 import useAllCampuses from "../../../hooks/queries/classes/useAllCampuses";
-
-type EditCampusProps = {
-  data: any;
-};
+import parseRole from "../../../utils/parseRole";
+import ViewCampus from "../../modals/ViewCampusDetails";
+import EditCampusModal from "../../modals/editModals/EditCampusModal";
+import useDeleteCampus from "../../../hooks/mutations/classes/useDeleteCampus";
+import { toast } from "react-toastify";
+import ToastContent from "../../molecules/ToastContent";
+import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
+import { useState } from "react";
 
 type CampusesTableProps = {
   setShowCampusDetail: any;
   toggle: VoidFunction;
 };
 
-function EditCampus({ data }: EditCampusProps) {
-  const [isEditing, toggleEditing] = useToggle();
+const DeleteCampus = (id: any) => {
+  const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const deleteIt = useDeleteCampus(id);
+
+  const isDeleteLoading = deleteIt?.isLoading;
+
+  const handleDelete = async () => {
+    try {
+      await deleteIt.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"Campus deleted successfully"}
+        />,
+        ToastContent.Config
+      );
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Error"}
+          message={error?.response?.data?.error?.message?.toString()}
+        />,
+        ToastContent.Config
+      );
+    }
+    toggleDeleteModal();
+  };
 
   return (
-    <>
-      <p onClick={toggleEditing} style={{ cursor: "pointer" }}>
-        Edit
-      </p>
-    </>
+    <ConfirmDeleteModal
+      visibility={visibilityDeleteModal}
+      toggle={toggleDeleteModal}
+      onDelete={() => handleDelete()}
+      isLoading={isDeleteLoading}
+    />
   );
-}
+};
 
 export default function CampusesTable2({
   setShowCampusDetail,
@@ -33,7 +70,7 @@ export default function CampusesTable2({
   const campusesData = data?.nodes;
 
   const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i}</p> },
+    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
       key: "Name",
       title: "Name",
@@ -42,7 +79,16 @@ export default function CampusesTable2({
     {
       key: "Level",
       title: "Level",
-      render: (data) => <p>{"1 & 2"}</p>,
+      render: (data) => (
+        <p>
+          {data?.levels?.map(
+            (r: any, i: number) =>
+              `${parseRole(r?.name).split("Level")[1]}${
+                i === data?.levels?.length - 1 ? "" : ", "
+              }`
+          )}
+        </p>
+      ),
     },
     {
       key: "Campus Cordinator",
@@ -52,40 +98,24 @@ export default function CampusesTable2({
     {
       key: "Address",
       title: "Address",
-      render: (data) => (
-        <p>
-          {"To make the table scrollable in the x-direction, you can add the"}
-        </p>
-      ),
+      render: (data) => <p>{`${data.address}`}</p>,
     },
     {
       key: "View",
       title: "View",
-      render: (data) => (
-        <u
-          onClick={() => {
-            toggle();
-            setShowCampusDetail(true);
-          }}
-          className="text-info click"
-          data-bs-toggle="modal"
-          data-bs-target="#studentModal"
-        >
-          View
-        </u>
-      ),
+      render: (data) => <ViewCampus data={data} />,
     },
 
     {
       key: "Action",
       title: "Action",
       render: (data) => {
+        console.log(data);
+
         return (
-          <div className="d-flex gap-3">
-            <p className="" style={{ color: "red", cursor: "pointer" }}>
-              Delete
-            </p>
-            <EditCampus data={data} />
+          <div className="d-flex gap-4 ">
+            <EditCampusModal data={data} />
+            <DeleteCampus id={data.id} />
           </div>
         );
       },

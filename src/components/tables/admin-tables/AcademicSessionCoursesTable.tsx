@@ -9,7 +9,7 @@ export default function AcademicSessionCoursesTable() {
   const data = sessionsData?.nodes;
 
   const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i}</p> },
+    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
       key: "Session Course",
       title: "Course",

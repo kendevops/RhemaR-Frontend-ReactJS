@@ -37,7 +37,9 @@ import * as serviceWorker from "./serviceWorker";
 // ** Fake Database
 // import './@fake-db'
 
-
+// ** Lazy load app
+// const LazyApp = lazy(() => import("./App"));
+import App from "./App";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -52,7 +54,6 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

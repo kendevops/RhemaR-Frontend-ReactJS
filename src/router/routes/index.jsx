@@ -3,9 +3,10 @@ import AuthRoutes from "./auth";
 import MiscRoutes from "./misc";
 import StudentRoutes from "./student";
 import ProspectiveStudentRoutes from "./prospectiveStudent";
-import CampusCoordinatorRoutes from "./campusCoordinator";
+import StudentServiceAdminRoutes from "./studentServiceAdmin";
 import FinanceAdminRoutes from "./financeAdmin";
 import ictAdminRoutes from "./ictAdmin";
+import instructorAdminRoutes from "./instructorAdmin";
 
 // ** Document title
 const BrowserTabTitle = "%s - RHEMA Bible Training Center, Nigeria";
@@ -19,9 +20,10 @@ const Routes = [
   ...MiscRoutes,
   ...StudentRoutes,
   ...ProspectiveStudentRoutes,
-  ...CampusCoordinatorRoutes,
+  ...StudentServiceAdminRoutes,
   ...FinanceAdminRoutes,
   ...ictAdminRoutes,
+  ...instructorAdminRoutes,
 ];
 
 export { DefaultRoute, BrowserTabTitle, Routes };

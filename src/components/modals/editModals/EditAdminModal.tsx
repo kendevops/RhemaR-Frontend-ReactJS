@@ -1,23 +1,23 @@
 import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
-import useAllUsers from "../../hooks/queries/useAllUsers";
-import { UserDto } from "../../types/dto";
-import useRoles from "../../hooks/queries/useRoles";
-import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
-import useForm from "../../utility/hooks/useForm";
-import FormDropdown from "../molecules/FormDropdown";
+import useAllUsers from "../../../hooks/queries/useAllUsers";
+import { UserDto } from "../../../types/dto";
+import useRoles from "../../../hooks/queries/useRoles";
+import useAllCampuses from "../../../hooks/queries/classes/useAllCampuses";
+import useForm from "../../../utility/hooks/useForm";
+import FormDropdown from "../../molecules/FormDropdown";
 import { FormEvent } from "react";
-import useAssignRole from "../../hooks/mutations/roles/useAssignRole";
+import useAssignRole from "../../../hooks/mutations/roles/useAssignRole";
 import { Autocomplete, TextField } from "@mui/material";
 import { toast } from "react-toastify";
-import ToastContent from "../molecules/ToastContent";
-import handleError from "../../utils/handleError";
+import ToastContent from "../../molecules/ToastContent";
+import handleError from "../../../utils/handleError";
 
 type AddAdminModalProps = {
   isOpen: boolean;
   toggle: VoidFunction;
 };
 
-export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
+export default function EditAdminModal({ isOpen, toggle }: AddAdminModalProps) {
   const { data, isLoading: usersLoading } = useAllUsers();
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
@@ -78,7 +78,7 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
 
   return (
     <Modal centered {...{ isOpen, toggle }}>
-      <ModalHeader toggle={toggle}>Add Admin</ModalHeader>
+      <ModalHeader toggle={toggle}>Edit Admin</ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -118,7 +118,7 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
             <Spinner />
           ) : (
             <button className="btn btn-blue-800 btn-lg w-100" type="submit">
-              Assign role
+              Edit role
             </button>
           )}
         </form>

@@ -77,6 +77,19 @@ export const UpdateLoggedInUserAbility = (userRole, ability, access) => {
     console.log("User is student services admin / campus coordinator");
   }
 
+  if (userRole === userRoles.INSTRUCTORS_ADMIN) {
+    const priviledge = [
+      {
+        action: "read",
+        subject: "Instructors",
+      },
+    ];
+    ability.update(priviledge);
+    access?.updateAccess(priviledge);
+
+    console.log("User is student services admin / Instructor");
+  }
+
   if (userRole === "Level1Student") {
     ability.update([
       {
@@ -174,21 +187,24 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
   if (userRole === userRoles.ICT_ADMIN) return "/ict-admin/dashboard";
+  if (userRole === userRoles.INSTRUCTORS_ADMIN)
+    return "/instructor-admin/dashboard";
   if (userRole === "Client") return "/access-control";
   if (userRole === userRoles.PROSPECTIVE_STUDENT) return "/application";
   if (userRole === userRoles.STUDENT) return "/student/dashboard";
   if (userRole === userRoles.STUDENT_SERVICES_ADMIN)
-    return "/campus-coordinator/dashboard";
+    return "/student-services-admin/dashboard";
   return "/login";
 };
 
 export const getRoleForRoute = (route) => {
   if (route === "/access-control") return "Client";
   if (route.startsWith("/ict-admin")) return userRoles.ICT_ADMIN;
+  if (route.startsWith("/instructor-admin")) return userRoles.INSTRUCTORS_ADMIN;
   if (route.startsWith("/application")) return userRoles.PROSPECTIVE_STUDENT;
-  if (route.startsWith("/student")) return userRoles.STUDENT;
-  if (route.startsWith("/campus-coordinator"))
+  if (route.startsWith("/student-services-admin"))
     return userRoles.STUDENT_SERVICES_ADMIN;
+  if (route.startsWith("/student")) return userRoles.STUDENT;
 };
 
 // ** React Select Theme Colors
