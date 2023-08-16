@@ -2,15 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../api";
 import queryKeys from "../../../queryKeys";
 
-// interface Data {
-//   total: number;
-//   dueDate: string;
-//   discount: number;
-//   feePayment: number;
-//   initialPayment: number;
-//   installmentMinimum: number;
-// }
-
 interface Data {
   level: string;
   campus: string;

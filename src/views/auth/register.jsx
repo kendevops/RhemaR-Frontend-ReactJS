@@ -47,6 +47,8 @@ const AuthRegistrationPage = () => {
 
     console.log(data);
 
+    console.log(data);
+
     toggleLoading();
     useJwt
       .register(data)
