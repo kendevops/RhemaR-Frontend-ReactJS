@@ -1,5 +1,5 @@
 import { FormEvent } from "react";
-import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, Spinner, Input } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
 import useCreateCampusTuition from "../../hooks/mutations/classes/useCreateCampusTuition";
 import useUpdateCampusTuition from "../../hooks/mutations/classes/useUpdateCampusTuition";
@@ -13,6 +13,7 @@ import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
 import { states } from "../../data/States";
 import { InstructorsData } from "../../data/InstructorsData";
+import { Controller } from "react-hook-form";
 
 interface AcademicAddTuitionModalProps {
   toggle: VoidFunction;
@@ -39,7 +40,11 @@ export default function AcademicAddTuitionModal({
   const initialState = {
     level: levels[0],
     campus: "",
-    amount: "",
+    total: 0,
+    discount: 0,
+    feePayment: 0,
+    initialPayment: 0,
+    installmentMinimum: 0,
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
@@ -53,57 +58,56 @@ export default function AcademicAddTuitionModal({
     children: d?.name,
   }));
 
-  // function handleSubmit(e: FormEvent) {
-  //   e.preventDefault();
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
 
-  //   const { level, campus, ...otherData } = formData;
+    const { level, campus, ...otherData } = formData;
 
-  //   if (formIsValid) {
-  //     isCreating
-  //       ? createTuition.mutate(formData, {
-  //           onSuccess: () => {
-  //             toast.success(
-  //               <ToastContent
-  //                 type={"success"}
-  //                 heading={"Success"}
-  //                 message={`Successfully created campus tuition`}
-  //               />,
-  //               ToastContent.Config
-  //             );
-  //             !!onCreate && onCreate();
-  //             toggle();
-  //           },
-  //           onError: (e: any) => {
-  //             handleError(e, formData);
-  //           },
-  //         })
-  //       : updateTuition.mutate(otherData, {
-  //           onSuccess: () => {
-  //             toast.success(
-  //               <ToastContent
-  //                 type={"success"}
-  //                 heading={"Success"}
-  //                 message={`Successfully updated campus tuition`}
-  //               />,
-  //               ToastContent.Config
-  //             );
-  //             toggle();
-  //           },
-  //           onError: (e: any) => {
-  //             handleError(e, formData);
-  //           },
-  //         });
-  //   } else {
-  //     alert("Please fill in all fields");
-  //     console.log(formData);
-  //   }
-  // }
+    if (formIsValid) {
+      createTuition.mutate(formData, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Success"}
+              message={`Successfully created campus tuition`}
+            />,
+            ToastContent.Config
+          );
+          !!onCreate && onCreate();
+          toggle();
+        },
+        onError: (e: any) => {
+          handleError(e, formData);
+        },
+      });
+      //  updateTuition.mutate(otherData, {
+      //     onSuccess: () => {
+      //       toast.success(
+      //         <ToastContent
+      //           type={"success"}
+      //           heading={"Success"}
+      //           message={`Successfully updated campus tuition`}
+      //         />,
+      //         ToastContent.Config
+      //       );
+      //       toggle();
+      //     },
+      //     onError: (e: any) => {
+      //       handleError(e, formData);
+      //     },
+      //   });
+    } else {
+      alert("Please fill in all fields");
+      console.log(formData);
+    }
+  }
 
   return (
     <Modal centered isOpen={visibility} toggle={toggle}>
       <ModalHeader toggle={toggle}>Add Tuition</ModalHeader>
       <ModalBody>
-        <form onSubmit={() => {}}>
+        <form onSubmit={handleSubmit}>
           <FormDropdown
             options={campusOptions}
             title="Select campus"
@@ -119,10 +123,38 @@ export default function AcademicAddTuitionModal({
           />
 
           <FormInput
-            label="Tuition Amount"
-            placeholder="Tuition Amount"
-            onChange={(e) => updateForm("amount", e?.target?.value)}
-            value={formData?.amount}
+            label="Application Payment"
+            placeholder="Application Payment"
+            onChange={(e) => updateForm("feePayment", e?.target?.value)}
+            value={formData?.feePayment}
+          />
+
+          <FormInput
+            label="Discount"
+            placeholder="Discount"
+            onChange={(e) => updateForm("discount", e?.target?.value)}
+            value={formData?.discount}
+          />
+
+          <FormInput
+            label="Initial Payment"
+            placeholder="Initial Payment"
+            onChange={(e) => updateForm("initialPayment", e?.target?.value)}
+            value={formData?.initialPayment}
+          />
+
+          <FormInput
+            label="Installment Minimum"
+            placeholder="Installment Minimum"
+            onChange={(e) => updateForm("installmentMinimum", e?.target?.value)}
+            value={formData?.installmentMinimum}
+          />
+
+          <FormInput
+            label="Total"
+            placeholder="Total"
+            onChange={(e) => updateForm("total", e?.target?.value)}
+            value={formData?.feePayment - formData?.discount}
           />
 
           {isLoading ? (

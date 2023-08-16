@@ -7,8 +7,14 @@ import handleError from "../../utils/handleError";
 export default function Verify() {
   const { mutate, isLoading } = useResendVerification();
 
+  const email = localStorage.getItem("userEmail");
+
+  const formData: any = { email: email };
+
+  console.log(email);
+
   function resendLink() {
-    mutate(undefined, {
+    mutate({ email: email } as any, {
       onSuccess: () =>
         toast.success(
           <ToastContent
@@ -20,6 +26,7 @@ export default function Verify() {
         ),
       onError: (e: any) => {
         handleError(e);
+        console.log(e);
       },
     });
   }

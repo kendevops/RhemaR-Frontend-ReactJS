@@ -15,6 +15,7 @@ import useEditCampus from "../../../hooks/mutations/classes/useEditCampus";
 import { FormEvent } from "react";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
+import { InstructorsData } from "../../../data/InstructorsData";
 
 interface EditCampusModalProps {
   data: any;
@@ -28,13 +29,24 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
   const initialState = {
     levels: [data?.levels],
     name: data?.name,
-    shortName: data?.shortName,
-    addressStreet: data?.addressStreet,
-    addressLGA: data?.addressLGA,
-    addressState: data?.states,
-    cordinator: data?.cordinator,
+    region: data?.region,
+    currency: data?.currency,
+    continent: data?.continent,
+    campusCode: data?.campusCode,
+    campusCoordinator: data?.campusCoordinator,
     phoneNumber1: data?.phoneNumber1,
     phoneNumber2: data?.phoneNumber2,
+    shortName: data?.shortName,
+    country: data?.country,
+    campusArea: data?.campusArea,
+    primaryLanguage: data?.primaryLanguage,
+    secondaryLanguage: data?.secondaryLanguage,
+    campusAbbreviation: data?.campusAbbreviation,
+
+    city: data?.city,
+    street: data?.street,
+    state: data?.state,
+    zipCode: data?.zipCode,
   };
 
   const editCampus = useEditCampus(data?.id);
@@ -56,23 +68,32 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
 
   console.log(adminOptions);
 
-  //   const roleOptions = rolesData?.roles
-  //     ?.filter((r: any) => r.name?.includes("ADMIN"))
-  //     .map((d: any) => ({
-  //       children: d?.name,
-  //     }));
+  // const roleOptions = rolesData?.roles
+  //   ?.filter((r: any) => r.name?.includes("ADMIN"))
+  //   .map((d: any) => ({
+  //     children: d?.name,
+  //   }));
 
   //   function onSubmit() {}
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    const address = {
+      city: formData.city,
+      street: formData.state,
+      state: formData.state,
+      zipCode: formData.zipCode,
+    };
+
+    const data2 = { ...formData, address };
+
     if (!formIsValid) {
       alert("Please fill in all fields");
       return;
     }
     if (data) {
-      editCampus?.mutate(formData, {
+      editCampus?.mutate(data2, {
         onSuccess: () => {
           toast.success(
             <ToastContent
@@ -114,7 +135,7 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
       </p>
 
       {/* Modal */}
-      <Modal centered isOpen={visibility} toggle={toggle}>
+      <Modal centered isOpen={visibility} toggle={toggle} scrollable>
         <ModalHeader toggle={toggle}>Edit Campus</ModalHeader>
         <ModalBody>
           <form onSubmit={onSubmit}>
@@ -133,41 +154,90 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             />
 
             <FormDropdownSelectMultiple
-              title="Campus Level"
+              title="Campus Levels"
               onChange={(e) => updateForm("levels", e.target.value)}
               options={levels.map((v) => ({ children: v }))}
               value={formData?.levels}
-              // disabled={!isCreating}
             />
 
             <FormInput
               label="Campus Address (Street)"
               placeholder="Enter Campus Street Address"
-              onChange={(e) => updateForm("addressStreet", e?.target?.value)}
-              value={formData?.addressStreet}
+              onChange={(e) => updateForm("street", e?.target?.value)}
+              value={formData?.street}
             />
 
             <FormInput
-              label="Campus Address (LGA)"
-              placeholder="Enter Campus LGA"
-              onChange={(e) => updateForm("addressLGA", e?.target?.value)}
-              value={formData?.addressLGA}
+              label="City"
+              placeholder="City"
+              onChange={(e) => updateForm("city", e?.target?.value)}
+              value={formData?.city}
+            />
+
+            <FormInput
+              label="Campus Abbreviation"
+              placeholder="Campus Abbreviation"
+              onChange={(e) =>
+                updateForm("campusAbbreviation", e?.target?.value)
+              }
+              value={formData?.campusAbbreviation}
+            />
+            <FormInput
+              label="Campus Area"
+              placeholder="Campus Area"
+              onChange={(e) => updateForm("campusArea", e?.target?.value)}
+              value={formData?.campusArea}
+            />
+
+            <FormInput
+              label="Campus Code"
+              placeholder="Campus Code"
+              onChange={(e) => updateForm("campusCode", e?.target?.value)}
+              value={formData?.campusCode}
+            />
+
+            <FormInput
+              label="Continent"
+              placeholder="Continent"
+              onChange={(e) => updateForm("continent", e?.target?.value)}
+              value={formData?.continent}
+            />
+
+            <FormInput
+              label="Country"
+              placeholder="Country"
+              onChange={(e) => updateForm("country", e?.target?.value)}
+              value={formData?.country}
+            />
+
+            <FormInput
+              label="Currency"
+              placeholder="Currency"
+              onChange={(e) => updateForm("currency", e?.target?.value)}
+              value={formData?.currency}
+            />
+
+            <FormInput
+              label="Zip Code"
+              placeholder="Zip Code"
+              onChange={(e) => updateForm("zipCode", e?.target?.value)}
+              value={formData?.zipCode}
             />
 
             <FormDropdown
               title="Campus Address (State)"
-              value={formData?.addressState}
+              value={formData?.state}
               options={states?.map((d: any) => ({ children: d }))}
-              onChange={(e) => updateForm("addressState", e?.target?.value)}
-              // disabled={!isCreating}
+              onChange={(e) => updateForm("state", e?.target?.value)}
             />
 
             <FormDropdown
               title="Campus Cordinator"
-              value={formData?.cordinator}
+              value={formData?.campusCoordinator}
               options={adminOptions?.map((d: any) => ({ children: d?.label }))}
-              onChange={(e) => updateForm("cordinator", e?.target?.value)}
-              // disabled={!isCreating}
+              onChange={(e) => {
+                updateForm("campusCoordinator", e?.target?.value);
+              }}
             />
 
             <FormInput

@@ -34,10 +34,13 @@ const AuthRegistrationPage = () => {
     } = formData;
     const data = { ...others, altPhoneNumber, gender: gender.toUpperCase() };
 
+    console.log(data);
+
     toggleLoading();
     useJwt
       .register(data)
       .then((d) => {
+        localStorage.setItem("userEmail", data.email);
         toggleLoading();
         toast.success(
           <ToastContent
