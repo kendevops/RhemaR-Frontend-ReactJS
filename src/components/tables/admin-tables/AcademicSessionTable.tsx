@@ -61,13 +61,6 @@ function ModifySession({ data, onCreate }: Props) {
 
   return (
     <>
-      <p
-        className=""
-        style={{ color: "red", cursor: "pointer" }}
-        onClick={toggleDeleteModal}
-      >
-        Delete
-      </p>
       <p onClick={toggle} style={{ cursor: "pointer" }}>
         Edit
       </p>

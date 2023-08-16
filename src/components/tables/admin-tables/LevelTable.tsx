@@ -7,21 +7,12 @@ type EditLevelProps = {
   data: any;
 };
 
-function EditLevel({ data }: EditLevelProps) {
-  const [isEditing, toggleEditing] = useToggle();
-
-  return (
-    <>
-      <p onClick={toggleEditing} style={{ cursor: "pointer" }}>
-        Edit
-      </p>
-    </>
-  );
-}
-
 export default function LevelTable() {
   const { data: levelData, isLoading } = useCampusLevel();
+
   const data = levelData?.nodes;
+
+  console.log(data);
 
   const levelData2 = [1, 2, 3];
 
@@ -36,27 +27,6 @@ export default function LevelTable() {
       key: "No. of Courses",
       title: "No. of Courses",
       render: (data) => <p>{data + 10}</p>,
-    },
-
-    {
-      key: "Action",
-      title: "Action",
-      render: (data) => {
-        function handleDelete() {}
-        return (
-          <div className="d-flex gap-3">
-            <p
-              className=""
-              style={{ color: "red", cursor: "pointer" }}
-              onClick={handleDelete}
-            >
-              Delete
-            </p>
-            {/* <p style={{ cursor: "pointer" }}>Edit</p> */}
-            <EditLevel data={data} />
-          </div>
-        );
-      },
     },
   ];
 
