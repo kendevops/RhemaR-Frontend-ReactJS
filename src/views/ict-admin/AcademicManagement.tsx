@@ -296,8 +296,8 @@ export default function AcademicManager() {
             <HiPlus />
             Export Campus List
           </button>
-        </div>
-      )}
+        </article>
+      </div>
 
       {/* level */}
 
