@@ -56,6 +56,8 @@ export default function FormDropdownSelectMultiple({
     setInputValue(e.target.value);
   };
 
+  console.log(selectedOptions);
+
   return (
     <FormInputWrapper {...{ lg, md }}>
       <label>{title}</label>
