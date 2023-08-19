@@ -37,10 +37,13 @@ const AuthRegistrationPage = () => {
       altPhoneNumber,
       gender: gender.toUpperCase(),
     };
+<<<<<<< HEAD
 
     console.log(data);
 
     console.log(data);
+=======
+>>>>>>> e2eae5f (worked on ssAdmin, students and pStudents)
 
     console.log(data);
 

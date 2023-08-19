@@ -17,6 +17,7 @@ import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
 import { InstructorsData } from "../../../data/InstructorsData";
+import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
 
 interface EditCampusModalProps {
   data: any;
@@ -47,10 +48,10 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
     secondaryLanguage: data?.secondaryLanguage,
     campusAbbreviation: data?.campusAbbreviation,
 
-    city: data?.city,
-    street: data?.street,
-    state: data?.state,
-    zipCode: data?.zipCode,
+    city: data?.address?.city,
+    street: data?.address?.street,
+    state: data?.address?.state,
+    zipCode: data?.address?.zipCode,
   };
 
   const editCampus = useEditCampus(data?.id);
@@ -89,9 +90,10 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
 
     const address = {
       city: formData.city,
-      street: formData.state,
+      street: formData.street,
       state: formData.state,
       zipCode: formData.zipCode,
+      country: formData.country,
     };
 
     const data2 = { ...formData, address };
@@ -171,7 +173,7 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             <FormDropdownSelectMultiple
               title="Campus Levels"
               onChange={(e) => updateForm("levels", e.target.value)}
-              options={levels.map((v) => ({ children: v }))}
+              options={levelData?.map((v: any) => ({ children: v.name }))}
               value={formData?.levels}
             />
 
@@ -256,7 +258,7 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             <FormDropdown
               title="Campus Cordinator"
               value={formData?.campusCoordinator}
-              options={adminOptions?.map((d: any) => ({ children: d?.label }))}
+              options={adminOptions?.map((d: any) => ({ children: d?.id }))}
               onChange={(e) => {
                 updateForm("campusCoordinator", e?.target?.value);
               }}
