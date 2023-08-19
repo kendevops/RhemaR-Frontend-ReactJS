@@ -3,6 +3,8 @@ import api from "../../api";
 import queryKeys from "../../queryKeys";
 
 export default function useVerifyEmail(id: string) {
+  console.log(id);
+
   return useQuery(
     [queryKeys.emailVerification],
     () => api.get(`/auth/email/verify/${id}`).then((r) => r.data),

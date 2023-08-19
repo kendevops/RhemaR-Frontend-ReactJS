@@ -17,6 +17,7 @@ interface Data {
   secondaryLanguage: string;
   campusAbbreviation: string;
   campusCoordinator: string;
+  zipCode?: number;
   levels: any;
   address: any;
 }

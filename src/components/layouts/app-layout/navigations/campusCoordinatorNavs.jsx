@@ -17,7 +17,7 @@ export default [
   },
   {
     id: "students",
-    title: "Students",
+    title: "Students Management",
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/student-services-admin/students",
   },

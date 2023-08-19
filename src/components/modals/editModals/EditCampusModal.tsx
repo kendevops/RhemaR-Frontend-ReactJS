@@ -16,6 +16,7 @@ import { FormEvent } from "react";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
 import { InstructorsData } from "../../../data/InstructorsData";
+import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
 
 interface EditCampusModalProps {
   data: any;
@@ -24,10 +25,12 @@ interface EditCampusModalProps {
 export default function EditCampusModal({ data }: EditCampusModalProps) {
   const [visibility, toggle] = useToggle();
 
-  console.log(data);
+  const { data: levelData } = useCampusLevel();
+
+  // console.log(levelData);
 
   const initialState = {
-    levels: [data?.levels],
+    levels: data?.levels,
     name: data?.name,
     region: data?.region,
     currency: data?.currency,
@@ -43,22 +46,25 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
     secondaryLanguage: data?.secondaryLanguage,
     campusAbbreviation: data?.campusAbbreviation,
 
-    city: data?.city,
-    street: data?.street,
-    state: data?.state,
-    zipCode: data?.zipCode,
+    city: data?.address?.city,
+    street: data?.address?.street,
+    state: data?.address?.state,
+    zipCode: data?.address?.zipCode,
   };
 
   const editCampus = useEditCampus(data?.id);
+
   const isLoading = editCampus.isLoading;
   const { data: usersData, isLoading: usersLoading } = useAllUsers();
 
   const { formData, updateForm, formIsValid } = useForm({ initialState });
 
+  console.log(data?.levels);
+
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("ADMIN"));
+      .some((n: any) => n?.includes("CAMPUS_COORD_ADMIN"));
   });
 
   const adminOptions = users?.map((u) => ({
@@ -81,9 +87,10 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
 
     const address = {
       city: formData.city,
-      street: formData.state,
+      street: formData.street,
       state: formData.state,
       zipCode: formData.zipCode,
+      country: formData.country,
     };
 
     const data2 = { ...formData, address };
@@ -156,7 +163,7 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             <FormDropdownSelectMultiple
               title="Campus Levels"
               onChange={(e) => updateForm("levels", e.target.value)}
-              options={levels.map((v) => ({ children: v }))}
+              options={levelData?.map((v: any) => ({ children: v.name }))}
               value={formData?.levels}
             />
 
@@ -234,7 +241,7 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             <FormDropdown
               title="Campus Cordinator"
               value={formData?.campusCoordinator}
-              options={adminOptions?.map((d: any) => ({ children: d?.label }))}
+              options={adminOptions?.map((d: any) => ({ children: d?.id }))}
               onChange={(e) => {
                 updateForm("campusCoordinator", e?.target?.value);
               }}

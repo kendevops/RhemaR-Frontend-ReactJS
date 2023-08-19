@@ -42,7 +42,11 @@ export default function Lecture() {
   const course = data?.class?.course;
   const sessions = course?.sections;
   const [watching, setWatching] = useState("");
+  const [isCompletted, setIsCompletted] = useState(false);
+
   const currentSession = sessions?.find((s: any) => s?.videoUrl === watching);
+
+  console.log(data);
 
   const classId = data?.class?.id;
 
@@ -85,6 +89,8 @@ export default function Lecture() {
 
   //download button for courses
 
+  console.log(sessions);
+
   return (
     <>
       <BackButton />
@@ -95,6 +101,16 @@ export default function Lecture() {
           {/* Video or Audio Player */}
           <section>
             <ReactPlayer url={watching} controls />
+
+            <div style={{ margin: "5px 0" }}>
+              Completed?{" "}
+              <span>
+                <input
+                  type="checkbox"
+                  onClick={() => setIsCompletted(!isCompletted)}
+                />
+              </span>
+            </div>
           </section>
 
           {/* Course overview and Discussion */}
@@ -170,6 +186,16 @@ export default function Lecture() {
                               {s?.name}
                             </u>
                           )}
+
+                          <input
+                            type="checkbox"
+                            // value={i === 0 ? "true" : "false"}
+                            checked={
+                              s?.name === currentSession?.name
+                                ? isCompletted
+                                : false
+                            }
+                          />
 
                           <div className="progress w-25">
                             <div

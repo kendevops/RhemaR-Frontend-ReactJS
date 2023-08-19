@@ -15,7 +15,7 @@ const fields = [
   { name: "Ability to follow instructions", key: "followInstructions" },
 ];
 
-const options = ["isExcellent", "isGood", "isFair", "isPoor"];
+const options = ["Excellent", "Good", "Fair", "Poor"];
 
 const initialState = {
   teamWork: {},

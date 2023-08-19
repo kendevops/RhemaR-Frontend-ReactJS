@@ -26,6 +26,8 @@ function ModifySession({ data, onCreate }: Props) {
 
   const deleteIt = useDeleteSession(defaultValues?.id as string);
 
+  console.log(defaultValues?.id);
+
   const isLoading = deleteIt?.isLoading;
 
   const deleteMutation = useDeleteSession(defaultValues?.id as string);

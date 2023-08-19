@@ -32,7 +32,11 @@ const AuthRegistrationPage = () => {
       gender,
       ...others
     } = formData;
-    const data = { ...others, altPhoneNumber, gender: gender.toUpperCase() };
+    const data = {
+      ...others,
+      altPhoneNumber,
+      gender: gender.toUpperCase(),
+    };
 
     console.log(data);
 
@@ -99,7 +103,7 @@ const AuthRegistrationPage = () => {
               <div className="bg-white shadow rounded-2 p-5">
                 <div className="text-center mb-5">
                   <h3 className="title mb-4">Registration</h3>
-                  <p>
+                  <p style={{ lineHeight: "30px" }}>
                     Fill the form below to register.
                     <br />
                     This is the first step towards applying for admission into
