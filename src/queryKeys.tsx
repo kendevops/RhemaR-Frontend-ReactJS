@@ -21,7 +21,7 @@ const queryKeys = {
   resources: "all-resources",
   pmr: "pmr",
   instructors: "instructors",
-  level: "level",
+  levels: "levels",
 };
 
 export default queryKeys;

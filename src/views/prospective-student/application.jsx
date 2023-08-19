@@ -28,8 +28,8 @@ function ApplicationPage(props) {
 
   const initialState = {
     title: "",
-    campus: "",
-    session: "",
+    campus: "Enugu",
+    session: "2023/2024",
     referralSource: "direct",
     classAttendanceMethod: "",
     churchDetails: "",
@@ -57,6 +57,8 @@ function ApplicationPage(props) {
 
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const academicOptions = data?.nodes?.map((d) => d?.name);
+
+  // console.log(campusesData, data);
   const maritalOptions = ["single", "married"];
   const [campusFee, setCampusFee] = useState("30000");
 
@@ -164,7 +166,8 @@ function ApplicationPage(props) {
 
                 setCampusFee(fee);
               }}
-              options={campusOptions.map((o) => ({
+              options={campusOptions?.map((o) => ({
+                // options={["Enugu", "Anambra", "Imo"]?.map((o) => ({
                 children: o,
               }))}
               title={"Campus"}
@@ -174,7 +177,8 @@ function ApplicationPage(props) {
           {academicOptions && (
             <FormDropdown
               onChange={(e) => updateForm("session", e?.target?.value)}
-              options={academicOptions.map((o) => ({
+              options={academicOptions?.map((o) => ({
+                // options={["2023/2024", "2024/2025"]?.map((o) => ({
                 children: o,
               }))}
               title={"Academic Session"}
@@ -314,7 +318,7 @@ function ApplicationPage(props) {
               color: "red",
             }}
           >
-            You selected ${formData.campus} Campus, once you click proceed, it
+            You selected {formData.campus} Campus, once you click proceed, it
             cannot be changed
           </p>
           <p>

@@ -16,6 +16,9 @@ const StudentDashboardPage = () => {
   const { data, isLoading } = useClasses({
     startTime: "2022-12-01T21:56:53.900Z",
   });
+
+  const [progress, setProgress] = useState(0);
+
   const lectures = data?.classes?.nodes;
 
   const { data: eventsData, isLoading: eventsLoading } = useAllEvents();
@@ -34,6 +37,8 @@ const StudentDashboardPage = () => {
   const totalCompletion = courses?.length * 100;
   const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
+  console.log(semesterProgress);
+
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const application = userData?.applications
     ? userData?.applications[userData?.applications?.length - 1]
@@ -43,6 +48,29 @@ const StudentDashboardPage = () => {
   const paymentCompletion = (feesPaid / totalAmountRequired) * 100;
 
   const payUrl = application?.feePayment?.paymentUrl;
+
+  const startDate = userData?.applications[0]?.session?.startDate;
+  const endDate = userData?.applications[0]?.session?.endDate;
+
+  // const startDate = "2022-12-07T22:00:43.187Z";
+  // const endDate = "2023-12-20T22:00:43.187Z";
+
+  useEffect(() => {
+    const currentTime = new Date().getTime();
+
+    const startTime = new Date(startDate).getTime();
+    const endTime = new Date(endDate).getTime();
+
+    const totalDuration = endTime - startTime;
+    const elapsedDuration = currentTime - startTime;
+
+    console.log(totalDuration, elapsedDuration);
+
+    const calculatedProgress = Math.round(
+      (elapsedDuration / totalDuration) * 100
+    );
+    setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
+  }, [startDate, endDate]);
 
   return (
     <div className="container my-5">
@@ -54,8 +82,35 @@ const StudentDashboardPage = () => {
             <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
               <div className="d-flex justify-content-between ">
                 <p className="r-card-title">Semester Progress</p>
+                <h2 className="font-bold text-2xl ms-4">{progress}%</h2>
+              </div>
+
+              {/* Progress bar */}
+              <div>
+                <div className="progress ">
+                  <div
+                    className="progress-bar progress-bar-animated bg-warning "
+                    role="progressbar"
+                    style={{
+                      width: `${progress}%`,
+                      // width: "30%",
+                    }}
+                    aria-valuenow={progress}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Semester Progress */}
+          {courses && (
+            <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
+              <div className="d-flex justify-content-between ">
+                <p className="r-card-title">Student Progress</p>
                 <h2 className="font-bold text-2xl ms-4">
-                  {semesterProgress.toString() === "NaN"
+                  {semesterProgress.toString() == "NaN"
                     ? "0"
                     : semesterProgress.toString()}
                   %
@@ -64,11 +119,18 @@ const StudentDashboardPage = () => {
 
               {/* Progress bar */}
               <div>
-                <div class="progress ">
+                <div className="progress ">
                   <div
-                    class="progress-bar progress-bar-animated bg-warning "
+                    className="progress-bar progress-bar-animated bg-warning "
                     role="progressbar"
-                    style={{ width: `${semesterProgress}%` }}
+                    style={{
+                      width: `${
+                        semesterProgress.toString() === "NaN"
+                          ? "0"
+                          : semesterProgress
+                      }%`,
+                      // width: "30%",
+                    }}
                     aria-valuenow={semesterProgress}
                     aria-valuemin="0"
                     aria-valuemax="100"
@@ -150,6 +212,13 @@ const StudentDashboardPage = () => {
         </div>
 
         <div className="col-lg-6 col-md-6 col-12 mb-4">
+          <div className="d-flex justify-content-between">
+            <h2 className="text-xl font-bold text-blue-600">Next Schedule</h2>
+
+            <Link to={"/student/downloads"}>
+              <small className="text-decoration-underline">Show All</small>
+            </Link>
+          </div>
           <CardWrapper>
             <CourseSchedule />
           </CardWrapper>

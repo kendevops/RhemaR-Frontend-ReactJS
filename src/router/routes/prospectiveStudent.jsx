@@ -28,7 +28,7 @@ const ProspectiveStudentRoutes = [
     },
   },
   {
-    path: "/confirm-verification/:id",
+    path: "/:id",
     component: lazy(() =>
       import("../../views/prospective-student/ConfirmVerification")
     ),

@@ -28,14 +28,23 @@ export default function FormRadioGroup({
           const isLastItem = options?.length - 1 === index;
 
           return (
-            <div className={`radio-box ${!isLastItem ? "me-3" : ""}`}>
-              <label htmlFor={label}>{value}</label>
+            <div
+              className={`radio-box ${!isLastItem ? "me-3" : ""} d-flex gap-3`}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <label htmlFor={label} className="">
+                {value}
+              </label>
               <input
                 type="radio"
                 id={label}
                 value={value}
                 name={label}
                 onChange={onChange}
+                className=""
               />
             </div>
           );

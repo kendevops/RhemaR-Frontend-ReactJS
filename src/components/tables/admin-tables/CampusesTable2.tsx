@@ -21,7 +21,9 @@ const DeleteCampus = (id: any) => {
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  const deleteIt = useDeleteCampus(id);
+  const deleteIt = useDeleteCampus(id?.id);
+
+  console.log(id?.id);
 
   const isDeleteLoading = deleteIt?.isLoading;
 
@@ -69,6 +71,8 @@ export default function CampusesTable2({
   const { isLoading, data } = useAllCampuses();
   const campusesData = data?.nodes;
 
+  console.log(campusesData);
+
   const columns: TableColumns<any>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
@@ -98,7 +102,9 @@ export default function CampusesTable2({
     {
       key: "Address",
       title: "Address",
-      render: (data) => <p>{`${data.address}`}</p>,
+      render: (data) => (
+        <p>{`${data?.address?.city} ${data?.address?.state} ${data?.address?.country}`}</p>
+      ),
     },
     {
       key: "View",

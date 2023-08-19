@@ -108,6 +108,7 @@ export default class JwtService {
   }
 
   register(...args) {
+    console.log(...args);
     return axios.post(`${this.jwtConfig.registerEndpoint}`, ...args);
   }
 

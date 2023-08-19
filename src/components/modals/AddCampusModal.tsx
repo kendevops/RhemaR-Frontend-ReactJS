@@ -60,7 +60,7 @@ export default function AddCampusModal({
     city: "",
     state: states[0],
     street: "",
-    zipCode: "",
+    zipCode: 0,
   };
 
   const { formData, formIsValid, updateForm } = useForm<typeof initialState>({
@@ -71,13 +71,15 @@ export default function AddCampusModal({
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("ADMIN"));
+      .some((n: any) => n?.includes("CAMPUS_COORD_ADMIN"));
   });
 
   const adminOptions = users?.map((u) => ({
     label: `${u?.firstName} ${u?.lastName}`,
     id: u?.email,
   }));
+
+  console.log(adminOptions);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -87,6 +89,7 @@ export default function AddCampusModal({
       street: formData.state,
       state: formData.state,
       zipCode: formData.zipCode,
+      country: formData.country,
     };
 
     const data = { ...formData, address };
@@ -138,7 +141,7 @@ export default function AddCampusModal({
             title="Campus Levels"
             onChange={(e) => updateForm("levels", e.target.value)}
             options={levels.map((v) => ({ children: v }))}
-            value={formData?.levels}
+            // value={formData?.levels}
             disabled={!isCreating}
           />
 
@@ -201,7 +204,7 @@ export default function AddCampusModal({
             label="Zip Code"
             placeholder="Zip Code"
             onChange={(e) => updateForm("zipCode", e?.target?.value)}
-            value={formData?.zipCode}
+            value={+formData?.zipCode}
           />
 
           <FormDropdown
@@ -215,7 +218,7 @@ export default function AddCampusModal({
           <FormDropdown
             title="Campus Cordinator"
             value={formData?.campusCoordinator}
-            options={InstructorsData?.map((d: any) => ({ children: d?.name }))}
+            options={adminOptions?.map((d: any) => ({ children: d?.id }))}
             onChange={(e) => updateForm("campusCoordinator", e?.target?.value)}
             disabled={!isCreating}
           />

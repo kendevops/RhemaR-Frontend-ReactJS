@@ -27,11 +27,12 @@ export default function FormDropdownSelectMultiple({
   lg,
   md,
   hasErrors,
+  value,
   ...otherProps
 }: FormDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<any>([]);
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -43,12 +44,17 @@ export default function FormDropdownSelectMultiple({
         ? prevSelected.filter((item) => item !== option)
         : [...prevSelected, option]
     );
+
+    console.log(option);
+
     setInputValue(""); // Clear input value after selecting an option
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
+
+  console.log(selectedOptions);
 
   return (
     <FormInputWrapper {...{ lg, md }}>
@@ -81,14 +87,18 @@ export default function FormDropdownSelectMultiple({
         //   width: "100%",
         // }}
         >
-          {options.map(({ children }, i) => (
-            <DropdownItem
-              key={i.toString()}
-              onClick={() => handleOptionClick(children as string)}
-            >
-              {children}
-            </DropdownItem>
-          ))}
+          {options.map(({ children }, i) => {
+            console.log(children);
+
+            return (
+              <DropdownItem
+                key={i.toString()}
+                onClick={() => handleOptionClick(children as string)}
+              >
+                {children}
+              </DropdownItem>
+            );
+          })}
         </DropdownMenu>
       </Dropdown>
     </FormInputWrapper>

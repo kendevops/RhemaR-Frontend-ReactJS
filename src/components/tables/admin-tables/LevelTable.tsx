@@ -10,30 +10,39 @@ type EditLevelProps = {
 export default function LevelTable() {
   const { data: levelData, isLoading } = useCampusLevel();
 
-  const data = levelData?.nodes;
+  console.log(levelData);
 
-  console.log(data);
-
-  const levelData2 = [1, 2, 3];
+  // const data = levelData?.nodes;
 
   const levelTColumns: TableColumns<any>[] = [
-    { key: "Level", title: "Level", render: (data, i) => <p>{i + 1}</p> },
+    { key: "Level", title: "Level", render: (data, i) => <p>{data.name}</p> },
+    {
+      key: "No. of Students",
+      title: "No. of Students",
+      render: (data) => <p>{data._count.students}</p>,
+    },
     {
       key: "No. of Campuses",
       title: "No. of Campuses",
-      render: (data) => <p>{data + 20}</p>,
+      render: (data) => <p>{data._count.campuses}</p>,
     },
     {
       key: "No. of Courses",
       title: "No. of Courses",
-      render: (data) => <p>{data + 10}</p>,
+      render: (data) => <p>{data._count.courses}</p>,
+    },
+
+    {
+      key: "No. of Tuitions",
+      title: "No. of Tuitions",
+      render: (data) => <p>{data._count.tuitions}</p>,
     },
   ];
 
   return (
     <>
       <Table.Wrapper>
-        {levelData2 && <Table columns={levelTColumns} data={levelData2} />}
+        {levelData && <Table columns={levelTColumns} data={levelData} />}
       </Table.Wrapper>
     </>
   );
