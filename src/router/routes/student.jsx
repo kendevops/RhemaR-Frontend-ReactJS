@@ -9,6 +9,33 @@ const StudentRoutes = [
       resource: "Students",
     },
   },
+
+  {
+    path: "/student/schedule",
+    component: lazy(() => import("../../views/student/Schedule")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+
+  {
+    path: "/student/elearning",
+    component: lazy(() => import("../../views/student/ELearning")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+
+  {
+    path: "/student/academic-report",
+    component: lazy(() => import("../../views/student/AcademicReport")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
   {
     path: "/student/tuition-clearance",
     component: lazy(() => import("../../views/student/tuition-clearance")),

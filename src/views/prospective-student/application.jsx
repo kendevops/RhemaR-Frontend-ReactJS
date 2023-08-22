@@ -343,6 +343,8 @@ function ApplicationPage(props) {
 const ProspectiveStudentApplicationPage = () => {
   const [hasApplied, setHasApplied] = useState(false);
   const [pendingPayment, setPendingPayment] = useState(false);
+  // const [hasApplied, setHasApplied] = useState(false);
+  const [pendingFeePayment, setPendingFeePayment] = useState(false);
   const { data, isLoading } = useCurrentUser();
 
   const dispatch = useDispatch();
@@ -352,6 +354,13 @@ const ProspectiveStudentApplicationPage = () => {
   function makePayment() {
     const application = data?.applications[0];
     const paymentUrl = application?.initialPayment?.paymentUrl;
+    window?.open(paymentUrl);
+    window.location?.reload();
+  }
+
+  function feePayment() {
+    const application = data?.applications[0];
+    const paymentUrl = application?.feePayment?.paymentUrl;
     window?.open(paymentUrl);
     window.location?.reload();
   }
@@ -387,6 +396,18 @@ const ProspectiveStudentApplicationPage = () => {
       default:
         console.log("Default");
     }
+
+    switch (application?.feePayment?.status) {
+      case "pending":
+        setPendingFeePayment(true);
+        break;
+
+      case "success":
+        setHasApplied(true);
+        break;
+      default:
+        console.log("Default");
+    }
   }, [data]);
 
   return (
@@ -395,10 +416,42 @@ const ProspectiveStudentApplicationPage = () => {
         <div className="auth-wrapper">
           <div className="row">
             <div className="col-xl-7 col-lg-8 col-md-10 col-12 mx-auto">
+              <article className="bg-white shadow rounded-2 p-5 my-5">
+                <section className="text-center">
+                  <div className="p-3 bg-blue-200 rounded-3">
+                    <img src={applicationPending} alt="Payment pending" />
+                  </div>{" "}
+                  <button
+                    // onClick={makePayment}
+                    className="btn bg-success  btn-lg w-100 text-bg-dark "
+                    type="button"
+                    style={{ color: "white" }}
+                  >
+                    APPLICATION FORM SUBMITTED
+                  </button>
+                </section>
+              </article>
+
+              <article className="bg-white shadow rounded-2 p-5 my-5">
+                <section className="text-center">
+                  <div className="p-3 bg-blue-200 rounded-3">
+                    <img src={applicationPending} alt="Payment pending" />
+                  </div>{" "}
+                  <button
+                    onClick={pendingFeePayment && feePayment}
+                    className="btn btn-blue-800 btn-lg w-100"
+                    type="button"
+                  >
+                    {pendingFeePayment
+                      ? "FEE PAYMENT PENDING"
+                      : "FEE PAYMENT PAID"}
+                  </button>
+                </section>
+              </article>
               {isLoading && <Spinner />}
-              <article className="bg-white shadow rounded-2 p-5">
-                {pendingPayment && (
-                  <section className="text-center">
+              <article className="bg-white shadow rounded-2 p-5 my-5">
+                {
+                  <section className="text-center  ">
                     <div className="p-3 bg-blue-200 rounded-3">
                       <img src={applicationPending} alt="Payment pending" />
                     </div>{" "}
@@ -407,10 +460,12 @@ const ProspectiveStudentApplicationPage = () => {
                       className="btn btn-blue-800 btn-lg w-100"
                       type="button"
                     >
-                      Proceed to Payment
+                      {pendingPayment
+                        ? "INITIAL FEE PENDING"
+                        : "INITIAL FEE PAID"}
                     </button>
                   </section>
-                )}
+                }
 
                 {hasApplied && (
                   <>

@@ -1,10 +1,8 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
-import useCreateCampusTuition from "../../hooks/mutations/classes/useCreateCampusTuition";
-import useUpdateCampusTuition from "../../hooks/mutations/classes/useUpdateCampusTuition";
 import FormDropdown from "../molecules/FormDropdown";
-import { levels } from "../../data/Levels";
+// import { levels } from "../../data/Levels";
 import FormInput from "../molecules/FormInput";
 import { UserDto } from "../../types/dto";
 import { toast } from "react-toastify";
@@ -16,6 +14,7 @@ import { states } from "../../data/States";
 import { InstructorsData } from "../../data/InstructorsData";
 import useCreateCampus from "../../hooks/mutations/classes/useCreateCampus";
 import useAllUsers from "../../hooks/queries/useAllUsers";
+import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
 
 interface AddCampusModalProps {
   toggle: VoidFunction;
@@ -32,6 +31,8 @@ export default function AddCampusModal({
 }: AddCampusModalProps) {
   const isCreating = !defaultValues;
 
+  const [levelValues, setLevelValues] = useState<any>("");
+
   const { isLoading: campusesLoading, data } = useAllCampuses();
   const campusesData = data?.nodes;
   const createCampus = useCreateCampus();
@@ -40,14 +41,17 @@ export default function AddCampusModal({
   const isLoading = createCampus.isLoading || campusesLoading;
   const { data: usersData, isLoading: usersLoading } = useAllUsers();
 
+  const { data: levelData } = useCampusLevel();
+
+  console.log(levelData);
+
   const initialState = {
-    levels: [levels[0]],
+    levels: [],
     name: "",
     region: "",
     currency: "",
     continent: "",
     campusCode: "",
-    campusCoordinator: "",
     phoneNumber1: "",
     phoneNumber2: "",
     shortName: "",
@@ -56,6 +60,7 @@ export default function AddCampusModal({
     primaryLanguage: "",
     secondaryLanguage: "",
     campusAbbreviation: "",
+    campusCoordinator: "",
 
     city: "",
     state: states[0],
@@ -92,7 +97,11 @@ export default function AddCampusModal({
       country: formData.country,
     };
 
-    const data = { ...formData, address };
+    // const levels = formData?.levels?.map((l: any, i: number) => l.name);
+
+    const data = { ...formData, address, levels: levelValues };
+
+    console.log(data.campusCoordinator, levelValues);
 
     if (formIsValid) {
       createCampus.mutate(data, {
@@ -139,9 +148,10 @@ export default function AddCampusModal({
 
           <FormDropdownSelectMultiple
             title="Campus Levels"
-            onChange={(e) => updateForm("levels", e.target.value)}
-            options={levels.map((v) => ({ children: v }))}
             // value={formData?.levels}
+            onChange={(e) => updateForm("levels", e.target.value)}
+            options={levelData?.map((v: any) => ({ children: v.name }))}
+            setLevelValues={setLevelValues}
             disabled={!isCreating}
           />
 
@@ -204,7 +214,7 @@ export default function AddCampusModal({
             label="Zip Code"
             placeholder="Zip Code"
             onChange={(e) => updateForm("zipCode", e?.target?.value)}
-            value={+formData?.zipCode}
+            value={formData?.zipCode}
           />
 
           <FormDropdown
@@ -219,8 +229,12 @@ export default function AddCampusModal({
             title="Campus Cordinator"
             value={formData?.campusCoordinator}
             options={adminOptions?.map((d: any) => ({ children: d?.id }))}
+            // options={[
+            //   "studentservices@rhemanigeria2.com",
+            //   "studentservices@rhemanigeria.com",
+            // ]?.map((d: any) => ({ children: d }))}
             onChange={(e) => updateForm("campusCoordinator", e?.target?.value)}
-            disabled={!isCreating}
+            // disabled={!isCreating}
           />
 
           <FormInput
