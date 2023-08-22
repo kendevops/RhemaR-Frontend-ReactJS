@@ -214,7 +214,7 @@ export default function AddCampusModal({
             label="Zip Code"
             placeholder="Zip Code"
             onChange={(e) => updateForm("zipCode", e?.target?.value)}
-            value={+formData?.zipCode}
+            value={formData?.zipCode}
           />
 
           <FormDropdown
