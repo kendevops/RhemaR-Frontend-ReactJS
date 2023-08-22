@@ -3,7 +3,7 @@ import api from "../../../api";
 import queryKeys from "../../../queryKeys";
 
 export default function useCampusLevel() {
-  return useQuery([queryKeys.level], () =>
-    api.get(`/levels`).then((r) => r.data.data?.level)
+  return useQuery([queryKeys.levels], () =>
+    api.get(`/levels`).then((r) => r.data.data?.levels)
   );
 }

@@ -7,12 +7,16 @@ import useClasses from "../../hooks/queries/classes/useClasses";
 import { months } from "../../utils/getMonth";
 import Tab from "../atoms/Tab";
 import UpcomingEvent from "../molecules/UpcomingEvent";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import isWithinCurrentDateRange from "../../utils/isWithinDateRange";
+import { FaCalendarAlt } from "react-icons/fa";
+import BButton from "../general/button";
 
-export default function CourseSchedule() {
+export default function CourseSchedule({ title }: any) {
   const [viewing, setViewing] = useState(0);
   const [clas, setClas] = useState(0);
+
+  const history = useHistory();
 
   let classTabs = ["All"];
 
@@ -26,6 +30,8 @@ export default function CourseSchedule() {
 
   const allClasses = data?.classes?.nodes;
   let classes = allClasses;
+
+  console.log(classes);
 
   if (classes && classes[0]?.campus?.name === "Abuja") {
     classTabs = ["Weekend Classes", "Night Classes"];
@@ -89,15 +95,22 @@ export default function CourseSchedule() {
 
       {/* Classes */}
       <section className="">
+        <div className="d-flex gap-3 align-center ">
+          <FaCalendarAlt />
+          <p className="r-card-title">{title}</p>
+        </div>
+        <hr />
         {/* Tabs */}
-        <Tab.Wrapper>
+        <Tab.Wrapper className="d-flex justify-content-between ">
           {classTabs?.map((t, i) => {
             return (
               <Tab
                 key={t}
                 tabColor="#289483"
                 isSelected={currentClass === t}
-                onClick={() => setClas(i)}
+                onClick={() => {
+                  setClas(i);
+                }}
               >
                 {t}
               </Tab>
@@ -136,6 +149,10 @@ export default function CourseSchedule() {
               })
           ) : (
             <p>No Classes yet...</p>
+          )}
+
+          {classes && (
+            <BButton text={"View All 2023/2024 Schedule"} onClick={() => {}} />
           )}
         </div>
       </section>

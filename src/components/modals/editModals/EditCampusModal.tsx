@@ -12,10 +12,12 @@ import { states } from "../../../data/States";
 import { UserDto } from "../../../types/dto";
 import useAllUsers from "../../../hooks/queries/useAllUsers";
 import useEditCampus from "../../../hooks/mutations/classes/useEditCampus";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
 import { InstructorsData } from "../../../data/InstructorsData";
+import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
+import FormDropdownSelectMultiple2 from "../../molecules/FormDropdownSelectmultiple2";
 
 interface EditCampusModalProps {
   data: any;
@@ -23,11 +25,14 @@ interface EditCampusModalProps {
 
 export default function EditCampusModal({ data }: EditCampusModalProps) {
   const [visibility, toggle] = useToggle();
+  const [levelValues, setLevelValues] = useState<any>("");
 
-  console.log(data);
+  const { data: levelData } = useCampusLevel();
+
+  console.log(levelData);
 
   const initialState = {
-    levels: [data?.levels],
+    levels: data?.levels,
     name: data?.name,
     region: data?.region,
     currency: data?.currency,
@@ -43,22 +48,25 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
     secondaryLanguage: data?.secondaryLanguage,
     campusAbbreviation: data?.campusAbbreviation,
 
-    city: data?.city,
-    street: data?.street,
-    state: data?.state,
-    zipCode: data?.zipCode,
+    city: data?.address?.city,
+    street: data?.address?.street,
+    state: data?.address?.state,
+    zipCode: data?.address?.zipCode,
   };
 
   const editCampus = useEditCampus(data?.id);
+
   const isLoading = editCampus.isLoading;
   const { data: usersData, isLoading: usersLoading } = useAllUsers();
 
   const { formData, updateForm, formIsValid } = useForm({ initialState });
 
+  console.log(data?.levels);
+
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("ADMIN"));
+      .some((n: any) => n?.includes("CAMPUS_COORD_ADMIN"));
   });
 
   const adminOptions = users?.map((u) => ({
@@ -75,18 +83,27 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
   //   }));
 
   //   function onSubmit() {}
+  console.log("level", formData.levels);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const address = {
       city: formData.city,
-      street: formData.state,
+      street: formData.street,
       state: formData.state,
       zipCode: formData.zipCode,
+      country: formData.country,
     };
 
-    const data2 = { ...formData, address };
+    const levels =
+      levelValues?.lenght > 0
+        ? levelValues
+        : formData?.levels?.map((l: any, i: string) => l.name);
+
+    console.log(levels);
+
+    const data2 = { ...formData, address, levels };
 
     if (!formIsValid) {
       alert("Please fill in all fields");
@@ -123,6 +140,13 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
     }
   };
 
+  // const updateForm2 = (field: string, value: string | string[]) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [field]: value,
+  //   }));
+  // };
+
   return (
     <div className=" ">
       <p
@@ -155,10 +179,18 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
 
             <FormDropdownSelectMultiple
               title="Campus Levels"
-              onChange={(e) => updateForm("levels", e.target.value)}
-              options={levels.map((v) => ({ children: v }))}
               value={formData?.levels}
+              onChange={(e) => updateForm("levels", e.target.value)}
+              options={levelData?.map((v: any) => ({ children: v.name }))}
+              setLevelValues={setLevelValues}
             />
+
+            {/* <FormDropdownSelectMultiple2
+              title="Campus Levels"
+              onChange={(e) => updateForm("levels", e.target.value)}
+              options={levelData?.map((v: any) => ({ children: v.name }))}
+              value={formData?.levels}
+            /> */}
 
             <FormInput
               label="Campus Address (Street)"
@@ -233,11 +265,11 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
 
             <FormDropdown
               title="Campus Cordinator"
-              value={formData?.campusCoordinator}
-              options={adminOptions?.map((d: any) => ({ children: d?.label }))}
+              options={adminOptions?.map((d: any) => ({ children: d?.id }))}
               onChange={(e) => {
                 updateForm("campusCoordinator", e?.target?.value);
               }}
+              value={formData?.campusCoordinator}
             />
 
             <FormInput

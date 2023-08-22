@@ -1,6 +1,7 @@
 import { MouseEventHandler } from "react";
 import getMonth from "../../utils/getMonth";
 import getTimeString from "../../utils/getTimeString";
+import { MdCancel } from "react-icons/md";
 
 interface EventProps {
   startDate: Date;
@@ -22,7 +23,7 @@ export default function UpcomingEvent({
   return (
     <article
       aria-label="Event"
-      className="d-flex p-2 rounded-3 align-items-center gap-3 mt-4 cursor-pointer"
+      className="d-flex p-2 rounded-3 align-items-center gap-3 mt-4 cursor-pointer position-relative "
       onClick={onClick}
       style={{
         borderColor: "#D5DFEC",
@@ -50,6 +51,10 @@ export default function UpcomingEvent({
         <time className="text-sm">
           {startTime} {endTime ? `-${endTime}` : ""}
         </time>
+      </div>
+
+      <div style={{ position: "absolute", right: "15px", top: "15px" }}>
+        <MdCancel style={{ color: "red", fontSize: "23px" }} />
       </div>
     </article>
   );
