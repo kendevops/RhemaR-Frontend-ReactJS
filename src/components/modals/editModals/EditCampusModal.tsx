@@ -12,6 +12,7 @@ import { states } from "../../../data/States";
 import { UserDto } from "../../../types/dto";
 import useAllUsers from "../../../hooks/queries/useAllUsers";
 import useEditCampus from "../../../hooks/mutations/classes/useEditCampus";
+import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
