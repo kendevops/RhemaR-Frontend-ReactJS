@@ -6,11 +6,18 @@ import useClasses from "../../hooks/queries/classes/useClasses";
 import { Spinner } from "reactstrap";
 import getMonth, { months } from "../../utils/getMonth";
 import getTimeString from "../../utils/getTimeString";
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
+import { FaCalendarAlt, FaGraduationCap } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
+import { AiOutlineCreditCard } from "react-icons/ai";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import useAllEvents from "../../hooks/queries/events/useAllEvents";
 import UpcomingEvent from "../../components/molecules/UpcomingEvent";
+import ProgressBarMui from "../../components/progressBars/progressBer";
+import ProgressBarBootstrap from "../../components/progressBars/progressBarBoostrap";
+import BButton from "../../components/general/button";
 
 const StudentDashboardPage = () => {
   const { data, isLoading } = useClasses({
@@ -30,11 +37,15 @@ const StudentDashboardPage = () => {
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
   const courses = coursesData?.courses;
 
+  console.log(lectures);
+
   const completion = courses?.reduce((a, b) => {
     return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
   });
 
   const totalCompletion = courses?.length * 100;
+
+  // console.log(totalCompletion, courses?.length, completion);
   const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
   console.log(semesterProgress);
@@ -51,6 +62,8 @@ const StudentDashboardPage = () => {
 
   const startDate = userData?.applications[0]?.session?.startDate;
   const endDate = userData?.applications[0]?.session?.endDate;
+
+  console.log(userData);
 
   // const startDate = "2022-12-07T22:00:43.187Z";
   // const endDate = "2023-12-20T22:00:43.187Z";
@@ -74,80 +87,63 @@ const StudentDashboardPage = () => {
 
   return (
     <div className="container my-5">
+      <div
+        className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
+        style={{ color: "white", fontWeight: 700 }}
+      >
+        <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
+        <div>Student Dashboard</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.level?.name
+          ?.split("_")
+          .join(" ")
+          .toLowerCase()}`}</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.campus?.name}`}</div>
+      </div>
       <div className="row">
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           {coursesLoading && <Spinner />}
           {/* Semester Progress */}
-          {courses && (
-            <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
-              <div className="d-flex justify-content-between ">
-                <p className="r-card-title">Semester Progress</p>
-                <h2 className="font-bold text-2xl ms-4">{progress}%</h2>
-              </div>
-
-              {/* Progress bar */}
-              <div>
-                <div className="progress ">
-                  <div
-                    className="progress-bar progress-bar-animated bg-warning "
-                    role="progressbar"
-                    style={{
-                      width: `${progress}%`,
-                      // width: "30%",
-                    }}
-                    aria-valuenow={progress}
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Semester Progress */}
-          {courses && (
-            <div className="bg-white r-card px-5 py-4 mb-4 bg-cap">
-              <div className="d-flex justify-content-between ">
-                <p className="r-card-title">Student Progress</p>
-                <h2 className="font-bold text-2xl ms-4">
-                  {semesterProgress.toString() == "NaN"
-                    ? "0"
-                    : semesterProgress.toString()}
-                  %
-                </h2>
-              </div>
+          <ProgressBarMui
+            name={"Student Progress"}
+            percentage={
+              semesterProgress.toString() === "NaN" ? "0" : semesterProgress
+            }
+            progressColor={"green"}
+            icon={<FaGraduationCap />}
+          />
 
-              {/* Progress bar */}
-              <div>
-                <div className="progress ">
-                  <div
-                    className="progress-bar progress-bar-animated bg-warning "
-                    role="progressbar"
-                    style={{
-                      width: `${
-                        semesterProgress.toString() === "NaN"
-                          ? "0"
-                          : semesterProgress
-                      }%`,
-                      // width: "30%",
-                    }}
-                    aria-valuenow={semesterProgress}
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
+          <ProgressBarMui
+            name={"Session Progress"}
+            percentage={progress}
+            progressColor={"yellow"}
+            icon={<FaGraduationCap />}
+          />
+
           {/* Upcmonign lecture */}
           <section className="bg-white r-card px-5 py-4">
-            <div className="d-flex justify-content-between">
-              <p className="r-card-title">Upcoming Lecture</p>
+            <div className="d-flex gap-3 align-center ">
+              <FaCalendarAlt />
+              <p className="r-card-title">Ongoing Lecture</p>
               {isLoading && <Spinner />}
             </div>
             <hr />
             {lectures ? (
-              <article className="">
+              <article className="position-relative ">
                 <Link to={`/student/lecture/${lectures[0]?.id}`}>
                   <UpcomingEvent
                     title={lectures[0]?.name}
@@ -155,6 +151,12 @@ const StudentDashboardPage = () => {
                     startDate={new Date(lectures[0]?.startTime)}
                   />
                 </Link>
+
+                <div
+                  style={{ position: "absolute", right: "15px", top: "15px" }}
+                >
+                  <MdCancel style={{ color: "red", fontSize: "23px" }} />
+                </div>
               </article>
             ) : (
               <p className="text-xl font-bold">No Upcoming Lectures</p>
@@ -164,10 +166,10 @@ const StudentDashboardPage = () => {
 
         {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
-          <div className="bg-white d-flex align-items-center justify-content-between r-card px-5 py-4 mb-4 payment-card">
-            {userLoading && <Spinner />}
+          <div className="bg-white d-flex flex-column  align-items-center justify-content-between r-card mb-4 payment-card">
+            {/* {userLoading && <Spinner />} */}
             {/* left */}
-            <div className="text-center mx-auto">
+            {/* <div className="text-center mx-auto">
               <div>
                 <div
                   className="rounded-progressbar"
@@ -179,48 +181,59 @@ const StudentDashboardPage = () => {
                 ></div>
               </div>
               <div className="text-lg">Payment Completion</div>
+            </div> */}
+            <div className="w-100 ">
+              <ProgressBarMui
+                name={"Tuition Payment"}
+                percentage={Math.floor(paymentCompletion)}
+                progressColor={"green"}
+                icon={<AiOutlineCreditCard />}
+                others={
+                  <div className="w-100 my-3">
+                    {feesPaid < totalAmountRequired ? (
+                      <div className="text-center mx-auto d-flex justify-content-between py-3 align-items-center text-xl">
+                        <p className="text-xl">
+                          Next Payment: <span>N{feesPaid}</span>
+                        </p>
+                        {/* <p className="next-payment">N{feesPaid}</p> */}
+
+                        <button className="btn btn-blue-800 p-2 text-center ">
+                          <a href={payUrl}>Pay Now</a>
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-xl">Paid in full</p>
+                    )}
+                    <button className="btn btn-outline-dark border-1 text-xl border-blue-800 w-100 py-3 text-blue-800">
+                      <Link to={"/student/tuition-clearance"}>
+                        Show all Payments
+                      </Link>
+                    </button>
+                  </div>
+                }
+              />
             </div>
 
-            <div
+            {/* <div
               style={{
                 width: "2px",
                 backgroundColor: "#D2D7E0",
                 height: "100%",
               }}
-            ></div>
+            // ></div> */}
 
             {/* right */}
-            {feesPaid < totalAmountRequired ? (
-              <div className="text-center mx-auto">
-                <p className="text-xl">Next Payment</p>
-                <p className="next-payment">N{feesPaid}</p>
-                <p className="mb-0 text-lg click">
-                  <u>
-                    <a href={payUrl}>Make Payment</a>
-                  </u>
-                </p>
-              </div>
-            ) : (
-              <p className="text-xl">Paid in full</p>
-            )}
           </div>
 
           {/*  */}
-          <div className="bg-white r-card text-center p-3 click">
+          {/* <div className="bg-white r-card text-center p-3 click">
             <Link to={"/student/tuition-clearance"}>View Fee Breakdown</Link>
-          </div>
+          </div> */}
         </div>
 
         <div className="col-lg-6 col-md-6 col-12 mb-4">
-          <div className="d-flex justify-content-between">
-            <h2 className="text-xl font-bold text-blue-600">Next Schedule</h2>
-
-            <Link to={"/student/downloads"}>
-              <small className="text-decoration-underline">Show All</small>
-            </Link>
-          </div>
           <CardWrapper>
-            <CourseSchedule />
+            <CourseSchedule title={"Upcoming Classes"} />
           </CardWrapper>
         </div>
 
@@ -266,9 +279,7 @@ const StudentDashboardPage = () => {
               </div>
             )}
             <div className="text-center text-xl click my-3">
-              <u>
-                <Link to={"/student/events"}> Show all</Link>
-              </u>
+              <BButton text={"View All 2023/2024 Notice"} onClick={() => {}} />
             </div>
           </div>
         </div>

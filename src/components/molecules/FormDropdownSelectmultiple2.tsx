@@ -4,7 +4,6 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Input,
 } from "reactstrap";
 import FormInputWrapper from "./FormInputWrapper";
 
@@ -19,7 +18,6 @@ type FormDropdownProps = {
   lg?: string;
   md?: string;
   hasErrors?: boolean;
-  setLevelValues?: any;
 } & React.SelectHTMLAttributes<HTMLSelectElement>;
 
 export default function FormDropdownSelectMultiple({
@@ -28,15 +26,10 @@ export default function FormDropdownSelectMultiple({
   lg,
   md,
   hasErrors,
-  value,
-  setLevelValues,
-  ...otherProps
 }: FormDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<any>([]);
-
-  console.log(value);
+  const [inputValue, setInputValue] = useState("");
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -50,8 +43,6 @@ export default function FormDropdownSelectMultiple({
     );
   };
 
-  setLevelValues(() => selectedOptions);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -62,7 +53,7 @@ export default function FormDropdownSelectMultiple({
 
       <input
         type="text"
-        value={selectedOptions} // Display selected options in the input
+        value={selectedOptions}
         readOnly
         className="form-control"
         onClick={toggle}
@@ -71,36 +62,28 @@ export default function FormDropdownSelectMultiple({
           borderColor: hasErrors ? "red" : "",
           borderStyle: hasErrors ? "solid" : "none",
           cursor: "pointer",
-          position: "relative",
         }}
       />
 
       <Dropdown isOpen={isOpen} toggle={toggle}>
-        <DropdownToggle
-          style={{ position: "absolute", right: "30px", top: "-28px" }}
-          className="text-lg text-left shadow-none"
-          caret
-        ></DropdownToggle>
-
-        <DropdownMenu
-        // style={{
-        //   width: "100%",
-        // }}
-        >
-          {options?.map(({ children }, i) => {
-            console.log(children);
-
-            return (
-              <DropdownItem
-                key={i.toString()}
-                onClick={() => handleOptionClick(children as string)}
-              >
-                {children}
-              </DropdownItem>
-            );
-          })}
+        <DropdownToggle style={{ display: "none" }} />
+        <DropdownMenu>
+          {options.map(({ children }, i) => (
+            <DropdownItem
+              key={i.toString()}
+              onClick={() => handleOptionClick(children as string)}
+            >
+              {children}
+            </DropdownItem>
+          ))}
         </DropdownMenu>
       </Dropdown>
+      <p>
+        Selected Options:{" "}
+        {selectedOptions.map((option) => (
+          <span key={option}>{option}, </span>
+        ))}
+      </p>
     </FormInputWrapper>
   );
 }

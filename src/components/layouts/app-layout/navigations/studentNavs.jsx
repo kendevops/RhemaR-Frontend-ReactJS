@@ -12,6 +12,31 @@ export default [
     resource: "Students",
   },
   {
+    id: "schedule",
+    title: "Schedule",
+    icon: <Icon icon="ep:menu" />,
+    navLink: "/student/schedule",
+    action: "read",
+    resource: "Students",
+  },
+
+  {
+    id: "elearning",
+    title: "E-Learning",
+    icon: <Icon icon="ep:menu" />,
+    navLink: "/student/elearning",
+    action: "read",
+    resource: "Students",
+  },
+  {
+    id: "academic-report",
+    title: "Academic Report",
+    icon: <Icon icon="fa-regular:credit-card" />,
+    navLink: "/student/academic-report",
+    action: "read",
+    resource: "Students",
+  },
+  {
     id: "courses",
     title: "Courses",
     icon: <Icon icon="bi:collection-fill" />,
