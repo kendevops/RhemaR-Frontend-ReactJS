@@ -36,6 +36,23 @@ const StudentRoutes = [
       resource: "Students",
     },
   },
+
+  {
+    path: "/student/quizes",
+    component: lazy(() => import("../../views/student/Quizes")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+  {
+    path: "/student/tuition",
+    component: lazy(() => import("../../views/student/Tuition")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
   {
     path: "/student/tuition-clearance",
     component: lazy(() => import("../../views/student/tuition-clearance")),
@@ -79,6 +96,50 @@ const StudentRoutes = [
   {
     path: "/student/lecture/:id",
     component: lazy(() => import("../../views/student/Lecture")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+
+  {
+    path: "/student/lecture-material/:id",
+    component: lazy(() => import("../../views/student/LectureMaterial")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+  {
+    path: "/student/lecture-exams/:id",
+    component: lazy(() => import("../../views/student/LectureMaterial")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+  {
+    path: "/student/lecture-assignments/:id",
+    component: lazy(() => import("../../views/student/LectureAssignments")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+  {
+    path: "/student/lecture-quizes/:id",
+    component: lazy(() => import("../../views/student/LectureQuizes")),
+    meta: {
+      action: "read",
+      resource: "Students",
+    },
+  },
+
+  {
+    path: "/student/lecture-listening-assignment/:id",
+    component: lazy(() =>
+      import("../../views/student/LectureListeningAssignments")
+    ),
     meta: {
       action: "read",
       resource: "Students",

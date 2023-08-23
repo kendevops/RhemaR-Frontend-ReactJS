@@ -5,6 +5,9 @@ import { ArrowRight, Edit2 } from "react-feather";
 import ReactPlayer from "react-player";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Spinner } from "reactstrap";
+import { BsFillCheckCircleFill, BsFillPlayCircleFill } from "react-icons/bs";
+import { MdCancel, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import { GoPlay } from "react-icons/go";
 import Tab from "../../components/atoms/Tab";
 import Timeline from "../../components/atoms/Timeline";
 import AudioNoteIcon from "../../components/icons/AudioNote";
@@ -19,14 +22,23 @@ import CourseOverview from "../../components/students/CourseOverview";
 import useAttendClass from "../../hooks/mutations/classes/useAttendClass";
 import useToggle from "../../utility/hooks/useToggle";
 import downloadFile from "../../utils/downloadFile";
+import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import { Icon } from "@iconify/react";
+import { FaCalendarAlt } from "react-icons/fa";
+import LectureButton from "../../components/general/lectureButton";
+import ElearningInstructor from "../../components/students/ElearningInstructor";
 
 interface LectureParams {
   id: string;
 }
 
+// https://soundcloud.com/miami-nights-1984/accelerated  audio url
+
 const assignments = ["Reading Assignment.pdf", "Listening Assignment.mp3"];
 
-const tabs = ["Course Overview"]; //"Class Discussion"
+const tabs = ["Course Overview", "E-Learning Instructor", "Course Chat"];
+const playTabs = ["Session 2: Audio", "Session 2: Video"];
+
 // const video = require("../../assets/videos/class.mp4");
 
 export default function Lecture() {
@@ -34,15 +46,26 @@ export default function Lecture() {
   let router = useHistory();
   const className = "d-flex gap-4";
 
+  const id = params?.id;
+
+  const [eachSessionOverView, setEachSessionOverView] = useState("");
+
   const [tab, setTab] = useState(0);
+  const [playTab, setPlayTab] = useState(0);
   const currentTab = tabs[tab];
+  const currentPlayTab = playTabs[playTab];
 
   const { mutate, isLoading } = useAttendClass(params?.id);
   const [data, setData] = useState<any>(null);
   const course = data?.class?.course;
+  const instructor = data?.class?.instructor;
   const sessions = course?.sections;
   const [watching, setWatching] = useState("");
   const [isCompletted, setIsCompletted] = useState(false);
+
+  const { data: userData, isLoading: userLoading } = useCurrentUser();
+
+  console.log(sessions);
 
   const currentSession = sessions?.find((s: any) => s?.videoUrl === watching);
 
@@ -92,26 +115,100 @@ export default function Lecture() {
   console.log(sessions);
 
   return (
-    <>
+    <div className=" ">
+      <div
+        className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
+        style={{ color: "white", fontWeight: 700 }}
+      >
+        <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
+        <div>E-Learning Class</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.level?.name
+          ?.split("_")
+          .join(" ")
+          .toLowerCase()}`}</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.campus?.name}`}</div>
+      </div>
       <BackButton />
       <Row style={{ marginTop: "3rem" }}>
         {/* Left */}
         <ColWrapper lg="7">
           {isLoading && <Spinner />}
           {/* Video or Audio Player */}
-          <section>
-            <ReactPlayer url={watching} controls />
+          {data?.class?.status == "ongoing" && (
+            <section>
+              <div className="mb-5">
+                <Tab.Wrapper>
+                  {playTabs?.map((t, i) => {
+                    return (
+                      <Tab
+                        key={t}
+                        isSelected={t === currentPlayTab}
+                        tabColor={colors.green[500]}
+                        onClick={() => setPlayTab(i)}
+                      >
+                        {t}
+                      </Tab>
+                    );
+                  })}
+                </Tab.Wrapper>
+              </div>
 
-            <div style={{ margin: "5px 0" }}>
-              Completed?{" "}
-              <span>
-                <input
-                  type="checkbox"
-                  onClick={() => setIsCompletted(!isCompletted)}
-                />
-              </span>
-            </div>
-          </section>
+              {currentPlayTab.includes("Video") && (
+                <div
+                  style={{
+                    position: "relative",
+                    paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
+                  }}
+                >
+                  <ReactPlayer
+                    url={watching}
+                    controls
+                    width="100%"
+                    height="100%"
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
+                </div>
+              )}
+
+              {currentPlayTab.includes("Audio") && (
+                <div
+                  style={{
+                    position: "relative",
+                    paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
+                  }}
+                >
+                  <ReactPlayer
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                    url={"https://soundcloud.com/miami-nights-1984/accelerated"}
+                    controls
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Course overview and Discussion */}
           <CardWrapper>
@@ -131,7 +228,10 @@ export default function Lecture() {
             </Tab.Wrapper>
 
             {currentTab === "Course Overview" && (
-              <CourseOverview course={course} />
+              <CourseOverview course={course} overView={eachSessionOverView} />
+            )}
+            {currentTab === "E-Learning Instructor" && (
+              <ElearningInstructor instructor={instructor} />
             )}
             {/* {currentTab === "Class Discussion" && (
               <ClassDiscussion course={params?.id} />
@@ -140,16 +240,163 @@ export default function Lecture() {
         </ColWrapper>
 
         {/* Right */}
+
         <ColWrapper lg="4">
-          <CardWrapper className="d-flex flex-column gap-5">
-            {/* Course Outline Sessions */}
-            <article {...{ className }}>
-              <Timeline />
+          <div>
+            <div className="bg-white position-relative ">
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-80px",
+                  left: 0,
+                  fontSize: "18px",
+                }}
+              >
+                {data?.class?.status == "ongoing" && (
+                  <div>
+                    <div className="d-flex align-items-center gap-3">
+                      <FaCalendarAlt />
+                      <div>Start Date: 30th April 2023</div>
+                    </div>
+
+                    <div className="d-flex align-items-center gap-3">
+                      <FaCalendarAlt />
+                      <div>End Date: 30th April 2023</div>
+                    </div>
+                  </div>
+                )}
+                {data?.class?.status !== "ongoing" && (
+                  <div className="d-flex align-items-center gap-3">
+                    <FaCalendarAlt />
+                    <div>Date Of Course: 30th April 2023</div>
+                  </div>
+                )}
+              </div>
+              {data?.class?.status == "ongoing" && (
+                <>
+                  <div className="bg-blue-800 w-100 px-5 text-white py-3 text-2xl">
+                    Course Session
+                  </div>
+                  <div className="px-5 py-4 ">
+                    {data &&
+                      sessions?.map((s: any, i: number) => {
+                        const value =
+                          i <= 0 ? 100 : Math.round(Math.random() * 10); //change later
+
+                        // setEachSessionOverView(s.overView);
+
+                        function handleWatch() {
+                          setWatching(s?.videoUrl);
+                        }
+
+                        return (
+                          <div className="" key={s?.name}>
+                            {s?.name === currentSession?.name ? (
+                              <div
+                                className="my-3 d-flex align-items-center justify-content-between w-100 "
+                                style={{
+                                  // color:
+                                  //   s?.name === currentSession?.name ? "green" : "",
+                                  fontSize: "25px",
+                                }}
+                              >
+                                <div className="d-flex align-items-center  gap-4 ">
+                                  <BsFillCheckCircleFill
+                                    style={{ color: "green" }}
+                                  />
+                                  <p
+                                    className=" mt-2"
+                                    style={{ fontSize: "25px" }}
+                                  >
+                                    {s?.name}
+                                  </p>
+                                </div>
+                                <BsFillPlayCircleFill />
+                              </div>
+                            ) : (
+                              <div
+                                className="my-3 d-flex align-items-center justify-content-between w-100 text-blue-800"
+                                style={{
+                                  fontSize: "25px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={handleWatch}
+                              >
+                                <div className="d-flex align-items-center  gap-4 ">
+                                  <MdOutlineRadioButtonUnchecked />
+                                  <p
+                                    className=" mt-2"
+                                    style={{ fontSize: "25px" }}
+                                  >
+                                    {s?.name}
+                                  </p>
+                                </div>
+                                <GoPlay />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="my-5">
+              {data?.class?.status == "ongoing" && (
+                <>
+                  <div>
+                    <button
+                      onClick={toggle}
+                      className="btn btn-blue-800 btn-lg w-100  d-flex align-items-center justify-content-between"
+                    >
+                      Give Feedback <Feedback fill="#fff" />
+                    </button>
+                    <StudentFeedbackModal
+                      {...{ formValues, isOpen, toggle, courseId: classId }}
+                    />
+                  </div>
+                  <LectureButton
+                    text={"Course Feedback"}
+                    id={`lecture-feedback/${id}`}
+                  />
+                  <LectureButton
+                    text={"Course Exams"}
+                    done={true}
+                    id={`lecture-exams/${id}`}
+                  />
+                  <LectureButton
+                    text={"Listening Assignment"}
+                    done={true}
+                    id={`lecture-listening-assignment/${id}`}
+                  />
+                  <LectureButton
+                    text={"Course Assignments"}
+                    done={true}
+                    id={`lecture-assignments/${id}`}
+                  />
+                </>
+              )}
+              <LectureButton
+                text={"Course Material"}
+                done={true}
+                id={`lecture-material/${id}`}
+              />
+              <LectureButton
+                text={"Course Quizes"}
+                done={true}
+                id={`lecture-quizes/${id}`}
+              />
+            </div>
+          </div>
+        </ColWrapper>
+        {/* 
+        <ColWrapper lg="4">
+          <CardWrapper className="d-flex flex-column gap-5"> */}
+        {/* <article {...{ className }}>
+             
               <div className="w-100">
-                <h2 className="text-xl font-bold text-blue-600">
-                  {course?.title}
-                </h2>
-                <ul className="no-padding-left">
+                <div className="no-padding-left">
                   {data &&
                     sessions?.map((s: any, i: number) => {
                       const value =
@@ -177,45 +424,26 @@ export default function Lecture() {
                               {s?.name}
                             </p>
                           ) : (
-                            <u
+                            <p
                               style={{
                                 cursor: "pointer",
                               }}
                               onClick={handleWatch}
                             >
                               {s?.name}
-                            </u>
+                            </p>
                           )}
 
-                          <input
-                            type="checkbox"
-                            // value={i === 0 ? "true" : "false"}
-                            checked={
-                              s?.name === currentSession?.name
-                                ? isCompletted
-                                : false
-                            }
-                          />
-
-                          <div className="progress w-25">
-                            <div
-                              className="progress-bar progress-bar-animated bg-success "
-                              role="progressbar"
-                              style={{ width: `${value}%` }}
-                              aria-valuenow={value}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
-                            ></div>
-                          </div>
+                          
                         </li>
                       );
                     })}
-                </ul>
+                </div>
               </div>
-            </article>
+            </article> */}
 
-            {/* Course Materials */}
-            <article {...{ className }}>
+        {/* Course Materials */}
+        {/* <article {...{ className }}>
               <Timeline />
               <div>
                 <h2 className="text-xl font-bold text-blue-600">
@@ -256,10 +484,10 @@ export default function Lecture() {
                     })}
                 </ul>
               </div>
-            </article>
+            </article> */}
 
-            {/* Course Assignment */}
-            <article {...{ className }}>
+        {/* Course Assignment */}
+        {/* <article {...{ className }}>
               <Timeline />
               <div>
                 <h2 className="text-xl font-bold text-blue-600">
@@ -297,10 +525,10 @@ export default function Lecture() {
                     })}
                 </ul>
               </div>
-            </article>
+            </article> */}
 
-            {/* Course Exams */}
-            <article {...{ className }}>
+        {/* Course Exams */}
+        {/* <article {...{ className }}>
               <Timeline />
               <div className="w-100">
                 <h2 className="text-xl font-bold text-blue-600">Exams</h2>
@@ -321,17 +549,17 @@ export default function Lecture() {
                     })}
                 </ul>
               </div>
-            </article>
+            </article> */}
 
-            {/* Feedback and Attendance */}
-            <article>
-              {/* <div className="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3 bg-blue-200 ">
+        {/* Feedback and Attendance */}
+        {/* <article> */}
+        {/* <div className="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3 bg-blue-200 ">
                 Mark course attendance
                 <Checkbox />
               </div> */}
 
-              {/* Student feedback modal */}
-              <div>
+        {/* Student feedback modal */}
+        {/* <div>
                 <button
                   onClick={toggle}
                   className="btn btn-blue-800 btn-lg w-100  d-flex align-items-center justify-content-between"
@@ -342,10 +570,10 @@ export default function Lecture() {
                   {...{ formValues, isOpen, toggle, courseId: classId }}
                 />
               </div>
-            </article>
-          </CardWrapper>
-        </ColWrapper>
+            </article> */}
+        {/* </CardWrapper>
+        </ColWrapper> */}
       </Row>
-    </>
+    </div>
   );
 }
