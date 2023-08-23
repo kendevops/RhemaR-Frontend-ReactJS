@@ -1,16 +1,16 @@
 import typography from "../../assets/img/Typography";
 
-type CourseOverviewProps = {
-  course: any;
-  overView?: string;
+type ElearningInstructorProps = {
+  instructor: any;
 };
 
-export default function CourseOverview({
-  course,
-  overView,
-}: CourseOverviewProps) {
-  const title = course?.title;
-  const content = <>{course?.desc}</>;
+export default function ElearningInstructor({
+  instructor,
+}: ElearningInstructorProps) {
+  console.log(instructor);
+
+  const name = instructor?.firstName;
+  const email = <>{instructor?.email}</>;
 
   return (
     <article className="my-4">
@@ -20,7 +20,7 @@ export default function CourseOverview({
           marginBottom: "1.5rem",
         }}
       >
-        {title}
+        {name}
       </h2>
 
       <p
@@ -28,7 +28,7 @@ export default function CourseOverview({
           lineHeight: "2rem",
         }}
       >
-        {content}
+        {email}
       </p>
     </article>
   );

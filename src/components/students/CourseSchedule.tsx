@@ -138,11 +138,13 @@ export default function CourseSchedule({ title }: any) {
                         />
                       </Link>
                     ) : (
-                      <UpcomingEvent
-                        title={clas?.name}
-                        endDate={new Date(clas?.endTime)}
-                        startDate={new Date(clas?.startTime)}
-                      />
+                      <Link key={i} to={`/student/lecture/${clas?.id}`}>
+                        <UpcomingEvent
+                          title={clas?.name}
+                          endDate={new Date(clas?.endTime)}
+                          startDate={new Date(clas?.startTime)}
+                        />
+                      </Link>
                     )}
                   </>
                 );
