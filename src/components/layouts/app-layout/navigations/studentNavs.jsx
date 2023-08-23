@@ -36,6 +36,23 @@ export default [
     action: "read",
     resource: "Students",
   },
+
+  {
+    id: "quizes",
+    title: "Quizes",
+    icon: <Icon icon="fa-regular:credit-card" />,
+    navLink: "/student/quizes",
+    action: "read",
+    resource: "Students",
+  },
+  {
+    id: "tuition",
+    title: "Tuition",
+    icon: <Icon icon="fa-regular:credit-card" />,
+    navLink: "/student/tuition",
+    action: "read",
+    resource: "Students",
+  },
   {
     id: "courses",
     title: "Courses",
