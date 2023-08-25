@@ -9,6 +9,7 @@ import ProgressBarMui from "../../components/progressBars/progressBer";
 import SessionSchedule from "../../components/students/SessionSchedule";
 import Tab from "../../components/atoms/Tab";
 import AcademicReport from "../../components/students/AcademicReport";
+import StudentActionButtons from "./StudentActionButtons";
 
 const AcademicReportPage = () => {
   const [progress, setProgress] = useState(0);
@@ -189,6 +190,10 @@ const AcademicReportPage = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div>
+        <StudentActionButtons level={currentLevel} />
       </div>
     </div>
   );

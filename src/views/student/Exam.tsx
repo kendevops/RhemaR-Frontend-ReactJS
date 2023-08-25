@@ -18,6 +18,8 @@ export default function Exam() {
   const router = useHistory();
   const params = useParams<ExamParams>();
 
+  console.log(params?.id);
+
   useEffect(() => {
     params?.id ? console.log("") : router?.goBack();
   }, [params?.id, router]);

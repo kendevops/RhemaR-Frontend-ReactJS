@@ -2,6 +2,14 @@ import { lazy } from "react";
 
 const ProspectiveStudentRoutes = [
   {
+    path: "/dashboard",
+    component: lazy(() => import("../../views/prospective-student/Dashboard")),
+    meta: {
+      action: "read",
+      resource: "Applications",
+    },
+  },
+  {
     path: "/application",
     component: lazy(() =>
       import("../../views/prospective-student/application")

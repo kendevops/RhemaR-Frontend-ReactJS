@@ -6,8 +6,6 @@ import { FaBook, FaCalendarAlt, FaGraduationCap } from "react-icons/fa";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import ProgressBarMui from "../../components/progressBars/progressBer";
-import SessionSchedule from "../../components/students/SessionSchedule";
-import Tab from "../../components/atoms/Tab";
 import AcademicReport from "../../components/students/AcademicReport";
 import UpcomingEvent from "../../components/molecules/UpcomingEvent";
 import { MdCancel } from "react-icons/md";
@@ -88,8 +86,8 @@ const ELearningPage = () => {
         <div>{`${userData?.campus?.name}`}</div>
       </div>
 
-      <div className="row">
-        <div className="col-lg-6 col-md-6 col-12 mb-4">
+      <div className="row ">
+        <div className="col-lg-6 col-md-6 col-12 mb-4 ">
           {/* {coursesLoading && <Spinner />} */}
           {/*  Progress */}
 

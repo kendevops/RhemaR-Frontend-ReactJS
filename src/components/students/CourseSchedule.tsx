@@ -61,7 +61,7 @@ export default function CourseSchedule({ title }: any) {
 
   return (
     <>
-      {isLoading && <Spinner />}
+      {/* {isLoading && <Spinner />} */}
       {/* Header */}
       <section className="mb-3 d-flex justify-content-between">
         {/* <div className="d-flex gap-3 align-items-center">
