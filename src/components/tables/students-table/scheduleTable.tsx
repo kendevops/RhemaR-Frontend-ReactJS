@@ -77,7 +77,7 @@ export default function StudentScheduleTable() {
 
   return (
     <Table.Wrapper>
-      {isLoading && <Spinner />}
+      {/* {isLoading && <Spinner />} */}
       {data && <Table data={lectures} columns={columns} />}
     </Table.Wrapper>
   );

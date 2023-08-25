@@ -109,7 +109,7 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
 
 function Wrapper({ children }: Props) {
   return (
-    <div className="tab-content p-4" id="pills-tabContent">
+    <div className="tab-content py-4" id="pills-tabContent">
       <div className="table-responsive rounded-2 r-card bg-white">
         {children}
       </div>

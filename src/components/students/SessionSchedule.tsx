@@ -59,7 +59,7 @@ export default function SessionSchedule({ title }: any) {
 
   return (
     <>
-      {isLoading && <Spinner />}
+      {/* {isLoading && <Spinner />} */}
 
       {/* Classes */}
       <section className="">

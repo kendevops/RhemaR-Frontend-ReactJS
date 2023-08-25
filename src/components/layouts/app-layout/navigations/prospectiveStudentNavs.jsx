@@ -2,10 +2,10 @@ import { Icon } from "@iconify/react";
 
 const ProspectiveStudentNavs = [
   {
-    id: "application",
-    title: "Application",
+    id: "dashboard",
+    title: "Dashboard",
     icon: <Icon icon="ep:menu" />,
-    navLink: "/application",
+    navLink: "/dashboard",
     action: "read",
     resource: "Applications",
   },
