@@ -6,7 +6,7 @@ import ReactPlayer from "react-player";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import { BsFillCheckCircleFill, BsFillPlayCircleFill } from "react-icons/bs";
-import { MdCancel, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import { MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { GoPlay } from "react-icons/go";
 import Tab from "../../components/atoms/Tab";
 import Timeline from "../../components/atoms/Timeline";
@@ -80,6 +80,8 @@ export default function Lecture() {
     instructor: "",
     studentName: "John Doe",
   };
+
+  console.log(course?.exams[0].id);
 
   useEffect(() => {
     if (!params?.id) router?.goBack();
@@ -356,14 +358,11 @@ export default function Lecture() {
                       {...{ formValues, isOpen, toggle, courseId: classId }}
                     />
                   </div>
-                  <LectureButton
-                    text={"Course Feedback"}
-                    id={`lecture-feedback/${id}`}
-                  />
+                  <LectureButton text={"Course Feedback"} id={`feedback`} />
                   <LectureButton
                     text={"Course Exams"}
                     done={true}
-                    id={`lecture-exams/${id}`}
+                    id={`exam/${course?.exams[0]?.id}`}
                   />
                   <LectureButton
                     text={"Listening Assignment"}

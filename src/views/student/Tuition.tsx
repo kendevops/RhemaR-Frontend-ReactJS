@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import { Spinner } from "reactstrap";
 import { Icon } from "@iconify/react";
 import { FaBook } from "react-icons/fa";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import ProgressBarMui from "../../components/progressBars/progressBer";
-import SessionSchedule from "../../components/students/SessionSchedule";
 import Tab from "../../components/atoms/Tab";
-import QuizesContainer from "../../components/students/QuizesCaontainer";
 import TuitionPaymentContainer from "../../components/students/TuitionPaymentsContainer";
 
 const StudentTuitionPage = () => {
@@ -93,7 +90,7 @@ const StudentTuitionPage = () => {
           })}
         </Tab.Wrapper>
 
-        <div className="row my-4 ">
+        <div className="row my-4">
           <div className="col-lg-6 col-md-6 col-12 mb-4">
             {coursesLoading && <Spinner />}
             {/* Semester Progress */}

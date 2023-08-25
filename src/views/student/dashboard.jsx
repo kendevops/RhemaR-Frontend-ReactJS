@@ -86,7 +86,7 @@ const StudentDashboardPage = () => {
   }, [startDate, endDate]);
 
   return (
-    <div className="container my-5">
+    <div className="container my-5 mx-0">
       <div
         className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
         style={{ color: "white", fontWeight: 700 }}
@@ -113,29 +113,72 @@ const StudentDashboardPage = () => {
         <div>{`${userData?.campus?.name}`}</div>
       </div>
       <div className="row">
+        <div className="col-lg-12 col-md-12 col-12 mb-4 d-flex flex-column flex-lg-row  gap-5 justify-content-center ">
+          {/* {coursesLoading && <Spinner />} */}
+          {/* Semester Progress */}
+
+          {/* Semester Progress */}
+          <div className="col-lg-6 col-md-6 col-12 mb-4">
+            <ProgressBarMui
+              name={"Student Progress"}
+              percentage={
+                semesterProgress.toString() === "NaN" ? "0" : semesterProgress
+              }
+              progressColor={"green"}
+              icon={<FaGraduationCap />}
+            />
+
+            <ProgressBarMui
+              name={"Session Progress"}
+              percentage={progress}
+              progressColor={"yellow"}
+              icon={<FaGraduationCap />}
+            />
+          </div>
+
+          {/*  */}
+
+          <div className="col-lg-6 col-md-6 col-12 mb-4">
+            <div className="bg-white d-flex flex-column  align-items-center justify-content-between r-card mb-4 payment-card">
+              <div className="w-100 ">
+                <ProgressBarMui
+                  name={"Tuition Payment"}
+                  percentage={Math.floor(paymentCompletion)}
+                  progressColor={"green"}
+                  icon={<AiOutlineCreditCard />}
+                  others={
+                    <div className="w-100 my-3">
+                      {feesPaid < totalAmountRequired ? (
+                        <div className="text-center mx-auto d-flex justify-content-between py-3 align-items-center text-xl">
+                          <p className="text-xl">
+                            Next Payment: <span>N{feesPaid}</span>
+                          </p>
+                          {/* <p className="next-payment">N{feesPaid}</p> */}
+
+                          <button className="btn btn-blue-800 p-2 text-center ">
+                            <a href={payUrl}>Pay Now</a>
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="text-xl">Paid in full</p>
+                      )}
+                      <button className="btn btn-outline-dark border-1 text-xl border-blue-800 w-100 py-3 text-blue-800">
+                        <Link to={"/student/tuition-clearance"}>
+                          Show all Payments
+                        </Link>
+                      </button>
+                    </div>
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
-          {coursesLoading && <Spinner />}
-          {/* Semester Progress */}
-
-          {/* Semester Progress */}
-          <ProgressBarMui
-            name={"Student Progress"}
-            percentage={
-              semesterProgress.toString() === "NaN" ? "0" : semesterProgress
-            }
-            progressColor={"green"}
-            icon={<FaGraduationCap />}
-          />
-
-          <ProgressBarMui
-            name={"Session Progress"}
-            percentage={progress}
-            progressColor={"yellow"}
-            icon={<FaGraduationCap />}
-          />
-
           {/* Upcmonign lecture */}
-          <section className="bg-white r-card px-5 py-4">
+          <section className="bg-white r-card px-5   py-4">
             <div className="d-flex gap-3 align-center ">
               <FaCalendarAlt />
               <p className="r-card-title">Ongoing Lecture</p>
@@ -162,85 +205,22 @@ const StudentDashboardPage = () => {
               <p className="text-xl font-bold">No Upcoming Lectures</p>
             )}
           </section>
-        </div>
-
-        {/*  */}
-        <div className="col-lg-6 col-md-6 col-12 mb-4">
-          <div className="bg-white d-flex flex-column  align-items-center justify-content-between r-card mb-4 payment-card">
-            {/* {userLoading && <Spinner />} */}
-            {/* left */}
-            {/* <div className="text-center mx-auto">
-              <div>
-                <div
-                  className="rounded-progressbar"
-                  role="progressbar"
-                  aria-valuenow={Math.floor(paymentCompletion)}
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                  style={{ "--value": Math.floor(paymentCompletion) }}
-                ></div>
-              </div>
-              <div className="text-lg">Payment Completion</div>
-            </div> */}
-            <div className="w-100 ">
-              <ProgressBarMui
-                name={"Tuition Payment"}
-                percentage={Math.floor(paymentCompletion)}
-                progressColor={"green"}
-                icon={<AiOutlineCreditCard />}
-                others={
-                  <div className="w-100 my-3">
-                    {feesPaid < totalAmountRequired ? (
-                      <div className="text-center mx-auto d-flex justify-content-between py-3 align-items-center text-xl">
-                        <p className="text-xl">
-                          Next Payment: <span>N{feesPaid}</span>
-                        </p>
-                        {/* <p className="next-payment">N{feesPaid}</p> */}
-
-                        <button className="btn btn-blue-800 p-2 text-center ">
-                          <a href={payUrl}>Pay Now</a>
-                        </button>
-                      </div>
-                    ) : (
-                      <p className="text-xl">Paid in full</p>
-                    )}
-                    <button className="btn btn-outline-dark border-1 text-xl border-blue-800 w-100 py-3 text-blue-800">
-                      <Link to={"/student/tuition-clearance"}>
-                        Show all Payments
-                      </Link>
-                    </button>
-                  </div>
-                }
-              />
-            </div>
-
-            {/* <div
-              style={{
-                width: "2px",
-                backgroundColor: "#D2D7E0",
-                height: "100%",
-              }}
-            // ></div> */}
-
-            {/* right */}
-          </div>
 
           {/*  */}
           {/* <div className="bg-white r-card text-center p-3 click">
             <Link to={"/student/tuition-clearance"}>View Fee Breakdown</Link>
           </div> */}
-        </div>
-
-        <div className="col-lg-6 col-md-6 col-12 mb-4">
-          <CardWrapper>
-            <CourseSchedule title={"Upcoming Classes"} />
-          </CardWrapper>
+          <div className=" mb-4">
+            <CardWrapper>
+              <CourseSchedule title={"Upcoming Classes"} />
+            </CardWrapper>
+          </div>
         </div>
 
         {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           <div className="bg-white r-card px-5 py-4 mb-4">
-            {eventsLoading && <Spinner />}
+            {/* {eventsLoading && <Spinner />} */}
             <div className="bg-blue-200 rounded-2 py-2 px-4 d-flex justify-content-between align-items-center mt-3 mb-4">
               <h2 className="r-card-title me-3">Notice</h2>
               <div>
@@ -286,7 +266,7 @@ const StudentDashboardPage = () => {
           {/*  */}
 
           <div className="bg-white r-card px-5 py-4 mb-4">
-            {eventsLoading && <Spinner />}
+            {/* {eventsLoading && <Spinner />} */}
             <div className="bg-blue-200 rounded-2 py-2 px-4 d-flex justify-content-between align-items-center mt-3 mb-4">
               <h2 className="r-card-title me-3">Upcoming Events</h2>
               <div>

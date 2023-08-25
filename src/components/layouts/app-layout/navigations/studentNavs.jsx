@@ -54,6 +54,31 @@ export default [
     resource: "Students",
   },
   {
+    id: "downloads",
+    title: "Downloads",
+    icon: <Icon icon="akar-icons:download" />,
+    navLink: "/student/downloads",
+    action: "read",
+    resource: "Students",
+  },
+  {
+    id: "notice",
+    title: "Notices",
+    icon: <Icon icon="ep:menu" />,
+    navLink: "/student/notice",
+    action: "read",
+    resource: "Students",
+  },
+
+  {
+    id: "faq",
+    title: "FAQ",
+    icon: <Icon icon="ep:menu" />,
+    navLink: "/student/faq",
+    action: "read",
+    resource: "Students",
+  },
+  {
     id: "courses",
     title: "Courses",
     icon: <Icon icon="bi:collection-fill" />,
@@ -69,14 +94,7 @@ export default [
     action: "read",
     resource: "Students",
   },
-  {
-    id: "downloads",
-    title: "Downloads",
-    icon: <Icon icon="akar-icons:download" />,
-    navLink: "/student/downloads",
-    action: "read",
-    resource: "Students",
-  },
+
   {
     id: "tution&clearance",
     title: "Tuition & Clearance",

@@ -3,10 +3,8 @@ import { useHistory, useParams } from "react-router-dom";
 import { Spinner, Toast } from "reactstrap";
 import useVerifyEmail from "../../hooks/queries/useVerifyEmail";
 import CardWrapper from "../../components/students/CardWrapper";
-import ProspectiveStudentApplicationPage from "./application";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
-import { element } from "prop-types";
 
 export default function ConfirmVerification() {
   const history = useHistory();

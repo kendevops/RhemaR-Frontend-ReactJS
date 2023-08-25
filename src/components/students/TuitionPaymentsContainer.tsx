@@ -1,26 +1,19 @@
 import { useState } from "react";
-import { Spinner } from "reactstrap";
-import useClasses from "../../hooks/queries/classes/useClasses";
-import Tab from "../atoms/Tab";
+
 import { Link, useHistory } from "react-router-dom";
 import { FaCalendarAlt } from "react-icons/fa";
-import StudentScheduleTable from "../tables/students-table/scheduleTable";
+import TuitionAndClearanceTable from "../tables/students-table/TuitionTable";
 
 export default function TuitionPaymentContainer({ title }: any) {
   const [viewing, setViewing] = useState(0);
-  const [tuitionPayment, setTuitionPayment] = useState(0);
 
   const history = useHistory();
 
-  let tutionTabs = ["Fee Breakdown", "Payment History"];
-
-  const currentTuition = tutionTabs[tuitionPayment];
-
   const monthParam = viewing + 1 < 10 ? `0${viewing + 1}` : viewing + 1;
 
-  const { data, isLoading } = useClasses({
-    startTime: `${new Date().getFullYear()}-${monthParam}-01T21:56:53.900Z`,
-  });
+  // const { data, isLoading } = useClasses({
+  //   startTime: `${new Date().getFullYear()}-${monthParam}-01T21:56:53.900Z`,
+  // });
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -38,8 +31,6 @@ export default function TuitionPaymentContainer({ title }: any) {
 
   return (
     <>
-      {isLoading && <Spinner />}
-
       {/* Classes */}
       <section className="">
         <div
@@ -57,29 +48,10 @@ export default function TuitionPaymentContainer({ title }: any) {
           </p>
         </div>
         <hr />
-        {/* Tabs */}
-        <div className="d-flex justify-content-between mb-2">
-          <Tab.Wrapper className="d-flex gap-4  ">
-            {tutionTabs?.map((t, i) => {
-              return (
-                <Tab
-                  key={t}
-                  tabColor="#289483"
-                  isSelected={currentTuition === t}
-                  onClick={() => {
-                    setTuitionPayment(i);
-                  }}
-                >
-                  {t}
-                </Tab>
-              );
-            })}
-          </Tab.Wrapper>
-        </div>
 
         {/* Class List */}
         <div>
-          <StudentScheduleTable />
+          <TuitionAndClearanceTable />
         </div>
       </section>
     </>
