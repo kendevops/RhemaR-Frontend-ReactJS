@@ -26,6 +26,7 @@ import "@styles/index.scss";
 
 // ** Extra Styles
 import "./assets/styles/student.css";
+import "./assets/styles/style.css";
 
 // ** Service Worker
 import * as serviceWorker from "./serviceWorker";

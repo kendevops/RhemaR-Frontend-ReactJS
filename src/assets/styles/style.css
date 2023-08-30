@@ -1,0 +1,7 @@
+/*
+    Add extra design to the table
+*/
+
+td {
+  border: 0.05rem solid !important;
+}
