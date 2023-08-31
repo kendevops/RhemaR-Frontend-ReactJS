@@ -6,6 +6,10 @@ const StudentServiceAdminRoutes = [
     component: lazy(() => import("../../views/campus-coordinator/alumni")),
   },
   {
+    path: "/student-services-admin/dashboard",
+    component: lazy(() => import("../../views/campus-coordinator/dashboard")),
+  },
+  {
     path: "/student-services-admin/chat",
     component: lazy(() => import("../../views/campus-coordinator/chat")),
   },
@@ -41,15 +45,32 @@ const StudentServiceAdminRoutes = [
     path: "/student-services-admin/applications",
     component: lazy(() => import("../../views/ict-admin/Applications")),
   },
+
+  {
+    path: "/student-services-admin/student-services-admin",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/studentServicesAdmin")
+    ),
+  },
+
+  {
+    path: "/student-services-admin/defered-applications",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/DeferedApplications")
+    ),
+  },
+
+  {
+    path: "/student-services-admin/:id",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/studentDetails")
+    ),
+  },
   {
     path: "/student-services-admin/tuition-clearance",
     component: lazy(() =>
       import("../../views/campus-coordinator/tuitionClearance")
     ),
-  },
-  {
-    path: "/student-services-admin/dashboard",
-    component: lazy(() => import("../../views/campus-coordinator/dashboard")),
   },
 ].map((p) => ({
   ...p,
