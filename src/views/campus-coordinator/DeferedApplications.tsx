@@ -49,13 +49,15 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
       title: "Name",
       value: `${data?.user?.firstName} ${data?.user?.lastName}`,
     },
-    { title: "Fee Payment", value: data?.feePayment?.status },
-    { title: "Initial Payment", value: data?.initialPayment?.status },
-    { title: "Campus", value: data?.campus?.name },
-    { title: "Session", value: data?.session?.name },
     { title: "Level", value: data?.level?.name },
+    { title: "Intake", value: data?.session?.name },
     {
-      title: "Application Date",
+      title: "Expected Date Of Completion",
+      value: new Date(data?.createdAt)?.toDateString(),
+    },
+    { title: "Campus", value: data?.campus?.name },
+    {
+      title: "Date Of Deferment",
       value: new Date(data?.createdAt)?.toDateString(),
     },
   ];
@@ -112,7 +114,7 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
 
       {/* Modal */}
       <Modal centered {...{ isOpen, toggle }}>
-        <ModalHeader {...{ toggle }}>View Application</ModalHeader>
+        <ModalHeader {...{ toggle }}>Deferred Application</ModalHeader>
         <ModalBody>
           {isLoading && <Spinner />}
           {applicationData?.map((d) => {
@@ -153,7 +155,7 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
   );
 }
 
-export default function Applications() {
+export default function DeferredApplications() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const { data, isLoading, refetch } = useApplications();
   const { data: sessionsData } = useAcademicSessions();
@@ -177,6 +179,12 @@ export default function Applications() {
   console.log(sessionOptions);
 
   console.log(data?.nodes);
+
+  const deferredAppData = data?.nodes?.filter(
+    (d: any, i: number) => d.status === "PENDING"
+  );
+
+  console.log(deferredAppData);
 
   const filterProps: FilterProps = {
     params: [
@@ -244,7 +252,7 @@ export default function Applications() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>New Intake Applications</div>
+        <div>Deferred Applications</div>
 
         <div
           className=" bg-white "
@@ -287,7 +295,7 @@ export default function Applications() {
         <Table.Wrapper>
           {/* Table */}
           <Table
-            data={data?.nodes}
+            data={deferredAppData}
             columns={[
               {
                 key: "Serial number",
@@ -301,20 +309,15 @@ export default function Applications() {
               },
 
               {
-                key: "First Name",
-                title: "First Name",
-                render: (d) => <p>{d?.user?.firstName}</p>,
+                key: "Name",
+                title: "Name",
+                render: (d) => (
+                  <p>
+                    {d?.user?.firstName} {d?.user?.lastName}
+                  </p>
+                ),
               },
-              {
-                key: "Middle Name",
-                title: "Middle Name",
-                render: (d) => <p>{d?.user?.middleName}</p>,
-              },
-              {
-                key: "Last Name",
-                title: "Last Name",
-                render: (d) => <p>{d?.user?.lastName}</p>,
-              },
+
               {
                 key: "Gender",
                 title: "Gender",
@@ -334,21 +337,17 @@ export default function Applications() {
               },
 
               {
-                key: "applicationFee",
-                title: "Application Fee",
-                render: (d) => <p>{d?.feePayment?.status}</p>,
-              },
-
-              {
-                key: "initialFee",
-                title: "Initial Fee",
-                render: (d) => <p>{d?.initialPayment?.status}</p>,
+                key: "level",
+                title: "Level",
+                render: (d) => <p>{d?.level?.name}</p>,
               },
 
               {
                 key: "date",
                 title: "Date Of Application",
                 render: (d) => {
+                  console.log(d);
+
                   return <p>{new Date(d?.createdAt)?.toDateString()}</p>;
                 },
               },

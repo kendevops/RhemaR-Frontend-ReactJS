@@ -16,6 +16,14 @@ import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions
 import Papa from "papaparse";
 import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
 import handleError from "../../utils/handleError";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import TableProfilePicture from "../../components/general/tableProfilePic";
+import { FaRegEye } from "react-icons/fa";
+import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import useApplications from "../../hooks/queries/applications/useApplications";
+import { Icon } from "@iconify/react";
+import { Link } from "react-router-dom";
+import ExportStudentsFirstModal from "../../components/modals/ExportStudentsFirstModal";
 
 const Options = [
   {
@@ -37,32 +45,23 @@ const Options = [
   },
 ];
 
-const defaultColumnsData: any = [
-  {
-    key: "Name",
-    title: "Name",
-    render: (data: any) => <p>{data?.firstName + " " + data?.lastName}</p>,
-  },
-  {
-    key: "Phone Number",
-    title: "Phone Number",
-    render: (data: any) => <p>{data?.phoneNumber}</p>,
-  },
-  {
-    key: "Email",
-    title: "Email",
-    render: (data: any) => <p>{data?.email}</p>,
-  },
-];
-
 const CampusCoordinatorStudents = () => {
   const [isAdding, toggleAdding] = useToggle();
+  const [isExporting, toggleExport] = useToggle();
+
   const [isFiltering, toggleFiltering] = useToggle();
   const [filters, setFilters] = useState<any>(null);
-  const { data: userData, isLoading, refetch } = useAllUsers(filters);
-  const data = userData?.users?.nodes;
+  // const { data: userData, isLoading, refetch } = useAllUsers(filters);
+  // const data = userData?.users?.nodes;
+  const { data: userData, isLoading: userLoading } = useCurrentUser();
 
-  let columns: TableColumns<any>[] = [...defaultColumnsData];
+  const { data, isLoading, refetch } = useApplications();
+
+  const approvedStudentsData = data?.nodes?.filter(
+    (d: any, i: number) => d.status === "APPROVED"
+  );
+
+  console.log(approvedStudentsData);
 
   const { data: campusesData } = useAllCampuses();
   const { data: sessionsData } = useAcademicSessions();
@@ -99,6 +98,10 @@ const CampusCoordinatorStudents = () => {
     children: v + " intake",
   }));
 
+  const levelOptions = ["LEVEL_1", "LEVEL_2"].map((v) => ({
+    children: v,
+  }));
+
   const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
     children: sess?.name,
   }));
@@ -116,11 +119,12 @@ const CampusCoordinatorStudents = () => {
       {
         inputType: "Dropdown",
         inputProps: {
-          options: intakeOptions,
+          options: levelOptions,
         },
-        id: "intake",
-        name: "Intake",
+        id: "level",
+        name: "Level",
       },
+
       {
         inputType: "Dropdown",
         inputProps: {
@@ -129,21 +133,30 @@ const CampusCoordinatorStudents = () => {
         id: "session",
         name: "Session",
       },
+
       {
-        inputType: "Text",
+        inputType: "Dropdown",
         inputProps: {
-          type: "date",
+          options: intakeOptions,
         },
-        id: "applicationDateFrom",
-        name: "Application Date (From)",
+        id: "intake",
+        name: "Intake",
       },
       {
         inputType: "Text",
         inputProps: {
-          type: "date",
+          type: "text",
         },
-        id: "applicationDateTo",
-        name: "Application Date (To)",
+        id: "noOfClassDone",
+        name: "No of Class Done",
+      },
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: [{ children: "Paid" }, { children: "Pending" }],
+        },
+        id: "paymentStatus",
+        name: "Payment Status",
       },
     ],
     isOpen: isFiltering,
@@ -158,6 +171,21 @@ const CampusCoordinatorStudents = () => {
       <div id="Modals">
         <FilterModal {...filterProps} />
         <AddStudentModal isOpen={isAdding} toggle={toggleAdding} />
+        <ExportStudentsFirstModal isOpen={isExporting} toggle={toggleExport} />
+      </div>
+
+      <div
+        className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
+        style={{ color: "white", fontWeight: 700 }}
+      >
+        <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
+        <div>Student Management</div>
+
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.campus?.name}`}</div>
       </div>
 
       <article className="d-flex gap-5 m-5" id="Search">
@@ -197,6 +225,13 @@ const CampusCoordinatorStudents = () => {
           <button
             className="btn btn-blue-800 btn-lg"
             style={{ width: "fit-content" }}
+            onClick={toggleExport}
+          >
+            Export
+          </button>
+          <button
+            className="btn btn-blue-800 btn-lg"
+            style={{ width: "fit-content" }}
             onClick={toggleAdding}
           >
             Add student
@@ -207,7 +242,85 @@ const CampusCoordinatorStudents = () => {
       {/* Table */}
       <Table.Wrapper>
         {isLoading && <Spinner />}
-        {data && <Table columns={columns} data={data} />}
+        {data && (
+          <Table
+            columns={[
+              {
+                key: "Serial number",
+                title: "S/N",
+                render: (data, i) => <p>{i}</p>,
+              },
+              {
+                key: "Pic",
+                title: "Pic",
+                render: (data, i) => <TableProfilePicture />,
+              },
+
+              {
+                key: "First Name",
+                title: "First Name",
+                render: (d) => <p>{d?.user?.firstName}</p>,
+              },
+
+              {
+                key: "Last Name",
+                title: "Last Name",
+                render: (d) => <p>{d?.user?.lastName}</p>,
+              },
+              {
+                key: "Level",
+                title: "Level",
+                render: (d) => <p>{d?.level?.name}</p>,
+              },
+
+              {
+                key: "Campus",
+                title: "Campus",
+                render: (d) => <p>{d?.campus?.name}</p>,
+              },
+
+              {
+                key: "Intake",
+                title: "Intake",
+                render: (d) => <p>{d?.intake ?? "Not Provided"}</p>,
+              },
+              {
+                key: "Gender",
+                title: "Gender",
+                render: (d) => <p>{d?.gender ?? "Not Provided"}</p>,
+              },
+
+              {
+                key: "LastClass",
+                title: "Last Class",
+                render: (d) => {
+                  console.log(d);
+
+                  return <p>{new Date(d?.createdAt)?.toDateString()}</p>;
+                },
+              },
+
+              {
+                key: "action",
+                title: "Action",
+                render: (d) => (
+                  <div className="d-flex gap-4">
+                    <Link to={`/student-services-admin/${d?.id}`}>
+                      <FaRegEye
+                        style={{ cursor: "pointer", fontSize: "23px" }}
+                      />
+                    </Link>
+
+                    <RiDeleteBin6Line
+                      style={{ cursor: "pointer", fontSize: "23px" }}
+                    />
+                  </div>
+                ),
+              },
+            ]}
+            data={approvedStudentsData}
+          />
+        )}
       </Table.Wrapper>
     </>
   );

@@ -12,6 +12,7 @@ type MultipleSelectProps = {
   lg?: string;
   md?: string;
   hasErrors?: boolean;
+  setSelectedValues?: any;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const ITEM_HEIGHT = 48;
@@ -37,6 +38,7 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 export default function MultipleSelect({
   label,
   options,
+  setSelectedValues,
 }: MultipleSelectProps) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
@@ -49,7 +51,11 @@ export default function MultipleSelect({
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+
+    setSelectedValues(typeof value === "string" ? value.split(",") : value);
   };
+
+  console.log(personName);
 
   return (
     <div>
@@ -64,7 +70,7 @@ export default function MultipleSelect({
           // input={<OutlinedInput label={label} />}
           MenuProps={MenuProps}
         >
-          {options.map((name: any) => (
+          {options?.map((name: any) => (
             <MenuItem
               key={name}
               value={name}
