@@ -11,7 +11,7 @@ export default [
   },
   {
     id: "applications",
-    title: "Applications",
+    title: "Applications Management",
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/student-services-admin/applications",
   },
@@ -20,6 +20,19 @@ export default [
     title: "Students Management",
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/student-services-admin/students",
+  },
+
+  {
+    id: "student-services-admin",
+    title: "Students Services Admin",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/student-services-admin/student-services-admin",
+  },
+  {
+    id: "defered-applications",
+    title: "Defered Applications",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/student-services-admin/defered-applications",
   },
   {
     id: "instructors",
