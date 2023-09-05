@@ -6,10 +6,6 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 
-// ** Lazy load app
-// const LazyApp = lazy(() => import("./App"));
-import App from "./App";
-
 // ** Intl, CASL & ThemeColors Context
 import ability from "@configs/acl/ability";
 import { ToastContainer } from "react-toastify";
@@ -30,6 +26,7 @@ import "@styles/index.scss";
 
 // ** Extra Styles
 import "./assets/styles/student.css";
+import "./assets/styles/style.css";
 
 // ** Service Worker
 import * as serviceWorker from "./serviceWorker";

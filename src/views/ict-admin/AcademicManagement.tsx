@@ -286,16 +286,16 @@ export default function AcademicManager() {
               toggle={toggle}
             />
           </main>
-
-          <button
-            className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
-            style={{ width: "fit-content" }}
-          >
-            <HiPlus />
-            Export Campus List
-          </button>
         </div>
       )}
+
+      <button
+        className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
+        style={{ width: "fit-content" }}
+      >
+        <HiPlus />
+        Export Campus List
+      </button>
 
       {/* level */}
 
