@@ -1,20 +1,20 @@
 @font-face {
   font-family: "lato-bd";
-  src: url("../../../fonts/lato/Lato-Bold.ttf");
+  src: url("../../../../../src/assets/fonts/lato/Lato-Bold.ttf");
 }
 
 @font-face {
   font-family: "lato-md";
-  src: url("../../../fonts/lato/Lato-Medium.ttf");
+  src: url("../../../../../src/assets/fonts/lato/Lato-Medium.ttf");
 }
 @font-face {
   font-family: "lato-rg";
-  src: url("../../../fonts/lato/Lato-Regular.ttf");
+  src: url("../../../../../src/assets/fonts/lato/Lato-Regular.ttf");
 }
 
 @font-face {
   font-family: "lato-italic";
-  src: url("../../../fonts/lato/Lato-Italic.ttf");
+  src: url("../../../../../src/assets/fonts/lato/Lato-Italic.ttf");
 }
 
 // Alerts
@@ -29,7 +29,7 @@ $black-000: #000000;
 $black-700: #001533;
 $blue-800: #203864;
 $blue-200: #edf3fa;
-$blue-100:#F0F2F9;
+$blue-100: #f0f2f9;
 $green-600: #289483;
 $text-body: #475466;
 $gold-200: rgba($warning, 0.15);
@@ -51,7 +51,7 @@ $theme-colors: (
   "info": $info,
   "tip": $tip,
   "black-000": $black-000,
-  "black-700":$black-700,
+  "black-700": $black-700,
   "blue-800": $blue-800,
   "blue-200": $blue-200,
   "blue-100": $blue-100,

@@ -50,7 +50,7 @@ const Router = () => {
   const { setCurrentRole } = useContext(RoleContext);
 
   // ** Updating Ability on Load
-  const { data: userData } = useCurrentUser();
+  // const { data: userData } = useCurrentUser();
   const loggedIn = isUserLoggedIn();
   const data = getUserData();
 
