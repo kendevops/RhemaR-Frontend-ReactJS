@@ -23,20 +23,20 @@ const hamburgerIcon = (
     <path
       d="M1.5 1H36.5"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
     <path
       d="M1.5 11H36.5"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
     <path
       d="M1.5 21H36.5"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
   </svg>
 );
@@ -52,31 +52,37 @@ const closeIcon = (
     <path
       d="M1 1L25.7487 25.7487"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
     <path
       d="M1 25.748L25.7487 0.99931"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
   </svg>
 );
 
 const navItems = (
   <>
-    <div className="navlink" routerLinkActive="router-link-active">
+    <div
+      className="navlink"
+      // routerLinkActive="router-link-active"
+    >
       <a href="https://rhemanigeria.com/" target="_blank" rel="noreferrer">
         Home
       </a>
       {/* <Icon icon="bxs:down-arrow" /> */}
       <span className="ms-2 text-lg">
-        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+        {/* <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span> */}
       </span>
     </div>
 
-    <div className="navlink" routerLinkActive="router-link-active">
+    <div
+      className="navlink"
+      // routerLinkActive="router-link-active"
+    >
       <a
         href="https://app.rhemanigeria.com/register"
         target="_blank"
@@ -85,7 +91,10 @@ const navItems = (
         Apply
       </a>
     </div>
-    <div className="navlink" routerLinkActive="router-link-active">
+    <div
+      className="navlink"
+      // routerLinkActive="router-link-active"
+    >
       <a
         href="https://rhemanigeria.com/why-rbtc"
         target="_blank"
@@ -95,10 +104,13 @@ const navItems = (
       </a>
       {/* <Icon icon="bxs:down-arrow" /> */}
       <span className="ms-2 text-lg">
-        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+        {/* <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span> */}
       </span>
     </div>
-    <div className="navlink" routerLinkActive="router-link-active">
+    <div
+      className="navlink"
+      // routerLinkActive="router-link-active"
+    >
       <a
         href="https://rhemanigeria.com/rbtc-programs"
         target="_blank"
@@ -108,17 +120,17 @@ const navItems = (
       </a>
       {/* <Icon icon="bxs:down-arrow" /> */}
       <span className="ms-2 text-lg">
-        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+        {/* <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span> */}
       </span>
     </div>
 
-    <div className="navlink" routerLinkActive="router-link-active">
+    <div className="navlink">
       <a href="https://rhemanigeria.com/about" target="_blank" rel="noreferrer">
         Students
       </a>
       {/* <Icon icon="bxs:down-arrow" /> */}
       <span className="ms-2 text-lg">
-        <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span>
+        {/* <span className="iconify" dataIcon="fontisto:angle-dobule-down"></span> */}
       </span>
     </div>
   </>
@@ -139,7 +151,7 @@ const AppLayoutWrapper = (props) => {
         <article className="d-flex align-items-center justify-content-between mobile-nav-top">
           <p className="navlink">Welcome!</p>
           <div
-            routerLink="/login"
+            // routerLink="/login"
             onClick={() => {
               window.location.href = "/login";
             }}
@@ -188,7 +200,7 @@ const AppLayoutWrapper = (props) => {
               <div className="navlink">
                 <span className="mx-2"> |</span>
                 <span
-                  routerLink="/login"
+                  // routerLink="/login"
                   onClick={() => {
                     window.location.href = "/login";
                   }}
@@ -196,7 +208,14 @@ const AppLayoutWrapper = (props) => {
                   Student Login
                 </span>
                 <span className="mx-2"> |</span>
-                <span routerLink="/register">Apply Now </span>
+                <span
+                  // routerLink="/register"
+                  onClick={() => {
+                    window.location.href = "/register";
+                  }}
+                >
+                  Apply Now{" "}
+                </span>
                 <span className="mx-2"> |</span>
               </div>
             </div>
