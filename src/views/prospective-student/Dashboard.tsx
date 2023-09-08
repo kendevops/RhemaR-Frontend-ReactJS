@@ -107,7 +107,9 @@ const ProspectiveStudentApplicationPage = () => {
                     <img src={applicationPending} alt="Payment pending" />
                   </div>{" "}
                   <button
-                    onClick={pendingFeePayment && (feePayment as any)}
+                    onClick={
+                      pendingFeePayment ? (feePayment as any) : undefined
+                    }
                     className="btn btn-blue-800 btn-lg w-100"
                     type="button"
                   >

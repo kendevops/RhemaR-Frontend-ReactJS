@@ -34,6 +34,7 @@ export default function FormRadioGroup({
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              key={`${value}${index}`}
             >
               <label htmlFor={label} className="">
                 {value}
