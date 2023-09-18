@@ -45,14 +45,17 @@ const AuthLoginPage = () => {
     toggleLoading();
     if (Object.values(data).every((field) => field.length > 0)) {
       console.log("data", data.email, data.password);
+
       useJwt
-        .login({ email: data.email, password: data.password })
+        .login({ email: data?.email, password: data?.password })
         .then((res) => {
           console.log("res", res);
 
           toggleLoading();
           console.log("LOGIN.RESPONSE", res);
           const d = res?.data?.data;
+
+          console.log(d);
 
           const data = {
             ...d?.user,
@@ -90,6 +93,7 @@ const AuthLoginPage = () => {
         })
         .catch((err) => {
           toggleLoading();
+          console.log(err);
           handleError(err, data);
         });
     } else {

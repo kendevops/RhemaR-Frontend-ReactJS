@@ -25,6 +25,32 @@ const StudentServiceAdminRoutes = [
     path: "/student-services-admin/instructors",
     component: lazy(() => import("../../views/campus-coordinator/instructors")),
   },
+
+  {
+    path: "/student-services-admin/elearning-management",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/elearningManagement")
+    ),
+  },
+
+  {
+    path: "/student-services-admin/course-details",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/courseDetails")
+    ),
+  },
+  {
+    path: "/student-services-admin/schedule-management",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/scheduleManagement")
+    ),
+  },
+  {
+    path: "/student-services-admin/course-management",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/courseManagement")
+    ),
+  },
   {
     path: "/student-services-admin/instructor/:id",
     component: lazy(() => import("../../views/ict-admin/Instructor")),

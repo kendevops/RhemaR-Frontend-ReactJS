@@ -122,7 +122,7 @@ const StudentDashboardPage = () => {
             <ProgressBarMui
               name={"Student Progress"}
               percentage={
-                semesterProgress.toString() === "NaN" ? "0" : semesterProgress
+                semesterProgress.toString() === "NaN" ? 0 : semesterProgress
               }
               progressColor={"green"}
               icon={<FaGraduationCap />}

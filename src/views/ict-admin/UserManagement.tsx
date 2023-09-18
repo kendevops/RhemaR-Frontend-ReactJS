@@ -59,7 +59,7 @@ export default function UserManagement() {
 
           return (
             <Tab
-              tabColor="#289483"
+              tabColor="#203864"
               key={o}
               onClick={handleSelect}
               isSelected={isSelected}

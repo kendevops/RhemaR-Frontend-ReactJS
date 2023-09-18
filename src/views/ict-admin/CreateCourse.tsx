@@ -135,7 +135,7 @@ export default function CreateCourse() {
                 setOption(i);
               }
               return (
-                <Tab tabColor="#289483" key={o} {...{ onClick, isSelected }}>
+                <Tab tabColor="#203864" key={o} {...{ onClick, isSelected }}>
                   {o}
                 </Tab>
               );

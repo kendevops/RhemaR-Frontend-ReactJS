@@ -13,10 +13,12 @@ import AddAdminModal from "../../components/modals/AddAdminModal";
 import EditAdminModal from "../../components/modals/editModals/EditAdminModal";
 import AddAdminBySSAdminModal from "../../components/modals/AddAdminBySSAdmin";
 import TableProfilePicture from "../../components/general/tableProfilePic";
-import { FaRegEye } from "react-icons/fa";
+import { FaFilter, FaRegEye } from "react-icons/fa";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Icon } from "@iconify/react";
 import { MdOutlineCancel } from "react-icons/md";
+import useCourses from "../../hooks/queries/classes/useCourses";
+import { Link } from "react-router-dom";
 
 type FiltersProps = {
   campus?: string;
@@ -25,18 +27,22 @@ type FiltersProps = {
   toLoginDate?: string;
 };
 
-export default function AdminManagement() {
+export default function ElearningManagement() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
   const { data, isLoading } = useAllUsers(filters);
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
+  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+
+  const courses = coursesData?.courses;
+
+  console.log(courses, coursesData);
 
   console.log(filters);
 
   const [isFiltering, toggleFiltering] = useToggle();
-  const [isAdding, toggleAdding] = useToggle();
   const [isEditing, toggleEditing] = useToggle();
 
   const usersData = data?.users?.nodes?.filter((u: any) => {
@@ -87,16 +93,16 @@ export default function AdminManagement() {
         inputProps: {
           type: "date",
         },
-        id: "fromLoginDate",
-        name: "Last Login Date (From)",
+        id: "StartDate",
+        name: "Start Date (From)",
       },
       {
         inputType: "Text",
         inputProps: {
           type: "date",
         },
-        id: "toLoginDate",
-        name: "Last Login Date (To)",
+        id: "EndDate",
+        name: "End Date (To)",
       },
     ],
     isOpen: isFiltering,
@@ -109,43 +115,34 @@ export default function AdminManagement() {
   function onSearch() {}
 
   const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i}</p> },
-    { key: "Pic", title: "Pic", render: (data, i) => <TableProfilePicture /> },
+    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
 
     {
-      key: "First name",
-      title: "First name",
-      render: (data) => <p>{data?.firstName}</p>,
+      key: "Course",
+      title: "Course",
+      render: (data) => <p>Math Chemistry Physics</p>,
     },
     {
-      key: "Last name",
-      title: "Last name",
-      render: (data) => <p>{data?.lastName}</p>,
+      key: "Level",
+      title: "Level",
+      render: (data) => <p>2</p>,
     },
     {
-      key: "Roles",
-      title: "Roles",
-      render: (data) => (
-        <p>
-          {data?.roles?.map(
-            (r: any, i: number) =>
-              `${parseRole(r?.name)}${
-                i === data?.roles?.length - 1 ? "" : ", "
-              }`
-          )}
-        </p>
-      ),
+      key: "Audio",
+      title: "Audio",
+      render: (data) => <p>8</p>,
     },
     {
-      key: "Campus",
-      title: "Campus",
-      render: (data) => <p>{"HQ"}</p>,
+      key: "Video",
+      title: "Video",
+      render: (data) => <p>16</p>,
     },
     {
-      key: "Last Login",
-      title: "Last Login",
-      render: (data) => <p>{"1 Week Ago"}</p>,
+      key: "Instructor",
+      title: "Instructor",
+      render: (data) => <p>Dubem Luke</p>,
     },
+
     {
       key: "Action",
       title: "Action",
@@ -153,16 +150,10 @@ export default function AdminManagement() {
         console.log("usersData", data);
         return (
           <div className="d-flex gap-4">
-            {/* <p className="" style={{ color: "red", cursor: "pointer" }}>
-              Delete
-            </p> */}
-
-            <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+            <Link to={`/student-services-admin/course-details`}>
+              <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+            </Link>
             <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
-
-            {/* <p onClick={toggleEditing} style={{ cursor: "pointer" }}>
-              Edit
-            </p> */}
           </div>
         );
       },
@@ -173,7 +164,6 @@ export default function AdminManagement() {
     <Fragment>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddAdminBySSAdminModal isOpen={isAdding} toggle={toggleAdding} />
       </div>
 
       <div
@@ -181,13 +171,8 @@ export default function AdminManagement() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>Student Services Admin</div>
+        <div>ELearning Course Materails</div>
 
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.campus?.name}`}</div>
         {filters.campus && (
           <div
             className=" bg-white "
@@ -233,18 +218,11 @@ export default function AdminManagement() {
           }}
         >
           <button
-            className="btn btn-outline-info btn-lg "
+            className="border-800-blue border-2 btn-lg "
             style={{ width: "fit-content" }}
             onClick={toggleFiltering}
           >
-            Filter
-          </button>
-          <button
-            className="btn btn-blue-800 btn-lg"
-            style={{ width: "fit-content" }}
-            onClick={toggleAdding}
-          >
-            Add admin
+            <FaFilter /> Filter Courses
           </button>
         </div>
       </article>
@@ -252,12 +230,7 @@ export default function AdminManagement() {
       <main id="Table">
         {isLoading && <Spinner />}
         <Table.Wrapper>
-          {usersData && (
-            <Table
-              columns={columns}
-              data={userData?.campus?.name === "HQ" ? usersData : ssData}
-            />
-          )}
+          {usersData && <Table columns={columns} data={usersData} />}
         </Table.Wrapper>
       </main>
     </Fragment>

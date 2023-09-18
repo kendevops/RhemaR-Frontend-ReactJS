@@ -31,6 +31,8 @@ FilterProps) {
     initialState[p.id] = "";
   });
 
+  console.log(params);
+
   const inputs = {
     Text: FormInput,
     Dropdown: FormDropdown,
@@ -73,6 +75,7 @@ FilterProps) {
           className="btn btn-blue-800 btn-lg mb-3"
           onClick={() => {
             handleFilter();
+            toggle();
             // setIsFiltering()
           }}
         >

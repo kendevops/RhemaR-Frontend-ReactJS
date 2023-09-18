@@ -30,7 +30,7 @@ export default function StudentPmrs() {
                       "You need to have done at least 100 hours in practical ministry before the final assessment "
                     );
               }}
-              tabColor="#289483"
+              tabColor="#203864"
               isSelected={currentTab === t}
             >
               {t}

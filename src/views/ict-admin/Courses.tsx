@@ -25,7 +25,7 @@ export default function AdminCourses() {
             <Tab
               key={t}
               onClick={() => setTab(i)}
-              tabColor="#289483"
+              tabColor="#203864"
               isSelected={currentTab === t}
             >
               {t}

@@ -107,7 +107,7 @@ export default function MyCourses() {
           return (
             <Tab
               key={t}
-              tabColor="#289483"
+              tabColor="#203864"
               isSelected={checkSelected()}
               onClick={toggleCourse}
             >
