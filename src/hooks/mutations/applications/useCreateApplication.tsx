@@ -5,6 +5,7 @@ import queryKeys from "../../../queryKeys";
 interface data {
   level: string;
   campus: string;
+  intake: string;
   session: string;
   nationality: string;
   dateOfBirth: string;
@@ -12,6 +13,7 @@ interface data {
   churchName: string;
   isBaptized: boolean;
   isBornAgain: boolean;
+  classAttendanceMethod: string;
   address: {
     city: string;
     street: string;

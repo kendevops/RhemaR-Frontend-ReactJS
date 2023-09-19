@@ -15,7 +15,7 @@ const AuthRegistrationPage = () => {
     email: "",
     gender: "",
     phoneNumber: "",
-    alternatePhoneNumber: "",
+    alternatePhoneNumber: null,
     password: "",
     confirmPassword: "",
   };

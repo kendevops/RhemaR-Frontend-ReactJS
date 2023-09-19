@@ -1,11 +1,18 @@
 import { Icon } from "@iconify/react";
+import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
+
+// const { data, isLoading } = useCurrentUser();
+
+const user = localStorage.getItem("userData");
+
+console.log(user);
 
 const ProspectiveStudentNavs = [
   {
     id: "dashboard",
-    title: "Dashboard",
+    title: `${user?.level ? "Dashboard" : "Application"}`,
     icon: <Icon icon="ep:menu" />,
-    navLink: "/dashboard",
+    navLink: `${user?.level ? "/dashboard" : "/application"}`,
     action: "read",
     resource: "Applications",
   },

@@ -11,8 +11,6 @@ export default function ConfirmVerification() {
   const params = useParams<{ id: string }>();
   const verificationId = params?.id;
 
-  // console.log("Working", verificationId, params);
-
   const { data, isLoading, isError, isSuccess } =
     useVerifyEmail(verificationId);
 
@@ -33,7 +31,7 @@ export default function ConfirmVerification() {
     if (!verificationId) {
       history.replace("/");
     } else {
-      history.push("/application");
+      history.replace("/application");
       console.log("Available");
     }
     // console.log(data);
@@ -44,11 +42,15 @@ export default function ConfirmVerification() {
     history.replace("/login");
   }
 
-  // console.log({ data });
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  console.log(isSuccess, data, isError);
 
   return (
     <div>
-      {!isSuccess && (
+      {isSuccess && (
         <main
           style={{
             display: "grid",
@@ -58,29 +60,32 @@ export default function ConfirmVerification() {
           }}
         >
           <CardWrapper className="container">
-            {isLoading && <Spinner />}
+            {/* {isLoading && <Spinner />} */}
 
             <div className=" mx-auto">
-              {isSuccess &&
-                // <div className="text-center">
-                //   <h2 className="my-4">Email Confirmation Successful</h2>
-                //   <button
-                //     onClick={onProceed}
-                //     className="btn btn-blue-800 btn-lg w-100 mb-5"
-                //   >
-                //     Proceed to Login
-                //   </button>
-                // </div>
+              {
+                isSuccess &&
+                  // <div className="text-center">
+                  //   <h2 className="my-4">Email Confirmation Successful</h2>
+                  //   <button
+                  //     onClick={onProceed}
+                  //     className="btn btn-blue-800 btn-lg w-100 mb-5"
+                  //   >
+                  //     Proceed to Login
+                  //   </button>
+                  // </div>
 
-                toast.success(
-                  <ToastContent
-                    type={"success"}
-                    heading={"Successful"}
-                    message={"Email verification was successfully"}
-                  />,
-                  ToastContent.Config
-                ) &&
-                history.replace("/login")}
+                  toast.success(
+                    <ToastContent
+                      type={"success"}
+                      heading={"Successful"}
+                      message={"Email verification was successfully"}
+                    />,
+                    ToastContent.Config
+                  )
+
+                // && history.replace("/login")
+              }
               {isError && <Toast>An Error Occurred</Toast>}
             </div>
           </CardWrapper>

@@ -26,7 +26,7 @@ function ApplicationPage(props) {
   // console.log(userData?.applications[0]?.level?.name);
 
   useEffect(() => {
-    if (userData?.applications[0]?.level) {
+    if (userData?.level) {
       history.replace("/dashboard");
     }
   }, []);
@@ -35,9 +35,10 @@ function ApplicationPage(props) {
 
   const initialState = {
     title: "",
-    campus: "Enugu",
+    campus: "Abuja",
+    intake: "October 2023",
     session: "2023/2024",
-    referralSource: "direct",
+    referralSource: "Social Media",
     classAttendanceMethod: "",
     churchDetails: "",
     churchPastorName: "",
@@ -46,7 +47,7 @@ function ApplicationPage(props) {
     address: "",
     dateOfBirth: "",
     nationality: "Nigerian",
-    maritalStatus: "single",
+    maritalStatus: "SINGLE",
     churchName: "",
     isBornAgain: "",
     longBornAgain: "",
@@ -64,9 +65,12 @@ function ApplicationPage(props) {
 
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const academicOptions = data?.nodes?.map((d) => d?.name);
+  console.log(academicOptions, campusOptions);
 
   // console.log(campusesData, data);
   const maritalOptions = ["single", "married"];
+  // const maritalOptions = ["SINGLE", "MARRIED"];
+
   const [campusFee, setCampusFee] = useState("30000");
 
   useEffect(() => {
@@ -113,8 +117,11 @@ function ApplicationPage(props) {
       return;
     }
 
+    console.log(body);
+
     mutate(body, {
       onSuccess: (d) => {
+        console.log(d);
         const paymentUrl =
           d?.data?.data?.application?.initialPayment?.paymentUrl;
         window?.open(paymentUrl);
@@ -183,6 +190,17 @@ function ApplicationPage(props) {
 
           {academicOptions && (
             <FormDropdown
+              onChange={(e) => updateForm("intake", e?.target?.value)}
+              options={academicOptions?.map((o) => ({
+                // options={["2023/2024", "2024/2025"]?.map((o) => ({
+                children: o,
+              }))}
+              title={"Intake"}
+            />
+          )}
+
+          {academicOptions && (
+            <FormDropdown
               onChange={(e) => updateForm("session", e?.target?.value)}
               options={academicOptions?.map((o) => ({
                 // options={["2023/2024", "2024/2025"]?.map((o) => ({
@@ -204,6 +222,7 @@ function ApplicationPage(props) {
             placeholder="Enter Contact Address"
             onChange={(e) => updateForm("address", e.target.value)}
             hasErrors={formErrors?.address}
+            value={formData.address}
           />
 
           <FormInput
@@ -212,6 +231,7 @@ function ApplicationPage(props) {
             onChange={(e) => updateForm("city", e.target.value)}
             hasErrors={formErrors?.city}
             lg="6"
+            value={formData.city}
           />
           <FormInput
             label="State"
@@ -219,6 +239,7 @@ function ApplicationPage(props) {
             onChange={(e) => updateForm("state", e.target.value)}
             hasErrors={formErrors?.state}
             lg="6"
+            value={formData.state}
           />
           <FormInput
             label="D.O.B"
@@ -255,6 +276,7 @@ function ApplicationPage(props) {
             placeholder="How did you find out about us?"
             onChange={(e) => updateForm("referralSource", e.target.value)}
             hasErrors={formErrors?.referralSource}
+            value={formData.referralSource}
           />
 
           <FormInput
@@ -262,18 +284,21 @@ function ApplicationPage(props) {
             placeholder="Enter Church Name"
             onChange={(e) => updateForm("churchName", e.target.value)}
             hasErrors={formErrors?.churchName}
+            value={formData.churchName}
           />
           <FormInput
             label="Church Address"
             placeholder="Enter Church Address"
             onChange={(e) => updateForm("churchDetails", e.target.value)}
             hasErrors={formErrors?.churchDetails}
+            value={formData.churchDetails}
           />
           <FormInput
             label="Church Pastor's Name"
             placeholder="Enter Church pastor's name"
             onChange={(e) => updateForm("churchPastorName", e.target.value)}
             hasErrors={formErrors?.churchPastorName}
+            value={formData.churchPastorName}
           />
           <FormInput
             label="Church Pastor's Phone Number"
@@ -282,6 +307,7 @@ function ApplicationPage(props) {
               updateForm("churchPastorPhoneNumber", e.target.value)
             }
             hasErrors={formErrors?.churchPastorPhoneNumber}
+            value={formData.churchPastorPhoneNumber}
           />
 
           <FormRadioGroup
@@ -297,6 +323,7 @@ function ApplicationPage(props) {
             placeholder="How long have you been born again?"
             onChange={(e) => updateForm("longBornAgain", e.target.value)}
             hasErrors={formErrors?.longBornAgain}
+            value={formData.longBornAgain}
           />
 
           <FormRadioGroup
@@ -307,6 +334,7 @@ function ApplicationPage(props) {
               console.log(e.target.value);
             }}
             hasErrors={formErrors?.isBaptized}
+            value={formData.isBaptized}
           />
 
           <FormRadioGroup
@@ -316,6 +344,7 @@ function ApplicationPage(props) {
               updateForm("affirmationAndSubmissions", e.target.value);
             }}
             hasErrors={formErrors?.affirmationAndSubmissions}
+            value={formData.affirmationAndSubmissions}
           />
         </div>
 
