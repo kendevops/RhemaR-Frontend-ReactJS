@@ -9,15 +9,15 @@ interface Data {
   currency: string;
   continent: string;
   campusCode: string;
-  campusArea: string;
+  // campusArea: string;
   shortName: string;
   phoneNumber1: string;
   phoneNumber2: string;
-  primaryLanguage: string;
-  secondaryLanguage: string;
+  // primaryLanguage: string;
+  // secondaryLanguage: string;
   campusAbbreviation: string;
   campusCoordinator: string;
-  zipCode?: number;
+  // zipCode?: number;
   levels: any;
   address: any;
 }

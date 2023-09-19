@@ -15,6 +15,18 @@ export default function handleError(e: any, formData?: any, toggleError?: any) {
       />,
       { ...ToastContent.Config, autoClose: false }
     );
+  } else if (
+    formData?.phoneNumber &&
+    !formData?.phoneNumber?.includes("+234")
+  ) {
+    toast.error(
+      <ToastContent
+        heading={`An error occurred`}
+        message={"Phone number must start with +234"}
+        type={"error"}
+      />,
+      { ...ToastContent.Config, autoClose: false }
+    );
   } else {
     const errors = Object.keys(errorMessage);
     errors.forEach((err) => {

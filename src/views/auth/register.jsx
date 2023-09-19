@@ -62,6 +62,9 @@ const AuthRegistrationPage = () => {
       .catch((e) => {
         toggleLoading();
         handleError(e, formData, toggleError);
+        console.log(e.response.data.error.message.phoneNumber);
+
+        // 'invalid phone number'
       })
       .finally(() => console.log(data));
   }
@@ -262,6 +265,12 @@ const AuthRegistrationPage = () => {
                           onChange={(e) =>
                             updateForm("password", e.target.value)
                           }
+                          style={{
+                            borderColor: formErrors?.password ? "red" : "",
+                            borderStyle: formErrors?.password
+                              ? "solid"
+                              : "none",
+                          }}
                         />
                       </div>
                     </div>

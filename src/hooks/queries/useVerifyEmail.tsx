@@ -4,6 +4,10 @@ import queryKeys from "../../queryKeys";
 
 export default function useVerifyEmail(id: string) {
   return useQuery([queryKeys.emailVerification], () =>
-    api.get(`/auth/email/verify/${id}`).then((r) => r?.data)
+    api.get(`/auth/email/verify/${id}`).then((r) => {
+      console.log(r);
+
+      return r?.data;
+    })
   );
 }

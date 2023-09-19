@@ -29,14 +29,14 @@ export default [
     resource: "Admins",
   },
 
-  // {
-  //   id: "academicManagement",
-  //   title: "Academic Management",
-  //   icon: <Icon icon="mdi:note-text" />,
-  //   navLink: "/ict-admin/academic-management",
-  //   action: "read",
-  //   resource: "Admins",
-  // },
+  {
+    id: "academicManagement",
+    title: "Academic Management",
+    icon: <Icon icon="mdi:note-text" />,
+    navLink: "/ict-admin/academic-management",
+    action: "read",
+    resource: "Admins",
+  },
   // {
   //   id: "studentServicesAdmin",
   //   title: "Student Services Admin",

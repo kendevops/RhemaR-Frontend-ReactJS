@@ -8,7 +8,7 @@ import FormInput from "../../molecules/FormInput";
 import parseRole from "../../../utils/parseRole";
 import FormDropdownSelectMultiple from "../../molecules/FormDropdownSelectMultiple";
 import FormDropdown from "../../molecules/FormDropdown";
-import { states } from "../../../data/States";
+import { states, regions } from "../../../data/States";
 import { UserDto } from "../../../types/dto";
 import useAllUsers from "../../../hooks/queries/useAllUsers";
 import useEditCampus from "../../../hooks/mutations/classes/useEditCampus";
@@ -20,11 +20,17 @@ import { InstructorsData } from "../../../data/InstructorsData";
 
 interface EditCampusModalProps {
   data: any;
+  onCreate: VoidFunction;
 }
 
-export default function EditCampusModal({ data }: EditCampusModalProps) {
+export default function EditCampusModal({
+  data,
+  onCreate,
+}: EditCampusModalProps) {
   const [visibility, toggle] = useToggle();
-  const [levelValues, setLevelValues] = useState<any>("");
+  const [levelValues, setLevelValues] = useState<any>(
+    data?.levels?.map((l: any) => l.name)
+  );
 
   const { data: levelData } = useCampusLevel();
 
@@ -37,20 +43,17 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
     currency: data?.currency,
     continent: data?.continent,
     campusCode: data?.campusCode,
-    campusCoordinator: data?.campusCoordinator,
+    campusCoordinator: data?.campusCoordinator?.email,
     phoneNumber1: data?.phoneNumber1,
     phoneNumber2: data?.phoneNumber2,
     shortName: data?.shortName,
-    country: data?.country,
-    campusArea: data?.campusArea,
-    primaryLanguage: data?.primaryLanguage,
-    secondaryLanguage: data?.secondaryLanguage,
+    country: data?.address?.country,
     campusAbbreviation: data?.campusAbbreviation,
 
-    city: data?.city,
-    street: data?.street,
-    state: data?.state,
-    zipCode: data?.zipCode,
+    city: data?.address?.city,
+    street: data?.address?.street,
+    state: data?.address?.state,
+    // zipCode: data?.zipCode,
   };
 
   const editCampus = useEditCampus(data?.id);
@@ -58,9 +61,10 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
   const isLoading = editCampus.isLoading;
   const { data: usersData, isLoading: usersLoading } = useAllUsers();
 
-  const { formData, updateForm, formIsValid } = useForm({ initialState });
+  const { formData, updateForm, formIsValid, formErrors, toggleError } =
+    useForm({ initialState });
 
-  console.log(data?.levels);
+  console.log(data);
 
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
@@ -82,7 +86,7 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
   //   }));
 
   //   function onSubmit() {}
-  console.log("level", formData.levels);
+  console.log("level", formData.levels, levelValues);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -91,10 +95,14 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
       city: formData.city,
       street: formData.state,
       state: formData.state,
-      zipCode: formData.zipCode,
+      // zipCode: formData.zipCode,
     };
 
-    const data2 = { ...formData, address };
+    const data2 = {
+      ...formData,
+      address,
+      levels: levelValues,
+    };
 
     if (!formIsValid) {
       alert("Please fill in all fields");
@@ -111,6 +119,8 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             />,
             ToastContent.Config
           );
+          !!onCreate && onCreate();
+          toggle();
         },
 
         onError: (e: any) => {
@@ -123,10 +133,10 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             />,
             ToastContent.Config
           );
+          toggle();
         },
       });
 
-      toggle();
       return;
     }
   };
@@ -170,17 +180,11 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
 
             <FormDropdownSelectMultiple
               title="Campus Levels"
-              onChange={(e) => updateForm("levels", e.target.value)}
-              options={levels.map((v) => ({ children: v }))}
               value={formData?.levels}
-            />
-
-            {/* <FormDropdownSelectMultiple2
-              title="Campus Levels"
               onChange={(e) => updateForm("levels", e.target.value)}
               options={levelData?.map((v: any) => ({ children: v.name }))}
-              value={formData?.levels}
-            /> */}
+              setLevelValues={setLevelValues}
+            />
 
             <FormInput
               label="Campus Address (Street)"
@@ -204,46 +208,12 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
               }
               value={formData?.campusAbbreviation}
             />
-            <FormInput
-              label="Campus Area"
-              placeholder="Campus Area"
-              onChange={(e) => updateForm("campusArea", e?.target?.value)}
-              value={formData?.campusArea}
-            />
 
             <FormInput
               label="Campus Code"
               placeholder="Campus Code"
               onChange={(e) => updateForm("campusCode", e?.target?.value)}
               value={formData?.campusCode}
-            />
-
-            <FormInput
-              label="Continent"
-              placeholder="Continent"
-              onChange={(e) => updateForm("continent", e?.target?.value)}
-              value={formData?.continent}
-            />
-
-            <FormInput
-              label="Country"
-              placeholder="Country"
-              onChange={(e) => updateForm("country", e?.target?.value)}
-              value={formData?.country}
-            />
-
-            <FormInput
-              label="Currency"
-              placeholder="Currency"
-              onChange={(e) => updateForm("currency", e?.target?.value)}
-              value={formData?.currency}
-            />
-
-            <FormInput
-              label="Zip Code"
-              placeholder="Zip Code"
-              onChange={(e) => updateForm("zipCode", e?.target?.value)}
-              value={formData?.zipCode}
             />
 
             <FormDropdown
@@ -254,18 +224,57 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
             />
 
             <FormDropdown
+              title="Campus Address (State)"
+              value={formData?.region}
+              options={regions?.map((d: any) => ({ children: d }))}
+              onChange={(e) => updateForm("region", e?.target?.value)}
+            />
+            <FormInput
+              label="Country"
+              placeholder="Country"
+              onChange={(e) => updateForm("country", e?.target?.value)}
+              value={formData?.country}
+              disabled
+            />
+
+            {/* <FormInput
+            label="Zip Code"
+            placeholder="Zip Code"
+            onChange={(e) => updateForm("zipCode", e?.target?.value)}
+            value={formData?.zipCode}
+          /> */}
+
+            <FormInput
+              label="Continent"
+              placeholder="Continent"
+              onChange={(e) => updateForm("continent", e?.target?.value)}
+              value={formData?.continent}
+              disabled
+            />
+
+            <FormInput
+              label="Currency"
+              placeholder="Currency"
+              onChange={(e) => updateForm("currency", e?.target?.value)}
+              value={formData?.currency}
+            />
+
+            <FormDropdown
               title="Campus Cordinator"
-              value={formData?.campusCoordinator}
-              options={adminOptions?.map((d: any) => ({ children: d?.label }))}
-              onChange={(e) => {
-                updateForm("campusCoordinator", e?.target?.value);
-              }}
+              value={formData.campusCoordinator}
+              options={adminOptions?.map((d: any) => ({ children: d?.id }))}
+              onChange={(e) =>
+                updateForm("campusCoordinator", e?.target?.value)
+              }
             />
 
             <FormInput
               label="Phone Number 1"
-              placeholder="Enter Phone Number"
-              onChange={(e) => updateForm("phoneNumber1", e?.target?.value)}
+              placeholder="+2348044444444"
+              onChange={(e) => {
+                updateForm("phoneNumber1", e?.target?.value);
+                formErrors?.phoneNumber && toggleError("phoneNumber1");
+              }}
               value={formData?.phoneNumber1}
             />
 

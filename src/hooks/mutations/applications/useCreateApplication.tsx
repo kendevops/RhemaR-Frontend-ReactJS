@@ -26,7 +26,10 @@ interface data {
 export default function useCreateApplication() {
   const q = useQueryClient();
   const { currentUser, users } = queryKeys;
-  return useMutation((data: data) => api.post(`/applications/create`, data), {
-    onSuccess: () => q.invalidateQueries([currentUser, users]),
-  });
+  return useMutation(
+    (data: data) => api.post(`/applications/LEVEL_1/create`, data),
+    {
+      onSuccess: () => q.invalidateQueries([currentUser, users]),
+    }
+  );
 }

@@ -22,6 +22,7 @@ const queryKeys = {
   pmr: "pmr",
   instructors: "instructors",
   levels: "levels",
+  intakes: "intakes",
 };
 
 export default queryKeys;

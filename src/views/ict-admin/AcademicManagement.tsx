@@ -25,6 +25,8 @@ import useAllUsers from "../../hooks/queries/useAllUsers";
 import handleError from "../../utils/handleError";
 import { Spinner } from "reactstrap";
 import AdminCourses from "./Courses";
+import AddIntakeModal from "../../components/modals/AddIntakeModal";
+import IntakeTable from "../../components/tables/admin-tables/IntakeTable";
 
 const tabs = [
   "Campus",
@@ -33,6 +35,7 @@ const tabs = [
   "Core Courses",
   "Session Courses",
   "Levels",
+  "Intakes",
 ];
 
 export default function AcademicManager() {
@@ -41,10 +44,11 @@ export default function AcademicManager() {
   const [visibility, toggle] = useToggle();
   const [showAddLevel, setShowAddLevel] = useState(false);
   const [showAddCampus, setShowAddCampus] = useState(false);
+  const [showAddIntake, setShowAddIntake] = useState(false);
   const [showCampusDetail, setShowCampusDetail] = useState(false);
 
-  const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
+  const { refetch: refetchCampus } = useAllCampuses();
 
   const { isLoading, mutate } = useUploadUsers();
   const { refetch } = useAllUsers();
@@ -75,6 +79,7 @@ export default function AcademicManager() {
     setShowAddLevel(() => false);
     setShowAddCampus(() => false);
     setShowCampusDetail(() => false);
+    setShowAddIntake(() => false);
   };
 
   useEffect(() => {
@@ -133,7 +138,11 @@ export default function AcademicManager() {
         )}
 
         {showAddCampus && (
-          <AddCampusModal visibility={visibility} toggle={toggle} />
+          <AddCampusModal
+            visibility={visibility}
+            toggle={toggle}
+            onCreate={refetchCampus}
+          />
         )}
 
         {tab === 1 && (
@@ -155,6 +164,10 @@ export default function AcademicManager() {
             toggle={toggle}
           />
         )}
+
+        {tab === 6 && (
+          <AddIntakeModal visibility={visibility} toggle={toggle} />
+        )}
       </div>
 
       <div>
@@ -173,6 +186,8 @@ export default function AcademicManager() {
                 ? "RN Courses for each  Session (Time Table)"
                 : tab === 5
                 ? "RN Level"
+                : tab === 6
+                ? "RN Intake"
                 : ""}
             </div>
           </div>
@@ -243,16 +258,6 @@ export default function AcademicManager() {
               </button>
             )}
 
-            {/* {tab === 3 && (
-              <button
-                className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
-                style={{ width: "fit-content" }}
-                onClick={toggle}
-              >
-                Add New Core Course
-              </button>
-            )} */}
-
             {tab === 4 && (
               <button
                 className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
@@ -274,28 +279,40 @@ export default function AcademicManager() {
                 </button>
               </div>
             )}
+
+            {tab === 6 && (
+              <button
+                className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
+                style={{ width: "fit-content" }}
+                onClick={toggle}
+              >
+                Add New Intake
+              </button>
+            )}
           </div>
         </article>
       </div>
 
       {tab === 0 && (
-        <div>
-          <main id="Table">
-            <CampusesTable2
-              setShowCampusDetail={setShowCampusDetail}
-              toggle={toggle}
-            />
-          </main>
-        </div>
-      )}
+        <>
+          <div>
+            <main id="Table">
+              <CampusesTable2
+                setShowCampusDetail={setShowCampusDetail}
+                toggle={toggle}
+              />
+            </main>
+          </div>
 
-      <button
-        className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
-        style={{ width: "fit-content" }}
-      >
-        <HiPlus />
-        Export Campus List
-      </button>
+          <button
+            className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
+            style={{ width: "fit-content" }}
+          >
+            <HiPlus />
+            Export Campus List
+          </button>
+        </>
+      )}
 
       {/* level */}
 
@@ -320,6 +337,7 @@ export default function AcademicManager() {
       {tab === 3 && <AdminCourses />}
 
       {tab === 4 && <AcademicSessionCoursesTable />}
+      {tab === 6 && <IntakeTable />}
     </Fragment>
   );
 }

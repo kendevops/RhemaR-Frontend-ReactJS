@@ -7,31 +7,31 @@ import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
 import useDeleteSession from "../../../hooks/mutations/classes/useDeleteSession";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
+import AddIntakeModal from "../../modals/AddIntakeModal";
+import useDeleteIntake from "../../../hooks/mutations/classes/useDeleteIntake";
+import useAllIntakes from "../../../hooks/queries/classes/useAllIntakes";
 
 interface Props {
   data: any;
   onCreate?: VoidFunction;
 }
 
-function ModifySession({ data, onCreate }: Props) {
+function ModifyIntake({ data, onCreate }: Props) {
   const [visibility, toggle] = useToggle();
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
 
   const defaultValues = {
     name: data?.name,
+    session: data?.session,
     startDate: new Date(data?.startDate).toDateString(),
     endDate: new Date(data?.endDate).toDateString(),
     isActive: data?.isActive,
     id: data?.id,
   };
+  console.log(defaultValues?.id);
 
-  const deleteIt = useDeleteSession(defaultValues?.id as string);
-
-  // console.log(defaultValues?.id);
-
-  const isLoading = deleteIt?.isLoading;
-
-  const deleteMutation = useDeleteSession(defaultValues?.id as string);
+  const deleteMutation = useDeleteIntake(defaultValues?.id as string);
+  const isLoading = deleteMutation?.isLoading;
 
   const handleDelete = async () => {
     try {
@@ -41,7 +41,7 @@ function ModifySession({ data, onCreate }: Props) {
         <ToastContent
           type={"success"}
           heading={"Successful"}
-          message={"Session deleted successfully"}
+          message={"Intake Deleted successfully"}
         />,
         ToastContent.Config
       );
@@ -73,28 +73,28 @@ function ModifySession({ data, onCreate }: Props) {
         onDelete={handleDelete}
         isLoading={isLoading}
       />
-      <NewSession
-        {...{
-          visibility,
-          toggle,
-          defaultValues,
-          onCreate,
-        }}
-      />
+      <AddIntakeModal {...{ visibility, toggle, defaultValues, onCreate }} />
     </>
   );
 }
 
-export default function AcademicSessionTable() {
-  const { data: sessionsData, isLoading, refetch } = useAcademicSessions();
-  const data = sessionsData?.nodes;
+export default function IntakeTable() {
+  const { data: intakeData, isLoading, refetch } = useAllIntakes();
+  const data = intakeData?.nodes;
 
   const columns: TableColumns<any>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
-      key: "Academic Session",
-      title: "Academic Session",
-      render: (data) => <p>{data?.name}</p>,
+      key: "Intake",
+      title: "Intake",
+      render: (data) => {
+        return <p>{data?.name}</p>;
+      },
+    },
+    {
+      key: "Session",
+      title: "Session",
+      render: (data) => <p>{data?.session.name}</p>,
     },
     {
       key: "Start Date",
@@ -111,9 +111,11 @@ export default function AcademicSessionTable() {
       key: "Action",
       title: "Action",
       render: (data) => {
+        console.log(data);
+
         return (
           <div className="d-flex gap-3">
-            <ModifySession onCreate={refetch} data={data} />
+            <ModifyIntake onCreate={refetch} data={data} />
           </div>
         );
       },

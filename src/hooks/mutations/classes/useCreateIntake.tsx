@@ -4,15 +4,16 @@ import queryKeys from "../../../queryKeys";
 
 interface Data {
   name: string;
+  session: string;
   endDate: string;
   startDate: string;
   isActive: string;
 }
 
-export default function useCreateSession() {
+export default function useCreateIntake() {
   const q = useQueryClient();
-  const { academicSession, courses } = queryKeys;
-  return useMutation((data: Data) => api.post(`/sessions`, data), {
-    onSuccess: () => q?.invalidateQueries([academicSession, courses]),
+  const { intakes, academicSession, courses } = queryKeys;
+  return useMutation((data: Data) => api.post(`/intakes`, data), {
+    onSuccess: () => q?.invalidateQueries([intakes, academicSession, courses]),
   });
 }

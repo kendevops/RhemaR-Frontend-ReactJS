@@ -34,24 +34,24 @@ export default [
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/student-services-admin/defered-applications",
   },
-  // {
-  //   id: "elearning-management",
-  //   title: "E-Learning Management",
-  //   icon: <Icon icon="fa-solid:chalkboard-teacher" />,
-  //   navLink: "/student-services-admin/elearning-management",
-  // },
-  // {
-  //   id: "course-management",
-  //   title: "Course Management",
-  //   icon: <Icon icon="ion:school-sharp" />,
-  //   navLink: "/student-services-admin/course-management",
-  // },
-  // {
-  //   id: "schedule-management",
-  //   title: "Schedule Management",
-  //   icon: <Icon icon="fluent:mail-24-filled" />,
-  //   navLink: "/student-services-admin/schedule-management",
-  // },
+  {
+    id: "elearning-management",
+    title: "E-Learning Management",
+    icon: <Icon icon="fa-solid:chalkboard-teacher" />,
+    navLink: "/student-services-admin/elearning-management",
+  },
+  {
+    id: "course-management",
+    title: "Course Management",
+    icon: <Icon icon="ion:school-sharp" />,
+    navLink: "/student-services-admin/course-management",
+  },
+  {
+    id: "schedule-management",
+    title: "Schedule Management",
+    icon: <Icon icon="fluent:mail-24-filled" />,
+    navLink: "/student-services-admin/schedule-management",
+  },
   // {
   //   id: "instructors",
   //   title: "Instructors",

@@ -13,6 +13,8 @@ import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import handleError from "../../utils/handleError";
 import countries from "../../data/Countries";
 import { useHistory } from "react-router-dom";
+import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
+import { states } from "../../data/States";
 
 function ApplicationPage(props) {
   const { setHasApplied } = props;
@@ -53,19 +55,24 @@ function ApplicationPage(props) {
     longBornAgain: "",
     isBaptized: "",
     affirmations: "",
-    state: "",
+    state: states[0],
     city: "",
   };
 
   const { formData, formIsValid, updateForm, toggleError, formErrors } =
     useForm({ initialState });
   const { mutate, isLoading } = useCreateApplication();
-  const { data } = useAcademicSessions();
+  const { data: sessionsData } = useAcademicSessions();
   const { data: campusesData } = useCampuses();
 
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
-  const academicOptions = data?.nodes?.map((d) => d?.name);
-  console.log(academicOptions, campusOptions);
+  const sessionsDataOptions = sessionsData?.nodes?.map((d) => d?.name);
+  console.log(sessionsDataOptions, campusOptions);
+
+  const { data: intakeData } = useAllIntakes();
+  const intakeDataOptions = intakeData?.nodes?.map((d) => d?.name);
+
+  console.log(intakeDataOptions);
 
   // console.log(campusesData, data);
   const maritalOptions = ["single", "married"];
@@ -82,14 +89,14 @@ function ApplicationPage(props) {
 
       setCampusFee(fee);
     }
-    if (formData?.session?.length < 3 && !!academicOptions) {
-      updateForm("session", academicOptions[0]);
+    if (formData?.session?.length < 3 && !!sessionsDataOptions) {
+      updateForm("session", sessionsDataOptions[0]);
     }
   }, [
     formData?.campus?.length,
     updateForm,
     campusOptions,
-    academicOptions,
+    sessionsDataOptions,
     formData?.session?.length,
     campusesData,
     formData?.campus,
@@ -170,45 +177,40 @@ function ApplicationPage(props) {
             hasErrors={formErrors?.title}
           />
 
-          {campusOptions && (
-            <FormDropdown
-              onChange={(e) => {
-                updateForm("campus", e?.target?.value);
-                const fee = campusesData?.nodes?.find(
-                  (c) => c?.name === formData?.campus
-                )?.tuitions[0]?.initialPayment;
+          <FormDropdown
+            onChange={(e) => {
+              updateForm("campus", e?.target?.value);
+              const fee = campusesData?.nodes?.find(
+                (c) => c?.name === formData?.campus
+              )?.tuitions[0]?.initialPayment;
 
-                setCampusFee(fee);
-              }}
-              options={campusOptions?.map((o) => ({
-                // options={["Enugu", "Anambra", "Imo"]?.map((o) => ({
-                children: o,
-              }))}
-              title={"Campus"}
-            />
-          )}
+              setCampusFee(fee);
+            }}
+            options={campusOptions?.map((o) => ({
+              // options={["Enugu", "Anambra", "Imo"]?.map((o) => ({
+              children: o,
+            }))}
+            title={"Campus"}
+          />
 
-          {academicOptions && (
-            <FormDropdown
-              onChange={(e) => updateForm("intake", e?.target?.value)}
-              options={academicOptions?.map((o) => ({
-                // options={["2023/2024", "2024/2025"]?.map((o) => ({
-                children: o,
-              }))}
-              title={"Intake"}
-            />
-          )}
+          <FormDropdown
+            onChange={(e) => updateForm("intake", e?.target?.value)}
+            options={intakeDataOptions?.map((o) => ({
+              // options={["2023/2024", "2024/2025"]?.map((o) => ({
+              children: o,
+            }))}
+            title={"Intake"}
+          />
 
-          {academicOptions && (
-            <FormDropdown
-              onChange={(e) => updateForm("session", e?.target?.value)}
-              options={academicOptions?.map((o) => ({
-                // options={["2023/2024", "2024/2025"]?.map((o) => ({
-                children: o,
-              }))}
-              title={"Academic Session"}
-            />
-          )}
+          <FormDropdown
+            onChange={(e) => updateForm("session", e?.target?.value)}
+            options={sessionsDataOptions?.map((o) => ({
+              // options={["2023/2024", "2024/2025"]?.map((o) => ({
+              children: o,
+            }))}
+            title={"Academic Session"}
+          />
+
           <FormRadioGroup
             label="How will you attend your classes"
             options={["onsite", "online"]}
@@ -233,13 +235,21 @@ function ApplicationPage(props) {
             lg="6"
             value={formData.city}
           />
-          <FormInput
+          {/* <FormInput
             label="State"
             placeholder="Enter State"
             onChange={(e) => updateForm("state", e.target.value)}
             hasErrors={formErrors?.state}
             lg="6"
             value={formData.state}
+          /> */}
+
+          <FormDropdown
+            title="Campus Address (State)"
+            value={formData?.state}
+            options={states?.map((d) => ({ children: d }))}
+            onChange={(e) => updateForm("state", e?.target?.value)}
+            lg="6"
           />
           <FormInput
             label="D.O.B"

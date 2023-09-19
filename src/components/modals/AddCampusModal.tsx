@@ -10,7 +10,7 @@ import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
-import { states } from "../../data/States";
+import { states, regions } from "../../data/States";
 import { InstructorsData } from "../../data/InstructorsData";
 import useCreateCampus from "../../hooks/mutations/classes/useCreateCampus";
 import useAllUsers from "../../hooks/queries/useAllUsers";
@@ -47,34 +47,6 @@ export default function AddCampusModal({
 
   console.log(levelData);
 
-  const initialState = {
-    levels: [],
-    name: "",
-    region: "",
-    currency: "",
-    continent: "",
-    campusCode: "",
-    phoneNumber1: "",
-    phoneNumber2: "",
-    shortName: "",
-    country: "",
-    campusArea: "",
-    primaryLanguage: "",
-    secondaryLanguage: "",
-    campusAbbreviation: "",
-    campusCoordinator: "",
-
-    city: "",
-    state: states[0],
-    street: "",
-    zipCode: 0,
-  };
-
-  const { formData, formIsValid, updateForm } = useForm<typeof initialState>({
-    initialState: defaultValues ?? initialState,
-    // optionalFields: ["discount"],
-  });
-
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
@@ -86,16 +58,47 @@ export default function AddCampusModal({
     id: u?.email,
   }));
 
+  const initialState = {
+    levels: [],
+    name: "",
+    region: regions[0],
+    currency: "",
+    continent: "Africa",
+    campusCode: "",
+    phoneNumber1: "",
+    phoneNumber2: "",
+    shortName: "",
+    country: "Nigeria",
+    // campusArea: "",
+    // primaryLanguage: "",
+    // secondaryLanguage: "",
+    campusAbbreviation: "",
+    campusCoordinator: adminOptions[0]?.id,
+
+    city: "",
+    state: states[0],
+    street: "",
+    // zipCode: 0,
+  };
+
+  const { formData, formIsValid, updateForm, formErrors, toggleError } =
+    useForm<typeof initialState>({
+      initialState: defaultValues ?? initialState,
+      // optionalFields: ["discount"],
+    });
+
   console.log(adminOptions);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
+    console.log(formData);
+
     const address = {
       city: formData.city,
       street: formData.state,
       state: formData.state,
-      zipCode: formData.zipCode,
+      // zipCode: formData.zipCode,
       country: formData.country,
     };
 
@@ -103,7 +106,7 @@ export default function AddCampusModal({
 
     const data = { ...formData, address, levels: levelValues };
 
-    console.log(data.campusCoordinator, levelValues);
+    console.log(data.campusCoordinator, levelValues, data);
 
     if (formIsValid) {
       createCampus.mutate(data, {
@@ -112,7 +115,7 @@ export default function AddCampusModal({
             <ToastContent
               type={"success"}
               heading={"Success"}
-              message={`Successfully created campus tuition`}
+              message={`Campus created Successfully`}
             />,
             ToastContent.Config
           );
@@ -128,11 +131,6 @@ export default function AddCampusModal({
       console.log(formData);
     }
   }
-
-  const customCloseIconStyle = {
-    color: "red", // Change this to your desired color
-    fontSize: "27px",
-  };
 
   return (
     <Modal centered isOpen={visibility} toggle={toggle} scrollable>
@@ -185,46 +183,12 @@ export default function AddCampusModal({
             onChange={(e) => updateForm("campusAbbreviation", e?.target?.value)}
             value={formData?.campusAbbreviation}
           />
-          <FormInput
-            label="Campus Area"
-            placeholder="Campus Area"
-            onChange={(e) => updateForm("campusArea", e?.target?.value)}
-            value={formData?.campusArea}
-          />
 
           <FormInput
             label="Campus Code"
             placeholder="Campus Code"
             onChange={(e) => updateForm("campusCode", e?.target?.value)}
             value={formData?.campusCode}
-          />
-
-          <FormInput
-            label="Continent"
-            placeholder="Continent"
-            onChange={(e) => updateForm("continent", e?.target?.value)}
-            value={formData?.continent}
-          />
-
-          <FormInput
-            label="Country"
-            placeholder="Country"
-            onChange={(e) => updateForm("country", e?.target?.value)}
-            value={formData?.country}
-          />
-
-          <FormInput
-            label="Currency"
-            placeholder="Currency"
-            onChange={(e) => updateForm("currency", e?.target?.value)}
-            value={formData?.currency}
-          />
-
-          <FormInput
-            label="Zip Code"
-            placeholder="Zip Code"
-            onChange={(e) => updateForm("zipCode", e?.target?.value)}
-            value={formData?.zipCode}
           />
 
           <FormDropdown
@@ -236,21 +200,57 @@ export default function AddCampusModal({
           />
 
           <FormDropdown
+            title="Campus Address (State)"
+            value={formData?.region}
+            options={regions?.map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("region", e?.target?.value)}
+            disabled={!isCreating}
+          />
+          <FormInput
+            label="Country"
+            placeholder="Country"
+            onChange={(e) => updateForm("country", e?.target?.value)}
+            value={formData?.country}
+            disabled
+          />
+
+          {/* <FormInput
+            label="Zip Code"
+            placeholder="Zip Code"
+            onChange={(e) => updateForm("zipCode", e?.target?.value)}
+            value={formData?.zipCode}
+          /> */}
+
+          <FormInput
+            label="Continent"
+            placeholder="Continent"
+            onChange={(e) => updateForm("continent", e?.target?.value)}
+            value={formData?.continent}
+            disabled
+          />
+
+          <FormInput
+            label="Currency"
+            placeholder="Currency"
+            onChange={(e) => updateForm("currency", e?.target?.value)}
+            value={formData?.currency}
+          />
+
+          <FormDropdown
             title="Campus Cordinator"
-            value={formData?.campusCoordinator}
+            value={formData.campusCoordinator}
             options={adminOptions?.map((d: any) => ({ children: d?.id }))}
-            // options={[
-            //   "studentservices@rhemanigeria2.com",
-            //   "studentservices@rhemanigeria.com",
-            // ]?.map((d: any) => ({ children: d }))}
             onChange={(e) => updateForm("campusCoordinator", e?.target?.value)}
-            // disabled={!isCreating}
+            disabled={!isCreating}
           />
 
           <FormInput
             label="Phone Number 1"
-            placeholder="Enter Phone Number"
-            onChange={(e) => updateForm("phoneNumber1", e?.target?.value)}
+            placeholder="+2348044444444"
+            onChange={(e) => {
+              updateForm("phoneNumber1", e?.target?.value);
+              formErrors?.phoneNumber && toggleError("phoneNumber1");
+            }}
             value={formData?.phoneNumber1}
           />
 

@@ -17,7 +17,7 @@ type CampusesTableProps = {
   toggle: VoidFunction;
 };
 
-const DeleteCampus = (id: any) => {
+const DeleteCampus = (id: any, refetch: any) => {
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
@@ -40,6 +40,7 @@ const DeleteCampus = (id: any) => {
         ToastContent.Config
       );
       toggleDeleteModal();
+      refetch();
     } catch (error: any) {
       console.error("Error deleting resource", error);
       toast.error(
@@ -50,8 +51,8 @@ const DeleteCampus = (id: any) => {
         />,
         ToastContent.Config
       );
+      toggleDeleteModal();
     }
-    toggleDeleteModal();
   };
 
   return (
@@ -68,7 +69,7 @@ export default function CampusesTable2({
   setShowCampusDetail,
   toggle,
 }: CampusesTableProps) {
-  const { isLoading, data } = useAllCampuses();
+  const { isLoading, data, refetch } = useAllCampuses();
   const campusesData = data?.nodes;
 
   console.log(campusesData);
@@ -97,7 +98,9 @@ export default function CampusesTable2({
     {
       key: "Campus Cordinator",
       title: "Campus Cordinator",
-      render: (data) => <p>{"Demo Names"}</p>,
+      render: (data) => (
+        <p>{`${data?.campusCoordinator.firstName} ${data?.campusCoordinator.lastName}`}</p>
+      ),
     },
     {
       key: "Address",
@@ -120,8 +123,8 @@ export default function CampusesTable2({
 
         return (
           <div className="d-flex gap-4 ">
-            <EditCampusModal data={data} />
-            <DeleteCampus id={data.id} />
+            <EditCampusModal data={data} onCreate={refetch} />
+            <DeleteCampus id={data.id} refetch={refetch} />
           </div>
         );
       },

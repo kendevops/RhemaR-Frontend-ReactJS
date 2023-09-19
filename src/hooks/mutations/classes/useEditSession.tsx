@@ -6,7 +6,7 @@ interface Data {
   name: string;
   endDate: string;
   startDate: string;
-  isActive?: boolean;
+  isActive?: string;
 }
 
 export default function useEditSession(id: string) {
