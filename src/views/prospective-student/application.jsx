@@ -37,7 +37,7 @@ function ApplicationPage(props) {
 
   const initialState = {
     title: "",
-    campus: "Abuja",
+    campus: "",
     intake: "October 2023",
     session: "2023/2024",
     referralSource: "Social Media",
@@ -69,13 +69,15 @@ function ApplicationPage(props) {
   const sessionsDataOptions = sessionsData?.nodes?.map((d) => d?.name);
   console.log(sessionsDataOptions, campusOptions);
 
+  console.log(campusesData);
+
   const { data: intakeData } = useAllIntakes();
   const intakeDataOptions = intakeData?.nodes?.map((d) => d?.name);
 
   console.log(intakeDataOptions);
 
   // console.log(campusesData, data);
-  const maritalOptions = ["single", "married"];
+  const maritalOptions = ["SINGLE", "MARRIED"];
   // const maritalOptions = ["SINGLE", "MARRIED"];
 
   const [campusFee, setCampusFee] = useState("30000");
@@ -83,9 +85,13 @@ function ApplicationPage(props) {
   useEffect(() => {
     //set Campus and academic sessions on render
     if (formData?.campus?.length < 3 && !!campusOptions) {
+      console.log(formData.campus);
       updateForm("campus", campusOptions[0]);
+
       const fee = campusesData?.nodes?.find((c) => c?.name === formData?.campus)
         ?.tuitions[0]?.initialPayment;
+
+      console.log(formData.campus);
 
       setCampusFee(fee);
     }
@@ -101,6 +107,19 @@ function ApplicationPage(props) {
     campusesData,
     formData?.campus,
   ]);
+
+  const updateafee = () => {
+    const fee = campusesData?.nodes?.find((c) => c?.name === formData?.campus)
+      ?.tuitions[0]?.feePayment;
+
+    setCampusFee(fee);
+  };
+
+  useEffect(() => {
+    updateafee();
+  }, [formData.campus]);
+
+  console.log(campusFee);
 
   function makePayment(e) {
     e.preventDefault();
@@ -178,19 +197,22 @@ function ApplicationPage(props) {
           />
 
           <FormDropdown
-            onChange={(e) => {
-              updateForm("campus", e?.target?.value);
-              const fee = campusesData?.nodes?.find(
-                (c) => c?.name === formData?.campus
-              )?.tuitions[0]?.initialPayment;
-
-              setCampusFee(fee);
-            }}
             options={campusOptions?.map((o) => ({
               // options={["Enugu", "Anambra", "Imo"]?.map((o) => ({
               children: o,
             }))}
+            onChange={(e) => {
+              updateForm("campus", e?.target?.value);
+              // console.log(formData?.campus);
+              // const fee =  campusesData?.nodes?.find(
+              //   (c) => c?.name === formData?.campus
+              // )?.tuitions[0]?.feePayment;
+
+              // setCampusFee(fee);
+              // console.log(fee, campusFee);
+            }}
             title={"Campus"}
+            value={formData?.campus}
           />
 
           <FormDropdown
@@ -213,7 +235,7 @@ function ApplicationPage(props) {
 
           <FormRadioGroup
             label="How will you attend your classes"
-            options={["onsite", "online"]}
+            options={["ONSITE", "ONLINE"]}
             onChange={(e) =>
               updateForm("classAttendanceMethod", e.target.value)
             }
@@ -364,12 +386,12 @@ function ApplicationPage(props) {
               color: "red",
             }}
           >
-            You selected {formData.campus} Campus, once you click proceed, it
+            You selected {formData?.campus} Campus, once you click proceed, it
             cannot be changed
           </p>
           <p>
-            You are to pay an application fee of N{campusFee ?? "30000"} to
-            proceed with your application
+            You are to pay an application fee of N{campusFee} to proceed with
+            your application
           </p>
           <p>
             You will be redirected to paystack to make payment after filling the

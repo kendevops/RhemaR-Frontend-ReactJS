@@ -5,11 +5,13 @@ import queryKeys from "../../../queryKeys";
 interface Data {
   level: string;
   campus: string;
-  total?: number;
-  discount: number;
-  feePayment: number;
-  initialPayment: number;
-  installmentMinimum: number;
+  total?: string;
+  discount: string;
+  feePayment: string;
+  initialPayment: string;
+  installmentMinimum: string;
+  installmentDuration: string;
+  dueDate: string;
 }
 
 export default function useCreateCampusTuition() {

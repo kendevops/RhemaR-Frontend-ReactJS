@@ -4,7 +4,7 @@ import useForm from "../../utility/hooks/useForm";
 import useCreateCampusTuition from "../../hooks/mutations/classes/useCreateCampusTuition";
 import useUpdateCampusTuition from "../../hooks/mutations/classes/useUpdateCampusTuition";
 import FormDropdown from "../molecules/FormDropdown";
-import { levels } from "../../data/Levels";
+// import { levels } from "../../data/Levels";
 import FormInput from "../molecules/FormInput";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
@@ -14,6 +14,7 @@ import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple"
 import { states } from "../../data/States";
 import { InstructorsData } from "../../data/InstructorsData";
 import { Controller } from "react-hook-form";
+import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
 
 interface AcademicAddTuitionModalProps {
   toggle: VoidFunction;
@@ -33,18 +34,26 @@ export default function AcademicAddTuitionModal({
   const { isLoading: campusesLoading, data } = useAllCampuses();
   const campusesData = data?.nodes;
   const createTuition = useCreateCampusTuition();
+  const { data: levelData } = useCampusLevel();
+
+  const levels = levelData?.map((v: any) => v.name);
+
+  console.log(levelData, levels);
+
   // const updateTuition = useUpdateCampusTuition(id ?? "");
 
   const isLoading = createTuition.isLoading || campusesLoading;
 
   const initialState = {
-    level: levels[0],
+    level: "",
     campus: "",
-    total: 0,
-    discount: 0,
-    feePayment: 0,
-    initialPayment: 0,
-    installmentMinimum: 0,
+    total: "",
+    discount: "",
+    feePayment: "",
+    initialPayment: "",
+    installmentMinimum: "",
+    installmentDuration: "",
+    dueDate: "",
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
@@ -130,13 +139,6 @@ export default function AcademicAddTuitionModal({
           />
 
           <FormInput
-            label="Discount"
-            placeholder="Discount"
-            onChange={(e) => updateForm("discount", e?.target?.value)}
-            value={formData?.discount}
-          />
-
-          <FormInput
             label="Initial Payment"
             placeholder="Initial Payment"
             onChange={(e) => updateForm("initialPayment", e?.target?.value)}
@@ -144,17 +146,40 @@ export default function AcademicAddTuitionModal({
           />
 
           <FormInput
-            label="Installment Minimum"
+            label="Minimum Installment fee"
             placeholder="Installment Minimum"
             onChange={(e) => updateForm("installmentMinimum", e?.target?.value)}
             value={formData?.installmentMinimum}
           />
 
           <FormInput
+            label="Minimum Installment Duration"
+            placeholder="Installment Minimum Duration"
+            onChange={(e) =>
+              updateForm("installmentDuration", e?.target?.value)
+            }
+            value={formData?.installmentDuration}
+          />
+
+          <FormInput
             label="Total"
             placeholder="Total"
             onChange={(e) => updateForm("total", e?.target?.value)}
-            value={formData?.feePayment - formData?.discount}
+            value={formData?.total}
+          />
+          <FormInput
+            label="Discount"
+            placeholder="Discount"
+            onChange={(e) => updateForm("discount", e?.target?.value)}
+            value={formData?.discount}
+          />
+
+          <FormInput
+            label="Due Date"
+            type={"date"}
+            onChange={(e) =>
+              updateForm("dueDate", new Date(e?.target?.value)?.toISOString())
+            }
           />
 
           {isLoading ? (
