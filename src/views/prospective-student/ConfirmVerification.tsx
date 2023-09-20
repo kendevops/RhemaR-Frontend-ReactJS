@@ -11,6 +11,8 @@ export default function ConfirmVerification() {
   const params = useParams<{ id: string }>();
   const verificationId = params?.id;
 
+  console.log(params, verificationId);
+
   const { data, isLoading, isError, isSuccess } =
     useVerifyEmail(verificationId);
 

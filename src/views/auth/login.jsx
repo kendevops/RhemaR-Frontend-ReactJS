@@ -63,6 +63,8 @@ const AuthLoginPage = () => {
             refreshToken: d?.tokens?.refresh_token,
           };
 
+          localStorage.setItem("userData", JSON.stringify(data));
+
           console.log(data);
 
           const userRole =

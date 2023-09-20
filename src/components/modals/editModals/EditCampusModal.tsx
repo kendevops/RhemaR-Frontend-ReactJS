@@ -64,8 +64,6 @@ export default function EditCampusModal({
   const { formData, updateForm, formIsValid, formErrors, toggleError } =
     useForm({ initialState });
 
-  console.log(data);
-
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
@@ -76,8 +74,6 @@ export default function EditCampusModal({
     label: `${u?.firstName} ${u?.lastName}`,
     id: u?.email,
   }));
-
-  console.log(adminOptions);
 
   // const roleOptions = rolesData?.roles
   //   ?.filter((r: any) => r.name?.includes("ADMIN"))

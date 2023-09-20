@@ -47,12 +47,12 @@ export default function AcademicAddTuitionModal({
   const initialState = {
     level: "",
     campus: "",
-    total: "",
-    discount: "",
-    feePayment: "",
-    initialPayment: "",
-    installmentMinimum: "",
-    installmentDuration: "",
+    total: 0,
+    discount: 0,
+    feePayment: 0,
+    initialPayment: 0,
+    installmentMinimum: 0,
+    installmentDuration: 0,
     dueDate: "",
   };
 
@@ -69,11 +69,20 @@ export default function AcademicAddTuitionModal({
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    console.log(formData);
 
-    const { level, campus, ...otherData } = formData;
+    const body = {
+      ...formData,
+      total: +formData.total,
+      discount: +formData.discount,
+      feePayment: +formData.feePayment,
+      initialPayment: +formData.initialPayment,
+      installmentMinimum: +formData.installmentMinimum,
+      installmentDuration: +formData.installmentDuration,
+    };
 
     if (formIsValid) {
-      createTuition.mutate(formData, {
+      createTuition.mutate(body, {
         onSuccess: () => {
           toast.success(
             <ToastContent
@@ -113,13 +122,14 @@ export default function AcademicAddTuitionModal({
   }
 
   return (
-    <Modal centered isOpen={visibility} toggle={toggle}>
+    <Modal centered isOpen={visibility} toggle={toggle} scrollable>
       <ModalHeader toggle={toggle}>Add Tuition</ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit}>
           <FormDropdown
             options={campusOptions}
             title="Select campus"
+            onChange={(e) => updateForm("campus", e?.target?.value)}
             hasErrors={formErrors?.campus}
           />
 
@@ -132,8 +142,8 @@ export default function AcademicAddTuitionModal({
           />
 
           <FormInput
-            label="Application Payment"
-            placeholder="Application Payment"
+            label="Application Fee"
+            placeholder="Application Fee"
             onChange={(e) => updateForm("feePayment", e?.target?.value)}
             value={formData?.feePayment}
           />

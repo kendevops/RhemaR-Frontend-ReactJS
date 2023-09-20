@@ -10,6 +10,8 @@ interface Data {
   feePayment: number;
   initialPayment: number;
   installmentMinimum: number;
+  installmentDuration: number;
+  dueDate: string;
 }
 
 export default function useUpdateCampusTuition(id: string) {

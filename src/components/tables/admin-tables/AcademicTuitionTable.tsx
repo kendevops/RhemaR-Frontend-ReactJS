@@ -68,18 +68,55 @@ export default function AcademicTuitionTable() {
     {
       key: "Level",
       title: "Level",
-      render: (data) => <p>{2}</p>,
+      render: (data) => <p>{data?.tuitions?.level?.name?.split("_")[1]}</p>,
     },
     {
-      key: "Cost",
+      key: "Application Fee",
       title: "Cost",
-      render: (data) => <p>{30000}</p>,
+      render: (data) => <p>{data?.tuitions?.feePayment}</p>,
     },
 
+    {
+      key: "Initial Payment",
+      title: "Cost",
+      render: (data) => <p>{data?.tuitions?.initialPayment}</p>,
+    },
+    {
+      key: "Installment Minimum",
+      title: "Cost",
+      render: (data) => <p>{data?.tuitions?.installmentMinimum}</p>,
+    },
+    {
+      key: "Discount",
+      title: "Cost",
+      render: (data) => <p>{data?.tuitions?.discount}</p>,
+    },
+    {
+      key: "Total",
+      title: "Cost",
+      render: (data) => <p>{data?.tuitions?.total}</p>,
+    },
+
+    {
+      key: "Due Date",
+      title: "Due Date",
+      render: (data) => (
+        <p>{new Date(data?.tuitions?.dueDate).toDateString()}</p>
+      ),
+    },
+
+    // total: 130000,
+    //     dueDate: '2022-11-23T13:24:00.417Z',
+    //     discount: 10,
+    //     feePayment: 10000,
+    //     initialPayment: 20000,
+    //     installmentMinimum: 10000,
     {
       key: "Action",
       title: "Action",
       render: (data) => {
+        console.log(data);
+
         return (
           <div className="d-flex gap-3">
             <DeleteTuition />

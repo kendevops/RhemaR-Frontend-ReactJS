@@ -5,14 +5,20 @@ import useCurrentUser from "../../../../hooks/queries/users/useCurrentUser";
 
 const user = localStorage.getItem("userData");
 
-console.log(user);
+const parsedData = JSON.parse(user);
+
+console.log(parsedData);
 
 const ProspectiveStudentNavs = [
   {
     id: "dashboard",
-    title: `${user?.level ? "Dashboard" : "Application"}`,
+    title: `${
+      parsedData?.levelOneApplications[0] ? "Dashboard" : "Application"
+    }`,
     icon: <Icon icon="ep:menu" />,
-    navLink: `${user?.level ? "/dashboard" : "/application"}`,
+    navLink: `${
+      parsedData?.levelOneApplications[0] ? "/dashboard" : "/application"
+    }`,
     action: "read",
     resource: "Applications",
   },

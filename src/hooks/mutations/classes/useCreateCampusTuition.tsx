@@ -5,12 +5,12 @@ import queryKeys from "../../../queryKeys";
 interface Data {
   level: string;
   campus: string;
-  total?: string;
-  discount: string;
-  feePayment: string;
-  initialPayment: string;
-  installmentMinimum: string;
-  installmentDuration: string;
+  total?: number;
+  discount: number;
+  feePayment: number;
+  initialPayment: number;
+  installmentMinimum: number;
+  installmentDuration: number;
   dueDate: string;
 }
 

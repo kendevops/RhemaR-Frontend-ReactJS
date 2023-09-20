@@ -15,6 +15,8 @@ import countries from "../../data/Countries";
 import { useHistory } from "react-router-dom";
 import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
 import { states } from "../../data/States";
+import ToastContent from "../../components/molecules/ToastContent";
+import { toast } from "react-toastify";
 
 function ApplicationPage(props) {
   const { setHasApplied } = props;
@@ -28,15 +30,16 @@ function ApplicationPage(props) {
   // console.log(userData?.applications[0]?.level?.name);
 
   useEffect(() => {
-    if (userData?.level) {
+    if (userData?.levelOneApplications[0]) {
+      localStorage.setItem("userData", JSON.stringify(userData));
       history.replace("/dashboard");
     }
-  }, []);
+  }, [userData?.levelOneApplications[0]]);
 
   const countriesOptions = countries?.map((c) => c?.en_short_name);
 
   const initialState = {
-    title: "",
+    title: "Mr",
     campus: "",
     intake: "October 2023",
     session: "2023/2024",
@@ -65,19 +68,17 @@ function ApplicationPage(props) {
   const { data: sessionsData } = useAcademicSessions();
   const { data: campusesData } = useCampuses();
 
+  console.log(userData?.levelOneApplications[0]);
+
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const sessionsDataOptions = sessionsData?.nodes?.map((d) => d?.name);
-  console.log(sessionsDataOptions, campusOptions);
-
-  console.log(campusesData);
 
   const { data: intakeData } = useAllIntakes();
   const intakeDataOptions = intakeData?.nodes?.map((d) => d?.name);
 
-  console.log(intakeDataOptions);
-
   // console.log(campusesData, data);
   const maritalOptions = ["SINGLE", "MARRIED"];
+  const titleOptions = ["Mr", "Mrs", "Miss", "Others"];
   // const maritalOptions = ["SINGLE", "MARRIED"];
 
   const [campusFee, setCampusFee] = useState("30000");
@@ -121,7 +122,7 @@ function ApplicationPage(props) {
 
   console.log(campusFee);
 
-  function makePayment(e) {
+  async function makePayment(e) {
     e.preventDefault();
     const { state, city, affirmations, longBornAgain, address, ...otherData } =
       formData;
@@ -147,6 +148,17 @@ function ApplicationPage(props) {
 
     mutate(body, {
       onSuccess: (d) => {
+        toast.success(
+          <ToastContent
+            type={"success"}
+            heading={"Success"}
+            message={`Application submitted Successfully`}
+          />,
+          ToastContent.Config
+        );
+        // localStorage.setItem("userData", JSON.stringify(d?.data?.data));
+        console.log(d?.data);
+        console.log(d);
         const paymentUrl =
           d?.data?.data?.application?.initialPayment?.paymentUrl;
         window?.open(paymentUrl);
@@ -188,11 +200,13 @@ function ApplicationPage(props) {
 
       <form onSubmit={makePayment}>
         <div className="row">
-          <FormInput
-            label="Title"
-            placeholder="Title"
-            onChange={(e) => updateForm("title", e.target.value)}
-            hasErrors={formErrors?.title}
+          <FormDropdown
+            onChange={(e) => updateForm("title", e?.target?.value)}
+            options={titleOptions?.map((o) => ({
+              // options={["2023/2024", "2024/2025"]?.map((o) => ({
+              children: o,
+            }))}
+            title={"Title"}
           />
 
           <FormDropdown
@@ -397,6 +411,8 @@ function ApplicationPage(props) {
             form
           </p>
         </div>
+
+        {isLoading && <Spinner />}
 
         <button className="btn btn-blue-800 btn-lg w-100" type="submit">
           Proceed to Payment

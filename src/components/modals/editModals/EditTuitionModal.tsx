@@ -17,7 +17,7 @@ interface EditTuitionModalProps {
 export default function EditTuitionModal({ data }: EditTuitionModalProps) {
   const [visibility, toggle] = useToggle();
 
-  console.log(data);
+  console.log("data", data);
 
   const initialState = {
     level: data?.level,
@@ -27,6 +27,8 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
     feePayment: data?.installmentMinimum,
     initialPayment: data?.installmentMinimum,
     installmentMinimum: data?.installmentMinimum,
+    installmentDuration: data?.installmentDuration,
+    dueDate: data?.dueDate,
   };
 
   const editTuition = useUpdateCampusTuition(data?.id);
@@ -49,8 +51,18 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
       alert("Please fill in all fields");
       return;
     }
+
+    const body = {
+      ...formData,
+      total: +formData.total,
+      discount: +formData.discount,
+      feePayment: +formData.feePayment,
+      initialPayment: +formData.initialPayment,
+      installmentMinimum: +formData.installmentMinimum,
+      installmentDuration: +formData.installmentDuration,
+    };
     if (data) {
-      editTuition?.mutate(formData, {
+      editTuition?.mutate(body, {
         onSuccess: () => {
           toast.success(
             <ToastContent
@@ -60,6 +72,7 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
             />,
             ToastContent.Config
           );
+          toggle();
         },
 
         onError: (e: any) => {
@@ -72,10 +85,10 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
             />,
             ToastContent.Config
           );
+          toggle();
         },
       });
 
-      toggle();
       return;
     }
   };
@@ -87,13 +100,14 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
       </p>
 
       {/* Modal */}
-      <Modal centered isOpen={visibility} toggle={toggle}>
+      <Modal centered isOpen={visibility} toggle={toggle} scrollable>
         <ModalHeader toggle={toggle}>Edit Tuition</ModalHeader>
         <ModalBody>
           <form onSubmit={onSubmit}>
             <FormDropdown
               options={campusOptions}
               title="Select campus"
+              onChange={(e) => updateForm("campus", e?.target?.value)}
               hasErrors={formErrors?.campus}
             />
 
@@ -105,17 +119,10 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
             />
 
             <FormInput
-              label="Application Payment"
-              placeholder="Application Payment"
+              label="Application Fee"
+              placeholder="Application Fee"
               onChange={(e) => updateForm("feePayment", e?.target?.value)}
               value={formData?.feePayment}
-            />
-
-            <FormInput
-              label="Discount"
-              placeholder="Discount"
-              onChange={(e) => updateForm("discount", e?.target?.value)}
-              value={formData?.discount}
             />
 
             <FormInput
@@ -126,7 +133,7 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
             />
 
             <FormInput
-              label="Installment Minimum"
+              label="Minimum Installment fee"
               placeholder="Installment Minimum"
               onChange={(e) =>
                 updateForm("installmentMinimum", e?.target?.value)
@@ -135,10 +142,33 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
             />
 
             <FormInput
+              label="Minimum Installment Duration"
+              placeholder="Installment Minimum Duration"
+              onChange={(e) =>
+                updateForm("installmentDuration", e?.target?.value)
+              }
+              value={formData?.installmentDuration}
+            />
+
+            <FormInput
               label="Total"
               placeholder="Total"
               onChange={(e) => updateForm("total", e?.target?.value)}
-              value={formData?.feePayment - formData?.discount}
+              value={formData?.total}
+            />
+            <FormInput
+              label="Discount"
+              placeholder="Discount"
+              onChange={(e) => updateForm("discount", e?.target?.value)}
+              value={formData?.discount}
+            />
+
+            <FormInput
+              label="Due Date"
+              type={"date"}
+              onChange={(e) =>
+                updateForm("dueDate", new Date(e?.target?.value)?.toISOString())
+              }
             />
 
             {isLoading ? (
