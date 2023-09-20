@@ -131,7 +131,7 @@ function ApplicationPage(props) {
 
   console.log(campusFee);
 
-  function makePayment(e) {
+  async function makePayment(e) {
     e.preventDefault();
     const {
       state,
