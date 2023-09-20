@@ -108,7 +108,7 @@ function ApplicationPage(props) {
     formData?.campus,
   ]);
 
-  const updateafee = () => {
+  const updateFee = () => {
     const fee = campusesData?.nodes?.find((c) => c?.name === formData?.campus)
       ?.tuitions[0]?.feePayment;
 
@@ -116,7 +116,7 @@ function ApplicationPage(props) {
   };
 
   useEffect(() => {
-    updateafee();
+    updateFee();
   }, [formData.campus]);
 
   console.log(campusFee);
@@ -143,11 +143,10 @@ function ApplicationPage(props) {
       return;
     }
 
-    console.log(body);
+    // console.log(body);
 
     mutate(body, {
       onSuccess: (d) => {
-        console.log(d);
         const paymentUrl =
           d?.data?.data?.application?.initialPayment?.paymentUrl;
         window?.open(paymentUrl);
