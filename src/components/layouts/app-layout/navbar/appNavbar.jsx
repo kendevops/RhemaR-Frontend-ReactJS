@@ -75,26 +75,28 @@ const Navbar = (props) => {
   }
 
   const rolesOptions =
-    currentUser?.roles?.map((role) => {
-      const r = role?.name;
-      console.log(r);
-      return {
-        id: r,
-        children: (
-          <p
-            className="mt-3"
-            style={{
-              color: checkRoleMatch(r) ? "green" : "",
-            }}
-          >
-            {checkRoleMatch(r) ? `Signed in as ${r}` : `Switch to ${r}`}
-          </p>
-        ),
-        onClick: () => {
-          handleRoleSwitch(r);
-        },
-      };
-    }) ?? [];
+    currentUser?.roles
+      ?.filter((role) => role?.name !== "PROSPECTIVE_STUDENT")
+      .map((role) => {
+        const r = role?.name;
+        console.log(r);
+        return {
+          id: r,
+          children: (
+            <p
+              className="mt-3"
+              style={{
+                color: checkRoleMatch(r) ? "green" : "",
+              }}
+            >
+              {checkRoleMatch(r) ? `Signed in as ${r}` : `Switch to ${r}`}
+            </p>
+          ),
+          onClick: () => {
+            handleRoleSwitch(r);
+          },
+        };
+      }) ?? [];
 
   const options = [
     {

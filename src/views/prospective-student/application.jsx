@@ -29,32 +29,26 @@ function ApplicationPage(props) {
 
   // console.log(userData?.applications[0]?.level?.name);
 
-  useEffect(() => {
-    if (userData?.levelOneApplications[0]) {
-      localStorage.setItem("userData", JSON.stringify(userData));
-      history.replace("/dashboard");
-    }
-  }, [userData?.levelOneApplications[0]]);
-
   const countriesOptions = countries?.map((c) => c?.en_short_name);
 
   const initialState = {
-    title: "Mr",
+    userTitle: "Mr",
     campus: "",
     intake: "October 2023",
     session: "2023/2024",
     referralSource: "Social Media",
     classAttendanceMethod: "",
-    churchDetails: "",
+    churchAddress: "",
     churchPastorName: "",
     churchPastorPhoneNumber: "",
-    affirmationAndSubmissions: "",
+    affirmationsAndSubmissions: "",
     address: "",
     dateOfBirth: "",
     nationality: "Nigerian",
     maritalStatus: "SINGLE",
     churchName: "",
     isBornAgain: "",
+    hasBeenBornAgainFor: "",
     longBornAgain: "",
     isBaptized: "",
     affirmations: "",
@@ -71,14 +65,29 @@ function ApplicationPage(props) {
   console.log(userData?.levelOneApplications[0]);
 
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
-  const sessionsDataOptions = sessionsData?.nodes?.map((d) => d?.name);
+  const sessionsDataOptions = sessionsData?.nodes
+    ?.filter((d) => d?.isActive)
+    .map((d) => d?.name);
 
   const { data: intakeData } = useAllIntakes();
-  const intakeDataOptions = intakeData?.nodes?.map((d) => d?.name);
+  const intakeDataOptions = intakeData?.nodes
+    ?.filter((d) => d?.session?.isActive)
+    .map((d) => d?.name);
+
+  console.log(sessionsData, sessionsDataOptions);
 
   // console.log(campusesData, data);
   const maritalOptions = ["SINGLE", "MARRIED"];
   const titleOptions = ["Mr", "Mrs", "Miss", "Others"];
+  const referralSourceOptions = [
+    "Social Media",
+    "LinkedIn",
+    "Twitter",
+    "Whatsapp",
+    "Friend",
+    "Others",
+  ];
+
   // const maritalOptions = ["SINGLE", "MARRIED"];
 
   const [campusFee, setCampusFee] = useState("30000");
@@ -122,10 +131,17 @@ function ApplicationPage(props) {
 
   console.log(campusFee);
 
-  async function makePayment(e) {
+  function makePayment(e) {
     e.preventDefault();
-    const { state, city, affirmations, longBornAgain, address, ...otherData } =
-      formData;
+    const {
+      state,
+      city,
+      affirmations,
+      longBornAgain,
+      address,
+      churchStreet,
+      ...otherData
+    } = formData;
     const body = {
       ...otherData,
       level: "LEVEL_1",
@@ -148,15 +164,14 @@ function ApplicationPage(props) {
 
     mutate(body, {
       onSuccess: (d) => {
-        toast.success(
-          <ToastContent
-            type={"success"}
-            heading={"Success"}
-            message={`Application submitted Successfully`}
-          />,
-          ToastContent.Config
-        );
-        // localStorage.setItem("userData", JSON.stringify(d?.data?.data));
+        // toast.success(
+        //   <ToastContent
+        //     type={"success"}
+        //     heading={"Success"}
+        //     message={`Application submitted Successfully`}
+        //   />,
+        //   ToastContent.Config
+        // );
         console.log(d?.data);
         console.log(d);
         const paymentUrl =
@@ -169,6 +184,13 @@ function ApplicationPage(props) {
       },
     });
   }
+
+  useEffect(() => {
+    if (userData?.levelOneApplications[0]) {
+      localStorage.setItem("userData", JSON.stringify(userData));
+      history.replace("/dashboard");
+    }
+  }, [userData?.levelOneApplications[0]]);
 
   return (
     <>
@@ -201,7 +223,7 @@ function ApplicationPage(props) {
       <form onSubmit={makePayment}>
         <div className="row">
           <FormDropdown
-            onChange={(e) => updateForm("title", e?.target?.value)}
+            onChange={(e) => updateForm("userTitle", e?.target?.value)}
             options={titleOptions?.map((o) => ({
               // options={["2023/2024", "2024/2025"]?.map((o) => ({
               children: o,
@@ -316,12 +338,20 @@ function ApplicationPage(props) {
             hasErrors={formErrors?.maritalStatus}
           />
 
-          <FormInput
+          {/* <FormInput
             label="Referral source"
             placeholder="How did you find out about us?"
             onChange={(e) => updateForm("referralSource", e.target.value)}
             hasErrors={formErrors?.referralSource}
             value={formData.referralSource}
+          /> */}
+
+          <FormDropdown
+            onChange={(e) => updateForm("referralSource", e?.target?.value)}
+            options={referralSourceOptions?.map((o) => ({
+              children: o,
+            }))}
+            title={"Referral source"}
           />
 
           <FormInput
@@ -334,10 +364,11 @@ function ApplicationPage(props) {
           <FormInput
             label="Church Address"
             placeholder="Enter Church Address"
-            onChange={(e) => updateForm("churchDetails", e.target.value)}
-            hasErrors={formErrors?.churchDetails}
-            value={formData.churchDetails}
+            onChange={(e) => updateForm("churchAddress", e.target.value)}
+            hasErrors={formErrors?.churchAddress}
+            value={formData.churchAddress}
           />
+
           <FormInput
             label="Church Pastor's Name"
             placeholder="Enter Church pastor's name"
@@ -366,9 +397,9 @@ function ApplicationPage(props) {
           <FormInput
             label="How long have you been born again?"
             placeholder="How long have you been born again?"
-            onChange={(e) => updateForm("longBornAgain", e.target.value)}
-            hasErrors={formErrors?.longBornAgain}
-            value={formData.longBornAgain}
+            onChange={(e) => updateForm("hasBeenBornAgainFor", e.target.value)}
+            hasErrors={formErrors?.hasBeenBornAgainFor}
+            value={formData.hasBeenBornAgainFor}
           />
 
           <FormRadioGroup
@@ -386,10 +417,10 @@ function ApplicationPage(props) {
             label="Affirmations and Submissions"
             options={["Yes", "No"]}
             onChange={(e) => {
-              updateForm("affirmationAndSubmissions", e.target.value);
+              updateForm("affirmationsAndSubmissions", e.target.value);
             }}
-            hasErrors={formErrors?.affirmationAndSubmissions}
-            value={formData.affirmationAndSubmissions}
+            hasErrors={formErrors?.affirmationsAndSubmissions}
+            value={formData.affirmationsAndSubmissions}
           />
         </div>
 

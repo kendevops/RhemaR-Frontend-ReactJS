@@ -18,6 +18,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegEye } from "react-icons/fa";
 import { Icon } from "@iconify/react";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
 
 interface ViewApplicationProps {
   status?: any;
@@ -166,9 +167,16 @@ export default function Applications() {
     children: d?.name,
   }));
 
-  const intakeOptions = ["April", "November"].map((v) => ({
-    children: v + " intake",
+  const { data: intakeData } = useAllIntakes();
+  const intakeDataOptions = intakeData?.nodes?.map((d: any) => ({
+    children: d?.name,
   }));
+
+  console.log(intakeDataOptions);
+
+  // const intakeOptions = ["April", "November"].map((v) => ({
+  //   children: v + " intake",
+  // }));
 
   const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
     children: sess?.name,
@@ -191,7 +199,7 @@ export default function Applications() {
       {
         inputType: "Dropdown",
         inputProps: {
-          options: intakeOptions,
+          options: intakeDataOptions,
         },
         id: "intake",
         name: "Intake",

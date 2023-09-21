@@ -3,6 +3,7 @@ import api from "../../../api";
 import queryKeys from "../../../queryKeys";
 
 interface data {
+  userTitle: string;
   level: string;
   campus: string;
   intake: string;
@@ -11,9 +12,15 @@ interface data {
   dateOfBirth: string;
   maritalStatus: string;
   churchName: string;
+  churchAddress: string;
+  churchPastorPhoneNumber: string;
+  churchPastorName: string;
   isBaptized: boolean;
   isBornAgain: boolean;
+  referralSource: string;
+  hasBeenBornAgainFor: string;
   classAttendanceMethod: string;
+  affirmationsAndSubmissions: string;
   address: {
     city: string;
     street: string;
