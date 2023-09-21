@@ -78,13 +78,19 @@ function ApplicationPage(props) {
 
   // console.log(campusesData, data);
   const maritalOptions = ["SINGLE", "MARRIED"];
-  const titleOptions = ["Mr", "Mrs", "Miss", "Others"];
+  const titleOptions = ["Mr", "Mrs", "Ms", "Pastor", "Rev", "Dr", "Other"];
   const referralSourceOptions = [
-    "Social Media",
-    "LinkedIn",
-    "Twitter",
-    "Whatsapp",
-    "Friend",
+    "Facebook",
+    "Instagram",
+    "Email",
+    "SMS",
+    "Billboard",
+    "Referral - Friend",
+    "Referral - Current Student",
+    "Referral - Alumni",
+    "Referral - RHEMA Staff",
+    "RHEMA Conference",
+    "RHEMA Youth",
     "Others",
   ];
 
@@ -172,8 +178,6 @@ function ApplicationPage(props) {
         //   />,
         //   ToastContent.Config
         // );
-        console.log(d?.data);
-        console.log(d);
         const paymentUrl =
           d?.data?.data?.application?.initialPayment?.paymentUrl;
         window?.open(paymentUrl);
@@ -186,7 +190,10 @@ function ApplicationPage(props) {
   }
 
   useEffect(() => {
-    if (userData?.levelOneApplications[0]) {
+    if (
+      userData?.levelOneApplications[0].status === "PENDING" ||
+      userData?.levelOneApplications[0].status === "APPROVED"
+    ) {
       localStorage.setItem("userData", JSON.stringify(userData));
       history.replace("/dashboard");
     }
