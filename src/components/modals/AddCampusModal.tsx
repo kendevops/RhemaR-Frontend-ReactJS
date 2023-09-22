@@ -45,8 +45,6 @@ export default function AddCampusModal({
 
   const { data: levelData } = useCampusLevel();
 
-  console.log(levelData);
-
   const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
@@ -86,8 +84,6 @@ export default function AddCampusModal({
       initialState: defaultValues ?? initialState,
       // optionalFields: ["discount"],
     });
-
-  console.log(adminOptions);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
