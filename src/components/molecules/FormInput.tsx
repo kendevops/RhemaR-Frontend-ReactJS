@@ -32,6 +32,14 @@ export default function FormInput({
         invalid={hasErrors}
         type={others.type as any}
       />
+
+      <style>
+        {`
+          .form-control::placeholder {
+            color: #888; 
+          }
+        `}
+      </style>
     </FormInputWrapper>
   );
 }
