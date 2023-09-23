@@ -1,5 +1,6 @@
 import { ChangeEventHandler, ReactNode } from "react";
 import FormInputWrapper from "./FormInputWrapper";
+import { InputProps, Input } from "reactstrap";
 
 type RadioGroupOption = string;
 
@@ -10,7 +11,7 @@ type RadioGroupProps = {
   md?: string;
   lg?: string;
   customLabel?: ReactNode;
-};
+} & InputProps;
 
 export default function FormRadioGroup({
   options,
@@ -19,6 +20,7 @@ export default function FormRadioGroup({
   lg,
   md,
   customLabel,
+  ...otherProps
 }: RadioGroupProps) {
   return (
     <FormInputWrapper {...{ md, lg }}>
@@ -46,6 +48,7 @@ export default function FormRadioGroup({
                 name={label}
                 onChange={onChange}
                 className=""
+                {...otherProps}
               />
             </div>
           );

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 import TableProfilePicture from "../../components/general/tableProfilePic";
@@ -19,6 +19,7 @@ import { FaRegEye } from "react-icons/fa";
 import { Icon } from "@iconify/react";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
+import { MdOutlineCancel } from "react-icons/md";
 
 interface ViewApplicationProps {
   status?: any;
@@ -28,18 +29,19 @@ interface ViewApplicationProps {
 
 type FiltersProps = {
   campus?: string;
-  fromLoginDate?: string;
-  toLoginDate?: string;
+  applicationDateFrom?: string;
+  applicationDateTo?: string;
   intake?: string;
   session?: string;
+  status?: string;
 };
 
 function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
   const [isOpen, toggle] = useToggle();
   const id = data?.id;
 
-  const approveApplication = useAcceptApplication(id);
-  const rejectApplication = useRejectApplication(id);
+  const approveApplication = useAcceptApplication(id, data?.level?.name);
+  const rejectApplication = useRejectApplication(id, data?.level?.name);
   const isLoading =
     approveApplication?.isLoading || rejectApplication?.isLoading;
 
@@ -67,7 +69,7 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
         toast.success(
           <ToastContent
             heading={"Application Approved!"}
-            message={`You have successfully approved ${data?.firstName} ${data?.lastName}'s application `}
+            message={`You have successfully approved ${data?.user?.firstName} ${data?.user?.lastName}'s application `}
             type={"success"}
           />,
           { ...ToastContent.Config }
@@ -76,6 +78,8 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
         refetch();
       },
       onError: (e: any) => {
+        console.log(e);
+
         handleError(e);
       },
     });
@@ -87,12 +91,13 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
         toast.success(
           <ToastContent
             heading={"Application Rejected"}
-            message={`You have successfully rejected ${data?.firstName} ${data?.lastName}'s application `}
+            message={`You have successfully rejected ${data?.user?.firstName} ${data?.user?.lastName}'s application `}
             type={"success"}
           />,
           { ...ToastContent.Config }
         );
         toggle();
+        refetch();
       },
       onError: (e: any) => {
         handleError(e);
@@ -156,12 +161,21 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
 
 export default function Applications() {
   const [filters, setFilters] = useState<FiltersProps>({});
-  const { data, isLoading, refetch } = useApplications();
-  const { data: sessionsData } = useAcademicSessions();
+  const [filtering, setFiltering] = useState(false);
   const [isFiltering, toggleFiltering] = useToggle();
+  const { data, isLoading, refetch } = useApplications(
+    filtering ? filters : {}
+  );
+  const { data: sessionsData } = useAcademicSessions();
 
   const { data: campusesData } = useAllCampuses();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
+
+  // useEffect(()=>{
+  //   const { data, isLoading, refetch } = useApplications(filters);
+  // },[])
+
+  console.log(userData);
 
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
@@ -172,8 +186,6 @@ export default function Applications() {
     children: d?.name,
   }));
 
-  console.log(intakeDataOptions);
-
   // const intakeOptions = ["April", "November"].map((v) => ({
   //   children: v + " intake",
   // }));
@@ -181,8 +193,6 @@ export default function Applications() {
   const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
     children: sess?.name,
   }));
-
-  console.log(sessionOptions);
 
   console.log(data?.nodes);
 
@@ -232,7 +242,11 @@ export default function Applications() {
       {
         inputType: "Dropdown",
         inputProps: {
-          options: [{ children: "Approved" }, { children: "Pending" }],
+          options: [
+            { children: "APPROVED" },
+            { children: "PENDING" },
+            { children: "DEFERRED" },
+          ],
         },
         id: "status",
         name: "Status",
@@ -240,7 +254,24 @@ export default function Applications() {
     ],
     isOpen: isFiltering,
     onFilter: (params: any) => {
-      setFilters(params);
+      setFilters({
+        intake: params?.intake,
+        campus: params?.campus,
+        session: params?.session,
+        status: params?.status,
+        applicationDateFrom: params?.applicationDateFrom
+          ? params?.applicationDateFrom
+          : null,
+        applicationDateTo: params?.applicationDateTo
+          ? params?.applicationDateTo
+          : null,
+      });
+      console.log(params);
+
+      refetch();
+      setFiltering(true);
+      console.log(data);
+      toggleFiltering();
     },
     toggle: toggleFiltering,
   };
@@ -254,20 +285,91 @@ export default function Applications() {
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>New Intake Applications</div>
 
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.campus?.name}`}</div>
-        {filters.campus && (
+        {filtering && (
           <div
             className=" bg-white "
             style={{ width: "2px", height: "20px" }}
           ></div>
         )}
 
-        {filters.campus && <div>Filtering</div>}
+        {filtering && <div>Filtered List</div>}
       </div>
+
+      {filtering && (
+        <div className="d-flex gap-4 ">
+          {filters?.campus && (
+            <p
+              className="d-flex gap-3 py-3 px-4 rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.campus}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.session && (
+            <p
+              className="d-flex gap-3 py-3 px-4 rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.session}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.applicationDateFrom && (
+            <p
+              className="d-flex gap-3 py-3 px-4  rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.applicationDateFrom}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.applicationDateTo && (
+            <p
+              className="d-flex gap-3 py-3 px-4  rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.applicationDateTo}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.intake && (
+            <p
+              className="d-flex gap-3 py-3 px-4  rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.intake}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.status && (
+            <p
+              className="d-flex gap-3 py-3 px-4  rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.status}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+        </div>
+      )}
 
       {isLoading && <Spinner />}
       <FilterModal {...filterProps} />
@@ -285,7 +387,11 @@ export default function Applications() {
           <button
             className="btn btn-outline-info btn-lg "
             style={{ width: "fit-content" }}
-            onClick={toggleFiltering}
+            onClick={() => {
+              toggleFiltering();
+              setFiltering(false);
+              setFilters({});
+            }}
           >
             Filter
           </button>
@@ -300,7 +406,11 @@ export default function Applications() {
               {
                 key: "Serial number",
                 title: "S/N",
-                render: (data, i) => <p>{i}</p>,
+                render: (data, i) => {
+                  console.log(data);
+
+                  return <p>{i}</p>;
+                },
               },
               {
                 key: "Pic",
@@ -326,7 +436,7 @@ export default function Applications() {
               {
                 key: "Gender",
                 title: "Gender",
-                render: (d) => <p>{d?.gender ?? "Not Provided"}</p>,
+                render: (d) => <p>{"Not Provided"}</p>,
               },
 
               {
@@ -338,7 +448,7 @@ export default function Applications() {
               {
                 key: "Intake",
                 title: "Intake",
-                render: (d) => <p>{d?.intake ?? "Not Provided"}</p>,
+                render: (d) => <p>{d?.intake?.name}</p>,
               },
 
               {

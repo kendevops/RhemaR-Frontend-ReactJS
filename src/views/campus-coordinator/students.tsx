@@ -24,6 +24,10 @@ import useApplications from "../../hooks/queries/applications/useApplications";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import ExportStudentsFirstModal from "../../components/modals/ExportStudentsFirstModal";
+import UploadBulkStudentModal from "../../components/modals/UploadBulkStudentModal";
+import { AiOutlineCaretDown } from "react-icons/ai";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
 
 const Options = [
   {
@@ -48,9 +52,12 @@ const Options = [
 const CampusCoordinatorStudents = () => {
   const [isAdding, toggleAdding] = useToggle();
   const [isExporting, toggleExport] = useToggle();
+  const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
 
   const [isFiltering, toggleFiltering] = useToggle();
   const [filters, setFilters] = useState<any>(null);
+  const [addStudentDropDown, setAddStudentDropDown] = useState(false);
+
   // const { data: userData, isLoading, refetch } = useAllUsers(filters);
   // const data = userData?.users?.nodes;
   const { data: userData, isLoading: userLoading } = useCurrentUser();
@@ -65,30 +72,6 @@ const CampusCoordinatorStudents = () => {
 
   const { data: campusesData } = useAllCampuses();
   const { data: sessionsData } = useAcademicSessions();
-
-  const { isLoading: isUploading, mutate } = useUploadUsers();
-
-  const importHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) return;
-    Papa.parse(event.target.files[0], {
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results: any) {
-        const data: any = results?.data;
-        console.log(data);
-        mutate(
-          { users: data?.map((d: any) => ({ ...d, roles: [d?.roles] })) },
-          {
-            onSuccess: () => {
-              alert("Upload successful!");
-              refetch();
-            },
-            onError: (e) => handleError(e),
-          }
-        );
-      },
-    });
-  };
 
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
@@ -172,6 +155,11 @@ const CampusCoordinatorStudents = () => {
         <FilterModal {...filterProps} />
         <AddStudentModal isOpen={isAdding} toggle={toggleAdding} />
         <ExportStudentsFirstModal isOpen={isExporting} toggle={toggleExport} />
+        <UploadBulkStudentModal
+          isOpen={isBulkUploadOpen}
+          toggle={toggleBulkUpload}
+          refetch={refetch}
+        />
       </div>
 
       <div
@@ -200,12 +188,12 @@ const CampusCoordinatorStudents = () => {
         >
           <button
             className="btn btn-outline-info btn-lg "
-            style={{ width: "fit-content" }}
+            style={{ width: "fit-content", height: "50px" }}
             onClick={toggleFiltering}
           >
             Filter
           </button>
-          <div>
+          {/* <div onClick={toggleBulkUpload}>
             <label
               htmlFor="upload"
               className="btn btn-outline-info btn-lg "
@@ -221,21 +209,52 @@ const CampusCoordinatorStudents = () => {
               onChange={importHandler}
               hidden
             />
-          </div>
+          </div> */}
           <button
             className="btn btn-blue-800 btn-lg"
-            style={{ width: "fit-content" }}
+            style={{ width: "fit-content", height: "50px" }}
             onClick={toggleExport}
           >
             Export
           </button>
-          <button
-            className="btn btn-blue-800 btn-lg"
-            style={{ width: "fit-content" }}
-            onClick={toggleAdding}
+
+          <div
+            className=""
+            style={{
+              height: `${addStudentDropDown ? "150px" : ""}`,
+            }}
           >
-            Add student
-          </button>
+            <button
+              className="btn btn-blue-800 btn-lg mb-3 "
+              style={{ width: "fit-content" }}
+              onClick={() => setAddStudentDropDown(() => !addStudentDropDown)}
+            >
+              Add student <AiOutlineCaretDown className="mx-3" />
+            </button>
+
+            {addStudentDropDown && (
+              <div
+                className="position-absolute d-flex gap-3 flex-column z-3 "
+                style={{ width: "200px" }}
+              >
+                <button
+                  className="btn btn-blue-800 btn-lg"
+                  style={{ minWidth: "100%" }}
+                  onClick={toggleAdding}
+                >
+                  Add single student
+                </button>
+
+                <button
+                  className="btn btn-blue-800 btn-lg"
+                  style={{ minWidth: "100%" }}
+                  onClick={toggleBulkUpload}
+                >
+                  Bulk upload students
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </article>
 

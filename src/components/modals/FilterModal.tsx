@@ -75,8 +75,9 @@ FilterProps) {
           className="btn btn-blue-800 btn-lg mb-3"
           onClick={() => {
             handleFilter();
-            toggle();
+            // toggle();
             // setIsFiltering()
+            handleReset();
           }}
         >
           Apply filter

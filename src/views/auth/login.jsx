@@ -21,6 +21,7 @@ import handleError from "../../utils/handleError";
 import AccessContext from "../../utility/context/accessContext";
 
 import rhemaLogo from "@src/assets/img/logo/logo.svg";
+import useResendVerification from "../../hooks/mutations/useResendVerification";
 
 const defaultValues = {
   password: "helloWorld1",
@@ -38,6 +39,31 @@ const AuthLoginPage = () => {
     mode: "onChange", // onBlur
     // reValidateMode: "onChange",
   });
+
+  const { mutate, isLoading } = useResendVerification();
+
+  // const email = localStorage.getItem("userEmail");
+
+  function resendLink(email) {
+    mutate(
+      { email: email },
+      {
+        onSuccess: () =>
+          toast.success(
+            <ToastContent
+              heading={"Email Verification Resent!"}
+              message={`Email verification link has been resent successfully`}
+              type={"success"}
+            />,
+            { ...ToastContent.Config }
+          ),
+        onError: (e) => {
+          handleError(e);
+          console.log(e);
+        },
+      }
+    );
+  }
 
   console.log("From Login");
 
@@ -95,8 +121,15 @@ const AuthLoginPage = () => {
         })
         .catch((err) => {
           toggleLoading();
-          console.log(err);
+          console.log(err?.response?.data?.error?.message);
           handleError(err, data);
+
+          if (
+            err?.response?.data?.error?.message === "email address not verified"
+          ) {
+            resendLink(data.email);
+            history.replace("verify");
+          }
         });
     } else {
       for (const key in data) {

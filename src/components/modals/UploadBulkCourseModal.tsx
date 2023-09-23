@@ -24,16 +24,16 @@ export default function UploadBulkCourseModal({
   const { formData, formErrors, formIsValid, toggleError, updateForm } =
     useForm({
       initialState: {
-        pdf: "",
+        csv: "",
       },
     });
 
   const onDrop = useCallback((acceptedFiles) => {
     // Handle the dropped files here, e.g., update your form data with the file(s).
-    formData.pdf = acceptedFiles;
+    formData.csv = acceptedFiles;
 
-    updateForm("pdf", acceptedFiles);
-    console.log(acceptedFiles, formData.pdf);
+    updateForm("csv", acceptedFiles);
+    console.log(acceptedFiles, formData.csv);
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });

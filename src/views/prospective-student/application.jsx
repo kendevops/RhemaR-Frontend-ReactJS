@@ -345,14 +345,6 @@ function ApplicationPage(props) {
             hasErrors={formErrors?.maritalStatus}
           />
 
-          {/* <FormInput
-            label="Referral source"
-            placeholder="How did you find out about us?"
-            onChange={(e) => updateForm("referralSource", e.target.value)}
-            hasErrors={formErrors?.referralSource}
-            value={formData.referralSource}
-          /> */}
-
           <FormDropdown
             onChange={(e) => updateForm("referralSource", e?.target?.value)}
             options={referralSourceOptions?.map((o) => ({

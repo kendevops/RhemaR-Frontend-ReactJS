@@ -11,8 +11,6 @@ export default function Verify() {
 
   const formData: any = { email: email };
 
-  console.log(email);
-
   function resendLink() {
     mutate({ email: email } as any, {
       onSuccess: () =>

@@ -18,6 +18,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegEye } from "react-icons/fa";
 import { Icon } from "@iconify/react";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import useDeferApplication from "../../hooks/mutations/applications/useDeferApplication";
 
 interface ViewApplicationProps {
   status?: any;
@@ -37,10 +38,9 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
   const [isOpen, toggle] = useToggle();
   const id = data?.id;
 
-  const approveApplication = useAcceptApplication(id);
-  const rejectApplication = useRejectApplication(id);
-  const isLoading =
-    approveApplication?.isLoading || rejectApplication?.isLoading;
+  const deferApplication = useDeferApplication(id, data?.level?.name);
+  const rejectApplication = useRejectApplication(id, data?.level?.name);
+  const isLoading = deferApplication?.isLoading || rejectApplication?.isLoading;
 
   const isApproved = status === "APPROVED";
 
@@ -62,13 +62,13 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
     },
   ];
 
-  function accept() {
-    approveApplication.mutate(undefined, {
+  function defer() {
+    deferApplication.mutate(undefined, {
       onSuccess: () => {
         toast.success(
           <ToastContent
-            heading={"Application Approved!"}
-            message={`You have successfully approved ${data?.firstName} ${data?.lastName}'s application `}
+            heading={"Application Deferred!"}
+            message={`You have successfully deferred ${data?.firstName} ${data?.lastName}'s application `}
             type={"success"}
           />,
           { ...ToastContent.Config }
@@ -142,10 +142,10 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
                 Reject
               </button>
               <button
-                onClick={accept}
+                onClick={defer}
                 className="btn success btn-blue-800 btn-lg w-25"
               >
-                Approve
+                Defer
               </button>
             </div>
           )}
@@ -300,7 +300,7 @@ export default function DeferredApplications() {
               {
                 key: "Serial number",
                 title: "S/N",
-                render: (data, i) => <p>{i}</p>,
+                render: (data, i) => <p>{i + 1}</p>,
               },
               {
                 key: "Pic",
@@ -321,7 +321,7 @@ export default function DeferredApplications() {
               {
                 key: "Gender",
                 title: "Gender",
-                render: (d) => <p>{d?.gender ?? "Not Provided"}</p>,
+                render: (d) => <p>{"Not Provided"}</p>,
               },
 
               {
@@ -333,7 +333,7 @@ export default function DeferredApplications() {
               {
                 key: "Intake",
                 title: "Intake",
-                render: (d) => <p>{d?.intake ?? "Not Provided"}</p>,
+                render: (d) => <p>{d?.intake?.name}</p>,
               },
 
               {
