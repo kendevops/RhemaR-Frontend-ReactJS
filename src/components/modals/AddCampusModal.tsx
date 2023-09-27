@@ -102,7 +102,7 @@ export default function AddCampusModal({
 
     const data = { ...formData, address, levels: levelValues };
 
-    console.log(data.campusCoordinator, levelValues, data);
+    console.log(data?.campusCoordinator, levelValues, data);
 
     if (formIsValid) {
       createCampus.mutate(data, {
@@ -196,7 +196,7 @@ export default function AddCampusModal({
           />
 
           <FormDropdown
-            title="Campus Address (State)"
+            title="Campus Address (Region)"
             value={formData?.region}
             options={regions?.map((d: any) => ({ children: d }))}
             onChange={(e) => updateForm("region", e?.target?.value)}

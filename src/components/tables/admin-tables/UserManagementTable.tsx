@@ -22,7 +22,11 @@ export default function UserManagementTable() {
 
   const staffsData = users
     ? users
-        ?.filter((user: any) => user?.roles[0]?.name !== userRoles.STUDENT)
+        ?.filter(
+          (user: any) =>
+            user?.roles[0]?.name !== userRoles.STUDENT &&
+            user?.roles[0]?.name !== userRoles.PROSPECTIVE_STUDENT
+        )
         .map((user: any) => {
           return {
             name: user?.firstName + " " + user?.lastName,

@@ -15,9 +15,10 @@ import countries from "../../data/Countries";
 import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
 import FormRadioGroup from "../molecules/FormRadioGroup";
 import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
-import { states } from "../../data/States";
+import { regions, states } from "../../data/States";
+import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
 
-type AddAdminModalProps = {
+type AddStudentModalProps = {
   isOpen: boolean;
   toggle: VoidFunction;
 };
@@ -25,7 +26,7 @@ type AddAdminModalProps = {
 export default function AddStudentModal({
   isOpen,
   toggle,
-}: AddAdminModalProps) {
+}: AddStudentModalProps) {
   const { data, isLoading: usersLoading } = useAllUsers();
   const { data: campusesData } = useAllCampuses();
   const { data: sessionsData } = useAcademicSessions();
@@ -39,63 +40,54 @@ export default function AddStudentModal({
   const { formData, formErrors, formIsValid, toggleError, updateForm } =
     useForm({
       initialState: {
-        userTitle: "",
         firstName: "",
         middleName: "",
+        level: "",
         lastName: "",
         email: "",
         phoneNumber: "",
         altPhoneNumber: "",
         gender: "",
-        campus: "",
-        session: "",
+        graduateDate: "2022-10-25T17:35:31.914Z",
+        certificateHolderDate: "",
+        roles: "",
+        region: "",
+        continent: "",
+        levelOneEndDate: "",
+        levelOneStartDate: "2022-10-25T17:35:31.914Z",
+        levelTwoEndDate: "",
+        levelTwoStartDate: "",
+        levelThreeEndDate: "",
+        levelThreeStartDate: "",
+        levelFourEndDate: "",
+        levelFourStartDate: "",
+        currentCampus: "Enugu",
+        levelOneCampus: "Enugu",
+        levelTwoCampus: "",
+        levelThreeCampus: "",
+        levelFourCampus: "",
+        currentIntake: "2027/2028",
+        levelOneIntake: "2027/2028",
+        levelTwoIntake: "",
+        levelThreeIntake: "",
+        levelFourIntake: "",
+        currentSession: "2022/2023",
+        levelOneSession: "2022/2023",
+        levelTwoSession: "",
+        levelThreeSession: "",
+        levelFourSession: "",
         address: "",
+        city: "",
         state: "",
         country: "",
         role: "",
-        rdNo: "",
-        intake: "",
-        referralSource: "",
-        classAttendanceMethod: "",
-        churchAddress: "",
-        churchPastorName: "",
-        churchPastorPhoneNumber: "",
-        affirmationsAndSubmissions: "",
-        dateOfBirth: "",
         nationality: "Nigerian",
         maritalStatus: "",
-        churchName: "",
-        isBornAgain: "",
-        hasBeenBornAgainFor: "",
-        longBornAgain: "",
-        isBaptized: "",
-        affirmations: "",
-        city: "",
-        hasPaidInitialPayment: "",
-        hasPaidFeePayment: "",
-        initialPaymentAmount: "",
-        feePaymentAmount: "",
       },
     });
 
   const maritalOptions = ["SINGLE", "MARRIED"];
-  const classAttendanceOptions = ["ONSITE", "ONLINE"];
   const genderOptions = ["MALE", "FEMALE"];
-  const titleOptions = ["Mr", "Mrs", "Ms", "Pastor", "Rev", "Dr", "Other"];
-  const referralSourceOptions = [
-    "Facebook",
-    "Instagram",
-    "Email",
-    "SMS",
-    "Billboard",
-    "Referral - Friend",
-    "Referral - Current Student",
-    "Referral - Alumni",
-    "Referral - RHEMA Staff",
-    "RHEMA Conference",
-    "RHEMA Youth",
-    "Others",
-  ];
 
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
@@ -110,7 +102,11 @@ export default function AddStudentModal({
     children: d?.name,
   }));
 
-  const countriesOptions = countries?.map((c) => c?.en_short_name);
+  //   const { data: levelData } = useCampusLevel();
+
+  const levels = ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"];
+
+  //   const countriesOptions = countries?.map((c) => c?.en_short_name);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -118,69 +114,70 @@ export default function AddStudentModal({
     const {
       state,
       city,
-      affirmations,
-      feePaymentAmount,
-      initialPaymentAmount,
-      hasPaidFeePayment,
-      hasPaidInitialPayment,
-      longBornAgain,
-      hasBeenBornAgainFor,
-      churchAddress,
-      affirmationsAndSubmissions,
-      churchPastorName,
-      churchPastorPhoneNumber,
-      churchName,
+
       address,
-      campus,
-      classAttendanceMethod,
-      referralSource,
+
       maritalStatus,
-      intake,
-      isBornAgain,
-      dateOfBirth,
-      session,
-      userTitle,
-      isBaptized,
+
       nationality,
+      graduateDate,
+      levelFourStartDate,
+      levelFourEndDate,
+      levelThreeStartDate,
+      levelThreeEndDate,
+      levelTwoStartDate,
+      levelTwoEndDate,
+      levelOneStartDate,
+      levelOneEndDate,
+      certificateHolderDate,
+      region,
       ...otherData
     } = formData;
 
     const body = {
       ...otherData,
       // level: "LEVEL_1",
-      levelOneApplication: {
-        campus: campus,
-        intake: intake,
-        session: session,
-        userTitle: userTitle,
-        isBaptized: isBaptized,
-        isBornAgain: isBornAgain,
-        nationality: "Nigeria",
-        dateOfBirth: new Date(dateOfBirth)?.toISOString(),
-        maritalStatus: maritalStatus,
-        referralSource: referralSource,
-        classAttendanceMethod: classAttendanceMethod,
-        hasBeenBornAgainFor: hasBeenBornAgainFor,
-        churchName: churchName,
-        churchAddress: churchAddress,
-        churchPastorName: churchPastorName,
-        churchPastorPhoneNumber: churchPastorPhoneNumber,
-        affirmationsAndSubmissions: affirmationsAndSubmissions,
-      },
+
       address: {
         city,
         street: address,
         state,
         country: "Nigeria",
-        zipCode: 234,
+        zipCode: 2345,
+        region: region,
+        continent: "Africa",
       },
+      roles: ["STUDENT"],
 
-      payments: {
-        feePaymentAmount: feePaymentAmount,
-        hasPaidFeePayment: hasPaidFeePayment,
-        initialPaymentAmount: initialPaymentAmount,
-        hasPaidInitialPayment: hasPaidInitialPayment,
-      },
+      graduateDate: graduateDate ? new Date(graduateDate)?.toISOString() : null,
+      certificateHolderDate: certificateHolderDate
+        ? new Date(certificateHolderDate)?.toISOString()
+        : null,
+      levelOneEndDate: levelOneEndDate
+        ? new Date(levelOneEndDate)?.toISOString()
+        : null,
+      levelOneStartDate: levelOneStartDate
+        ? new Date(levelOneStartDate)?.toISOString()
+        : null,
+      levelTwoEndDate: levelTwoEndDate
+        ? new Date(levelTwoEndDate)?.toISOString()
+        : null,
+      levelTwoStartDate: levelTwoStartDate
+        ? new Date(levelTwoStartDate)?.toISOString()
+        : null,
+      levelThreeEndDate: levelThreeEndDate
+        ? new Date(levelThreeEndDate)?.toISOString()
+        : null,
+      levelThreeStartDate: levelThreeStartDate
+        ? new Date(levelThreeStartDate)?.toISOString()
+        : null,
+      levelFourEndDate: levelFourEndDate
+        ? new Date(levelFourEndDate)?.toISOString()
+        : null,
+      levelFourStartDate: levelFourStartDate
+        ? new Date(levelFourStartDate)?.toISOString()
+        : null,
+      nationality: "Nigeria",
     };
 
     if (!formIsValid) {
@@ -216,15 +213,6 @@ export default function AddStudentModal({
         <form className="row" onSubmit={handleSubmit}>
           {showFirstModal && (
             <div>
-              <FormDropdown
-                onChange={(e) => updateForm("userTitle", e?.target?.value)}
-                options={titleOptions?.map((o) => ({
-                  // options={["2023/2024", "2024/2025"]?.map((o) => ({
-                  children: o,
-                }))}
-                title={"Title"}
-                value={formData.userTitle}
-              />
               <FormInput
                 label="First name"
                 onChange={(e) => updateForm("firstName", e.target.value)}
@@ -277,15 +265,6 @@ export default function AddStudentModal({
                 value={formData.gender}
               />
 
-              <FormInput
-                label="D.O.B"
-                placeholder="Date of Birth"
-                type={"date"}
-                value={formData.dateOfBirth}
-                onChange={(e) => updateForm("dateOfBirth", e.target.value)}
-                hasErrors={formErrors?.dateOfBirth}
-              />
-
               <FormDropdown
                 onChange={(e) => updateForm("maritalStatus", e?.target?.value)}
                 options={maritalOptions.map((o) => ({
@@ -296,15 +275,13 @@ export default function AddStudentModal({
                 value={formData.maritalStatus}
               />
               <FormDropdown
-                title="How will you attend your classes"
-                options={classAttendanceOptions.map((o) => ({
-                  children: o,
-                }))}
-                onChange={(e) =>
-                  updateForm("classAttendanceMethod", e.target.value)
-                }
-                value={formData.classAttendanceMethod}
+                title="Select Level"
+                value={formData?.level}
+                options={levels?.map((d: any) => ({ children: d }))}
+                onChange={(e) => updateForm("level", e?.target?.value)}
+                // disabled={!isCreating}
               />
+
               <div className="d-flex justify-content-between align-items-center w-100">
                 <button
                   onClick={() => {
@@ -331,90 +308,80 @@ export default function AddStudentModal({
 
           {showSecondModal && (
             <div>
+              <FormInput
+                label="Date of Graduation"
+                placeholder="Date of Graduation"
+                type={"date"}
+                value={formData.graduateDate}
+                onChange={(e) => updateForm("graduateDate", e.target.value)}
+                hasErrors={formErrors?.graduateDate}
+              />
+              <FormInput
+                label="Certificate Holder Date"
+                placeholder="Certificate Holder Date"
+                type={"date"}
+                value={formData.certificateHolderDate}
+                onChange={(e) =>
+                  updateForm("certificateHolderDate", e.target.value)
+                }
+                hasErrors={formErrors?.certificateHolderDate}
+              />
               <FormDropdown
                 options={campusOptions}
-                title="Select campus"
-                onChange={(e) => updateForm("campus", e.target.value)}
-                hasErrors={formErrors?.campus}
-                value={formData.campus}
+                title="Select Current campus"
+                onChange={(e) => updateForm("currentCampus", e.target.value)}
+                hasErrors={formErrors?.currentCampus}
+                value={formData.currentCampus}
               />
 
               <FormDropdown
-                onChange={(e) => updateForm("intake", e?.target?.value)}
+                options={campusOptions}
+                title="Select L1 campus"
+                onChange={(e) => updateForm("levelOneCampus", e.target.value)}
+                hasErrors={formErrors?.levelOneCampus}
+                value={formData.levelOneCampus}
+              />
+              <FormDropdown
+                options={campusOptions}
+                title="Select L2 campus"
+                onChange={(e) => updateForm("levelTwoCampus", e.target.value)}
+                hasErrors={formErrors?.levelTwoCampus}
+                value={formData.levelTwoCampus}
+              />
+              <FormDropdown
+                options={campusOptions}
+                title="Select L3 campus"
+                onChange={(e) => updateForm("levelThreeCampus", e.target.value)}
+                hasErrors={formErrors?.levelThreeCampus}
+                value={formData.levelThreeCampus}
+              />
+              <FormDropdown
+                options={campusOptions}
+                title="Select L4 campus"
+                onChange={(e) => updateForm("levelFourCampus", e.target.value)}
+                hasErrors={formErrors?.levelFourCampus}
+                value={formData.levelFourCampus}
+              />
+
+              <FormDropdown
+                onChange={(e) => updateForm("currentIntake", e?.target?.value)}
                 options={intakeDataOptions?.map((o: any) => ({
                   // options={["2023/2024", "2024/2025"]?.map((o) => ({
                   children: o,
                 }))}
-                title={"Intake"}
-                value={formData.intake}
+                title={"Current Intake"}
+                value={formData.currentIntake}
               />
-
-              {sessionOptions?.length && (
-                <FormDropdown
-                  options={sessionOptions}
-                  title="Session"
-                  onChange={(e) => updateForm("session", e.target.value)}
-                  hasErrors={formErrors?.session}
-                  value={formData.session}
-                />
-              )}
-
-              <FormInput
-                label="Address"
-                placeholder="Enter Contact Address"
-                onChange={(e) => updateForm("address", e.target.value)}
-                hasErrors={formErrors?.address}
-                value={formData.address}
-              />
-
-              <FormInput
-                label="RD No."
-                placeholder="Enter RD No."
-                onChange={(e) => updateForm("rdNo", e.target.value)}
-                hasErrors={formErrors?.rdNo}
-                value={formData.rdNo}
-              />
-
               <FormDropdown
-                title="State"
-                value={formData?.state}
-                options={states?.map((d) => ({ children: d }))}
-                onChange={(e) => updateForm("state", e?.target?.value)}
-              />
-
-              <FormDropdown
-                title="Nationality"
-                onChange={(e) => updateForm("nationality", e.target.value)}
-                options={countriesOptions.map((o) => ({
+                onChange={(e) => updateForm("levelOneIntake", e?.target?.value)}
+                options={intakeDataOptions?.map((o: any) => ({
+                  // options={["2023/2024", "2024/2025"]?.map((o) => ({
                   children: o,
                 }))}
-                hasErrors={formErrors?.nationality}
-                value={formData.nationality}
+                title={"L1 Intake"}
+                value={formData.levelOneIntake}
               />
 
-              <FormDropdown
-                onChange={(e) => updateForm("referralSource", e?.target?.value)}
-                options={referralSourceOptions?.map((o) => ({
-                  children: o,
-                }))}
-                title={"Referral source"}
-                value={formData.referralSource}
-              />
-
-              <FormInput
-                label="Church Name"
-                placeholder="Enter Church Name"
-                onChange={(e) => updateForm("churchName", e.target.value)}
-                hasErrors={formErrors?.churchName}
-                value={formData.churchName}
-              />
-              <FormInput
-                label="Church Address"
-                placeholder="Enter Church Address"
-                onChange={(e) => updateForm("churchAddress", e.target.value)}
-                hasErrors={formErrors?.churchAddress}
-                value={formData.churchAddress}
-              />
               <div className="d-flex justify-content-between align-items-center w-100">
                 <button
                   onClick={() => {
@@ -442,101 +409,65 @@ export default function AddStudentModal({
 
           {showThirdModal && (
             <div>
-              <FormInput
-                label="Church Pastor's Name"
-                placeholder="Enter Church pastor's name"
-                onChange={(e) => updateForm("churchPastorName", e.target.value)}
-                hasErrors={formErrors?.churchPastorName}
-                value={formData.churchPastorName}
+              <FormDropdown
+                options={sessionOptions}
+                title="Current Session"
+                onChange={(e) => updateForm("currentSession", e.target.value)}
+                hasErrors={formErrors?.currentSession}
+                value={formData.currentSession}
+              />
+
+              <FormDropdown
+                options={sessionOptions}
+                title="L1 Session"
+                onChange={(e) => updateForm("levelOneSession", e.target.value)}
+                hasErrors={formErrors?.levelOneSession}
+                value={formData.levelOneSession}
               />
 
               <FormInput
-                label="Church Pastor's Phone Number"
-                placeholder="+2348012340000"
+                label="L1 start Date"
+                placeholder="L1 start Date"
+                type={"date"}
+                value={formData.levelOneStartDate}
                 onChange={(e) =>
-                  updateForm("churchPastorPhoneNumber", e.target.value)
+                  updateForm("levelOneStartDate", e.target.value)
                 }
-                hasErrors={formErrors?.churchPastorPhoneNumber}
-                value={formData.churchPastorPhoneNumber}
-              />
-
-              <FormRadioGroup
-                label="Are you born again as stated in Romans 10:8 to 10?"
-                options={["Yes", "No"]}
-                onChange={(e) =>
-                  updateForm("isBornAgain", !!(e.target.value === "Yes"))
-                }
-                value={formData.isBornAgain}
+                hasErrors={formErrors?.levelOneStartDate}
               />
 
               <FormInput
-                label="How long have you been born again?"
-                placeholder="How long have you been born again?"
-                onChange={(e) =>
-                  updateForm("hasBeenBornAgainFor", e.target.value)
-                }
-                hasErrors={formErrors?.hasBeenBornAgainFor}
-                value={formData.hasBeenBornAgainFor}
-              />
-
-              <FormRadioGroup
-                label="Are you baptized in the Holy Spirit with the evidence of speaking in tongues as in Acts 2:4?"
-                options={["Yes", "No"]}
-                onChange={(e) => {
-                  updateForm("isBaptized", !!(e.target.value === "Yes"));
-                  console.log(e.target.value);
-                }}
-                // hasErrors={formErrors?.isBaptized}
-                value={formData.isBaptized}
-              />
-
-              <FormRadioGroup
-                label="Affirmations and Submissions"
-                options={["Yes", "No"]}
-                onChange={(e) => {
-                  updateForm("affirmationsAndSubmissions", e.target.value);
-                }}
-                // hasErrors={formErrors?.affirmationsAndSubmissions}
-                value={formData.affirmationsAndSubmissions}
-              />
-
-              <FormRadioGroup
-                label="Has paid Application fee?"
-                options={["Yes", "No"]}
-                onChange={(e) =>
-                  updateForm("hasPaidFeePayment", !!(e.target.value === "Yes"))
-                }
-                value={formData.hasPaidFeePayment}
-              />
-              <FormInput
-                label="Application Fee amount"
-                placeholder="Enter Application Fee amount"
-                onChange={(e) => updateForm("feePaymentAmount", e.target.value)}
-                hasErrors={formErrors?.feePaymentAmount}
-                value={formData.feePaymentAmount}
-              />
-
-              <FormRadioGroup
-                label="Has paid Initial fee?"
-                options={["Yes", "No"]}
-                onChange={(e) =>
-                  updateForm(
-                    "hasPaidInitialPayment",
-                    !!(e.target.value === "Yes")
-                  )
-                }
-                value={formData.hasPaidInitialPayment}
+                label="L1 End Date"
+                placeholder="L1 End Date"
+                type={"date"}
+                value={formData.levelOneEndDate}
+                onChange={(e) => updateForm("levelOneEndDate", e.target.value)}
+                hasErrors={formErrors?.levelOneEndDate}
               />
 
               <FormInput
-                label="Initial Fee amount"
-                placeholder="Enter Initial Fee amount"
-                onChange={(e) =>
-                  updateForm("initialPaymentAmount", e.target.value)
-                }
-                hasErrors={formErrors?.initialFeeAmount}
-                value={formData.initialPaymentAmount}
+                label="Address"
+                placeholder="Enter Contact Address"
+                onChange={(e) => updateForm("address", e.target.value)}
+                hasErrors={formErrors?.address}
+                value={formData.address}
               />
+
+              <FormDropdown
+                title="State"
+                value={formData?.state}
+                options={states?.map((d) => ({ children: d }))}
+                onChange={(e) => updateForm("state", e?.target?.value)}
+              />
+
+              <FormDropdown
+                title="Campus Address (Region)"
+                value={formData?.region}
+                options={regions?.map((d: any) => ({ children: d }))}
+                onChange={(e) => updateForm("region", e?.target?.value)}
+                // disabled={!isCreating}
+              />
+
               <div className="d-flex justify-content-between align-items-center w-100 my-3 ">
                 <button
                   onClick={() => {

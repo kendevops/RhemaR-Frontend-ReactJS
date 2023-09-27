@@ -176,8 +176,6 @@ export default function DeferredApplications() {
     children: sess?.name,
   }));
 
-  console.log(sessionOptions);
-
   console.log(data?.nodes);
 
   const deferredAppData = data?.nodes?.filter(
@@ -254,11 +252,6 @@ export default function DeferredApplications() {
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>Deferred Applications</div>
 
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.campus?.name}`}</div>
         {filters.campus && (
           <div
             className=" bg-white "
@@ -272,7 +265,7 @@ export default function DeferredApplications() {
       {isLoading && <Spinner />}
       <FilterModal {...filterProps} />
 
-      <article className="d-flex gap-5 m-5" id="Search">
+      <article className="d-flex gap-5 my-5" id="Search">
         <div style={{ flex: 1 }}>
           <SearchBar />
         </div>

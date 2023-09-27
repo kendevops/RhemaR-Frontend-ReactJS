@@ -4,7 +4,11 @@ import { useDispatch } from "react-redux";
 import { getUserData } from "../../utility/utilsGeneric";
 import { useHistory } from "react-router-dom";
 import { Spinner } from "reactstrap";
-import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import {
+  ExclamationCircleIcon,
+  CheckCircleIcon,
+  CheckIcon,
+} from "@heroicons/react/solid";
 import { handleLogout } from "../../redux/slices/authSlice";
 import applicationPending from "../../assets/img/applicationPending.png";
 import ApplicationPage from "./application";
@@ -98,13 +102,14 @@ const ProspectiveStudentApplicationPage = () => {
                         className="btn bg-success  btn-lg w-100 text-bg-dark "
                         type="button"
                         style={{ color: "white" }}
+                        disabled
                       >
                         APPLICATION FORM SUBMITTED
                       </button>
                     </section>
                   </article>
 
-                  <article className="bg-white shadow rounded-2 p-5 my-5">
+                  {/* <article className="bg-white shadow rounded-2 p-5 my-5">
                     <section className="text-center">
                       <div className="p-3 bg-blue-200 rounded-3">
                         <img src={applicationPending} alt="Payment pending" />
@@ -115,29 +120,73 @@ const ProspectiveStudentApplicationPage = () => {
                         }
                         className="btn btn-blue-800 btn-lg w-100"
                         type="button"
+                        disabled={!pendingFeePayment}
                       >
                         {pendingFeePayment
                           ? "FEE PAYMENT PENDING"
                           : "FEE PAYMENT PAID"}
                       </button>
                     </section>
-                  </article>
-                  {isLoading && <Spinner />}
+                  </article> */}
+                  {/* {isLoading && <Spinner />} */}
                   <article className="bg-white shadow rounded-2 p-5 my-5">
+                    <section className="text-center ">
+                      <div className="p-3 bg-blue-200 rounded-3">
+                        <img
+                          src={applicationPending}
+                          alt="Application Pending"
+                        />
+                      </div>
+                      <div
+                        className="d-flex my-4 align-items-center justify-content-center gap-3 p-3 rounded-3"
+                        style={{
+                          backgroundColor: "#FEF7EA",
+                        }}
+                      >
+                        {data?.levelOneApplications[0]?.initialPayment
+                          ?.status === "pending" ? (
+                          <ExclamationCircleIcon color="#F2B12E" height={32} />
+                        ) : (
+                          <CheckCircleIcon color="green" height={32} />
+                        )}
+
+                        {data?.levelOneApplications[0] &&
+                        data?.levelOneApplications[0]?.initialPayment
+                          ?.status === "pending" ? (
+                          <div>
+                            <h2 className="text-bold"> Addmission Pending </h2>
+                            <p className="mb-3">
+                              Initial deposit must be paid before admission is
+                              granted
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <h2 className="text-bold"> Initial Fee Paid </h2>
+                            {/* <p className="mb-3">
+                                  We will contact you via the email you
+                                  registered with once your admission request is
+                                  processed.
+                                </p> */}
+                          </div>
+                        )}
+                      </div>
+                    </section>
                     {
                       <section className="text-center  ">
-                        <div className="p-3 bg-blue-200 rounded-3">
+                        {/* <div className="p-3 bg-blue-200 rounded-3">
                           <img src={applicationPending} alt="Payment pending" />
-                        </div>{" "}
+                        </div> */}
                         <button
                           onClick={
                             pendingPayment ? (makePayment as any) : undefined
                           }
                           className="btn btn-blue-800 btn-lg w-100"
                           type="button"
+                          disabled={!pendingPayment}
                         >
                           {pendingPayment
-                            ? "INITIAL FEE PENDING"
+                            ? `Complete Initial Payment N${data?.levelOneApplications[0]?.initialPayment.amount}`
                             : "INITIAL FEE PAID"}
                         </button>
                       </section>
@@ -160,10 +209,15 @@ const ProspectiveStudentApplicationPage = () => {
                               backgroundColor: "#FEF7EA",
                             }}
                           >
-                            <ExclamationCircleIcon
-                              color="#F2B12E"
-                              height={32}
-                            />
+                            {data?.levelOneApplications[0]?.feePayment
+                              ?.status === "pending" ? (
+                              <ExclamationCircleIcon
+                                color="#F2B12E"
+                                height={32}
+                              />
+                            ) : (
+                              <CheckCircleIcon color="green" height={32} />
+                            )}
 
                             {data?.levelOneApplications[0] &&
                             data?.levelOneApplications[0]?.feePayment
@@ -171,11 +225,11 @@ const ProspectiveStudentApplicationPage = () => {
                               <div>
                                 <h2 className="text-bold">
                                   {" "}
-                                  Application Pending{" "}
+                                  Addmission Pending{" "}
                                 </h2>
                                 <p className="mb-3">
-                                  Initial deposit must be paid before admission
-                                  is granted
+                                  Fee deposit must be paid before admission is
+                                  granted
                                 </p>
                               </div>
                             ) : (
@@ -202,7 +256,8 @@ const ProspectiveStudentApplicationPage = () => {
                             type="button"
                             onClick={makeDepositPayment}
                           >
-                            Complete Fee Payment
+                            Complete Fee Payment N
+                            {data?.levelOneApplications[0]?.feePayment.amount}
                           </button>
                         ) : (
                           <button

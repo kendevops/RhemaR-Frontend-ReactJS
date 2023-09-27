@@ -374,7 +374,7 @@ export default function Applications() {
       {isLoading && <Spinner />}
       <FilterModal {...filterProps} />
 
-      <article className="d-flex gap-5 m-5" id="Search">
+      <article className="d-flex gap-5 my-5" id="Search">
         <div style={{ flex: 1 }}>
           <SearchBar />
         </div>

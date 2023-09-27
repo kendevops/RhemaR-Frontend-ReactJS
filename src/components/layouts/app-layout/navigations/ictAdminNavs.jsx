@@ -12,14 +12,20 @@ export default [
     resource: "Admins",
   },
 
-  // {
-  //   id: "userManagement",
-  //   title: "User Management",
-  //   icon: <Icon icon="teenyicons:users-solid" />,
-  //   navLink: "/ict-admin/user-management",
-  //   action: "read",
-  //   resource: "Admins",
-  // },
+  {
+    id: "userManagement",
+    title: "User Management",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/ict-admin/user-management",
+    action: "read",
+    resource: "Admins",
+  },
+  {
+    id: "students",
+    title: "Students Management",
+    icon: <Icon icon="teenyicons:users-solid" />,
+    navLink: "/student-services-admin/students",
+  },
   {
     id: "adminManagement",
     title: "Admin Management",
@@ -47,7 +53,7 @@ export default [
   // },
   {
     id: "applications",
-    title: "Applications",
+    title: "Applications Management",
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/ict-admin/applications",
     action: "read",

@@ -88,7 +88,7 @@ export default function StudentProfile() {
 
   return (
     <section className="container mt-5">
-      <div className=" col-md-8 col-9 mx-auto">
+      <div className=" col-md-8 col-11 mx-auto">
         <article className="bg-white r-card px-5 py-4 mb-4 ">
           {isLoading && <Spinner />}
           {/* Header */}
@@ -141,8 +141,8 @@ export default function StudentProfile() {
                   disabled
                 />
 
-                <div className="form-group d-flex gap-4">
-                  <div style={{ width: "60%" }}>
+                <div className="form-group d-flex flex-column flex-sm-row  gap-4">
+                  <div style={{ width: "100%" }}>
                     <FormInput
                       type={"email"}
                       label="Email"
@@ -152,7 +152,7 @@ export default function StudentProfile() {
                     />
                   </div>
 
-                  <div style={{ width: "" }}>
+                  <div style={{ width: "100%" }}>
                     <FormInput
                       type={"text"}
                       label="Gender"
@@ -173,7 +173,7 @@ export default function StudentProfile() {
                   </div> */}
                 </div>
 
-                <div className="form-group d-flex gap-4">
+                <div className="form-group d-flex flex-column flex-sm-row  gap-4">
                   <div style={{ width: "100%" }}>
                     <FormInput
                       label="Phone Number"

@@ -10,7 +10,6 @@ import PromoteStudentModal from "../../components/modals/PromoteStudentModal";
 import SearchBar from "../../components/general/searchBar";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useToggle from "../../utility/hooks/useToggle";
-import AddStudentModal from "../../components/modals/AddStudentModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 import Papa from "papaparse";
@@ -24,10 +23,12 @@ import useApplications from "../../hooks/queries/applications/useApplications";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import ExportStudentsFirstModal from "../../components/modals/ExportStudentsFirstModal";
-import UploadBulkStudentModal from "../../components/modals/UploadBulkStudentModal";
+import UploadBulkStudentModal from "../../components/modals/UploadBulkStudentApplicationModal";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
+import AddstudentApplicationModal from "../../components/modals/AddStudentApplicationModal";
+import UploadBulkStudentApplicationModal from "../../components/modals/UploadBulkStudentApplicationModal";
 
 const Options = [
   {
@@ -50,8 +51,8 @@ const Options = [
 ];
 
 const CampusCoordinatorStudents = () => {
-  const [isAdding, toggleAdding] = useToggle();
   const [isExporting, toggleExport] = useToggle();
+  const [isAdding, toggleAdding] = useToggle();
   const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
 
   const [isFiltering, toggleFiltering] = useToggle();
@@ -153,9 +154,9 @@ const CampusCoordinatorStudents = () => {
     <>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddStudentModal isOpen={isAdding} toggle={toggleAdding} />
+        <AddstudentApplicationModal isOpen={isAdding} toggle={toggleAdding} />
         <ExportStudentsFirstModal isOpen={isExporting} toggle={toggleExport} />
-        <UploadBulkStudentModal
+        <UploadBulkStudentApplicationModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
           refetch={refetch}
@@ -168,15 +169,9 @@ const CampusCoordinatorStudents = () => {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>Student Management</div>
-
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.campus?.name}`}</div>
       </div>
 
-      <article className="d-flex gap-5 m-5" id="Search">
+      <article className="d-flex gap-5 my-5" id="Search">
         <div style={{ flex: 1 }}>
           <SearchBar />
         </div>

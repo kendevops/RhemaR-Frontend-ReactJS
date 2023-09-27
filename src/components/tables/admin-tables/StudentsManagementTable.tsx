@@ -20,8 +20,7 @@ export default function StudentsManagementTable() {
 
   const users = userData?.users?.nodes;
 
-  console.log(users);
-  const staffsData = users
+  const studentsData = users
     ? users
         ?.filter((user: any) => user?.roles[0]?.name === userRoles.STUDENT)
         .map((user: any) => {
@@ -30,11 +29,14 @@ export default function StudentsManagementTable() {
             name: user?.firstName + " " + user?.lastName,
             email: user?.email,
             phoneNumber: user?.phoneNumber,
-            role: user?.roles,
-            graduationStatus: "Pending",
+            role: user?.roles?.name,
+            graduationStatus: user?.graduationStatus,
+            gender: user?.gender,
           };
         })
     : [];
+
+  console.log(users, studentsData);
 
   const columns: TableColumns<any>[] = [
     {
@@ -70,7 +72,7 @@ export default function StudentsManagementTable() {
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}
-      {staffsData && <Table columns={columns} data={staffsData} />}
+      {studentsData && <Table columns={columns} data={studentsData} />}
     </Table.Wrapper>
   );
 }

@@ -16,7 +16,7 @@ export default function ViewStaff({ data, isStudent }: ViewStaffProps) {
   const initialState = {
     name: data?.name,
     email: data?.email,
-    phone: data?.phone,
+    phone: data?.phoneNumber,
     gender: data?.gender ?? "Not provided",
     role: data?.role,
     privilege: data?.privilege,
@@ -24,6 +24,8 @@ export default function ViewStaff({ data, isStudent }: ViewStaffProps) {
     state: data?.state ?? "Not provided",
     city: data?.city ?? "Not provided",
   };
+
+  console.log(data);
 
   const { formData, updateForm } = useForm({ initialState });
 

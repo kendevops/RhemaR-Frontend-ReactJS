@@ -15,19 +15,20 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
 import Papa from "papaparse";
 import useToggle from "../../utility/hooks/useToggle";
+import useUploadApplications from "../../hooks/mutations/users/useUploadApplications";
 
-type UploadBulkStudentModalProps = {
+type UploadBulkStudentApplicationModalProps = {
   isOpen: boolean;
   toggle: VoidFunction;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   refetch?: any;
 };
 
-export default function UploadBulkStudentModal({
+export default function UploadBulkStudentApplicationModal({
   isOpen,
   toggle,
   refetch,
-}: UploadBulkStudentModalProps) {
+}: UploadBulkStudentApplicationModalProps) {
   const [dataToUpload, setDataToUpload] = useState([]);
   const acceptableCSVFileTypes =
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .csv";
@@ -69,11 +70,9 @@ export default function UploadBulkStudentModal({
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const { isLoading, mutate } = useUploadUsers();
+  const { isLoading, mutate } = useUploadApplications();
 
   const importHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("Working");
-
     if (!event.target.files) return;
     Papa.parse(event.target.files[0], {
       header: true,
@@ -149,7 +148,9 @@ export default function UploadBulkStudentModal({
 
   return (
     <Modal centered {...{ isOpen, toggle }}>
-      <ModalHeader toggle={toggle}>Bulk Upload Students </ModalHeader>
+      <ModalHeader toggle={toggle}>
+        Bulk Upload Students Applications{" "}
+      </ModalHeader>
       <ModalBody>
         <form onSubmit={() => {}}>
           {/* <label>File (Drag and drop, or click to select)</label> */}

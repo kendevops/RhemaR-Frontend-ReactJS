@@ -48,6 +48,7 @@ export default function Verify() {
                 onClick={resendLink}
                 className="btn btn-blue-800 btn-lg w-100"
                 type="button"
+                disabled={isLoading}
               >
                 Resend Link
               </button>

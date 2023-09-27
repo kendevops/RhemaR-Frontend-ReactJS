@@ -49,8 +49,6 @@ const Navbar = (props) => {
   const checkRoleMatch = (role) => {
     const roleForRoute = getRoleForRoute(history.location.pathname);
 
-    console.log({ role, roleForRoute });
-
     return roleForRoute === role;
   };
 
@@ -65,8 +63,6 @@ const Navbar = (props) => {
     history.replace("/login");
   };
 
-  console.log(currentUser);
-
   function handleRoleSwitch(role) {
     setCurrentRole(role);
     console.log(role);
@@ -79,7 +75,6 @@ const Navbar = (props) => {
       ?.filter((role) => role?.name !== "PROSPECTIVE_STUDENT")
       .map((role) => {
         const r = role?.name;
-        console.log(r);
         return {
           id: r,
           children: (
@@ -116,6 +111,7 @@ const Navbar = (props) => {
             <SidebarToggle
               setGroupOpen={setGroupOpen}
               menuHover={menuHover}
+              setMenuHover={setMenuHover}
               {...props}
             />
 

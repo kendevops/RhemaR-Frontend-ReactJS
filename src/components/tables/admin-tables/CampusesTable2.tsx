@@ -99,7 +99,7 @@ export default function CampusesTable2({
       key: "Campus Cordinator",
       title: "Campus Cordinator",
       render: (data) => (
-        <p>{`${data?.campusCoordinator.firstName} ${data?.campusCoordinator.lastName}`}</p>
+        <p>{`${data?.campusCoordinator?.firstName} ${data?.campusCoordinator?.lastName}`}</p>
       ),
     },
     {

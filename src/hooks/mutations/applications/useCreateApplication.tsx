@@ -30,13 +30,10 @@ interface data {
   };
 }
 
-export default function useCreateApplication() {
+export default function useCreateApplication(level: string) {
   const q = useQueryClient();
   const { currentUser, users } = queryKeys;
-  return useMutation(
-    (data: data) => api.post(`/applications/LEVEL_1/create`, data),
-    {
-      onSuccess: () => q.invalidateQueries([currentUser, users]),
-    }
-  );
+  return useMutation((data: data) => api.post(`/applications/${level}`, data), {
+    onSuccess: () => q.invalidateQueries([currentUser, users]),
+  });
 }

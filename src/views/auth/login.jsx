@@ -65,8 +65,6 @@ const AuthLoginPage = () => {
     );
   }
 
-  console.log("From Login");
-
   const onSubmit = (data) => {
     toggleLoading();
     if (Object.values(data).every((field) => field.length > 0)) {
@@ -75,13 +73,8 @@ const AuthLoginPage = () => {
       useJwt
         .login({ email: data?.email, password: data?.password })
         .then((res) => {
-          console.log("res", res);
-
           toggleLoading();
-          console.log("LOGIN.RESPONSE", res);
           const d = res?.data?.data;
-
-          console.log(d);
 
           const data = {
             ...d?.user,
@@ -90,8 +83,6 @@ const AuthLoginPage = () => {
           };
 
           localStorage.setItem("userData", JSON.stringify(data));
-
-          console.log(data);
 
           const userRole =
             Array.isArray(data?.roles) && data?.roles?.length

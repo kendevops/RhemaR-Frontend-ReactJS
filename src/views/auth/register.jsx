@@ -292,6 +292,7 @@ const AuthRegistrationPage = () => {
                   <button
                     className="btn btn-blue-800 btn-lg w-100"
                     type="submit"
+                    disabled={loading}
                   >
                     <span className="inline-block">Proceed</span>
                   </button>

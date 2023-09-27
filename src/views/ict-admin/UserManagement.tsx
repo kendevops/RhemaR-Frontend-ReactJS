@@ -10,14 +10,21 @@ import useUploadUsers from "../../hooks/mutations/users/useUploadUsers";
 import { Spinner } from "reactstrap";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import handleError from "../../utils/handleError";
+import { AiOutlineCaretDown } from "react-icons/ai";
+import UploadBulkStudentModal from "../../components/modals/UploadBulkStudentsModal";
+import AddStudentModal from "../../components/modals/AddStudentModal";
+import { Icon } from "@iconify/react";
 
 export default function UserManagement() {
   const Options = ["Staff", "Students"];
   const [option, setOption] = useState(0);
+  const [addStudentDropDown, setAddStudentDropDown] = useState(false);
 
   const currentOption = Options[option];
 
   const [modalState, toggleModal] = useToggle();
+  const [isAdding, toggleAdding] = useToggle();
+  const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
 
   const { isLoading, mutate } = useUploadUsers();
   const { refetch } = useAllUsers();
@@ -48,8 +55,28 @@ export default function UserManagement() {
     <section>
       {/* Modal For Adding Staff */}
       <AddStaff toggle={toggleModal} visibility={modalState} />
+      <AddStudentModal isOpen={isAdding} toggle={toggleAdding} />
+      <UploadBulkStudentModal
+        isOpen={isBulkUploadOpen}
+        toggle={toggleBulkUpload}
+        refetch={refetch}
+      />
 
       {/* Header */}
+
+      <div
+        className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
+        style={{ color: "white", fontWeight: 700 }}
+      >
+        <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
+        <div>Users Management</div>
+
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        {/* <div>{`${userData?.campus?.name}`}</div> */}
+      </div>
       <div role={"tabpanel"} className="d-flex px-2 gap-3 border-bottom ">
         {Options.map((o, i) => {
           const isSelected = i === option;
@@ -71,12 +98,12 @@ export default function UserManagement() {
       </div>
 
       {/* Search Bar and add Staff */}
-      <article className="d-flex gap-5 m-5">
+      <article className="d-flex justify-content-between  gap-5 my-5">
         <div style={{ width: "70%" }}>
           <SearchBar />
         </div>
 
-        {currentOption === "Staff" && (
+        {currentOption === "Staff" ? (
           <button
             onClick={toggleModal}
             className="btn btn-blue-800 btn-lg "
@@ -84,22 +111,44 @@ export default function UserManagement() {
           >
             Add Staff
           </button>
-        )}
-      </article>
-
-      <article className="d-flex gap-5 m-5">
-        <label>Import from CSV</label>
-        {isLoading ? (
-          <Spinner />
         ) : (
-          <input
-            className="form-control"
-            type="file"
-            name="file"
-            accept=".csv"
-            onChange={importHandler}
-            style={{ display: "block", margin: "10px auto" }}
-          />
+          <div
+            className=""
+            style={{
+              height: `${addStudentDropDown ? "150px" : ""}`,
+            }}
+          >
+            <button
+              className="btn btn-blue-800 btn-lg mb-3 "
+              style={{ width: "fit-content" }}
+              onClick={() => setAddStudentDropDown(() => !addStudentDropDown)}
+            >
+              Add student <AiOutlineCaretDown className="mx-3" />
+            </button>
+
+            {addStudentDropDown && (
+              <div
+                className="position-absolute d-flex gap-3 flex-column z-3 "
+                style={{ width: "200px" }}
+              >
+                <button
+                  className="btn btn-blue-800 btn-lg"
+                  style={{ minWidth: "100%" }}
+                  onClick={toggleAdding}
+                >
+                  Add single student
+                </button>
+
+                <button
+                  className="btn btn-blue-800 btn-lg"
+                  style={{ minWidth: "100%" }}
+                  onClick={toggleBulkUpload}
+                >
+                  Bulk upload students
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </article>
 

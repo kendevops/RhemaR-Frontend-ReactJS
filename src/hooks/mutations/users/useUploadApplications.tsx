@@ -6,10 +6,13 @@ interface Data {
   users: any[];
 }
 
-export default function useUploadUsers() {
+export default function useUploadApplications() {
   const q = useQueryClient();
   const { users } = queryKeys;
-  return useMutation((data: Data) => api.post("/users/upload", data), {
-    onSuccess: () => q.invalidateQueries([users]),
-  });
+  return useMutation(
+    (data: Data) => api.post("/users/upload/applications", data),
+    {
+      onSuccess: () => q.invalidateQueries([users]),
+    }
+  );
 }
