@@ -9,7 +9,7 @@ export default function Verify() {
 
   const email = localStorage.getItem("userEmail");
 
-  const formData: any = { email: email };
+  // const formData: any = { email: email };
 
   function resendLink() {
     mutate({ email: email } as any, {
