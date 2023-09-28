@@ -233,8 +233,7 @@ function ApplicationPage(props) {
           //   />,
           //   ToastContent.Config
           // );
-          const paymentUrl =
-            d?.data?.data?.application?.initialPayment?.paymentUrl;
+          const paymentUrl = d?.data?.data?.application?.feePayment?.paymentUrl;
           window?.open(paymentUrl);
           window.location?.reload();
         },
