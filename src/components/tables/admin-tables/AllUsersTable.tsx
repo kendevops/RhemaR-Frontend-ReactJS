@@ -4,7 +4,7 @@ import useAllUsers from "../../../hooks/queries/useAllUsers";
 import { UserDto } from "../../../types/dto";
 import Table, { TableColumns } from "../../general/table/Table";
 import ViewStaff from "../../modals/ViewStaff";
-import userRoles from "../../../utility/userRoles";
+// import userRoles from "../../../utility/userRoles";
 
 interface Data {
   name: string;
