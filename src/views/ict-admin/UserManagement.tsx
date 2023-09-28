@@ -14,9 +14,10 @@ import { AiOutlineCaretDown } from "react-icons/ai";
 import UploadBulkStudentModal from "../../components/modals/UploadBulkStudentsModal";
 import AddStudentModal from "../../components/modals/AddStudentModal";
 import { Icon } from "@iconify/react";
+import AllUserTable from "../../components/tables/admin-tables/AllUsersTable";
 
 export default function UserManagement() {
-  const Options = ["Staff", "Students"];
+  const Options = ["All", "Staff", "Students"];
   const [option, setOption] = useState(0);
   const [addStudentDropDown, setAddStudentDropDown] = useState(false);
 
@@ -153,6 +154,7 @@ export default function UserManagement() {
       </article>
 
       {/* Table */}
+      {currentOption === "All" && <AllUserTable />}
       {currentOption === "Staff" && <UserManagementTable />}
       {currentOption === "Students" && <StudentsManagementTable />}
     </section>

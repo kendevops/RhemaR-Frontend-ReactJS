@@ -20,6 +20,8 @@ import { Icon } from "@iconify/react";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
 import { MdOutlineCancel } from "react-icons/md";
+import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
+import useDeleteApplication from "../../hooks/mutations/classes/useDeleteApplication";
 
 interface ViewApplicationProps {
   status?: any;
@@ -46,6 +48,9 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
     approveApplication?.isLoading || rejectApplication?.isLoading;
 
   const isApproved = status === "APPROVED";
+  const hasPaid =
+    data?.feePayment?.status === "success" &&
+    data?.initialPayment?.status === "success";
 
   const applicationData = [
     {
@@ -105,20 +110,63 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
     });
   }
 
+  const deleteMutation = useDeleteApplication(id as string);
+  const isDeleteLoading = deleteMutation?.isLoading;
+  const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
+
+  console.log(id);
+
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"Application deleted successfully"}
+        />,
+        ToastContent.Config
+      );
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Error"}
+          message={error?.response?.data?.error?.message?.toString()}
+        />,
+        ToastContent.Config
+      );
+    }
+    toggleDeleteModal();
+  };
+
   return (
     <>
       <u
         style={{
           cursor: "pointer",
         }}
-        onClick={toggle}
+        className="d-flex gap-3 align-items-center "
       >
-        <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+        <FaRegEye
+          style={{ cursor: "pointer", fontSize: "23px" }}
+          onClick={toggle}
+        />
+
+        <ConfirmDeleteModal
+          visibility={visibilityDeleteModal}
+          toggle={toggleDeleteModal}
+          onDelete={handleDelete}
+          isLoading={isDeleteLoading}
+        />
       </u>
 
       {/* Modal */}
       <Modal centered {...{ isOpen, toggle }}>
-        <ModalHeader {...{ toggle }}>View Application</ModalHeader>
+        <ModalHeader {...{ toggle }}> Application Details</ModalHeader>
         <ModalBody>
           {isLoading && <Spinner />}
           {applicationData?.map((d) => {
@@ -148,6 +196,7 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
               <button
                 onClick={accept}
                 className="btn success btn-blue-800 btn-lg w-25"
+                disabled={hasPaid ? false : true}
               >
                 Approve
               </button>
@@ -275,6 +324,8 @@ export default function Applications() {
     },
     toggle: toggleFiltering,
   };
+
+  // console.log(defaultValues?.id);
 
   return (
     <section>
@@ -488,9 +539,9 @@ export default function Applications() {
                       data={d}
                     />
 
-                    <RiDeleteBin6Line
+                    {/* <RiDeleteBin6Line
                       style={{ cursor: "pointer", fontSize: "23px" }}
-                    />
+                    /> */}
                   </div>
                 ),
               },

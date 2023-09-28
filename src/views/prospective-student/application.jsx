@@ -62,6 +62,7 @@ function ApplicationPage(props) {
   const { data: campusesData } = useCampuses();
 
   console.log(userData?.levelOneApplications[0]);
+  console.log(userData);
 
   const campusOptions = campusesData?.nodes?.map((d) => d?.name);
   const sessionsDataOptions = sessionsData?.nodes
@@ -138,6 +139,8 @@ function ApplicationPage(props) {
 
   async function makePayment(e) {
     e.preventDefault();
+
+    let hasFieldsError;
     const {
       state,
       city,
@@ -162,44 +165,96 @@ function ApplicationPage(props) {
       },
     };
 
-    if (!Object.values(body).every((v) => v > "")) {
-      alert("Please fill in all fields");
-      console.log({ body });
+    console.log(body);
+
+    Object.keys(body).forEach((key) => {
+      const value = body[key];
+      if (value === "" && key !== "referralSource") {
+        // console.log(`Property: ${key}, Value: ${value}`);
+        hasFieldsError = true;
+
+        toast.error(
+          <ToastContent
+            type={"error"}
+            heading={"Empty Field"}
+            message={`Please ${key} should not be emplty`}
+          />,
+          ToastContent.Config
+        );
+      }
+    });
+
+    if (!body.isBornAgain) {
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Be Born Again"}
+          message={`You must be born again to go through this application`}
+        />,
+        ToastContent.Config
+      );
+      return;
+    } else if (body.affirmationsAndSubmissions === "No") {
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Affirmations and Submissions"}
+          message={`You must be affirm and submit to go through this application`}
+        />,
+        ToastContent.Config
+      );
+      return;
+    } else if (!body.isBaptized) {
+      toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Be Baptized"}
+          message={`You must be Baptized to go through this application`}
+        />,
+        ToastContent.Config
+      );
       return;
     }
 
-    console.log(body);
+    // if (!Object.values(body).every((v) => v > "")) {
+    //   alert("Please fill in all fields");
+    //   console.log({ body });
+    //   return;
+    // }
 
-    mutate(body, {
-      onSuccess: (d) => {
-        // toast.success(
-        //   <ToastContent
-        //     type={"success"}
-        //     heading={"Success"}
-        //     message={`Application submitted Successfully`}
-        //   />,
-        //   ToastContent.Config
-        // );
-        const paymentUrl =
-          d?.data?.data?.application?.initialPayment?.paymentUrl;
-        window?.open(paymentUrl);
-        window.location?.reload();
-      },
-      onError: (err) => {
-        handleError(err, formData, toggleError);
-      },
-    });
+    if (!hasFieldsError) {
+      mutate(body, {
+        onSuccess: (d) => {
+          // toast.success(
+          //   <ToastContent
+          //     type={"success"}
+          //     heading={"Success"}
+          //     message={`Application submitted Successfully`}
+          //   />,
+          //   ToastContent.Config
+          // );
+          const paymentUrl =
+            d?.data?.data?.application?.initialPayment?.paymentUrl;
+          window?.open(paymentUrl);
+          window.location?.reload();
+        },
+        onError: (err) => {
+          handleError(err, formData, toggleError);
+        },
+      });
+    }
   }
 
   useEffect(() => {
     if (
       userData?.levelOneApplications[0]?.status === "PENDING" ||
-      userData?.levelOneApplications[0]?.status === "APPROVED"
+      userData?.levelOneApplications[0]?.status === "APPROVED" ||
+      userData?.levelOneApplications[0]?.status === "ABANDONED"
     ) {
       localStorage.setItem("userData", JSON.stringify(userData));
       return history.replace("/dashboard");
     }
-  }, [userData?.levelOneApplications[0]]);
+  }, [userData?.levelOneApplications[0], userData]);
 
   return (
     <>
@@ -236,10 +291,10 @@ function ApplicationPage(props) {
               <FormDropdown
                 onChange={(e) => updateForm("userTitle", e?.target?.value)}
                 options={titleOptions?.map((o) => ({
-                  // options={["2023/2024", "2024/2025"]?.map((o) => ({
                   children: o,
                 }))}
                 title={"Title"}
+                hasErrors={formErrors?.userTitle}
               />
 
               <FormDropdown
@@ -256,10 +311,10 @@ function ApplicationPage(props) {
               <FormDropdown
                 onChange={(e) => updateForm("intake", e?.target?.value)}
                 options={intakeDataOptions?.map((o) => ({
-                  // options={["2023/2024", "2024/2025"]?.map((o) => ({
                   children: o,
                 }))}
                 title={"Intake"}
+                hasErrors={formErrors?.intake}
               />
 
               <FormDropdown
@@ -269,6 +324,7 @@ function ApplicationPage(props) {
                   children: o,
                 }))}
                 title={"Academic Session"}
+                hasErrors={formErrors?.session}
               />
 
               <FormRadioGroup
@@ -277,6 +333,7 @@ function ApplicationPage(props) {
                 onChange={(e) =>
                   updateForm("classAttendanceMethod", e.target.value)
                 }
+                hasErrors={formErrors?.classAttendanceMethod}
               />
 
               <FormInput
@@ -309,6 +366,7 @@ function ApplicationPage(props) {
                 value={formData?.state}
                 options={states?.map((d) => ({ children: d }))}
                 onChange={(e) => updateForm("state", e?.target?.value)}
+                hasErrors={formErrors?.state}
                 lg="6"
               />
               <FormInput
@@ -390,6 +448,7 @@ function ApplicationPage(props) {
                 onChange={(e) =>
                   updateForm("isBornAgain", !!(e.target.value === "Yes"))
                 }
+                hasErrors={formErrors?.isBornAgain}
               />
 
               <FormInput

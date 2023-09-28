@@ -60,7 +60,7 @@ const ProspectiveStudentApplicationPage = () => {
     //check the user application status
     const application = data?.levelOneApplications[0];
     switch (application?.initialPayment?.status) {
-      case "pending":
+      case "pending" || "abandoned":
         setPendingPayment(true);
         break;
 
@@ -72,7 +72,7 @@ const ProspectiveStudentApplicationPage = () => {
     }
 
     switch (application?.feePayment?.status) {
-      case "pending":
+      case "pending" || "abandoned":
         setPendingFeePayment(true);
         break;
 
@@ -154,7 +154,7 @@ const ProspectiveStudentApplicationPage = () => {
                         data?.levelOneApplications[0]?.initialPayment
                           ?.status === "pending" ? (
                           <div>
-                            <h2 className="text-bold"> Addmission Pending </h2>
+                            <h2 className="text-bold"> Admission Pending </h2>
                             <p className="mb-3">
                               Initial deposit must be paid before admission is
                               granted
@@ -225,7 +225,7 @@ const ProspectiveStudentApplicationPage = () => {
                               <div>
                                 <h2 className="text-bold">
                                   {" "}
-                                  Addmission Pending{" "}
+                                  Admission Pending{" "}
                                 </h2>
                                 <p className="mb-3">
                                   Fee deposit must be paid before admission is
