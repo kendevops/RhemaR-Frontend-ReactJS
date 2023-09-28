@@ -13,7 +13,7 @@ export default function handleError(e: any, formData?: any, toggleError?: any) {
         message={errorMessage}
         type={"error"}
       />,
-      { ...ToastContent.Config, autoClose: false }
+      { ...ToastContent.Config }
     );
   } else if (
     formData?.phoneNumber &&
@@ -25,7 +25,7 @@ export default function handleError(e: any, formData?: any, toggleError?: any) {
         message={"Phone number must start with +234"}
         type={"error"}
       />,
-      { ...ToastContent.Config, autoClose: false }
+      { ...ToastContent.Config }
     );
   } else {
     const errors = Object.keys(errorMessage);
@@ -36,7 +36,7 @@ export default function handleError(e: any, formData?: any, toggleError?: any) {
           message={errorMessage[err]}
           type={"error"}
         />,
-        { ...ToastContent.Config, autoClose: false }
+        { ...ToastContent.Config }
       );
       toggleError && toggleError(err);
     });

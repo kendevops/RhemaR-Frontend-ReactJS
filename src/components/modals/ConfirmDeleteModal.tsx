@@ -1,4 +1,5 @@
 import React from "react";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 
 interface ConfirmDeleteModalProps {
@@ -16,13 +17,18 @@ export function ConfirmDeleteModal({
 }: ConfirmDeleteModalProps) {
   return (
     <div>
-      <p
+      {/* <p
         className=""
         style={{ color: "red", cursor: "pointer" }}
         onClick={toggle}
       >
         Delete
-      </p>
+      </p> */}
+
+      <RiDeleteBin6Line
+        style={{ cursor: "pointer", fontSize: "23px", color: "red" }}
+        onClick={toggle}
+      />
 
       <Modal isOpen={visibility} toggle={toggle}>
         <ModalHeader toggle={toggle}>Confirm Delete</ModalHeader>
