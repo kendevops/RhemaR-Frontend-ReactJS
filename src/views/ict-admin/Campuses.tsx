@@ -4,7 +4,7 @@ import CampusesTable from "../../components/tables/admin-tables/CampusesTable";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useToggle from "../../utility/hooks/useToggle";
 
-export default function Campuses() {
+export default function CreateLevel() {
   const [isOpen, toggle] = useToggle();
   const { refetch } = useAllCampuses();
 
@@ -16,7 +16,7 @@ export default function Campuses() {
           <SearchBar />
         </div>
 
-        <AddCampusModal {...{ isOpen, toggle, onCreate: refetch }} />
+        {/* <AddCampusModal {...{ isOpen, toggle, onCreate: refetch }} /> */}
 
         <button
           onClick={toggle}

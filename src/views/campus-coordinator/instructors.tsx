@@ -30,7 +30,10 @@ export default function CampusCoordinatorInstructors() {
       </article>
 
       {/* Table */}
-      <InstructorsTable shouldRefetch={refetch} route="campus-coordinator" />
+      <InstructorsTable
+        shouldRefetch={refetch}
+        route="student-services-admin"
+      />
     </section>
   );
 }

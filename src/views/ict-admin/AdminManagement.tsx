@@ -9,6 +9,7 @@ import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useRoles from "../../hooks/queries/useRoles";
 import AddAdminModal from "../../components/modals/AddAdminModal";
+import EditAdminModal from "../../components/modals/editModals/EditAdminModal";
 
 export default function AdminManagement() {
   const [filters, setFilters] = useState({});
@@ -18,6 +19,7 @@ export default function AdminManagement() {
 
   const [isFiltering, toggleFiltering] = useToggle();
   const [isAdding, toggleAdding] = useToggle();
+  const [isEditing, toggleEditing] = useToggle();
 
   const usersData = data?.users?.nodes?.filter((u: any) => {
     return u?.roles
@@ -115,8 +117,19 @@ export default function AdminManagement() {
     },
     {
       key: "Action",
+      title: "Action",
       render: (data) => {
-        return <div></div>;
+        console.log("usersData", data);
+        return (
+          <div className="d-flex gap-3">
+            <p className="" style={{ color: "red", cursor: "pointer" }}>
+              Delete
+            </p>
+            <p onClick={toggleEditing} style={{ cursor: "pointer" }}>
+              Edit
+            </p>
+          </div>
+        );
       },
     },
   ];
@@ -126,9 +139,10 @@ export default function AdminManagement() {
       <div id="Modals">
         <FilterModal {...filterProps} />
         <AddAdminModal isOpen={isAdding} toggle={toggleAdding} />
+        <EditAdminModal isOpen={isEditing} toggle={toggleEditing} />
       </div>
 
-      <article className="d-flex gap-5 m-5" id="Search">
+      <article className="d-flex gap-5 my-5" id="Search">
         <div style={{ flex: 1 }}>
           <SearchBar />
         </div>

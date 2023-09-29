@@ -21,6 +21,7 @@ export default function StudentProfile() {
   const [option, setOption] = useState(0);
 
   const userData = getUserData();
+
   const { mutate, isLoading } = useUpdateCurrentUser();
 
   const defaultValues = {
@@ -32,6 +33,8 @@ export default function StudentProfile() {
     phoneNumber: userData?.phoneNumber,
     altPhoneNumber: userData?.altPhoneNumber,
   };
+
+  console.log(userData.gender);
 
   const currentPage = Options[option];
 
@@ -85,7 +88,7 @@ export default function StudentProfile() {
 
   return (
     <section className="container mt-5">
-      <div className=" col-md-8 col-9 mx-auto">
+      <div className=" col-md-8 col-11 mx-auto">
         <article className="bg-white r-card px-5 py-4 mb-4 ">
           {isLoading && <Spinner />}
           {/* Header */}
@@ -123,38 +126,54 @@ export default function StudentProfile() {
                   label="First Name"
                   value={formData?.firstName}
                   onChange={(e) => updateForm("firstName", e.target.value)}
+                  disabled
                 />
                 <FormInput
                   label="Middle Name"
                   value={formData?.middleName}
                   onChange={(e) => updateForm("middleName", e.target.value)}
+                  disabled
                 />
                 <FormInput
                   label="Last Name"
                   value={formData?.lastName}
                   onChange={(e) => updateForm("lastName", e.target.value)}
+                  disabled
                 />
 
-                <div className="form-group d-flex gap-4">
-                  <div style={{ width: "60%" }}>
+                <div className="form-group d-flex flex-column flex-sm-row  gap-4">
+                  <div style={{ width: "100%" }}>
                     <FormInput
                       type={"email"}
                       label="Email"
                       value={formData?.email}
                       onChange={(e) => updateForm("email", e.target.value)}
+                      disabled
                     />
                   </div>
 
-                  <div>
+                  <div style={{ width: "100%" }}>
+                    <FormInput
+                      type={"text"}
+                      label="Gender"
+                      value={formData?.gender}
+                      onChange={(e) => updateForm("gender", e.target.value)}
+                      disabled
+                    />
+                  </div>
+
+                  {/* <div>
                     <FormRadioGroup
                       label="Gender"
                       options={["MALE", "FEMALE"]}
                       onChange={(e) => updateForm("gender", e.target.value)}
+                      disabled={true}
+                      defaultValue={userData?.gender}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
-                <div className="form-group d-flex gap-4">
+                <div className="form-group d-flex flex-column flex-sm-row  gap-4">
                   <div style={{ width: "100%" }}>
                     <FormInput
                       label="Phone Number"

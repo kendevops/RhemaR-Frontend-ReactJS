@@ -16,13 +16,15 @@ type FormDropdownProps = {
 } & InputProps;
 
 export default function FormDropdown({
-  options,
+  options = [],
   title,
   lg,
   md,
   hasErrors,
   ...otherProps
 }: FormDropdownProps) {
+  const optionsWithEmpty = [{ children: "" }, ...options];
+
   return (
     <FormInputWrapper {...{ lg, md }}>
       <label>{title}</label>
@@ -39,7 +41,7 @@ export default function FormDropdown({
         }}
       >
         <>
-          {options?.map(({ children, ...others }, i) => {
+          {optionsWithEmpty?.map(({ children, ...others }, i) => {
             return (
               <option key={i.toString()} {...others}>
                 {children}

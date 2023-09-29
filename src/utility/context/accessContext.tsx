@@ -32,7 +32,7 @@ export function AccessContextProvider({
   const [access, setAccess] = useState<accessContextProps["access"]>([]);
 
   const canAccess = useCallback(
-    (resource) => {
+    (resource: any) => {
       const match = access.some((obj) => {
         console.log({ obj, res: resource, outcome: deepEqual(resource, obj) });
 
@@ -45,7 +45,7 @@ export function AccessContextProvider({
   );
 
   const updateAccess = useCallback(
-    (accs) => {
+    (accs: any) => {
       accs !== access && setAccess(accs);
     },
     [access]

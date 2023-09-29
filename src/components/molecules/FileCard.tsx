@@ -5,7 +5,7 @@ import { AudioIcon, PdfIcon, VideoIcon } from "../icons/FIleCard";
 import { Icon } from "@iconify/react";
 
 export type FileCardProps = {
-  type: "video" | "audio" | "pdf" | "photo";
+  type: "video" | "audio" | "pdf" | "photo" | "png" | "jpg";
   title: string;
   url: string;
 };
@@ -24,7 +24,7 @@ export default function FileCard({ type, title, url }: FileCardProps) {
   };
 
   switch (type) {
-    case "photo":
+    case "photo" || "png" || "jpg":
       backgroundColor = "#E8E8E8";
       icon = <Icon fontSize={24} icon={"ic:outline-image"} color="blue" />;
       break;

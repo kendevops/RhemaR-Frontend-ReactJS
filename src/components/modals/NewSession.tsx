@@ -5,18 +5,23 @@ import FormInput from "../molecules/FormInput";
 import useCreateSession from "../../hooks/mutations/classes/useCreateSession";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
+import useEditSession from "../../hooks/mutations/classes/useEditSession";
+import FormDropdown from "../molecules/FormDropdown";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 
 interface defaultValues {
   name: string;
   startDate: string;
   endDate: string;
+  isActive: string;
+  id: string;
 }
 
 type NewSessionProps = {
   toggle: VoidFunction;
   visibility: boolean;
   defaultValues?: defaultValues;
-  onCreate?: VoidFunction;
+  onCreate?: any;
 };
 
 export default function NewSession({
@@ -29,19 +34,33 @@ export default function NewSession({
     name: "",
     startDate: "",
     endDate: "",
+    isActive: "",
   };
+
+  console.log(defValues);
+  console.log(defaultValues);
 
   const { formData, updateForm, formIsValid } = useForm({
     initialState: defaultValues,
   });
+
+  const { data: sessionsData, refetch } = useAcademicSessions();
+
   const createSession = useCreateSession();
+
   const isLoading = createSession?.isLoading;
+
+  const editSession = useEditSession(defValues?.id as string);
+
+  const editIsLoading = editSession?.isLoading;
 
   function onSubmit(e: FormEvent) {
     e?.preventDefault();
     console.log({ formData });
 
-    // Creating
+    formData.isActive = formData.isActive === "false" ? false : (true as any);
+
+    /// Creating
     if (!defValues) {
       createSession?.mutate(formData, {
         onSuccess: () => {
@@ -53,7 +72,7 @@ export default function NewSession({
             />,
             ToastContent.Config
           );
-          !!onCreate && onCreate();
+          refetch();
         },
 
         onError: (e: any) => {
@@ -68,11 +87,43 @@ export default function NewSession({
           );
         },
       });
+      !isLoading && toggle();
       return;
     }
 
     // Modifying
-    if (!!defValues) return;
+
+    if (defValues) {
+      editSession?.mutate(formData, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Successful"}
+              message={"Session edited successfully"}
+            />,
+            ToastContent.Config
+          );
+          onCreate();
+        },
+
+        onError: (e: any) => {
+          console.log(e);
+          toast.error(
+            <ToastContent
+              type={"error"}
+              heading={"Error"}
+              message={e?.response?.data?.error?.message?.toString()}
+            />,
+            ToastContent.Config
+          );
+        },
+      });
+
+      !editIsLoading && toggle();
+      return;
+    }
+    // if (!!defValues) return;
   }
 
   return (
@@ -83,9 +134,11 @@ export default function NewSession({
         </ModalHeader>
         <ModalBody>
           {isLoading && <Spinner />}
+          {editIsLoading && <Spinner />}
+
           <form className="mt-3" onSubmit={onSubmit}>
             <FormInput
-              label="Name"
+              label="Session"
               onChange={(e) => updateForm("name", e?.target?.value)}
               value={formData?.name}
             />
@@ -107,10 +160,19 @@ export default function NewSession({
               }
             />
 
+            <FormDropdown
+              onChange={(e) => updateForm("isActive", e?.target?.value)}
+              //   options={sessionOptions?.map((o: string) => ({
+              options={["Yes", "No"]?.map((o) => ({
+                children: o,
+              }))}
+              title={"Is This The Current Intake?"}
+            />
+
             <button
               className="btn btn-blue-800 btn-lg w-100 my-5"
               type="submit"
-              // disabled={!formIsValid || isLoading}
+              disabled={!formIsValid || isLoading}
             >
               {defValues ? "Modify Session" : "Add Session"}
             </button>

@@ -1,172 +1,260 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
-import useCreateCampusTuition from "../../hooks/mutations/classes/useCreateCampusTuition";
-import useUpdateCampusTuition from "../../hooks/mutations/classes/useUpdateCampusTuition";
 import FormDropdown from "../molecules/FormDropdown";
-import { levels } from "../../data/Levels";
+// import { levels } from "../../data/Levels";
 import FormInput from "../molecules/FormInput";
+import { UserDto } from "../../types/dto";
 import { toast } from "react-toastify";
 import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
+import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
+import { states, regions } from "../../data/States";
+import { InstructorsData } from "../../data/InstructorsData";
+import useCreateCampus from "../../hooks/mutations/classes/useCreateCampus";
+import useAllUsers from "../../hooks/queries/useAllUsers";
+import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
+
+// import './styles.css';
 
 interface AddCampusModalProps {
-  isOpen: boolean;
   toggle: VoidFunction;
-  id?: string;
+  visibility: boolean;
   defaultValues?: any;
   onCreate?: VoidFunction;
 }
 
 export default function AddCampusModal({
-  isOpen,
   toggle,
   defaultValues,
-  id,
+  visibility,
   onCreate,
 }: AddCampusModalProps) {
   const isCreating = !defaultValues;
 
+  const [levelValues, setLevelValues] = useState<any>("");
+
   const { isLoading: campusesLoading, data } = useAllCampuses();
   const campusesData = data?.nodes;
-  const createTuition = useCreateCampusTuition();
-  const updateTuition = useUpdateCampusTuition(id ?? "");
+  const createCampus = useCreateCampus();
+  // const updateTuition = useUpdateCampusTuition(id ?? "");
 
-  const isLoading =
-    createTuition.isLoading || updateTuition.isLoading || campusesLoading;
+  const isLoading = createCampus.isLoading || campusesLoading;
+  const { data: usersData, isLoading: usersLoading } = useAllUsers();
+
+  const { data: levelData } = useCampusLevel();
+
+  const users: UserDto[] = usersData?.users?.nodes?.filter((u: any) => {
+    return u?.roles
+      ?.map((r: any) => r?.name)
+      .some((n: any) => n?.includes("CAMPUS_COORD_ADMIN"));
+  });
+
+  const adminOptions = users?.map((u) => ({
+    label: `${u?.firstName} ${u?.lastName}`,
+    id: u?.email,
+  }));
 
   const initialState = {
-    level: levels[0],
-    campus: "",
-    total: 0,
-    dueDate: "",
-    discount: 0,
-    feePayment: 0,
-    initialPayment: 0,
-    installmentMinimum: 0,
+    levels: [],
+    name: "",
+    region: regions[0],
+    currency: "",
+    continent: "Africa",
+    campusCode: "",
+    phoneNumber1: "",
+    phoneNumber2: "",
+    shortName: "",
+    country: "Nigeria",
+    // campusArea: "",
+    // primaryLanguage: "",
+    // secondaryLanguage: "",
+    campusAbbreviation: "",
+    campusCoordinator: adminOptions[0]?.id,
+
+    city: "",
+    state: states[0],
+    street: "",
+    // zipCode: 0,
   };
 
-  const { formData, formIsValid, updateForm } = useForm<typeof initialState>({
-    initialState: defaultValues ?? initialState,
-    optionalFields: ["discount"],
-  });
+  const { formData, formIsValid, updateForm, formErrors, toggleError } =
+    useForm<typeof initialState>({
+      initialState: defaultValues ?? initialState,
+      // optionalFields: ["discount"],
+    });
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    const { level, campus, ...otherData } = formData;
+    console.log(formData);
+
+    const address = {
+      city: formData.city,
+      street: formData.state,
+      state: formData.state,
+      // zipCode: formData.zipCode,
+      country: formData.country,
+    };
+
+    // const levels = formData?.levels?.map((l: any, i: number) => l.name);
+
+    const data = { ...formData, address, levels: levelValues };
+
+    console.log(data?.campusCoordinator, levelValues, data);
 
     if (formIsValid) {
-      isCreating
-        ? createTuition.mutate(formData, {
-            onSuccess: () => {
-              toast.success(
-                <ToastContent
-                  type={"success"}
-                  heading={"Success"}
-                  message={`Successfully created campus tuition`}
-                />,
-                ToastContent.Config
-              );
-              !!onCreate && onCreate();
-              toggle();
-            },
-            onError: (e: any) => {
-              handleError(e, formData);
-            },
-          })
-        : updateTuition.mutate(otherData, {
-            onSuccess: () => {
-              toast.success(
-                <ToastContent
-                  type={"success"}
-                  heading={"Success"}
-                  message={`Successfully updated campus tuition`}
-                />,
-                ToastContent.Config
-              );
-              toggle();
-            },
-            onError: (e: any) => {
-              handleError(e, formData);
-            },
-          });
+      createCampus.mutate(data, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Success"}
+              message={`Campus created Successfully`}
+            />,
+            ToastContent.Config
+          );
+          !!onCreate && onCreate();
+          toggle();
+        },
+        onError: (e: any) => {
+          handleError(e, formData);
+        },
+      });
     } else {
       alert("Please fill in all fields");
       console.log(formData);
     }
   }
+
   return (
-    <Modal centered {...{ isOpen, toggle }}>
+    <Modal centered isOpen={visibility} toggle={toggle} scrollable>
       <ModalHeader toggle={toggle}>
-        {isCreating ? "Create" : "Edit"} Campus Tuition
+        Create Campus
+        {/* <span className="custom-close-icon">&times;</span> */}
       </ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit}>
-          {campusesData && (
-            <FormDropdown
-              title="Campus"
-              value={formData?.campus}
-              options={campusesData?.map((d: any) => ({ children: d?.name }))}
-              onChange={(e) => updateForm("campus", e?.target?.value)}
-              disabled={!isCreating}
-            />
-          )}
-          <FormDropdown
-            title="Level"
-            onChange={(e) => updateForm("level", e.target.value)}
-            options={levels.map((v) => ({ children: v }))}
-            value={formData?.level}
+          <FormInput
+            label="Campus Full Name"
+            placeholder="Enter Campus Full Name"
+            onChange={(e) => updateForm("name", e?.target?.value)}
+            value={formData?.name}
+          />
+
+          <FormInput
+            label="Campus Short Name"
+            placeholder="Enter Campus Short Name"
+            onChange={(e) => updateForm("shortName", e?.target?.value)}
+            value={formData?.shortName}
+          />
+
+          <FormDropdownSelectMultiple
+            title="Campus Levels"
+            // value={formData?.levels}
+            onChange={(e) => updateForm("levels", e.target.value)}
+            options={levelData?.map((v: any) => ({ children: v.name }))}
+            setLevelValues={setLevelValues}
             disabled={!isCreating}
           />
 
           <FormInput
-            label="Initial Payement"
-            type="number"
-            value={formData?.initialPayment?.toString()}
-            onChange={(e) =>
-              updateForm("initialPayment", parseInt(e?.target?.value))
-            }
+            label="Campus Address (Street)"
+            placeholder="Enter Campus Street Address"
+            onChange={(e) => updateForm("street", e?.target?.value)}
+            value={formData?.street}
           />
 
           <FormInput
-            label="Fee Payement"
-            type="number"
-            value={formData?.feePayment?.toString()}
-            onChange={(e) =>
-              updateForm("feePayment", parseInt(e?.target?.value))
-            }
+            label="City"
+            placeholder="City"
+            onChange={(e) => updateForm("city", e?.target?.value)}
+            value={formData?.city}
           />
 
           <FormInput
-            label="Total Fee Payment"
-            type="number"
-            value={formData?.total?.toString()}
-            onChange={(e) => updateForm("total", parseInt(e?.target?.value))}
+            label="Campus Abbreviation"
+            placeholder="Campus Abbreviation"
+            onChange={(e) => updateForm("campusAbbreviation", e?.target?.value)}
+            value={formData?.campusAbbreviation}
           />
 
           <FormInput
-            label="Minimum Installment"
-            type="number"
-            value={formData?.installmentMinimum?.toString()}
-            onChange={(e) =>
-              updateForm("installmentMinimum", parseInt(e?.target?.value))
-            }
+            label="Campus Code"
+            placeholder="Campus Code"
+            onChange={(e) => updateForm("campusCode", e?.target?.value)}
+            value={formData?.campusCode}
+          />
+
+          <FormDropdown
+            title="Campus Address (State)"
+            value={formData?.state}
+            options={states?.map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("state", e?.target?.value)}
+            disabled={!isCreating}
+          />
+
+          <FormDropdown
+            title="Campus Address (Region)"
+            value={formData?.region}
+            options={regions?.map((d: any) => ({ children: d }))}
+            onChange={(e) => updateForm("region", e?.target?.value)}
+            disabled={!isCreating}
+          />
+          <FormInput
+            label="Country"
+            placeholder="Country"
+            onChange={(e) => updateForm("country", e?.target?.value)}
+            value={formData?.country}
+            disabled
+          />
+
+          {/* <FormInput
+            label="Zip Code"
+            placeholder="Zip Code"
+            onChange={(e) => updateForm("zipCode", e?.target?.value)}
+            value={formData?.zipCode}
+          /> */}
+
+          <FormInput
+            label="Continent"
+            placeholder="Continent"
+            onChange={(e) => updateForm("continent", e?.target?.value)}
+            value={formData?.continent}
+            disabled
           />
 
           <FormInput
-            label="Discount (%)"
-            type="number"
-            value={formData?.discount?.toString()}
-            onChange={(e) => updateForm("discount", parseInt(e?.target?.value))}
+            label="Currency"
+            placeholder="Currency"
+            onChange={(e) => updateForm("currency", e?.target?.value)}
+            value={formData?.currency}
           />
+
+          <FormDropdown
+            title="Campus Cordinator"
+            value={formData.campusCoordinator}
+            options={adminOptions?.map((d: any) => ({ children: d?.id }))}
+            onChange={(e) => updateForm("campusCoordinator", e?.target?.value)}
+            disabled={!isCreating}
+          />
+
           <FormInput
-            label="Due Date"
-            type="date"
-            onChange={(e) =>
-              updateForm("dueDate", new Date(e?.target?.value).toISOString())
-            }
+            label="Phone Number 1"
+            placeholder="+2348044444444"
+            onChange={(e) => {
+              updateForm("phoneNumber1", e?.target?.value);
+              formErrors?.phoneNumber && toggleError("phoneNumber1");
+            }}
+            value={formData?.phoneNumber1}
+          />
+
+          <FormInput
+            label="Phone Number 2"
+            placeholder="Enter Optional 2nd number"
+            onChange={(e) => updateForm("phoneNumber2", e?.target?.value)}
+            value={formData?.phoneNumber2}
           />
 
           {isLoading ? (
@@ -176,7 +264,7 @@ export default function AddCampusModal({
               className="btn btn-blue-800 btn-lg w-100 my-5"
               type="submit"
             >
-              {isCreating ? "Create Tuition" : "Save Tuition Changes"}
+              {"Create Campus"}
             </button>
           )}
         </form>

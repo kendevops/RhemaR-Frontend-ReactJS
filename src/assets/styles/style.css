@@ -1,0 +1,35 @@
+/*
+    Add extra design to the table
+*/
+
+td {
+  border: 0.05rem solid !important;
+}
+
+.tabStyle {
+  border-radius: "0px";
+  border-top-width: "2px";
+  border-right-width: "2px";
+  border-left-width: "2px";
+  border-bottom-width: "2px";
+}
+
+.custom-close-icon {
+  color: "#000";
+  font-size: "27px";
+}
+
+.modal-header .btn-close {
+  background-color: #fff;
+}
+
+.modal-header {
+  background: #203864;
+  color: #fff;
+}
+
+/* .g-search-icon {
+  position: "absolute";
+  left: "0px";
+  top: "10px";
+} */

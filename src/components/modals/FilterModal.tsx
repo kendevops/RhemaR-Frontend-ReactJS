@@ -15,6 +15,7 @@ export type FilterProps = {
   onFilter: (params: any) => void;
   isOpen?: boolean;
   toggle: VoidFunction;
+  // setIsFiltering?: VoidFunction
 };
 
 export default function FilterModal({
@@ -22,12 +23,15 @@ export default function FilterModal({
   params,
   toggle,
   isOpen,
-}: FilterProps) {
+}: // setIsFiltering
+FilterProps) {
   let initialState: any = {};
 
   params.forEach((p) => {
     initialState[p.id] = "";
   });
+
+  console.log(params);
 
   const inputs = {
     Text: FormInput,
@@ -67,7 +71,15 @@ export default function FilterModal({
           );
         })}
 
-        <button className="btn btn-blue-800 btn-lg mb-3" onClick={handleFilter}>
+        <button
+          className="btn btn-blue-800 btn-lg mb-3"
+          onClick={() => {
+            handleFilter();
+            // toggle();
+            // setIsFiltering()
+            handleReset();
+          }}
+        >
           Apply filter
         </button>
         <button className="btn btn-outline-info btn-lg" onClick={handleReset}>

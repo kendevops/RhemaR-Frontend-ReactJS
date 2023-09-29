@@ -34,13 +34,15 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
   const users: UserDto[] = data?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("ADMIN"));
+      .some((n: any) => n?.includes("STUDENT"));
   });
 
   const userOptions = users?.map((u) => ({
     label: `${u?.firstName} ${u?.lastName}`,
     id: u?.email,
   }));
+
+  console.log(userOptions);
 
   const roleOptions = rolesData?.roles
     ?.filter((r: any) => r.name?.includes("ADMIN"))

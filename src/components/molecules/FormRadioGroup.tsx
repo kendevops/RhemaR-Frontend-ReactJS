@@ -1,5 +1,6 @@
 import { ChangeEventHandler, ReactNode } from "react";
 import FormInputWrapper from "./FormInputWrapper";
+import { InputProps, Input } from "reactstrap";
 
 type RadioGroupOption = string;
 
@@ -10,7 +11,7 @@ type RadioGroupProps = {
   md?: string;
   lg?: string;
   customLabel?: ReactNode;
-};
+} & InputProps;
 
 export default function FormRadioGroup({
   options,
@@ -19,6 +20,7 @@ export default function FormRadioGroup({
   lg,
   md,
   customLabel,
+  ...otherProps
 }: RadioGroupProps) {
   return (
     <FormInputWrapper {...{ md, lg }}>
@@ -28,14 +30,25 @@ export default function FormRadioGroup({
           const isLastItem = options?.length - 1 === index;
 
           return (
-            <div className={`radio-box ${!isLastItem ? "me-3" : ""}`}>
-              <label htmlFor={label}>{value}</label>
+            <div
+              className={`radio-box ${!isLastItem ? "me-3" : ""} d-flex gap-3`}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              key={`${value}${index}`}
+            >
+              <label htmlFor={label} className="">
+                {value}
+              </label>
               <input
                 type="radio"
                 id={label}
                 value={value}
                 name={label}
                 onChange={onChange}
+                className=""
+                {...otherProps}
               />
             </div>
           );
