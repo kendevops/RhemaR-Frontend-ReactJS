@@ -3,6 +3,7 @@ import { Spinner } from "reactstrap";
 import ToastContent from "../../components/molecules/ToastContent";
 import useResendVerification from "../../hooks/mutations/useResendVerification";
 import handleError from "../../utils/handleError";
+import React from "react";
 
 export default function Verify() {
   const { mutate, isLoading } = useResendVerification();
