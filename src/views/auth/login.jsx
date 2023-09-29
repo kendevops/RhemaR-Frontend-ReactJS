@@ -23,10 +23,10 @@ import AccessContext from "../../utility/context/accessContext";
 import rhemaLogo from "@src/assets/img/logo/logo.svg";
 import useResendVerification from "../../hooks/mutations/useResendVerification";
 
-const defaultValues = {
-  password: "helloWorld1",
-  email: "rhemar_tests@protonmail.com",
-};
+// const defaultValues = {
+//   password: "helloWorld1",
+//   email: "rhemar_tests@protonmail.com",
+// };
 
 const AuthLoginPage = () => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const AuthLoginPage = () => {
   const ability = useContext(AbilityContext);
   const access = useContext(AccessContext);
   const { control, setError, handleSubmit, formState } = useForm({
-    defaultValues,
+    // defaultValues,
     mode: "onChange", // onBlur
     // reValidateMode: "onChange",
   });
