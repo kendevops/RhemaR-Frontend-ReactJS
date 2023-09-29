@@ -22,6 +22,7 @@ const ProspectiveStudentNavs = [
     action: "read",
     resource: "Applications",
   },
+
   {
     id: "myProfile",
     title: "My Profile",
