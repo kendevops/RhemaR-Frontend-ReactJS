@@ -253,7 +253,7 @@ function ApplicationPage(props) {
       localStorage.setItem("userData", JSON.stringify(userData));
       return history.replace("/dashboard");
     }
-  }, [userData?.levelOneApplications[0], userData]);
+  }, [userData?.levelOneApplications[0]]);
 
   return (
     <>
@@ -277,7 +277,6 @@ function ApplicationPage(props) {
       ) : (
         <div className="bg-white r-card px-5 py-4 mb-4">
           <div className="text-center mb-5">
-            {isLoading && <Spinner />}
             <h3 className="title mb-4">Level One Application</h3>
             <p>
               Fill the form below to register.
