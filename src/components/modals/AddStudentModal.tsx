@@ -48,31 +48,32 @@ export default function AddStudentModal({
         phoneNumber: "",
         altPhoneNumber: "",
         gender: "",
-        graduateDate: "2022-10-25T17:35:31.914Z",
+        rdNo: "",
+        graduateDate: "",
         certificateHolderDate: "",
         roles: "",
         region: "",
         continent: "",
         levelOneEndDate: "",
-        levelOneStartDate: "2022-10-25T17:35:31.914Z",
+        levelOneStartDate: "",
         levelTwoEndDate: "",
         levelTwoStartDate: "",
         levelThreeEndDate: "",
         levelThreeStartDate: "",
         levelFourEndDate: "",
         levelFourStartDate: "",
-        currentCampus: "Enugu",
-        levelOneCampus: "Enugu",
+        currentCampus: "",
+        levelOneCampus: "",
         levelTwoCampus: "",
         levelThreeCampus: "",
         levelFourCampus: "",
-        currentIntake: "2027/2028",
-        levelOneIntake: "2027/2028",
+        currentIntake: "",
+        levelOneIntake: "",
         levelTwoIntake: "",
         levelThreeIntake: "",
         levelFourIntake: "",
-        currentSession: "2022/2023",
-        levelOneSession: "2022/2023",
+        currentSession: "",
+        levelOneSession: "",
         levelTwoSession: "",
         levelThreeSession: "",
         levelFourSession: "",
@@ -114,6 +115,7 @@ export default function AddStudentModal({
     const {
       state,
       city,
+      rdNo,
 
       address,
 
@@ -148,6 +150,7 @@ export default function AddStudentModal({
         continent: "Africa",
       },
       roles: ["STUDENT"],
+      rdNo: +rdNo,
 
       graduateDate: graduateDate ? new Date(graduateDate)?.toISOString() : null,
       certificateHolderDate: certificateHolderDate
@@ -187,15 +190,31 @@ export default function AddStudentModal({
     }
 
     const data = { users: [body] };
+    console.log(data);
+
     uploadUsers.mutate(data, {
       onSuccess: (e) => {
-        toast.success(
-          <ToastContent
-            type={"success"}
-            heading={"Student added"}
-            message={"The student has been added successfully"}
-          />
-        );
+        console.log(e);
+
+        e?.data?.data?.results?.map((e: any) => {
+          if (!e?.success) {
+            toast.error(
+              <ToastContent
+                type={"error"}
+                heading={"Error Adding Student"}
+                message={e?.error}
+              />
+            );
+          } else {
+            toast.success(
+              <ToastContent
+                type={"success"}
+                heading={"Student added"}
+                message={"The student has been added successfully"}
+              />
+            );
+          }
+        });
 
         toggle();
       },
@@ -280,6 +299,14 @@ export default function AddStudentModal({
                 options={levels?.map((d: any) => ({ children: d }))}
                 onChange={(e) => updateForm("level", e?.target?.value)}
                 // disabled={!isCreating}
+              />
+
+              <FormInput
+                label="RD No."
+                placeholder="Enter RD No."
+                onChange={(e) => updateForm("rdNo", e.target.value)}
+                hasErrors={formErrors?.rdNo}
+                value={formData.rdNo}
               />
 
               <div className="d-flex justify-content-between align-items-center w-100">
@@ -451,6 +478,14 @@ export default function AddStudentModal({
                 onChange={(e) => updateForm("address", e.target.value)}
                 hasErrors={formErrors?.address}
                 value={formData.address}
+              />
+
+              <FormInput
+                label="City"
+                placeholder="Enter City"
+                onChange={(e) => updateForm("city", e.target.value)}
+                hasErrors={formErrors?.city}
+                value={formData.city}
               />
 
               <FormDropdown

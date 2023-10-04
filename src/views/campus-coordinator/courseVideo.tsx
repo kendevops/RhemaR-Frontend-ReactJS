@@ -9,22 +9,20 @@ type courseVideoProps = {
 
 const CourseVideo = ({ data }: courseVideoProps) => {
   const [currentVideo, setCurrentVideo] = useState(0);
+  const [watching, setWatching] = useState(data ? data[0]?.video?.path : "");
+  const [currentSession, setCurrentSession] = useState(
+    data ? data[0]?.name : ""
+  );
+
   const [isOpen, toggle] = useToggle();
 
-  const domData = [
-    "session 1",
-    "session 2",
-    "session 3",
-    "session 4",
-    "session 5",
-  ];
   return (
     <div className="d-flex gap-5 align-items-start ">
       <div>
-        {domData.map((ses, i) => {
+        {data?.map((ses: any, i: number) => {
           return (
             <div
-              key={ses + i}
+              key={ses.id}
               className="py-2 px-5 mb-4 fw-semibold "
               style={{
                 border: "2px solid #203864",
@@ -32,14 +30,18 @@ const CourseVideo = ({ data }: courseVideoProps) => {
                 color: `${currentVideo === i ? "#fff" : "#203864"}`,
                 cursor: "pointer",
               }}
-              onClick={() => setCurrentVideo(i)}
+              onClick={() => {
+                setCurrentVideo(i);
+                setWatching(ses?.video?.path);
+                setCurrentSession(ses?.name);
+              }}
             >
-              {ses}
+              {ses.name}
             </div>
           );
         })}
 
-        <div
+        {/* <div
           className="py-2 px-5 my-4 fw-bold mt-5 "
           style={{
             background: "#203864",
@@ -49,7 +51,7 @@ const CourseVideo = ({ data }: courseVideoProps) => {
           onClick={() => toggle()}
         >
           + Add Video
-        </div>
+        </div> */}
       </div>
 
       <div
@@ -62,11 +64,13 @@ const CourseVideo = ({ data }: courseVideoProps) => {
           //   paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
         }}
       >
-        <p className="mb-5 fw-bold text-2xl">Session 5 (Video)</p>
+        <p className="mb-5 fw-bold text-2xl">
+          {currentSession ? currentSession : "No"} (Video)
+        </p>
         <ReactPlayer
-          // url={watching}
+          url={watching}
           // url={"https://youtu.be/CAavJmWDKkc?si=0nCubdqFQVVbG-wn"}
-          url={"https://youtu.be/m3kYb-vUMXQ?si=nqqLxSyU_lBSyVv_"}
+          // url={"https://youtu.be/m3kYb-vUMXQ?si=nqqLxSyU_lBSyVv_"}
           controls
           width="80%"
           //   height="100%"

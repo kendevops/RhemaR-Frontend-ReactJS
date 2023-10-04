@@ -129,17 +129,38 @@ export default function UploadBulkStudentApplicationModal({
         })),
       },
       {
-        onSuccess: () => {
-          toast.success(
-            <ToastContent
-              type={"success"}
-              heading={"Students Uploaded"}
-              message={"Students Upload successfully"}
-            />
-          );
+        onSuccess: (e) => {
+          console.log(e);
+
+          e?.data?.data?.results?.map((e: any) => {
+            if (!e?.success) {
+              toast.error(
+                <ToastContent
+                  type={"error"}
+                  heading={"Error Adding Student"}
+                  message={e?.error}
+                />
+              );
+            } else {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Students added"}
+                  message={"The students has been added successfully"}
+                />
+              );
+              refetch();
+            }
+          });
+          // toast.success(
+          //   <ToastContent
+          //     type={"success"}
+          //     heading={"Students Uploaded"}
+          //     message={"Students Upload successfully"}
+          //   />
+          // );
 
           toggle();
-          refetch();
         },
         onError: (e) => handleError(e),
       }

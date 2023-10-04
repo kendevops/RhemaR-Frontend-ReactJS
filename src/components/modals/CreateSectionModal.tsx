@@ -6,6 +6,7 @@ import CardWrapper from "../students/CardWrapper";
 import useFileReader from "../../utility/hooks/useFileReader";
 import FileTypeIcon from "../atoms/FIleTypeIcon";
 import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
+import FormRadioGroup from "../molecules/FormRadioGroup";
 
 type CreateSectionModalProps = {
   isOpen: boolean;
@@ -33,17 +34,24 @@ export default function CreateSectionModal({
     initialState: {
       name: defaultValues?.name ?? "",
       overview: defaultValues?.overview ?? "",
-      videoUrl: defaultValues?.videoUrl ?? "",
+      type: defaultValues?.type ?? "",
+      // videoUrl: defaultValues?.videoUrl ?? "",
     },
   });
   const [materials, setMaterials] = useState<any[]>(
     defaultValues?.materials ?? []
   );
+  const [audio, setAudio] = useState<any[]>(defaultValues?.audio ?? []);
+  const [video, setVideo] = useState<any[]>(defaultValues?.video ?? []);
+
   const [assignments, setAssignments] = useState<any[]>(
     defaultValues?.assignments ?? []
   );
 
-  function handleAdd(type: "material" | "assignment", file: FileType) {
+  function handleAdd(
+    type: "material" | "assignment" | "audio" | "video",
+    file: FileType
+  ) {
     if (type === "material") {
       setMaterials((p) => {
         return [...p, file];
@@ -51,6 +59,18 @@ export default function CreateSectionModal({
     }
     if (type === "assignment") {
       setAssignments((p) => {
+        return [...p, file];
+      });
+    }
+
+    if (type === "audio") {
+      setAudio((p) => {
+        return [...p, file];
+      });
+    }
+
+    if (type === "video") {
+      setVideo((p) => {
         return [...p, file];
       });
     }
@@ -97,7 +117,48 @@ export default function CreateSectionModal({
     },
   });
 
-  function handleDelete(type: "material" | "assignment", index: number) {
+  const {
+    onChangeFile: onChangeAudio,
+    status: audioStatus,
+    file: audioFile,
+  } = useFileReader();
+
+  const uploadAudio = useUploadFile({
+    file: audioFile!,
+    onSuccess: (d) => {
+      console.log({ d });
+      handleAdd("audio", {
+        name: audioFile?.name ?? Date?.now?.toString(),
+        path: d?.fileUrl,
+        size: audioFile?.size ?? 1024,
+        type: audioFile?.type ?? "unknown",
+      });
+    },
+  });
+
+  const {
+    onChangeFile: onChangeVideo,
+    status: videoStatus,
+    file: videoFile,
+  } = useFileReader();
+
+  const uploadVideo2 = useUploadFile({
+    file: videoFile!,
+    onSuccess: (d) => {
+      console.log({ d });
+      handleAdd("video", {
+        name: videoFile?.name ?? Date?.now?.toString(),
+        path: d?.fileUrl,
+        size: videoFile?.size ?? 1024,
+        type: videoFile?.type ?? "unknown",
+      });
+    },
+  });
+
+  function handleDelete(
+    type: "material" | "assignment" | "audio",
+    index: number
+  ) {
     if (type === "material") {
       setMaterials((p) => {
         return [...p?.filter((_, i) => i !== index)];
@@ -108,14 +169,22 @@ export default function CreateSectionModal({
         return [...p?.filter((_, i) => i !== index)];
       });
     }
+
+    if (type === "audio") {
+      setAudio((p) => {
+        return [...p?.filter((_, i) => i !== index)];
+      });
+    }
   }
 
   function handleSubmit(e: any) {
     onCreate({
       ...formData,
-      videoUrl: e?.fileUrl, //"https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
-      materials,
-      assignments,
+      // videoUrl: e?.fileUrl, //"https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
+      // materials,
+      // assignments,
+      video,
+      audio,
     });
     toggle();
   }
@@ -128,7 +197,7 @@ export default function CreateSectionModal({
       <Modal
         centered
         {...{ isOpen, toggle }}
-        fullscreen
+        // fullscreen
         id="createSectionModal"
       >
         <ModalHeader toggle={toggle}>
@@ -136,13 +205,15 @@ export default function CreateSectionModal({
         </ModalHeader>
         <ModalBody>
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              uploadVideo.startUpload();
-            }}
+            // onSubmit={(e) => {
+            //   e.preventDefault();
+            //   uploadVideo.startUpload();
+            // }}
+
+            onSubmit={handleSubmit}
           >
             <FormInput
-              label="Name"
+              label="Section Name"
               onChange={(e) => updateForm("name", e?.target?.value)}
               placeholder={defaultValues?.name}
               required
@@ -153,14 +224,93 @@ export default function CreateSectionModal({
               placeholder={defaultValues?.overview}
               required
             />
+            {/* <FormRadioGroup
+              label="What is the mode of the section"
+              options={["ONSITE", "ONLINE"]}
+              onChange={(e) => updateForm("type", e.target.value)}
+            /> */}
             <FormInput
               label="Upload Video"
               type={"file"}
-              onChange={onChangeFile}
+              // onChange={onChangeFile}
+              onChange={(e) => {
+                onChangeVideo(e);
+                if (videoStatus?.success) {
+                  uploadVideo2.startUpload();
+                }
+              }}
             />
+            {uploadVideo2.isLoading && <Spinner />}
+
+            <FormInput
+              label="Upload Audio"
+              type={"file"}
+              onChange={(e) => {
+                onChangeAudio(e);
+                if (audioStatus?.success) {
+                  uploadAudio.startUpload();
+                }
+              }}
+
+              // onChange={onChangeAudio}
+            />
+            {uploadAudio.isLoading && <Spinner />}
 
             {/* Course Materials */}
-            <CardWrapper className="bg-5 ">
+            {/* <CardWrapper className="bg-5 ">
+              <div className="d-flex justify-content-between mb-4">
+                <h1>Course Audio ({materials?.length?.toString()})</h1>
+                <div>
+                  <label htmlFor="Upload">
+                    <u>Upload</u>
+                  </label>
+                  <input
+                    onChange={(e) => {
+                      onChangeAudio(e);
+                      if (audioStatus?.success) {
+                        uploadAudio.startUpload();
+                      }
+                    }}
+                    id="Upload"
+                    type={"file"}
+                    hidden
+                  />
+                  {uploadMaterial.isLoading && <Spinner />}
+                </div>
+              </div>
+
+              <ul className="no-padding-left">
+                {audio?.map((d: any, i) => {
+                  return (
+                    <li
+                      className="d-flex justify-content-between"
+                      key={i?.toString()}
+                    >
+                      <div className="d-flex gap-3">
+                        <FileTypeIcon
+                          {...{ path: d?.path, name: d?.name, type: d?.type }}
+                        />
+                        <p>{d?.name}</p>
+                      </div>
+
+                      <u
+                        onClick={() => {
+                          handleDelete(
+                            "audio",
+                            audio?.findIndex((v) => v === d)
+                          );
+                        }}
+                      >
+                        Delete
+                      </u>
+                    </li>
+                  );
+                })}
+              </ul>
+            </CardWrapper> */}
+
+            {/* Course Materials */}
+            {/* <CardWrapper className="bg-5 ">
               <div className="d-flex justify-content-between mb-4">
                 <h1>Course Materials ({materials?.length?.toString()})</h1>
                 <div>
@@ -210,10 +360,10 @@ export default function CreateSectionModal({
                   );
                 })}
               </ul>
-            </CardWrapper>
+            </CardWrapper> */}
 
             {/* Course Assignments */}
-            <CardWrapper className="bg-5 my-5">
+            {/* <CardWrapper className="bg-5 my-5">
               <div className="d-flex justify-content-between mb-4">
                 <h1>Course Assignments ({assignments?.length?.toString()})</h1>
                 <div>
@@ -254,7 +404,7 @@ export default function CreateSectionModal({
                   );
                 })}
               </ul>
-            </CardWrapper>
+            </CardWrapper> */}
             {loading ? (
               <Spinner />
             ) : (

@@ -258,6 +258,16 @@ export default function AcademicManager() {
               </button>
             )}
 
+            {/* {tab === 3 && (
+              <button
+                className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "
+                style={{ width: "fit-content" }}
+                onClick={toggle}
+              >
+                Add New Course
+              </button>
+            )} */}
+
             {tab === 4 && (
               <button
                 className="btn btn-blue-800 btn-lg d-flex gap-3  align-items-center "

@@ -19,6 +19,7 @@ import AddCourseCoursesModal from "../../components/modals/AddCourseScheduleModa
 import UploadBulkCourseScheduleModal from "../../components/modals/UploadBulkCourseScheduleModal";
 import UploadBulkCourseModal from "../../components/modals/UploadBulkCourseModal";
 import AddCoreCourseModal from "../../components/modals/AddCourseModal";
+import useAllCourses from "../../hooks/queries/classes/useAllCourses";
 
 type FiltersProps = {
   level?: string;
@@ -33,9 +34,13 @@ export default function CourseManagement() {
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const {
+    data: coursesData,
+    isLoading: coursesLoading,
+    refetch,
+  } = useAllCourses();
 
-  const courses = coursesData?.courses;
+  const courses = coursesData?.nodes;
 
   console.log(courses, coursesData);
 
@@ -119,23 +124,23 @@ export default function CourseManagement() {
     {
       key: "Course Instance",
       title: "Course",
-      render: (data) => <p>Paul's Theology of Righteousness</p>,
+      render: (data) => <p>{data.name}</p>,
     },
     {
       key: "Level",
       title: "Level",
-      render: (data) => <p>2</p>,
+      render: (data) => <p>{data.level.name}</p>,
     },
     {
       key: "Elective",
       title: "Elective",
-      render: (data) => <p>Core</p>,
+      render: (data) => <p>{data.type}</p>,
     },
 
     {
       key: "Hours",
       title: "Hours",
-      render: (data) => <p>12 hours</p>,
+      render: (data) => <p>{data.totalHours}</p>,
     },
 
     {
@@ -145,7 +150,7 @@ export default function CourseManagement() {
         console.log("usersData", data);
         return (
           <div className="d-flex gap-4">
-            <Link to={`/student-services-admin/course-details`}>
+            <Link to={`/student-services-admin/course-details/${data.id}`}>
               <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
             </Link>
             <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
@@ -159,7 +164,11 @@ export default function CourseManagement() {
     <Fragment>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddCoreCourseModal visibility={isAdding} toggle={toggleAdding} />
+        <AddCoreCourseModal
+          visibility={isAdding}
+          toggle={toggleAdding}
+          refetch={refetch}
+        />
         <UploadBulkCourseModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
@@ -267,7 +276,7 @@ export default function CourseManagement() {
       <main id="Table">
         {isLoading && <Spinner />}
         <Table.Wrapper>
-          {usersData && <Table columns={columns} data={usersData} />}
+          {courses && <Table columns={columns} data={courses} />}
         </Table.Wrapper>
       </main>
     </Fragment>

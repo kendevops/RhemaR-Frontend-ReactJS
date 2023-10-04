@@ -34,7 +34,7 @@ const StudentServiceAdminRoutes = [
   },
 
   {
-    path: "/student-services-admin/course-details",
+    path: "/student-services-admin/course-details/:id",
     component: lazy(() =>
       import("../../views/campus-coordinator/courseDetails")
     ),

@@ -212,19 +212,16 @@ export default function Applications() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
   const [isFiltering, toggleFiltering] = useToggle();
-  const { data, isLoading, refetch } = useApplications(
-    filtering ? filters : {}
-  );
+  const { data, isLoading, refetch } = useApplications(filters);
   const { data: sessionsData } = useAcademicSessions();
 
   const { data: campusesData } = useAllCampuses();
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
 
   // useEffect(()=>{
   //   const { data, isLoading, refetch } = useApplications(filters);
   // },[])
 
-  console.log(userData);
+  console.log(filters);
 
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
@@ -304,10 +301,10 @@ export default function Applications() {
     isOpen: isFiltering,
     onFilter: (params: any) => {
       setFilters({
-        intake: params?.intake,
         campus: params?.campus,
         session: params?.session,
         status: params?.status,
+        intake: params?.intake,
         applicationDateFrom: params?.applicationDateFrom
           ? params?.applicationDateFrom
           : null,
@@ -460,7 +457,7 @@ export default function Applications() {
                 render: (data, i) => {
                   console.log(data);
 
-                  return <p>{i}</p>;
+                  return <p>{i + 1}</p>;
                 },
               },
               {

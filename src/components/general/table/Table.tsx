@@ -99,6 +99,7 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
       <div
         style={{
           padding: "1rem",
+          minWidth: "100%",
         }}
       >
         <TabSelect options={tabSelctOptions} />

@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import AddstudentApplicationModal from "../../components/modals/AddStudentApplicationModal";
 import UploadBulkStudentApplicationModal from "../../components/modals/UploadBulkStudentApplicationModal";
+import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
 
 const Options = [
   {
@@ -59,17 +60,21 @@ const CampusCoordinatorStudents = () => {
   const [filters, setFilters] = useState<any>(null);
   const [addStudentDropDown, setAddStudentDropDown] = useState(false);
 
-  // const { data: userData, isLoading, refetch } = useAllUsers(filters);
-  // const data = userData?.users?.nodes;
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
+  const { data, isLoading, refetch } = useAllUsers(filters);
+  const users = data?.users?.nodes;
+  // const { data: userData, isLoading: userLoading } = useCurrentUser();
 
-  const { data, isLoading, refetch } = useApplications();
+  const studentsData = users
+    ? users?.filter((user: any) => user?.roles[0]?.name === userRoles.STUDENT)
+    : [];
 
-  const approvedStudentsData = data?.nodes?.filter(
-    (d: any, i: number) => d.status === "APPROVED"
-  );
+  // const { data, isLoading, refetch } = useApplications();
 
-  console.log(approvedStudentsData);
+  // const approvedStudentsData = data?.nodes?.filter(
+  //   (d: any, i: number) => d.status === "APPROVED"
+  // );
+
+  // console.log(approvedStudentsData);
 
   const { data: campusesData } = useAllCampuses();
   const { data: sessionsData } = useAcademicSessions();
@@ -78,13 +83,21 @@ const CampusCoordinatorStudents = () => {
     children: d?.name,
   }));
 
-  const intakeOptions = ["April", "November"].map((v) => ({
-    children: v + " intake",
-  }));
+  const { data: intakeData } = useAllIntakes();
+  const intakeDataOptions = intakeData?.nodes
+    ?.filter((d: any) => d?.session?.isActive)
+    ?.map((d: any) => d?.name)
+    ?.map((v: string) => ({
+      children: v,
+    }));
 
-  const levelOptions = ["LEVEL_1", "LEVEL_2"].map((v) => ({
-    children: v,
-  }));
+  console.log(intakeDataOptions);
+
+  const levelOptions = ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"].map(
+    (v) => ({
+      children: v,
+    })
+  );
 
   const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
     children: sess?.name,
@@ -121,7 +134,7 @@ const CampusCoordinatorStudents = () => {
       {
         inputType: "Dropdown",
         inputProps: {
-          options: intakeOptions,
+          options: intakeDataOptions,
         },
         id: "intake",
         name: "Intake",
@@ -134,14 +147,14 @@ const CampusCoordinatorStudents = () => {
         id: "noOfClassDone",
         name: "No of Class Done",
       },
-      {
-        inputType: "Dropdown",
-        inputProps: {
-          options: [{ children: "Paid" }, { children: "Pending" }],
-        },
-        id: "paymentStatus",
-        name: "Payment Status",
-      },
+      // {
+      //   inputType: "Dropdown",
+      //   inputProps: {
+      //     options: [{ children: "Paid" }, { children: "Pending" }],
+      //   },
+      //   id: "paymentStatus",
+      //   name: "Payment Status",
+      // },
     ],
     isOpen: isFiltering,
     onFilter: (params: any) => {
@@ -188,23 +201,7 @@ const CampusCoordinatorStudents = () => {
           >
             Filter
           </button>
-          {/* <div onClick={toggleBulkUpload}>
-            <label
-              htmlFor="upload"
-              className="btn btn-outline-info btn-lg "
-              style={{ width: "fit-content" }}
-            >
-              Import
-            </label>
-            <input
-              id="upload"
-              type="file"
-              name="file"
-              accept=".csv"
-              onChange={importHandler}
-              hidden
-            />
-          </div> */}
+
           <button
             className="btn btn-blue-800 btn-lg"
             style={{ width: "fit-content", height: "50px" }}
@@ -215,29 +212,29 @@ const CampusCoordinatorStudents = () => {
 
           <div
             className=""
-            style={{
-              height: `${addStudentDropDown ? "150px" : ""}`,
-            }}
+            // style={{
+            //   height: `${addStudentDropDown ? "150px" : ""}`,
+            // }}
           >
             <button
               className="btn btn-blue-800 btn-lg mb-3 "
               style={{ width: "fit-content" }}
               onClick={() => setAddStudentDropDown(() => !addStudentDropDown)}
             >
-              Add student <AiOutlineCaretDown className="mx-3" />
+              Add New Application <AiOutlineCaretDown className="mx-3" />
             </button>
 
             {addStudentDropDown && (
               <div
-                className="position-absolute d-flex gap-3 flex-column z-3 "
-                style={{ width: "200px" }}
+                className="position-absolute d-flex gap-3 flex-column z-3 bg-white p-3"
+                // style={{ width: "200px" }}
               >
                 <button
                   className="btn btn-blue-800 btn-lg"
                   style={{ minWidth: "100%" }}
                   onClick={toggleAdding}
                 >
-                  Add single student
+                  Add single Application
                 </button>
 
                 <button
@@ -245,7 +242,7 @@ const CampusCoordinatorStudents = () => {
                   style={{ minWidth: "100%" }}
                   onClick={toggleBulkUpload}
                 >
-                  Bulk upload students
+                  Bulk upload Applications
                 </button>
               </div>
             )}
@@ -262,7 +259,7 @@ const CampusCoordinatorStudents = () => {
               {
                 key: "Serial number",
                 title: "S/N",
-                render: (data, i) => <p>{i}</p>,
+                render: (data, i) => <p>{i + 1}</p>,
               },
               {
                 key: "Pic",
@@ -273,13 +270,13 @@ const CampusCoordinatorStudents = () => {
               {
                 key: "First Name",
                 title: "First Name",
-                render: (d) => <p>{d?.user?.firstName}</p>,
+                render: (d) => <p>{d?.firstName}</p>,
               },
 
               {
                 key: "Last Name",
                 title: "Last Name",
-                render: (d) => <p>{d?.user?.lastName}</p>,
+                render: (d) => <p>{d?.lastName}</p>,
               },
               {
                 key: "Level",
@@ -301,7 +298,7 @@ const CampusCoordinatorStudents = () => {
               {
                 key: "Gender",
                 title: "Gender",
-                render: (d) => <p>{d?.gender ?? "Not Provided"}</p>,
+                render: (d) => <p>{d?.gender}</p>,
               },
 
               {
@@ -332,7 +329,7 @@ const CampusCoordinatorStudents = () => {
                 ),
               },
             ]}
-            data={approvedStudentsData}
+            data={studentsData}
           />
         )}
       </Table.Wrapper>
