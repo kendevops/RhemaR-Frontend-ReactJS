@@ -10,6 +10,13 @@ import Tab from "../../components/atoms/Tab";
 import CourseVideo from "./courseVideo";
 import CourseAudio from "./courseAudio";
 import CoursePDF from "./coursePDF";
+import CreateSectionModal from "../../components/modals/CreateSectionModal";
+import useToggle from "../../utility/hooks/useToggle";
+import useCourse from "../../hooks/queries/classes/useCourse";
+import useCreateCourseSection from "../../hooks/mutations/classes/useCreateCourseSection";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
 
 interface LectureParams {
   id: string;
@@ -19,8 +26,15 @@ export default function LectureMaterial() {
   const params = useParams<LectureParams>();
   let router = useHistory();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { mutate, isLoading } = useAttendClass(params?.id);
-  const [data, setData] = useState<any>(null);
+  const [isAddingSection, toggleAddSection] = useToggle();
+
+  // const { mutate, isLoading } = useAttendClass(params?.id);
+  const { data, isLoading, refetch } = useCourse(params?.id);
+  const { mutate, isLoading: createSectionLoading } = useCreateCourseSection(
+    params?.id
+  );
+
+  // const [data, setData] = useState<any>(null);
   const [tab, setTab] = useState(0);
 
   let Tabs = ["Course Videos", "Course Audios", "Course PDFs"];
@@ -29,9 +43,33 @@ export default function LectureMaterial() {
 
   const course = data?.class?.course;
 
-  const sessions = course?.sections;
+  const sessions = data?.sections;
 
+  console.log(data);
   console.log(sessions);
+
+  function onCreateSection(data: any) {
+    // setSectionsData((p) => [...p, data]);
+
+    console.log(data);
+
+    // mutate(data, {
+    //   onSuccess: () => {
+    //     toast.success(
+    //       <ToastContent
+    //         heading={"Section created successfully"}
+    //         type={"success"}
+    //         message={`Section has been created successfully`}
+    //       />,
+    //       ToastContent.Config
+    //     );
+    //   },
+
+    //   onError: (e: any) => {
+    //     handleError(e);
+    //   },
+    // });
+  }
 
   //   useEffect(
   //     () => {
@@ -75,53 +113,62 @@ export default function LectureMaterial() {
       </div>
       <BackButton />
 
-      <div className="my-4">
-        <Tab.Wrapper className="d-flex gap-3 ">
-          {Tabs?.map((t, i) => {
-            return (
-              <Tab
-                key={t}
-                tabColor="#203864"
-                isSelected={currentTab === t}
-                onClick={() => {
-                  setTab(i);
-                }}
-              >
-                {t}
-              </Tab>
-            );
-          })}
-        </Tab.Wrapper>
+      <>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <div className="my-4">
+              <Tab.Wrapper className="d-flex gap-3 ">
+                {Tabs?.map((t, i) => {
+                  return (
+                    <Tab
+                      key={t}
+                      tabColor="#203864"
+                      isSelected={currentTab === t}
+                      onClick={() => {
+                        setTab(i);
+                      }}
+                    >
+                      {t}
+                    </Tab>
+                  );
+                })}
+              </Tab.Wrapper>
 
-        <div className="my-5">
-          {currentTab === "Course Audios" && <CourseAudio />}
-          {currentTab === "Course Videos" && <CourseVideo />}
-          {currentTab === "Course PDFs" && <CoursePDF />}
-        </div>
-      </div>
-
-      <div className="d-flex align-items-center gap-4 flex-wrap mt-5  ">
-        {/* {sessions?.map((pdf: any, i: number) => {
-          console.log(pdf?.materials[0]);
-
-          return (
-            <div key={i}>
-              {pdf?.materials[0]?.path && (
-                <div className="text-center">
-                  <a
-                    href={pdf?.materials[0]?.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FaRegFilePdf style={{ fontSize: "60px", color: "red" }} />
-                  </a>
-                  <p className="text-2xl my-3">{pdf?.materials[0]?.name}</p>
-                </div>
-              )}
+              <div className="my-5">
+                {currentTab === "Course Audios" && (
+                  <CourseAudio data={sessions} />
+                )}
+                {currentTab === "Course Videos" && (
+                  <CourseVideo data={sessions} />
+                )}
+                {currentTab === "Course PDFs" && <CoursePDF />}
+              </div>
             </div>
-          );
-        })} */}
-      </div>
+
+            <div className="d-flex align-items-center gap-4 flex-wrap mt-5  ">
+              <CreateSectionModal
+                toggle={toggleAddSection}
+                isOpen={isAddingSection}
+                onCreate={onCreateSection}
+              />
+
+              <div
+                className="py-2 px-5 my-4 fw-bold mt-5 "
+                style={{
+                  background: "#203864",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+                onClick={() => toggleAddSection()}
+              >
+                + Add Session
+              </div>
+            </div>
+          </>
+        )}
+      </>
     </div>
   );
 }

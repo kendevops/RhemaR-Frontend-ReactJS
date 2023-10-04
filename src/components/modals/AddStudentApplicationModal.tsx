@@ -52,8 +52,7 @@ export default function AddstudentApplicationModal({
         address: "",
         state: "",
         country: "",
-        role: "",
-        rdNo: "",
+        // rdNo: "",
         intake: "",
         referralSource: "",
         classAttendanceMethod: "",
@@ -172,13 +171,13 @@ export default function AddstudentApplicationModal({
         street: address,
         state,
         country: "Nigeria",
-        zipCode: 234,
+        zipCode: 23456,
       },
 
       payments: {
-        feePaymentAmount: feePaymentAmount,
+        feePaymentAmount: +feePaymentAmount,
         hasPaidFeePayment: hasPaidFeePayment,
-        initialPaymentAmount: initialPaymentAmount,
+        initialPaymentAmount: +initialPaymentAmount,
         hasPaidInitialPayment: hasPaidInitialPayment,
       },
     };
@@ -190,15 +189,32 @@ export default function AddstudentApplicationModal({
     }
 
     const data = { users: [body] };
+
+    console.log(data);
+
     uploadUsers.mutate(data, {
       onSuccess: (e) => {
-        toast.success(
-          <ToastContent
-            type={"success"}
-            heading={"Student added"}
-            message={"The student has been added successfully"}
-          />
-        );
+        console.log(e);
+
+        e?.data?.data?.results?.map((e: any) => {
+          if (!e?.success) {
+            toast.error(
+              <ToastContent
+                type={"error"}
+                heading={"Error Adding Student"}
+                message={e?.error}
+              />
+            );
+          } else {
+            toast.success(
+              <ToastContent
+                type={"success"}
+                heading={"Student added"}
+                message={"The student has been added successfully"}
+              />
+            );
+          }
+        });
 
         toggle();
       },
@@ -349,15 +365,13 @@ export default function AddstudentApplicationModal({
                 value={formData.intake}
               />
 
-              {sessionOptions?.length && (
-                <FormDropdown
-                  options={sessionOptions}
-                  title="Session"
-                  onChange={(e) => updateForm("session", e.target.value)}
-                  hasErrors={formErrors?.session}
-                  value={formData.session}
-                />
-              )}
+              <FormDropdown
+                options={sessionOptions}
+                title="Session"
+                onChange={(e) => updateForm("session", e.target.value)}
+                hasErrors={formErrors?.session}
+                value={formData.session}
+              />
 
               <FormInput
                 label="Address"
@@ -368,12 +382,20 @@ export default function AddstudentApplicationModal({
               />
 
               <FormInput
+                label="City"
+                placeholder="Enter City"
+                onChange={(e) => updateForm("city", e.target.value)}
+                hasErrors={formErrors?.city}
+                value={formData.city}
+              />
+
+              {/* <FormInput
                 label="RD No."
                 placeholder="Enter RD No."
                 onChange={(e) => updateForm("rdNo", e.target.value)}
                 hasErrors={formErrors?.rdNo}
                 value={formData.rdNo}
-              />
+              /> */}
 
               <FormDropdown
                 title="State"
@@ -466,7 +488,7 @@ export default function AddstudentApplicationModal({
                 onChange={(e) =>
                   updateForm("isBornAgain", !!(e.target.value === "Yes"))
                 }
-                value={formData.isBornAgain}
+                // value={formData.isBornAgain}
               />
 
               <FormInput
@@ -487,7 +509,7 @@ export default function AddstudentApplicationModal({
                   console.log(e.target.value);
                 }}
                 // hasErrors={formErrors?.isBaptized}
-                value={formData.isBaptized}
+                // value={formData.isBaptized}
               />
 
               <FormRadioGroup
@@ -497,7 +519,7 @@ export default function AddstudentApplicationModal({
                   updateForm("affirmationsAndSubmissions", e.target.value);
                 }}
                 // hasErrors={formErrors?.affirmationsAndSubmissions}
-                value={formData.affirmationsAndSubmissions}
+                // value={formData.affirmationsAndSubmissions}
               />
 
               <FormRadioGroup
@@ -506,7 +528,6 @@ export default function AddstudentApplicationModal({
                 onChange={(e) =>
                   updateForm("hasPaidFeePayment", !!(e.target.value === "Yes"))
                 }
-                value={formData.hasPaidFeePayment}
               />
               <FormInput
                 label="Application Fee amount"
@@ -525,7 +546,6 @@ export default function AddstudentApplicationModal({
                     !!(e.target.value === "Yes")
                   )
                 }
-                value={formData.hasPaidInitialPayment}
               />
 
               <FormInput

@@ -102,6 +102,7 @@ export default function UploadBulkStudentModal({
             continent: "Africa",
           },
           roles: ["STUDENT"],
+          rdNo: +d.rdNo,
 
           graduateDate: d.graduateDate
             ? new Date(d.graduateDate)?.toISOString()
@@ -137,16 +138,37 @@ export default function UploadBulkStudentModal({
         })),
       },
       {
-        onSuccess: () => {
-          toast.success(
-            <ToastContent
-              type={"success"}
-              heading={"Students Uploaded"}
-              message={"Students Upload successfully"}
-            />
-          );
+        onSuccess: (e) => {
+          console.log(e);
 
-          refetch();
+          e?.data?.data?.results?.map((e: any) => {
+            if (!e?.success) {
+              toast.error(
+                <ToastContent
+                  type={"error"}
+                  heading={"Error Adding Student"}
+                  message={e?.error}
+                />
+              );
+            } else {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Students added"}
+                  message={"The students has been added successfully"}
+                />
+              );
+              refetch();
+            }
+          });
+          // toast.success(
+          //   <ToastContent
+          //     type={"success"}
+          //     heading={"Students Uploaded"}
+          //     message={"Students Upload successfully"}
+          //   />
+          // );
+
           toggle();
         },
         onError: (e) => handleError(e),

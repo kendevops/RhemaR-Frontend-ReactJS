@@ -115,9 +115,9 @@ export default function UserManagement() {
         ) : (
           <div
             className=""
-            style={{
-              height: `${addStudentDropDown ? "150px" : ""}`,
-            }}
+            // style={{
+            //   height: `${addStudentDropDown ? "150px" : ""}`,
+            // }}
           >
             <button
               className="btn btn-blue-800 btn-lg mb-3 "
@@ -129,8 +129,8 @@ export default function UserManagement() {
 
             {addStudentDropDown && (
               <div
-                className="position-absolute d-flex gap-3 flex-column z-3 "
-                style={{ width: "200px" }}
+                className="position-absolute d-flex gap-3 flex-column z-3 bg-white p-3"
+                // style={{ width: "200px" }}
               >
                 <button
                   className="btn btn-blue-800 btn-lg"
