@@ -11,10 +11,8 @@ import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
-import { states } from "../../data/States";
-import { InstructorsData } from "../../data/InstructorsData";
-import { Controller } from "react-hook-form";
 import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
+import useAllCampusesTuitions from "../../hooks/queries/classes/useAllCampusesTuitions";
 
 interface AcademicAddTuitionModalProps {
   toggle: VoidFunction;
@@ -36,6 +34,8 @@ export default function AcademicAddTuitionModal({
   const createTuition = useCreateCampusTuition();
   const { data: levelData } = useCampusLevel();
 
+  const { refetch } = useAllCampusesTuitions();
+
   const levels = levelData?.map((v: any) => v.name);
 
   console.log(levelData, levels);
@@ -52,7 +52,7 @@ export default function AcademicAddTuitionModal({
     feePayment: 0,
     initialPayment: 0,
     installmentMinimum: 0,
-    installmentDuration: 0,
+    installmentMinimumDurationInMonths: 0,
     dueDate: "",
   };
 
@@ -78,7 +78,8 @@ export default function AcademicAddTuitionModal({
       feePayment: +formData.feePayment,
       initialPayment: +formData.initialPayment,
       installmentMinimum: +formData.installmentMinimum,
-      installmentDuration: +formData.installmentDuration,
+      installmentMinimumDurationInMonths:
+        +formData.installmentMinimumDurationInMonths,
     };
 
     if (formIsValid) {
@@ -92,6 +93,7 @@ export default function AcademicAddTuitionModal({
             />,
             ToastContent.Config
           );
+          refetch();
           !!onCreate && onCreate();
           toggle();
         },
@@ -99,22 +101,6 @@ export default function AcademicAddTuitionModal({
           handleError(e, formData);
         },
       });
-      //  updateTuition.mutate(otherData, {
-      //     onSuccess: () => {
-      //       toast.success(
-      //         <ToastContent
-      //           type={"success"}
-      //           heading={"Success"}
-      //           message={`Successfully updated campus tuition`}
-      //         />,
-      //         ToastContent.Config
-      //       );
-      //       toggle();
-      //     },
-      //     onError: (e: any) => {
-      //       handleError(e, formData);
-      //     },
-      //   });
     } else {
       alert("Please fill in all fields");
       console.log(formData);
@@ -166,9 +152,9 @@ export default function AcademicAddTuitionModal({
             label="Minimum Installment Duration"
             placeholder="Installment Minimum Duration"
             onChange={(e) =>
-              updateForm("installmentDuration", e?.target?.value)
+              updateForm("installmentMinimumDurationInMonths", e?.target?.value)
             }
-            value={formData?.installmentDuration}
+            value={formData?.installmentMinimumDurationInMonths}
           />
 
           <FormInput

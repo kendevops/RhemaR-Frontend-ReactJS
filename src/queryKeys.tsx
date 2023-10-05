@@ -23,6 +23,7 @@ const queryKeys = {
   instructors: "instructors",
   levels: "levels",
   intakes: "intakes",
+  tuitions: "tuitions",
 };
 
 export default queryKeys;

@@ -12,22 +12,27 @@ import useUpdateCampusTuition from "../../../hooks/mutations/classes/useUpdateCa
 
 interface EditTuitionModalProps {
   data: any;
+  refetch?: any;
 }
 
-export default function EditTuitionModal({ data }: EditTuitionModalProps) {
+export default function EditTuitionModal({
+  data,
+  refetch,
+}: EditTuitionModalProps) {
   const [visibility, toggle] = useToggle();
 
   console.log("data", data);
 
   const initialState = {
-    level: data?.level,
-    campus: data?.campus,
+    level: data?.level?.name,
+    campus: data?.campus?.name,
     total: data?.total,
     discount: data?.discount,
     feePayment: data?.installmentMinimum,
     initialPayment: data?.installmentMinimum,
     installmentMinimum: data?.installmentMinimum,
-    installmentDuration: data?.installmentDuration,
+    installmentMinimumDurationInMonths:
+      data?.installmentMinimumDurationInMonths,
     dueDate: data?.dueDate,
   };
 
@@ -59,7 +64,8 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
       feePayment: +formData.feePayment,
       initialPayment: +formData.initialPayment,
       installmentMinimum: +formData.installmentMinimum,
-      installmentDuration: +formData.installmentDuration,
+      installmentMinimumDurationInMonths:
+        +formData.installmentMinimumDurationInMonths,
     };
     if (data) {
       editTuition?.mutate(body, {
@@ -72,6 +78,7 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
             />,
             ToastContent.Config
           );
+          refetch();
           toggle();
         },
 
@@ -145,9 +152,12 @@ export default function EditTuitionModal({ data }: EditTuitionModalProps) {
               label="Minimum Installment Duration"
               placeholder="Installment Minimum Duration"
               onChange={(e) =>
-                updateForm("installmentDuration", e?.target?.value)
+                updateForm(
+                  "installmentMinimumDurationInMonths",
+                  e?.target?.value
+                )
               }
-              value={formData?.installmentDuration}
+              value={formData?.installmentMinimumDurationInMonths}
             />
 
             <FormInput
