@@ -28,7 +28,7 @@ function ModifyIntake({ data, onCreate }: Props) {
     isActive: data?.isActive,
     id: data?.id,
   };
-  console.log(defaultValues?.id);
+  console.log(defaultValues);
 
   const deleteMutation = useDeleteIntake(defaultValues?.id as string);
   const isLoading = deleteMutation?.isLoading;
@@ -73,6 +73,7 @@ function ModifyIntake({ data, onCreate }: Props) {
         onDelete={handleDelete}
         isLoading={isLoading}
       />
+
       <AddIntakeModal {...{ visibility, toggle, defaultValues, onCreate }} />
     </>
   );
@@ -105,6 +106,12 @@ export default function IntakeTable() {
       key: "End Date",
       title: "End Date",
       render: (data) => <p>{new Date(data?.endDate).toDateString()}</p>,
+    },
+
+    {
+      key: "active",
+      title: "Active",
+      render: (data) => <p>{data?.isActive ? "Yes" : "No"}</p>,
     },
 
     {

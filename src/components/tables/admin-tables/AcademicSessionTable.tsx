@@ -108,6 +108,12 @@ export default function AcademicSessionTable() {
     },
 
     {
+      key: "active",
+      title: "Active",
+      render: (data) => <p>{data?.isActive ? "Yes" : "No"}</p>,
+    },
+
+    {
       key: "Action",
       title: "Action",
       render: (data) => {

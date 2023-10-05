@@ -147,6 +147,7 @@ export default function AddstudentApplicationModal({
     const body = {
       ...otherData,
       // level: "LEVEL_1",
+      CampusTuition: 30000,
       levelOneApplication: {
         campus: campus,
         intake: intake,

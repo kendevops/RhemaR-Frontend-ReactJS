@@ -7,6 +7,7 @@ import useFileReader from "../../utility/hooks/useFileReader";
 import FileTypeIcon from "../atoms/FIleTypeIcon";
 import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
 import FormRadioGroup from "../molecules/FormRadioGroup";
+import useCreateCourseSection from "../../hooks/mutations/classes/useCreateCourseSection";
 
 type CreateSectionModalProps = {
   isOpen: boolean;
@@ -38,6 +39,7 @@ export default function CreateSectionModal({
       // videoUrl: defaultValues?.videoUrl ?? "",
     },
   });
+
   const [materials, setMaterials] = useState<any[]>(
     defaultValues?.materials ?? []
   );
@@ -178,6 +180,7 @@ export default function CreateSectionModal({
   }
 
   function handleSubmit(e: any) {
+    e.preventDefault();
     onCreate({
       ...formData,
       // videoUrl: e?.fileUrl, //"https://rhema-course-uploads-bucket.s3.amazonaws.com/f347d7352b462b8f41056316ef65b414.mp4",
@@ -186,7 +189,7 @@ export default function CreateSectionModal({
       video,
       audio,
     });
-    toggle();
+    // toggle();
   }
 
   const uploadVideo = useUploadFile({ file: file!, onSuccess: handleSubmit });
@@ -235,9 +238,9 @@ export default function CreateSectionModal({
               // onChange={onChangeFile}
               onChange={(e) => {
                 onChangeVideo(e);
-                if (videoStatus?.success) {
-                  uploadVideo2.startUpload();
-                }
+                // if (videoStatus?.success) {
+                uploadVideo2.startUpload();
+                // }
               }}
             />
             {uploadVideo2.isLoading && <Spinner />}
@@ -247,9 +250,9 @@ export default function CreateSectionModal({
               type={"file"}
               onChange={(e) => {
                 onChangeAudio(e);
-                if (audioStatus?.success) {
-                  uploadAudio.startUpload();
-                }
+                // if (audioStatus?.success) {
+                uploadAudio.startUpload();
+                // }
               }}
 
               // onChange={onChangeAudio}
@@ -405,7 +408,7 @@ export default function CreateSectionModal({
                 })}
               </ul>
             </CardWrapper> */}
-            {loading ? (
+            {isLoading ? (
               <Spinner />
             ) : (
               <button type="submit" className="btn btn-lg  btn-blue-800">

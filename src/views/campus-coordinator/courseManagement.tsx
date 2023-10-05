@@ -62,10 +62,6 @@ export default function CourseManagement() {
       .some((n: any) => n?.includes("STUDENT_SERVICES_ADMIN"));
   });
 
-  console.log(ssData);
-
-  console.log(usersData);
-
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
   }));
@@ -74,6 +70,36 @@ export default function CourseManagement() {
   const roleOptions = rolesData?.roles?.map((d: any) => ({
     children: d?.name,
   }));
+
+  // const deleteMutation = useDeleteIntake(defaultValues?.id as string);
+  // const isLoading = deleteMutation?.isLoading;
+
+  // const handleDelete = async () => {
+  //   try {
+  //     await deleteMutation.mutateAsync();
+  //     console.log("Resource deleted");
+  //     toast.success(
+  //       <ToastContent
+  //         type={"success"}
+  //         heading={"Successful"}
+  //         message={"Intake Deleted successfully"}
+  //       />,
+  //       ToastContent.Config
+  //     );
+  //     toggleDeleteModal();
+  //   } catch (error: any) {
+  //     console.error("Error deleting resource", error);
+  //     toast.error(
+  //       <ToastContent
+  //         type={"error"}
+  //         heading={"Error"}
+  //         message={error?.response?.data?.error?.message?.toString()}
+  //       />,
+  //       ToastContent.Config
+  //     );
+  //   }
+  //   toggleDeleteModal();
+  // };
 
   const filterProps: FilterProps = {
     params: [
@@ -154,6 +180,12 @@ export default function CourseManagement() {
               <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
             </Link>
             <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
+            {/* <ConfirmDeleteModal
+        visibility={visibilityDeleteModal}
+        toggle={toggleDeleteModal}
+        onDelete={handleDelete}
+        isLoading={isLoading}
+      /> */}
           </div>
         );
       },

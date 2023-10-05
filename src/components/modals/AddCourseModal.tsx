@@ -192,9 +192,11 @@ export default function AddCoreCourseModal({
           />
 
           <FormDropdown
-            title="Course Elective"
+            title="Course Option"
             value={formData?.type}
-            options={["CORE", "ELETIVE"].map((d: any) => ({ children: d }))}
+            options={["CORE", "SPIRITUAL", "SUPPORTIVE"].map((d: any) => ({
+              children: d,
+            }))}
             onChange={(e) => updateForm("type", e?.target?.value)}
             disabled={!isCreating}
           />
