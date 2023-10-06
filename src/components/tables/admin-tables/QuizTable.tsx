@@ -2,25 +2,26 @@ import { Spinner } from "reactstrap";
 import useAllExams from "../../../hooks/queries/classes/useAllExams";
 import useToggle from "../../../utility/hooks/useToggle";
 import Table from "../../general/table/Table";
-import CreateExamModal from "../../modals/CreateExamModal";
 import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
 import handleError from "../../../utils/handleError";
-import useDeleteExam from "../../../hooks/mutations/classes/useDeleteExam";
+import CreateQuizModal from "../../modals/CreateQuizModal";
+import useDeleteQuiz from "../../../hooks/mutations/classes/useDeleteQuiz";
+import useAllQuizes from "../../../hooks/queries/classes/useAllQuizes";
 
-type EditExamProps = {
+type EditQuizProps = {
   data: any;
   refetch: any;
 };
 
-function EditExam({ data, refetch }: EditExamProps) {
+function EditQuiz({ data, refetch }: EditQuizProps) {
   const [isEditing, toggleEditing] = useToggle();
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
 
   const id = data?.id;
 
-  const deleteIt = useDeleteExam(id);
+  const deleteIt = useDeleteQuiz(id);
 
   const isDeleteLoading = deleteIt?.isLoading;
 
@@ -31,7 +32,7 @@ function EditExam({ data, refetch }: EditExamProps) {
           <ToastContent
             type={"success"}
             heading={"Success"}
-            message={`Exam deleted successfully`}
+            message={`Quiz deleted successfully`}
           />,
           ToastContent.Config
         );
@@ -48,7 +49,7 @@ function EditExam({ data, refetch }: EditExamProps) {
 
   return (
     <>
-      <CreateExamModal
+      <CreateQuizModal
         defaultValues={data}
         isOpen={isEditing}
         toggle={toggleEditing}
@@ -65,8 +66,10 @@ function EditExam({ data, refetch }: EditExamProps) {
   );
 }
 
-export default function ExamsTable() {
+export default function QuizesTable() {
   const { data: examsData, isLoading, refetch } = useAllExams();
+  //   const { data: examsData, isLoading, refetch } = useAllQuizes();
+
   const data = examsData?.nodes;
 
   console.log(data);
@@ -106,7 +109,7 @@ export default function ExamsTable() {
                 render: (d) => {
                   return (
                     <div className="d-flex gap-4">
-                      <EditExam data={d} refetch={refetch} />
+                      <EditQuiz data={d} refetch={refetch} />
                       {/* <u onClick={handleDelete}>Delete</u> */}
                     </div>
                   );

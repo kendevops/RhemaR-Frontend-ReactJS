@@ -44,7 +44,7 @@ const Navbar = (props) => {
   const currentUser = getUserData();
   const dispatch = useDispatch();
   const history = useHistory();
-  const { data: newNotification } = useSubscribeNotifications();
+  // const { data: newNotification } = useSubscribeNotifications();
 
   const checkRoleMatch = (role) => {
     const roleForRoute = getRoleForRoute(history.location.pathname);
@@ -52,11 +52,11 @@ const Navbar = (props) => {
     return roleForRoute === role;
   };
 
-  useEffect(() => {
-    if (newNotification) {
-      console.log({ newNotification });
-    }
-  }, [newNotification]);
+  // useEffect(() => {
+  //   if (newNotification) {
+  //     console.log({ newNotification });
+  //   }
+  // }, [newNotification]);
 
   const logOut = () => {
     dispatch(handleLogout(currentUser));

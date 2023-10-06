@@ -10,17 +10,20 @@ import UploadExamModal from "../../components/modals/UploadExamModal";
 import useAllExams from "../../hooks/queries/classes/useAllExams";
 import useAllQuizes from "../../hooks/queries/classes/useAllQuizes";
 import UploadQuizModal from "../../components/modals/UploadQuizModal";
+import useAllClassesAttendance from "../../hooks/queries/classes/useAllClassAttendance";
 
-export default function Exams() {
-  const [isCreatingExam, toggleCreatingExam] = useToggle();
-  const [isCreatingQuiz, toggleCreatingQuiz] = useToggle();
+export default function ClassCourseAttendance() {
+  const [isCreatingClassAttendance, toggleCreatingClassAttendance] =
+    useToggle();
+  const [isCreatingCourseAttendance, toggleCreatingCourseAttendance] =
+    useToggle();
   const [isQuizUploadOpen, toggleQuizUpload] = useToggle();
   const [isExamUploadOpen, toggleExamUpload] = useToggle();
 
-  const { refetch } = useAllExams();
+  const { refetch } = useAllClassesAttendance();
   const { refetch: refetchQuiz } = useAllQuizes();
 
-  const tabs = ["Exams", "Quizes"];
+  const tabs = ["Class", "Course"];
   const [tab, setTab] = useState(0);
   const currentTab = tabs[tab];
 
@@ -31,7 +34,7 @@ export default function Exams() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>Exams & Quizes Management</div>
+        <div>Class & Course Attendance</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
@@ -51,28 +54,28 @@ export default function Exams() {
           );
         })}
       </Tab.Wrapper>
-      {currentTab === "Exams" && (
+      {currentTab === "Class" && (
         <>
           <div className="d-flex justify-content-between mb-5 align-items-center">
-            <h1 className="text-bold">Exams</h1>
+            <h1 className="text-bold">Class</h1>
             <div className="d-flex  align-items-center gap-5 ">
               <button
                 onClick={toggleExamUpload}
                 className="btn btn-blue-800 btn-lg w-auto "
               >
-                Upload Exam
+                Upload Class
               </button>
               <button
-                onClick={toggleCreatingExam}
+                onClick={toggleCreatingClassAttendance}
                 className="btn btn-blue-800 btn-lg w-auto"
               >
-                Create Exam
+                Create Class Attendance
               </button>
             </div>
 
             <CreateExamModal
-              isOpen={isCreatingExam}
-              toggle={toggleCreatingExam}
+              isOpen={isCreatingClassAttendance}
+              toggle={toggleCreatingClassAttendance}
             />
           </div>
 
@@ -81,10 +84,10 @@ export default function Exams() {
         </>
       )}
 
-      {currentTab === "Quizes" && (
+      {currentTab === "Course" && (
         <>
           <div className="d-flex justify-content-between mb-5 align-items-center">
-            <h1 className="text-bold">Quizes</h1>
+            <h1 className="text-bold">Course</h1>
             <div className="d-flex  align-items-center gap-5 ">
               <button
                 onClick={toggleQuizUpload}
@@ -93,16 +96,16 @@ export default function Exams() {
                 Upload Quiz
               </button>
               <button
-                onClick={toggleCreatingQuiz}
+                onClick={toggleCreatingCourseAttendance}
                 className="btn btn-blue-800 btn-lg w-auto"
               >
-                Create Quiz
+                Create Course Attendance
               </button>
             </div>
 
             <CreateQuizModal
-              isOpen={isCreatingQuiz}
-              toggle={toggleCreatingQuiz}
+              isOpen={isCreatingCourseAttendance}
+              toggle={toggleCreatingCourseAttendance}
             />
           </div>
 

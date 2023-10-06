@@ -24,6 +24,8 @@ const queryKeys = {
   levels: "levels",
   intakes: "intakes",
   tuitions: "tuitions",
+  quiz: "quiz",
+  quizzes: "quizzes",
 };
 
 export default queryKeys;

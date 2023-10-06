@@ -12,21 +12,22 @@ import ToastContent from "../molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import FormDropdown from "../molecules/FormDropdown";
 import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
-import useAllExams from "../../hooks/queries/classes/useAllExams";
-import useEditExam from "../../hooks/mutations/classes/useEditExam";
+import useCreateQuiz from "../../hooks/mutations/classes/useCreateQuiz";
+import useEditQuiz from "../../hooks/mutations/classes/useEditQuiz";
+import useAllQuizes from "../../hooks/queries/classes/useAllQuizes";
 
-type CreateExamModalProps = {
+type CreateQuizModalProps = {
   defaultValues?: any;
   toggle: VoidFunction;
   isOpen: boolean;
 };
 
-export default function CreateExamModal({
+export default function CreateQuizModal({
   defaultValues,
   toggle,
   isOpen,
-}: CreateExamModalProps) {
-  const { refetch } = useAllExams();
+}: CreateQuizModalProps) {
+  const { refetch } = useAllQuizes();
   const [numQuestions, setNumQuestions] = useState(5);
 
   const Options = ["Basic Information", "Questions"];
@@ -41,8 +42,8 @@ export default function CreateExamModal({
 
   console.log(coursesData, coursesOptions);
 
-  const { mutate, isLoading: isCreating } = useCreateExam();
-  const { mutate: mutateEdit, isLoading: isEditing } = useEditExam(
+  const { mutate, isLoading: isCreating } = useCreateQuiz();
+  const { mutate: mutateEdit, isLoading: isEditing } = useEditQuiz(
     defaultValues?.id
   );
 
@@ -50,11 +51,10 @@ export default function CreateExamModal({
     name: "",
     courseId: "",
     sessionId: "",
-    duration: 0,
-    // session: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
+    durationInSeconds: 0,
     endsAt: "",
     startsAt: "",
-    score: 100,
+    totalScore: 100,
   };
 
   const {
@@ -66,10 +66,10 @@ export default function CreateExamModal({
     initialState: {
       name: initialState?.name,
       courseId: initialState?.courseId,
-      duration: initialState?.duration,
+      durationInSeconds: initialState?.durationInSeconds,
       endsAt: initialState?.endsAt,
       startsAt: initialState?.startsAt,
-      score: initialState?.score,
+      totalScore: initialState?.totalScore,
       sessionId: initialState?.sessionId,
     },
   });
@@ -114,7 +114,7 @@ export default function CreateExamModal({
           toast.success(
             <ToastContent
               heading={"Successful"}
-              message={"Exam created successfully"}
+              message={"Quiz created successfully"}
               type={"success"}
             />,
             ToastContent.Config
@@ -136,7 +136,7 @@ export default function CreateExamModal({
           toast.success(
             <ToastContent
               heading={"Successful"}
-              message={"Exam Updated successfully"}
+              message={"Quiz Updated successfully"}
               type={"success"}
             />,
             ToastContent.Config
@@ -155,7 +155,7 @@ export default function CreateExamModal({
     <>
       <Modal centered {...{ isOpen, toggle }} fullscreen id="examModal">
         <ModalHeader toggle={toggle}>
-          {!!defaultValues ? "Modify Exam" : "Create Exam"}
+          {!!defaultValues ? "Modify Quiz" : "Create Quiz"}
         </ModalHeader>
         <ModalBody>
           {/* Tabs */}
@@ -187,13 +187,14 @@ export default function CreateExamModal({
                     updateBasicInformation("name", e?.target?.value)
                   }
                 />
+
                 <FormInput
                   label="Total score"
                   placeholder="Total score"
-                  value={basicInformation?.score}
-                  hasErrors={formErrors.score}
+                  value={basicInformation?.totalScore}
+                  hasErrors={formErrors.totalScore}
                   onChange={(e) =>
-                    updateBasicInformation("score", e?.target?.value)
+                    updateBasicInformation("totalScore", e?.target?.value)
                   }
                 />
                 <div className="form-group">
@@ -259,11 +260,14 @@ export default function CreateExamModal({
                 <FormInput
                   label="Duration (minutes)"
                   placeholder="Duration in minutes e.g. 60"
-                  value={basicInformation?.duration}
-                  hasErrors={formErrors.duration}
+                  value={basicInformation?.durationInSeconds}
+                  hasErrors={formErrors.durationInSeconds}
                   type={"number"}
                   onChange={(e) =>
-                    updateBasicInformation("duration", e?.target?.valueAsNumber)
+                    updateBasicInformation(
+                      "durationInSeconds",
+                      e?.target?.valueAsNumber
+                    )
                   }
                 />
                 <FormInput
@@ -327,6 +331,7 @@ export default function CreateExamModal({
                     />
                   );
                 })}
+
                 <div className="d-flex justify-content-between align-items-center my-4 ">
                   <button
                     onClick={() => {
@@ -384,7 +389,7 @@ export default function CreateExamModal({
             {/* submit button */}
             {(isCreating || isEditing) && <Spinner />}
             <button type="submit" className="btn btn-lg  btn-blue-800">
-              {!!defaultValues ? "Modify Exam" : "Create Exam"}
+              {!!defaultValues ? "Modify Quiz" : "Create Quiz"}
             </button>
           </form>
         </ModalBody>

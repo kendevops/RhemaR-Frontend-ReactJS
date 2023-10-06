@@ -116,14 +116,23 @@ export default [
   //   action: "read",
   //   resource: "Admins",
   // },
-  // {
-  //   id: "exams",
-  //   title: "Exams",
-  //   icon: <Icon icon="mdi:note-text" />,
-  //   navLink: "/ict-admin/exams",
-  //   action: "read",
-  //   resource: "Admins",
-  // },
+  {
+    id: "exams",
+    title: "Exams & Quizes Management",
+    icon: <Icon icon="mdi:note-text" />,
+    navLink: "/ict-admin/exams",
+    action: "read",
+    resource: "Admins",
+  },
+
+  {
+    id: "attendance",
+    title: "Class & Course Attendance",
+    icon: <Icon icon="mdi:note-text" />,
+    navLink: "/ict-admin/attendance",
+    action: "read",
+    resource: "Admins",
+  },
   // {
   //   id: "messageBoard",
   //   title: "Message Board",

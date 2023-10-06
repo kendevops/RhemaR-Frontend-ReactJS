@@ -8,6 +8,7 @@ type QuestionInputProps = {
   serialNumber: number;
   onChangeQuestion: ChangeEventHandler<HTMLInputElement>;
   onChangeAnswer: ChangeEventHandler<HTMLInputElement>;
+  onChangeScore?: ChangeEventHandler<HTMLInputElement>;
   onChangeOption: (option: number, value: string) => void;
 };
 
@@ -16,6 +17,7 @@ export default function QuestionInput({
   onChangeOption,
   onChangeQuestion,
   onChangeAnswer,
+  onChangeScore,
 }: QuestionInputProps) {
   const [open, toggleOpen] = useToggle();
   let options = ["A", "B", "C", "D"];
@@ -45,6 +47,7 @@ export default function QuestionInput({
             {options?.map((o, i) => {
               return (
                 <FormInput
+                  key={i + 1}
                   label={`Option ${o}`}
                   onChange={(e) => onChangeOption(i, e?.target?.value)}
                   lg="6"
@@ -53,6 +56,7 @@ export default function QuestionInput({
             })}
           </div>
           <FormInput label={`Answer`} onChange={onChangeAnswer} />
+          <FormInput label={`Score`} type="number" onChange={onChangeScore} />
         </>
       )}
     </CardWrapper>
