@@ -51,7 +51,6 @@ export default function AddCoreCourseModal({
     code: "",
     desc: "",
     isActive: "",
-    bannerUrl: "",
     totalHours: "",
     abbreviation: "",
     hasQuiz: "",

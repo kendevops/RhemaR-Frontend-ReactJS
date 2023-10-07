@@ -17,8 +17,8 @@ socket.onAny((event, ...args) => {
   console.log(event, args);
 });
 
-socket.on("connect_error", (error) => {
-  console.log(error);
-});
+// socket.on("connect_error", (error) => {
+//   console.log(error);
+// });
 
 export default socket;

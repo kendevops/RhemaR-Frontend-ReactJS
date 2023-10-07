@@ -149,6 +149,17 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+
+  {
+    path: "/ict-admin/attendance",
+    component: lazy(
+      () => import("../../views/ict-admin/ClassCourseAttendance")
+    ),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
   {
     path: "/ict-admin/instructors",
     component: lazy(() => import("../../views/ict-admin/Instructors")),
