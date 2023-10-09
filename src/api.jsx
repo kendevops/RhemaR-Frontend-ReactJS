@@ -49,7 +49,9 @@ const refreshAccessToken = async (failedRequest) => {
     localStorage.setItem("accessToken", response.data.accessToken),
     localStorage.setItem("refreshToken", response.data.refreshToken),
   ]);
+
   failedRequest.response.config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+
   return Promise.resolve();
 };
 

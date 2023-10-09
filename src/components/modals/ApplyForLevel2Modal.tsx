@@ -1,17 +1,20 @@
 import { FormEvent } from "react";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
-import useCreateCampusTuition from "../../hooks/mutations/classes/useCreateCampusTuition";
-import useUpdateCampusTuition from "../../hooks/mutations/classes/useUpdateCampusTuition";
 import FormDropdown from "../molecules/FormDropdown";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
-import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
-import { states } from "../../data/States";
-import { InstructorsData } from "../../data/InstructorsData";
 import FormInput from "../molecules/FormInput";
 import TextArea from "../molecules/TextArea";
 import MultipleSelect from "../molecules/MultipleSelect";
 import useAllCourses from "../../hooks/queries/classes/useAllCourses";
+import useCourses from "../../hooks/queries/classes/useCourses";
+import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
+import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
+import FormRadioGroup from "../molecules/FormRadioGroup";
+import useCreateApplication from "../../hooks/mutations/applications/useCreateApplication";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
+import handleError from "../../utils/handleError";
 
 interface ApplyForLevel2ModalProps {
   toggle: VoidFunction;
@@ -26,31 +29,32 @@ export default function ApplyForLevel2Modal({
   onCreate,
   level,
 }: ApplyForLevel2ModalProps) {
-  const { isLoading: campusesLoading, data } = useAllCampuses();
-  const createTuition = useCreateCampusTuition();
-  // const updateTuition = useUpdateCampusTuition(id ?? "");
-
-  const isLoading = createTuition.isLoading || campusesLoading;
+  const { mutate, isLoading } = useCreateApplication("LEVEL_2");
 
   const initialState = {
-    isCourseCompleted: "",
-    isCleared: "",
-    courses: "",
-    isAddressChanged: "",
-    street: "",
-    LGA: "",
-    state: "",
-
-    isVolunteer: "",
-    whatTeam: "",
-    howLong: "",
-    leaderName: "",
-    leaderNameContact: "",
-
-    isMemberOfSameChurch: "",
-    howLongPartner: "",
-
-    comments: "",
+    campus: "",
+    intake: "",
+    session: "",
+    comment: "",
+    areaServing: "",
+    spouseEmail: "",
+    spouseDetails: "",
+    spouseFullName: "",
+    newChurchName: "",
+    newPastorContact: "",
+    newChurchDetails: "",
+    spousePhoneNumber: "",
+    newPastorFullName: "",
+    previousChurchName: "",
+    relationShipStatus: "",
+    coursesNotCompleted: "",
+    previousChurchDetails: "",
+    previousPastorContact: "",
+    previousPastorFullName: "",
+    spouseSupportsApplication: "",
+    hasCompletedLevelOneCourses: "",
+    considersApplicationTrueAndAccurate: "",
+    isMemberOfSameChurchAttendedInLevelOne: "",
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
@@ -58,70 +62,51 @@ export default function ApplyForLevel2Modal({
   >({
     initialState: initialState,
   });
+  const { data: coursesData, isLoading: coursesLoading } = useCourses();
 
-  const { data: coursesData, isLoading: coursesDataLoading } = useAllCourses();
-  const coursesOptions = coursesData?.nodes?.map((cours: any) => ({
-    label: cours?.title,
-    id: cours?.title,
+  const coursesOptions = coursesData?.courses?.map((cours: any) => cours.name);
+
+  const { data: campusesData } = useAllCampuses();
+  const { data: sessionsData } = useAcademicSessions();
+  const campusOptions = campusesData?.nodes?.map((d: any) => ({
+    children: d?.name,
   }));
 
-  console.log(coursesData);
+  const { data: intakeData } = useAllIntakes();
+  const intakeDataOptions = intakeData?.nodes
+    ?.filter((d: any) => d?.session?.isActive)
+    .map((d: any) => d?.name);
 
-  const coursesData2 = [
-    "Course 1",
-    "Course 2",
-    "Course 3",
-    "Course 4",
-    "Course 5",
-    "Course 6",
-    "Course 7",
-  ];
+  const sessionOptions = sessionsData?.nodes?.map((d: any) => ({
+    children: d?.name,
+  }));
 
-  // function handleSubmit(e: FormEvent) {
-  //   e.preventDefault();
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
 
-  //   const { level, campus, ...otherData } = formData;
-
-  //   if (formIsValid) {
-  //     isCreating
-  //       ? createTuition.mutate(formData, {
-  //           onSuccess: () => {
-  //             toast.success(
-  //               <ToastContent
-  //                 type={"success"}
-  //                 heading={"Success"}
-  //                 message={`Successfully created campus tuition`}
-  //               />,
-  //               ToastContent.Config
-  //             );
-  //             !!onCreate && onCreate();
-  //             toggle();
-  //           },
-  //           onError: (e: any) => {
-  //             handleError(e, formData);
-  //           },
-  //         })
-  //       : updateTuition.mutate(otherData, {
-  //           onSuccess: () => {
-  //             toast.success(
-  //               <ToastContent
-  //                 type={"success"}
-  //                 heading={"Success"}
-  //                 message={`Successfully updated campus tuition`}
-  //               />,
-  //               ToastContent.Config
-  //             );
-  //             toggle();
-  //           },
-  //           onError: (e: any) => {
-  //             handleError(e, formData);
-  //           },
-  //         });
-  //   } else {
-  //     alert("Please fill in all fields");
-  //     console.log(formData);
-  //   }
-  // }
+    if (formIsValid) {
+      mutate(formData, {
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Success"}
+              message={`Level 2 Application successfull`}
+            />,
+            ToastContent.Config
+          );
+          !!onCreate && onCreate();
+          toggle();
+        },
+        onError: (e: any) => {
+          handleError(e, formData);
+        },
+      });
+    } else {
+      alert("Please fill in all fields");
+      console.log(formData);
+    }
+  }
 
   return (
     <Modal
@@ -131,136 +116,59 @@ export default function ApplyForLevel2Modal({
       scrollable
       style={{ maxWidth: "1100px" }}
     >
-      <ModalHeader
-        toggle={toggle}
-        //   className="bg-blue-800"
-      >
-        Application For Level 2
-      </ModalHeader>
+      <ModalHeader toggle={toggle}>Application For Level 2</ModalHeader>
 
       <ModalBody>
-        <form onSubmit={() => {}}>
+        <form onSubmit={handleSubmit}>
           {/* <div className="lh-base fw-semibold mt-5">Personal Details</div> */}
           <div className="d-flex flex-wrap  justify-content-between mt-3">
             <div className="col-6 px-3 ">
               <FormDropdown
-                title="Have you successfully completed your 25 level 1 courses?"
-                value={formData?.isCourseCompleted}
-                options={["No", "Yes"].map((d: any) => ({ children: d }))}
-                onChange={(e) =>
-                  updateForm("isCourseCompleted", e?.target?.value)
-                }
-                // style={{ width: "500px" }}
+                options={campusOptions}
+                title="Select campus"
+                onChange={(e) => updateForm("campus", e.target.value)}
+                hasErrors={formErrors?.campus}
+                value={formData.campus}
               />
             </div>
             <div className="col-6 px-3 ">
               <FormDropdown
-                title="Have you been cleared by the student services team?"
-                value={formData?.isCleared}
-                options={["No", "Yes"].map((d: any) => ({ children: d }))}
-                onChange={(e) => updateForm("isCleared", e?.target?.value)}
-                // style={{ width: "500px" }}
+                onChange={(e) => updateForm("intake", e?.target?.value)}
+                options={intakeDataOptions?.map((o: any) => ({
+                  children: o,
+                }))}
+                title={"Intake"}
+                value={formData.intake}
               />
             </div>
             <div className="col-6 px-3 ">
-              {/* <FormInput
-                label="Last Name"
-                placeholder="Last Name"
-                onChange={(e) => updateForm("isCleared", e?.target?.value)}
-                // style={{ width: "500px" }}
-              /> */}
+              <FormDropdown
+                options={sessionOptions}
+                title="Session"
+                onChange={(e) => updateForm("session", e.target.value)}
+                hasErrors={formErrors?.session}
+                value={formData.session}
+              />
+            </div>
 
+            <div className="col-6 px-3 ">
+              <FormRadioGroup
+                label="Have you successfully completed your 25 level 1 courses?"
+                options={["Yes", "No"]}
+                onChange={(e) =>
+                  updateForm(
+                    "hasCompletedLevelOneCourses",
+                    !!(e.target.value === "Yes")
+                  )
+                }
+              />
+            </div>
+
+            <div className="col-6 px-3 ">
               <MultipleSelect
-                options={coursesData2}
-                label="If No, how many courses do you have left"
-                value={formData?.courses}
-              />
-            </div>
-          </div>
-
-          <div className="lh-base fw-semibold mt-3">Contact Details</div>
-
-          <div className="d-flex flex-wrap  justify-content-between mt-2">
-            <div className="col-6 px-3 ">
-              <FormDropdown
-                title="Did your contact address change?"
-                value={formData?.isAddressChanged}
-                options={["No", "Yes"].map((d: any) => ({ children: d }))}
-                onChange={(e) =>
-                  updateForm("isAddressChanged", e?.target?.value)
-                }
-                // style={{ width: "500px" }}
-              />
-            </div>
-            <div className="col-6 px-3 ">
-              <FormInput
-                label="Campus Address (Street)"
-                placeholder="Street"
-                onChange={(e) => updateForm("street", e?.target?.value)}
-                // style={{ width: "500px" }}
-              />
-            </div>
-
-            <div className="col-6 px-3 ">
-              <FormInput
-                label="Campus Address (LGA)"
-                placeholder="LGA"
-                onChange={(e) => updateForm("LGA", e?.target?.value)}
-                // style={{ width: "500px" }}
-              />
-            </div>
-            <div className="col-6 px-3 ">
-              <FormDropdown
-                title="Campus Address (State)"
-                value={formData?.state}
-                options={states?.map((d: any) => ({ children: d }))}
-                onChange={(e) => updateForm("state", e?.target?.value)}
-                // style={{ width: "500px" }}
-              />
-            </div>
-          </div>
-
-          <div className="lh-base fw-semibold mt-3">Volunteer Details</div>
-          <div className="d-flex flex-wrap  justify-content-between mt-2">
-            <div className="col-6 px-3">
-              <FormDropdown
-                title="Are you an RBTC Volunteer team member?"
-                value={formData?.isVolunteer}
-                options={["No", "Yes"].map((d: any) => ({ children: d }))}
-                onChange={(e) => updateForm("isVolunteer", e?.target?.value)}
-                // style={{ width: "500px" }}
-              />
-            </div>
-
-            <div className="col-6 px-3">
-              <FormDropdown
-                title="What RBTC team did you serve?"
-                value={formData?.whatTeam}
-                options={["No", "Yes"].map((d: any) => ({ children: d }))}
-                onChange={(e) => updateForm("whatTeam", e?.target?.value)}
-              />
-            </div>
-            <div className="col-6 px-3 ">
-              <FormInput
-                label="How long have you served"
-                placeholder=""
-                onChange={(e) => updateForm("howLong", e?.target?.value)}
-              />
-            </div>
-            <div className="col-6 px-3 ">
-              <FormInput
-                label="Team Leader Name"
-                placeholder=""
-                onChange={(e) => updateForm("leaderName", e?.target?.value)}
-              />
-            </div>
-            <div className="col-6 px-3 ">
-              <FormInput
-                label="Team Leader Contact (Email or Mobile)"
-                placeholder=""
-                onChange={(e) =>
-                  updateForm("leaderNameContact", e?.target?.value)
-                }
+                options={coursesOptions}
+                label="What courses have you not Completed?"
+                value={formData?.coursesNotCompleted}
               />
             </div>
           </div>
@@ -269,10 +177,108 @@ export default function ApplyForLevel2Modal({
 
           <div className="d-flex flex-wrap  justify-content-between mt-2">
             <div className="col-6 px-3 ">
+              <FormDropdown
+                title="Relationship Status?"
+                value={formData?.relationShipStatus}
+                options={["SINGLE", "MARRIED"].map((d: any) => ({
+                  children: d,
+                }))}
+                onChange={(e) =>
+                  updateForm("relationShipStatus", e?.target?.value)
+                }
+              />
+            </div>
+            <div className="col-6 px-3 ">
               <FormInput
-                label="How long have you been partnering with RBTC?"
-                placeholder=""
-                onChange={(e) => updateForm("howLongPartner", e?.target?.value)}
+                label="Spouse FullName"
+                placeholder="Spouse FullName"
+                value={formData.spouseFullName}
+                onChange={(e) => updateForm("spouseFullName", e?.target?.value)}
+              />
+            </div>
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="Spouse Email"
+                placeholder="Spouse Email"
+                value={formData.spouseEmail}
+                onChange={(e) => updateForm("spouseEmail", e?.target?.value)}
+              />
+            </div>
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="Spouse Phone Number"
+                placeholder="+2347033333333"
+                value={formData.spousePhoneNumber}
+                onChange={(e) =>
+                  updateForm("spousePhoneNumber", e?.target?.value)
+                }
+              />
+            </div>
+            <div className="col-12 px-3 ">
+              <FormInput
+                label="Spouse Details"
+                placeholder="Spouse Details"
+                value={formData.spouseDetails}
+                onChange={(e) => updateForm("spouseDetails", e?.target?.value)}
+              />
+            </div>
+            <div className="col-6 px-3 ">
+              <FormRadioGroup
+                label="Your spouse supports this application?"
+                options={["Yes", "No"]}
+                onChange={(e) =>
+                  updateForm(
+                    "spouseSupportsApplication",
+                    !!(e.target.value === "Yes")
+                  )
+                }
+              />
+            </div>
+          </div>
+
+          <div className="lh-base fw-semibold mt-3">Pastor Details</div>
+          <div className="d-flex flex-wrap  justify-content-between mt-2">
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="Previous Pastor's FullName"
+                placeholder="Previous Pastor FullName"
+                value={formData.previousPastorFullName}
+                onChange={(e) =>
+                  updateForm("previousPastorFullName", e?.target?.value)
+                }
+              />
+            </div>
+
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="Previous Pastor's Phone Number"
+                placeholder="+2347033333333"
+                value={formData.previousPastorContact}
+                onChange={(e) =>
+                  updateForm("previousPastorContact", e?.target?.value)
+                }
+              />
+            </div>
+
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="New Pastor's FullName"
+                placeholder="New Pastor FullName"
+                value={formData.newPastorFullName}
+                onChange={(e) =>
+                  updateForm("newPastorFullName", e?.target?.value)
+                }
+              />
+            </div>
+
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="New Pastor's Phone Number"
+                placeholder="+2347033333333"
+                value={formData.newPastorContact}
+                onChange={(e) =>
+                  updateForm("newPastorContact", e?.target?.value)
+                }
               />
             </div>
           </div>
@@ -280,16 +286,86 @@ export default function ApplyForLevel2Modal({
           <div className="lh-base fw-semibold mt-3">Church Details</div>
 
           <div className="d-flex flex-wrap  justify-content-between mt-2">
-            <div className="col-6 px-3">
-              <FormDropdown
-                title="Are you a member of same church you attended during your level 1 training?"
-                value={formData?.isMemberOfSameChurch}
-                options={["No", "Yes"].map((d: any) => ({ children: d }))}
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="Previous Church Name"
+                placeholder="Previous Church Name"
+                value={formData.previousChurchName}
                 onChange={(e) =>
-                  updateForm("isMemberOfSameChurch", e?.target?.value)
+                  updateForm("previousChurchName", e?.target?.value)
                 }
               />
             </div>
+            <div className="col-6 px-3 ">
+              <FormInput
+                label="New Church Name"
+                placeholder="New Church Name"
+                value={formData.newChurchName}
+                onChange={(e) => updateForm("newChurchName", e?.target?.value)}
+              />
+            </div>
+            <div className="col-12 px-3 ">
+              <FormInput
+                label="Previous Church Details"
+                placeholder="Previous Church Details"
+                value={formData.previousChurchDetails}
+                onChange={(e) =>
+                  updateForm("previousChurchDetails", e?.target?.value)
+                }
+              />
+            </div>
+
+            <div className="col-12 px-3 ">
+              <FormInput
+                label="New Church Details"
+                placeholder="New Church Details"
+                value={formData.newChurchDetails}
+                onChange={(e) =>
+                  updateForm("newChurchDetails", e?.target?.value)
+                }
+              />
+            </div>
+            <div className="col-6 px-3 ">
+              <FormInput
+                label=" What area are you Serving"
+                placeholder="eg. Ushering Unit"
+                value={formData.areaServing}
+                onChange={(e) => updateForm("areaServing", e?.target?.value)}
+              />
+            </div>
+
+            <div className="col-6 px-3 ">
+              <FormRadioGroup
+                label="Are you a member of same church you attended during your level 1 training?"
+                options={["Yes", "No"]}
+                onChange={(e) =>
+                  updateForm(
+                    "isMemberOfSameChurchAttendedInLevelOne",
+                    !!(e.target.value === "Yes")
+                  )
+                }
+              />
+            </div>
+
+            <div className="col-6 px-3 ">
+              <FormRadioGroup
+                label="Application True and Accurate?"
+                options={["Yes", "No"]}
+                onChange={(e) =>
+                  updateForm(
+                    "considersApplicationTrueAndAccurate",
+                    !!(e.target.value === "Yes")
+                  )
+                }
+              />
+            </div>
+
+            <TextArea
+              label="Additional comments"
+              placeholder="Additional comments go here"
+              value={formData.comment}
+              onChange={(e) => updateForm("comment", e?.target?.value)}
+            />
           </div>
 
           {isLoading ? (

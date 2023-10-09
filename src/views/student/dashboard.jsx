@@ -60,30 +60,30 @@ const StudentDashboardPage = () => {
 
   const payUrl = application?.feePayment?.paymentUrl;
 
-  const startDate = userData?.applications[0]?.session?.startDate;
-  const endDate = userData?.applications[0]?.session?.endDate;
+  // const startDate = userData?.applications[0]?.session?.startDate;
+  // const endDate = userData?.applications[0]?.session?.endDate;
 
   console.log(userData);
 
   // const startDate = "2022-12-07T22:00:43.187Z";
   // const endDate = "2023-12-20T22:00:43.187Z";
 
-  useEffect(() => {
-    const currentTime = new Date().getTime();
+  // useEffect(() => {
+  //   const currentTime = new Date().getTime();
 
-    const startTime = new Date(startDate).getTime();
-    const endTime = new Date(endDate).getTime();
+  //   const startTime = new Date(startDate).getTime();
+  //   const endTime = new Date(endDate).getTime();
 
-    const totalDuration = endTime - startTime;
-    const elapsedDuration = currentTime - startTime;
+  //   const totalDuration = endTime - startTime;
+  //   const elapsedDuration = currentTime - startTime;
 
-    console.log(totalDuration, elapsedDuration);
+  //   console.log(totalDuration, elapsedDuration);
 
-    const calculatedProgress = Math.round(
-      (elapsedDuration / totalDuration) * 100
-    );
-    setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
-  }, [startDate, endDate]);
+  //   const calculatedProgress = Math.round(
+  //     (elapsedDuration / totalDuration) * 100
+  //   );
+  //   setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
+  // }, [startDate, endDate]);
 
   return (
     <div className="container my-5 mx-0">

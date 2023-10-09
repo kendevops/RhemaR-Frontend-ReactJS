@@ -60,13 +60,13 @@ export default function ClassCourseAttendance() {
             <h1 className="text-bold">Class</h1>
             <div className="d-flex  align-items-center gap-5 ">
               <button
-                onClick={toggleExamUpload}
+                onClick={() => {}}
                 className="btn btn-blue-800 btn-lg w-auto "
               >
                 Upload Class
               </button>
               <button
-                onClick={toggleCreatingClassAttendance}
+                onClick={() => {}}
                 className="btn btn-blue-800 btn-lg w-auto"
               >
                 Create Class Attendance
@@ -75,7 +75,7 @@ export default function ClassCourseAttendance() {
 
             <CreateExamModal
               isOpen={isCreatingClassAttendance}
-              toggle={toggleCreatingClassAttendance}
+              toggle={() => {}}
             />
           </div>
 
@@ -90,13 +90,13 @@ export default function ClassCourseAttendance() {
             <h1 className="text-bold">Course</h1>
             <div className="d-flex  align-items-center gap-5 ">
               <button
-                onClick={toggleQuizUpload}
+                onClick={() => {}}
                 className="btn btn-blue-800 btn-lg w-auto "
               >
                 Upload Quiz
               </button>
               <button
-                onClick={toggleCreatingCourseAttendance}
+                onClick={() => {}}
                 className="btn btn-blue-800 btn-lg w-auto"
               >
                 Create Course Attendance
@@ -105,7 +105,7 @@ export default function ClassCourseAttendance() {
 
             <CreateQuizModal
               isOpen={isCreatingCourseAttendance}
-              toggle={toggleCreatingCourseAttendance}
+              toggle={() => {}}
             />
           </div>
 
@@ -116,12 +116,12 @@ export default function ClassCourseAttendance() {
 
       <UploadQuizModal
         isOpen={isQuizUploadOpen}
-        toggle={toggleQuizUpload}
+        toggle={() => {}}
         refetch={refetchQuiz}
       />
       <UploadExamModal
         isOpen={isExamUploadOpen}
-        toggle={toggleExamUpload}
+        toggle={() => {}}
         refetch={refetch}
       />
     </>
