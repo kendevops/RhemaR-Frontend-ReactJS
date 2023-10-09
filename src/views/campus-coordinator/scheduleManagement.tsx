@@ -17,6 +17,12 @@ import useCourses from "../../hooks/queries/classes/useCourses";
 import { Link } from "react-router-dom";
 import AddCourseScheduleModal from "../../components/modals/AddCourseScheduleModal";
 import UploadBulkCourseScheduleModal from "../../components/modals/UploadBulkCourseScheduleModal";
+import useAllClasses from "../../hooks/queries/classes/useAllClasses";
+import useDeleteClass from "../../hooks/mutations/classes/useDeleteClass";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
+import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
 
 type FiltersProps = {
   campus?: string;
@@ -26,18 +32,64 @@ type FiltersProps = {
   session?: string;
 };
 
+interface DeleteProps {
+  id: any;
+  refetch: any;
+}
+
+const DeleteClass = ({ id, refetch }: DeleteProps) => {
+  const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const deleteIt = useDeleteClass(id);
+
+  const isDeleteLoading = deleteIt?.isLoading;
+
+  const handleDelete = async () => {
+    try {
+      await deleteIt.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"Class deleted successfully"}
+        />,
+        ToastContent.Config
+      );
+      refetch();
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      handleError(error);
+      toggleDeleteModal();
+    }
+  };
+
+  return (
+    <ConfirmDeleteModal
+      visibility={visibilityDeleteModal}
+      toggle={toggleDeleteModal}
+      onDelete={() => handleDelete()}
+      isLoading={isDeleteLoading}
+    />
+  );
+};
+
 export default function ScheduleManagement() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
   const { data, isLoading } = useAllUsers(filters);
   const { data: campusesData } = useAllCampuses();
+  const { data: classesData, refetch } = useAllClasses(filters);
+
+  console.log(classesData);
+
   const { data: rolesData } = useRoles();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
 
   const courses = coursesData?.courses;
-
-  console.log(courses, coursesData);
 
   console.log(filters);
 
@@ -72,24 +124,24 @@ export default function ScheduleManagement() {
 
   const filterProps: FilterProps = {
     params: [
-      //   {
-      //     inputType: "Dropdown",
-      //     inputProps: {
-      //       options: campusOptions,
-      //     },
-      //     id: "campus",
-      //     name: "Campus",
-      //   },
       {
         inputType: "Dropdown",
         inputProps: {
-          options: ["Enugu", "Lagos"].map((d: any) => ({
-            children: d,
-          })),
+          options: campusOptions,
         },
         id: "campus",
         name: "Campus",
       },
+      // {
+      //   inputType: "Dropdown",
+      //   inputProps: {
+      //     options: ["Enugu", "Lagos"].map((d: any) => ({
+      //       children: d,
+      //     })),
+      //   },
+      //   id: "campus",
+      //   name: "Campus",
+      // },
       {
         inputType: "Dropdown",
         inputProps: {
@@ -198,10 +250,10 @@ export default function ScheduleManagement() {
         console.log("usersData", data);
         return (
           <div className="d-flex gap-4">
-            <Link to={`/student-services-admin/course-details`}>
-              <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
-            </Link>
-            <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
+            {/* <Link to={`/student-services-admin/course-details`}> */}
+            <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+            {/* </Link> */}
+            <DeleteClass id={data.id} refetch={refetch} />
           </div>
         );
       },
