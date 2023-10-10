@@ -186,7 +186,7 @@ export default function AddCourseScheduleModal({
               disablePortal
               id="Search campuses"
               loading={coursesLoading}
-              value={formData?.campusName}
+              value={formData?.campusId}
               options={campusOptions}
               // options={["temp", "temp2"]}
               renderInput={(params) => {
