@@ -30,6 +30,7 @@ import ToastContent from "../../components/molecules/ToastContent";
 import AddstudentApplicationModal from "../../components/modals/AddStudentApplicationModal";
 import UploadBulkStudentApplicationModal from "../../components/modals/UploadBulkStudentApplicationModal";
 import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
+import AddStudentModal from "../../components/modals/AddStudentModal";
 
 const Options = [
   {
@@ -167,9 +168,10 @@ const CampusCoordinatorStudents = () => {
     <>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddstudentApplicationModal isOpen={isAdding} toggle={toggleAdding} />
         <ExportStudentsFirstModal isOpen={isExporting} toggle={toggleExport} />
-        <UploadBulkStudentApplicationModal
+
+        <AddStudentModal isOpen={isAdding} toggle={toggleAdding} />
+        <UploadBulkStudentModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
           refetch={refetch}
@@ -221,7 +223,7 @@ const CampusCoordinatorStudents = () => {
               style={{ width: "fit-content" }}
               onClick={() => setAddStudentDropDown(() => !addStudentDropDown)}
             >
-              Add New Application <AiOutlineCaretDown className="mx-3" />
+              Add students <AiOutlineCaretDown className="mx-3" />
             </button>
 
             {addStudentDropDown && (
@@ -234,7 +236,7 @@ const CampusCoordinatorStudents = () => {
                   style={{ minWidth: "100%" }}
                   onClick={toggleAdding}
                 >
-                  Add single Application
+                  Add single student
                 </button>
 
                 <button
@@ -242,7 +244,7 @@ const CampusCoordinatorStudents = () => {
                   style={{ minWidth: "100%" }}
                   onClick={toggleBulkUpload}
                 >
-                  Bulk upload Applications
+                  Bulk upload students
                 </button>
               </div>
             )}

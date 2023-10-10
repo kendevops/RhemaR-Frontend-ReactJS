@@ -52,6 +52,12 @@ export default [
     icon: <Icon icon="fluent:mail-24-filled" />,
     navLink: "/student-services-admin/schedule-management",
   },
+  {
+    id: "academic-reports",
+    title: "Academic Reports",
+    icon: <Icon icon="fluent:mail-24-filled" />,
+    navLink: "/student-services-admin/academic-reports",
+  },
   // {
   //   id: "instructors",
   //   title: "Instructors",

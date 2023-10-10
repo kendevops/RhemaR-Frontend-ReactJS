@@ -89,7 +89,7 @@ export default function ScheduleManagement() {
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
 
-  const courses = coursesData?.courses;
+  const classes = classesData?.nodes;
 
   console.log(filters);
 
@@ -196,60 +196,93 @@ export default function ScheduleManagement() {
     {
       key: "Course Instance",
       title: "Course",
-      render: (data) => <p>Math</p>,
+      render: (data) => <p>{data?.name}</p>,
     },
     {
       key: "Session",
       title: "Session",
-      render: (data) => <p>2222/3333</p>,
+      render: (data) => <p>{data?.session?.name}</p>,
     },
-    {
-      key: "Level",
-      title: "Level",
-      render: (data) => <p>2</p>,
-    },
+    // {
+    //   key: "Level",
+    //   title: "Level",
+    //   render: (data) => <p>{data.type}</p>,
+    // },
     {
       key: "Campus",
       title: "Campus",
-      render: (data) => <p>Lagos</p>,
+      render: (data) => <p>{data?.campus?.name}</p>,
     },
 
     {
-      key: "Start Date",
-      title: "Start Date",
-      render: (data) => <p> Sun 22nd April 2026</p>,
+      key: "Online Start Date",
+      title: "Online Start Date",
+      render: (data) => (
+        <p>{new Date(data?.onlineStartDateTime).toDateString()}</p>
+      ),
     },
 
     {
-      key: "End Date",
-      title: "End Date",
-      render: (data) => <p> Mon 22nd April 2026</p>,
+      key: "Online End Date",
+      title: "Online End Date",
+      render: (data) => (
+        <p> {new Date(data?.onlineEndDateTime).toDateString()}</p>
+      ),
+    },
+    {
+      key: "Onsite Start Date",
+      title: "Onsite Start Date",
+      render: (data) => (
+        <p> {new Date(data?.onsiteStartDateTime).toDateString()}</p>
+      ),
+    },
+
+    {
+      key: "Onsite End Date",
+      title: "Onsite End Date",
+      render: (data) => (
+        <p>{new Date(data?.onsiteEndDateTime).toDateString()}</p>
+      ),
     },
     {
       key: "ID",
       title: "ID",
-      render: (data) => <p>RMA-445676567-FD3456</p>,
+      render: (data) => <p>{data?.id}</p>,
+    },
+
+    {
+      key: "Online Instructor",
+      title: "Online Instructor",
+      render: (data) => (
+        <p>
+          {`${data?.onlineInstructor?.firstName} ${data?.onlineInstructor?.lastName}`}
+        </p>
+      ),
     },
 
     {
       key: "Onsite Instructor",
       title: "Onsite Instructor",
-      render: (data) => <p>Dien Bassey</p>,
+      render: (data) => (
+        <p>
+          {`${data?.onsiteInstructor?.firstName} ${data?.onsiteInstructor?.lastName}`}
+        </p>
+      ),
     },
 
     {
       key: "Option",
       title: "Option",
-      render: (data) => <p>Weekend</p>,
+      render: (data) => <p>{data?.type}</p>,
     },
 
     {
       key: "Action",
       title: "Action",
       render: (data) => {
-        console.log("usersData", data);
+        console.log(data);
         return (
-          <div className="d-flex gap-4">
+          <div className="d-flex gap-4 align-items-center ">
             {/* <Link to={`/student-services-admin/course-details`}> */}
             <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
             {/* </Link> */}
@@ -264,7 +297,11 @@ export default function ScheduleManagement() {
     <Fragment>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddCourseScheduleModal visibility={isAdding} toggle={toggleAdding} />
+        <AddCourseScheduleModal
+          visibility={isAdding}
+          toggle={toggleAdding}
+          onCreate={refetch}
+        />
         <UploadBulkCourseScheduleModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
@@ -396,7 +433,7 @@ export default function ScheduleManagement() {
       <main id="Table">
         {isLoading && <Spinner />}
         <Table.Wrapper>
-          {usersData && <Table columns={columns} data={usersData} />}
+          {usersData && <Table columns={columns} data={classes} />}
         </Table.Wrapper>
       </main>
     </Fragment>

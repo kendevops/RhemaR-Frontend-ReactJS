@@ -9,13 +9,18 @@ import useToggle from "../../utility/hooks/useToggle";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useRoles from "../../hooks/queries/useRoles";
-import TableProfilePicture from "../../components/general/tableProfilePic";
 import { FaFilter, FaRegEye } from "react-icons/fa";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Icon } from "@iconify/react";
 import { MdOutlineCancel } from "react-icons/md";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import { Link } from "react-router-dom";
+import Tab from "../../components/atoms/Tab";
+import ClearanceTable from "../../components/tables/admin-tables/ClearanceTable";
+import CardReplacementTable from "../../components/tables/admin-tables/CardReplacementTable";
+
+const tabs = ["Clearance", "Card Replacement"];
+const levelTabs = ["Level 1", "Level 2"];
 
 type FiltersProps = {
   campus?: string;
@@ -33,9 +38,12 @@ export default function ElearningManagement() {
   const { data: userData, isLoading: userLoading } = useCurrentUser();
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
 
-  const courses = coursesData?.courses;
+  const [tab, setTab] = useState(0);
+  const currentTab = tabs[tab];
+  const [levelTab, setLevelTab] = useState(0);
+  const currentLevelTab = levelTabs[levelTab];
 
-  console.log(courses, coursesData);
+  const courses = coursesData?.courses;
 
   console.log(filters);
 
@@ -48,20 +56,9 @@ export default function ElearningManagement() {
       .some((n: any) => n?.includes("ADMIN"));
   });
 
-  const ssData = data?.users?.nodes?.filter((u: any) => {
-    return u?.roles
-      ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("STUDENT_SERVICES_ADMIN"));
-  });
-
-  console.log(ssData);
-
-  console.log(usersData);
-
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
   }));
-  console.log(campusOptions);
 
   const roleOptions = rolesData?.roles?.map((d: any) => ({
     children: d?.name,
@@ -111,52 +108,6 @@ export default function ElearningManagement() {
 
   function onSearch() {}
 
-  const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
-
-    {
-      key: "Course",
-      title: "Course",
-      render: (data) => <p>Math Chemistry Physics</p>,
-    },
-    {
-      key: "Level",
-      title: "Level",
-      render: (data) => <p>2</p>,
-    },
-    {
-      key: "Audio",
-      title: "Audio",
-      render: (data) => <p>8</p>,
-    },
-    {
-      key: "Video",
-      title: "Video",
-      render: (data) => <p>16</p>,
-    },
-    {
-      key: "Instructor",
-      title: "Instructor",
-      render: (data) => <p>Dubem Luke</p>,
-    },
-
-    {
-      key: "Action",
-      title: "Action",
-      render: (data) => {
-        console.log("usersData", data);
-        return (
-          <div className="d-flex gap-4">
-            <Link to={`/student-services-admin/course-details`}>
-              <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
-            </Link>
-            <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
-          </div>
-        );
-      },
-    },
-  ];
-
   return (
     <Fragment>
       <div id="Modals">
@@ -168,41 +119,23 @@ export default function ElearningManagement() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>ELearning Course Materails</div>
-
-        {filters.campus && (
-          <div
-            className=" bg-white "
-            style={{ width: "2px", height: "20px" }}
-          ></div>
-        )}
-
-        {filters.campus && <div>Filtering</div>}
+        <div>Students Academic Reports</div>
       </div>
 
-      {filters.campus && (
-        <div className="d-flex gap-4 ">
-          <p
-            className="d-flex gap-3 py-3 px-4 rounded-5  "
-            style={{ background: "#fffaaa" }}
-          >
-            {filters?.campus} <MdOutlineCancel />{" "}
-          </p>
-          <p
-            className="d-flex gap-3 py-3 px-4  rounded-5  "
-            style={{ background: "#fffaaa" }}
-          >
-            {filters?.role} <MdOutlineCancel />
-          </p>
-          <p
-            className="d-flex gap-3 py-3 px-4  rounded-5  "
-            style={{ background: "#fffaaa" }}
-          >
-            {filters?.fromLoginDate} - {filters?.toLoginDate}{" "}
-            <MdOutlineCancel />
-          </p>
-        </div>
-      )}
+      <Tab.Wrapper>
+        {tabs?.map((t, i) => {
+          return (
+            <Tab
+              key={t}
+              onClick={() => setTab(i)}
+              tabColor="#203864"
+              isSelected={currentTab === t}
+            >
+              {t}
+            </Tab>
+          );
+        })}
+      </Tab.Wrapper>
 
       <article className="d-flex gap-5 my-5" id="Search">
         <div style={{ flex: 1 }}>
@@ -219,16 +152,36 @@ export default function ElearningManagement() {
             style={{ width: "fit-content" }}
             onClick={toggleFiltering}
           >
-            <FaFilter /> Filter Courses
+            <FaFilter /> Filter
           </button>
         </div>
       </article>
 
+      {currentTab === "Clearance" && (
+        <Tab.Wrapper>
+          {levelTabs?.map((t, i) => {
+            return (
+              <Tab
+                key={t}
+                onClick={() => setLevelTab(i)}
+                tabColor="#203864"
+                isSelected={currentLevelTab === t}
+              >
+                {t}
+              </Tab>
+            );
+          })}
+        </Tab.Wrapper>
+      )}
+
       <main id="Table">
-        {isLoading && <Spinner />}
-        <Table.Wrapper>
-          {usersData && <Table columns={columns} data={usersData} />}
-        </Table.Wrapper>
+        {currentTab === "Clearance" && (
+          <ClearanceTable
+            level={`${currentLevelTab === "Level 1" ? "LEVEL_1" : "LEVEL_2"}`}
+          />
+        )}
+
+        {currentTab === "Card Replacement" && <CardReplacementTable />}
       </main>
     </Fragment>
   );

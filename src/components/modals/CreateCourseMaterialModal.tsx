@@ -85,6 +85,7 @@ export default function CreateCourseMaterialModal({
     file: materialFile!,
     onSuccess: (d) => {
       console.log({ d });
+      console.log(materialFile);
 
       handleAdd("material", {
         name: materialFile?.name ?? Date?.now?.toString(),

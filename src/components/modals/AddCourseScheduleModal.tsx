@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
 import FormDropdown from "../molecules/FormDropdown";
@@ -45,6 +45,7 @@ export default function AddCourseScheduleModal({
     type: "",
     name: "",
     campusId: "",
+    campusName: "",
     courseId: "",
     sessionId: "",
     onlineInstructorId: "",
@@ -87,9 +88,7 @@ export default function AddCourseScheduleModal({
   const users = usersData?.users?.nodes;
 
   const instructorsOptions = users
-    ?.filter(
-      (user: any) => user?.roles[0]?.name === userRoles.INSTRUCTORS_ADMIN
-    )
+    ?.filter((user: any) => user?.roles[0]?.name === userRoles.INSTRUCTOR)
     .map((u: any) => ({
       label: `${u?.firstName} ${u?.lastName}`,
       id: u?.id,
@@ -187,7 +186,7 @@ export default function AddCourseScheduleModal({
               disablePortal
               id="Search campuses"
               loading={coursesLoading}
-              value={formData?.campusId}
+              value={formData?.campusName}
               options={campusOptions}
               // options={["temp", "temp2"]}
               renderInput={(params) => {
@@ -200,6 +199,7 @@ export default function AddCourseScheduleModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("campusName", value?.name);
                 updateForm("campusId", value?.id);
               }}
             />
