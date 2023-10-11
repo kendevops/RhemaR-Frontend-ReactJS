@@ -79,16 +79,26 @@ export default function ExamsTable() {
           <Table
             data={data}
             columns={[
+              {
+                key: "Serial number",
+                title: "S/N",
+                render: (data, i) => <p>{i + 1}</p>,
+              },
               { key: "Name", title: "Name", render: (d) => <p>{d?.name}</p> },
               {
                 key: "Course",
                 title: "Course",
-                render: (d) => <p>{d?.course?.title}</p>,
+                render: (d) => <p>{d?.course?.name}</p>,
+              },
+              {
+                key: "Session",
+                title: "Session",
+                render: (d) => <p>{d?.session?.name}</p>,
               },
               {
                 key: "Duration",
                 title: "Duration",
-                render: (d) => <p>{d?.duration / 60}</p>,
+                render: (d) => <p>{d?.duration}mins</p>,
               },
               {
                 key: "Date",

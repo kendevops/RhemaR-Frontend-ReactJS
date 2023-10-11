@@ -59,7 +59,7 @@ export default function AddCampusModal({
   const initialState = {
     levels: [],
     name: "",
-    region: regions[0],
+    region: "",
     currency: "",
     continent: "Africa",
     campusCode: "",
@@ -67,16 +67,16 @@ export default function AddCampusModal({
     phoneNumber2: "",
     shortName: "",
     country: "Nigeria",
-    // campusArea: "",
+    email: "",
     // primaryLanguage: "",
     // secondaryLanguage: "",
     campusAbbreviation: "",
-    campusCoordinator: adminOptions[0]?.id,
+    campusCoordinator: "",
 
     city: "",
-    state: states[0],
+    state: "",
     street: "",
-    // zipCode: 0,
+    zipCode: "",
   };
 
   const { formData, formIsValid, updateForm, formErrors, toggleError } =
@@ -94,7 +94,8 @@ export default function AddCampusModal({
       city: formData.city,
       street: formData.state,
       state: formData.state,
-      // zipCode: formData.zipCode,
+      region: formData.region,
+      zipCode: +formData.zipCode,
       country: formData.country,
     };
 
@@ -160,6 +161,13 @@ export default function AddCampusModal({
           />
 
           <FormInput
+            label="Email"
+            placeholder="Enter Campus Email"
+            onChange={(e) => updateForm("email", e?.target?.value)}
+            value={formData?.email}
+          />
+
+          <FormInput
             label="Campus Address (Street)"
             placeholder="Enter Campus Street Address"
             onChange={(e) => updateForm("street", e?.target?.value)}
@@ -210,12 +218,12 @@ export default function AddCampusModal({
             disabled
           />
 
-          {/* <FormInput
+          <FormInput
             label="Zip Code"
             placeholder="Zip Code"
             onChange={(e) => updateForm("zipCode", e?.target?.value)}
             value={formData?.zipCode}
-          /> */}
+          />
 
           <FormInput
             label="Continent"

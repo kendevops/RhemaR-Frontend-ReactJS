@@ -31,6 +31,7 @@ export default function AddAdminBySSAdminModal({
     useForm({
       initialState: {
         email: "",
+        emailName: "",
         role: "STUDENT_SERVICES_ADMIN",
       },
     });
@@ -93,6 +94,7 @@ export default function AddAdminBySSAdminModal({
               fullWidth
               disablePortal
               id="Search Staff"
+              value={formData?.emailName as any}
               loading={usersLoading}
               options={userOptions}
               renderInput={(params) => {
@@ -105,6 +107,7 @@ export default function AddAdminBySSAdminModal({
                 );
               }}
               onChange={(e, value) => {
+                updateForm("emailName", value?.label);
                 updateForm("email", value?.id);
               }}
             />

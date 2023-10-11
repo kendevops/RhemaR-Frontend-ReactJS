@@ -67,12 +67,12 @@ function EditQuiz({ data, refetch }: EditQuizProps) {
 }
 
 export default function QuizesTable() {
-  const { data: examsData, isLoading, refetch } = useAllExams();
-  //   const { data: examsData, isLoading, refetch } = useAllQuizes();
+  // const { data: examsData, isLoading, refetch } = useAllExams();
+  const { data: examsData, isLoading, refetch } = useAllQuizes();
 
   const data = examsData?.nodes;
 
-  console.log(data);
+  console.log(data, examsData);
 
   return (
     <>
@@ -82,16 +82,29 @@ export default function QuizesTable() {
           <Table
             data={data}
             columns={[
+              {
+                key: "Serial number",
+                title: "S/N",
+                render: (data, i) => <p>{i + 1}</p>,
+              },
               { key: "Name", title: "Name", render: (d) => <p>{d?.name}</p> },
               {
                 key: "Course",
                 title: "Course",
-                render: (d) => <p>{d?.course?.title}</p>,
+                render: (d) => <p>{d?.course?.name}</p>,
+              },
+              {
+                key: "Session",
+                title: "Session",
+                render: (d) => <p>{d?.session?.name}</p>,
               },
               {
                 key: "Duration",
                 title: "Duration",
-                render: (d) => <p>{d?.duration / 60}</p>,
+                render: (d) => (
+                  // <p>{Math.ceil(d?.durationInSeconds / 60)}hr(s)</p>
+                  <p>{d?.durationInSeconds}mins</p>
+                ),
               },
               {
                 key: "Date",

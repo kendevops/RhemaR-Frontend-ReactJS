@@ -220,6 +220,7 @@ export default function CourseManagement() {
         <UploadBulkCourseModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
+          refetch={refetch}
         />
       </div>
 

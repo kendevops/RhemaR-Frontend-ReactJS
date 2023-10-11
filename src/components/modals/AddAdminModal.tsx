@@ -15,9 +15,14 @@ import handleError from "../../utils/handleError";
 type AddAdminModalProps = {
   isOpen: boolean;
   toggle: VoidFunction;
+  onCreate: any;
 };
 
-export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
+export default function AddAdminModal({
+  isOpen,
+  toggle,
+  onCreate,
+}: AddAdminModalProps) {
   const { data, isLoading: usersLoading } = useAllUsers();
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
@@ -27,6 +32,8 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
     useForm({
       initialState: {
         email: "",
+        emailName: "",
+        campus: "",
         role: "ICT_ADMIN",
       },
     });
@@ -72,6 +79,7 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
           />,
           ToastContent.Config
         );
+        onCreate();
         toggle();
       },
       onError: (e: any) => handleError(e, formData, toggleError),
@@ -86,6 +94,7 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
           <div className="form-group">
             <label htmlFor="Search Staff">Search Users</label>
             <Autocomplete
+              value={formData?.emailName as any}
               fullWidth
               disablePortal
               id="Search Staff"
@@ -101,6 +110,7 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
                 );
               }}
               onChange={(e, value) => {
+                updateForm("emailName", value?.label);
                 updateForm("email", value?.id);
               }}
             />
@@ -109,6 +119,7 @@ export default function AddAdminModal({ isOpen, toggle }: AddAdminModalProps) {
             options={campusOptions}
             title="Select campus"
             hasErrors={formErrors?.campus}
+            onChange={(e) => updateForm("campus", e.target.value)}
           />
           <FormDropdown
             options={roleOptions}

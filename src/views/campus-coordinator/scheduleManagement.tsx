@@ -305,6 +305,7 @@ export default function ScheduleManagement() {
         <UploadBulkCourseScheduleModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
+          refetch={refetch}
         />
       </div>
 

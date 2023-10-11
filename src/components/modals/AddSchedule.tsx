@@ -21,9 +21,11 @@ type AddScheduleProps = {
   defaultValues?: {
     name: string;
     course: string;
+    courseName?: string;
     endTime: string;
     startTime: string;
     instructorEmail: string;
+    instructorName?: string;
     campus: string;
     session: string;
   };
@@ -39,9 +41,11 @@ export default function AddSchedule({
   const defaultValues = defValues ?? {
     name: "",
     course: "",
+    courseName: "",
     endTime: "",
     startTime: "",
     instructorEmail: "",
+    instructorName: "",
     campus: "Abuja",
     session: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
   };
@@ -118,7 +122,7 @@ export default function AddSchedule({
                 disablePortal
                 id="Search courses"
                 loading={coursesLoading}
-                value={formData?.course}
+                value={formData?.courseName}
                 options={coursesOptions}
                 renderInput={(params) => {
                   return (
@@ -130,6 +134,7 @@ export default function AddSchedule({
                   );
                 }}
                 onChange={(e, value: any) => {
+                  updateForm("courseName", value?.label);
                   updateForm("course", value?.id);
                 }}
               />
@@ -163,7 +168,7 @@ export default function AddSchedule({
                 fullWidth
                 disablePortal
                 id="Search instructors"
-                value={formData?.instructorEmail}
+                value={formData?.instructorName}
                 loading={usersLoading}
                 options={instructorsOptions}
                 renderInput={(params) => {
@@ -176,6 +181,7 @@ export default function AddSchedule({
                   );
                 }}
                 onChange={(e, value: any) => {
+                  updateForm("instructorName", value?.label);
                   updateForm("instructorEmail", value?.id);
                 }}
               />

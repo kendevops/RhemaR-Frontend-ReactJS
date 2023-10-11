@@ -14,7 +14,7 @@ const CourseVideo = ({ data }: courseVideoProps) => {
     data ? data[0]?.name : ""
   );
 
-  // console.log(watching);
+  console.log(data);
 
   const [isOpen, toggle] = useToggle();
 

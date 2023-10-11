@@ -22,6 +22,7 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
   const initialState = {
     title: "",
     courseId: "",
+    courseName: "",
     desc: "",
   };
 
@@ -94,6 +95,7 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
                 id="Search courses"
                 loading={coursesLoading}
                 options={coursesOptions}
+                value={formData?.courseName}
                 renderInput={(params) => {
                   return (
                     <TextField
@@ -105,6 +107,7 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
                   );
                 }}
                 onChange={(e, value: any) => {
+                  updateForm("courseName", value?.label);
                   updateForm("courseId", value?.id);
                 }}
               />
