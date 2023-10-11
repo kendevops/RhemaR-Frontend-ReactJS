@@ -11,44 +11,34 @@ import { Autocomplete, TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
 import handleError from "../../../utils/handleError";
+import useRetractRole from "../../../hooks/mutations/roles/useRetractRole";
+import FormInput from "../../molecules/FormInput";
 
 type AddAdminModalProps = {
   isOpen: boolean;
   toggle: VoidFunction;
+  data?: any;
 };
 
-export default function EditAdminModal({ isOpen, toggle }: AddAdminModalProps) {
-  const { data, isLoading: usersLoading } = useAllUsers();
-  const { data: campusesData } = useAllCampuses();
-  const { data: rolesData } = useRoles();
-  const { mutate, isLoading } = useAssignRole();
+export default function EditAdminModal({
+  isOpen,
+  toggle,
+  data: editData,
+}: AddAdminModalProps) {
+  const { mutate, isLoading } = useRetractRole();
+
+  console.log(editData);
 
   const { formData, formErrors, formIsValid, toggleError, updateForm } =
     useForm({
       initialState: {
-        email: "",
-        role: "ICT_ADMIN",
+        email: editData?.email,
+        emailName: `${editData?.firstName} ${editData?.lastName}`,
+        role: "",
       },
     });
 
-  const users: UserDto[] = data?.users?.nodes?.filter((u: any) => {
-    return u?.roles
-      ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("STUDENT"));
-  });
-
-  const userOptions = users?.map((u) => ({
-    label: `${u?.firstName} ${u?.lastName}`,
-    id: u?.email,
-  }));
-
-  const roleOptions = rolesData?.roles
-    ?.filter((r: any) => r.name?.includes("ADMIN"))
-    .map((d: any) => ({
-      children: d?.name,
-    }));
-
-  const campusOptions = campusesData?.nodes?.map((d: any) => ({
+  const roleOptions = editData?.roles?.map((d: any) => ({
     children: d?.name,
   }));
 
@@ -81,33 +71,21 @@ export default function EditAdminModal({ isOpen, toggle }: AddAdminModalProps) {
       <ModalHeader toggle={toggle}>Edit Admin</ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="Search Staff">Search Users</label>
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="Search Staff"
-              loading={usersLoading}
-              options={userOptions}
-              renderInput={(params) => {
-                return (
-                  <TextField
-                    {...params}
-                    placeholder="Search Users"
-                    className="form-control "
-                  />
-                );
-              }}
-              onChange={(e, value) => {
-                updateForm("email", value?.id);
-              }}
-            />
-          </div>
-          <FormDropdown
-            options={campusOptions}
-            title="Select campus"
-            hasErrors={formErrors?.campus}
+          <FormInput
+            label="Name"
+            placeholder="Name"
+            onChange={(e) => updateForm("emailName", e?.target?.value)}
+            value={formData?.emailName}
+            disabled
           />
+          <FormInput
+            label="Email"
+            placeholder="Email"
+            onChange={(e) => updateForm("email", e?.target?.value)}
+            value={formData?.email}
+            disabled
+          />
+
           <FormDropdown
             options={roleOptions}
             title="Select role"

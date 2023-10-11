@@ -55,7 +55,7 @@ export default function Exams() {
         <>
           <div className="d-flex justify-content-between mb-5 align-items-center">
             <h1 className="text-bold">Exams</h1>
-            <div className="d-flex  align-items-center gap-5 ">
+            <div className="d-flex  align-items-center gap-5 my-3">
               <button
                 onClick={toggleExamUpload}
                 className="btn btn-blue-800 btn-lg w-auto "
@@ -85,7 +85,7 @@ export default function Exams() {
         <>
           <div className="d-flex justify-content-between mb-5 align-items-center">
             <h1 className="text-bold">Quizes</h1>
-            <div className="d-flex  align-items-center gap-5 ">
+            <div className="d-flex  align-items-center gap-5 my-3 ">
               <button
                 onClick={toggleQuizUpload}
                 className="btn btn-blue-800 btn-lg w-auto "

@@ -48,6 +48,7 @@ export default function AcademicAddSessionCoursesModal({
     instructor: "",
     hasProject: "",
     instructorEmail: "",
+    instructorName: "",
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
@@ -188,7 +189,7 @@ export default function AcademicAddSessionCoursesModal({
               fullWidth
               disablePortal
               id="Search instructors"
-              value={formData?.instructorEmail}
+              value={formData?.instructorName}
               loading={usersLoading}
               options={instructorsOptions}
               renderInput={(params) => {
@@ -201,6 +202,7 @@ export default function AcademicAddSessionCoursesModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("instructorName", value?.label);
                 updateForm("instructorEmail", value?.id);
               }}
             />

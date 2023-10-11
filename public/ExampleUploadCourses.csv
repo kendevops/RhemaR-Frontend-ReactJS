@@ -1,0 +1,3 @@
+"name","type","code","desc","isActive","level","totalHours","abbreviation","hasQuiz","hasListeningAssignment","rdNo","bannerUrl"
+"christ the healer 4","CORE","CTH234","An introductory course to christ.","Yes","LEVEL_1","89","CTC","Yes","Yes","12345","https://rhema-course-uploads-bucket.s3.amazonaws.com/cf43584bf5034b24b9136b25394f51f8.png"
+"christ the healer 5","CORE","CTH111","An introductory course to christ. 2","Yes","LEVEL_1","67","CBT","Yes","Yes","54321","https://rhema-course-uploads-bucket.s3.amazonaws.com/cf43584bf5034b24b9136b25394f51f8.png"

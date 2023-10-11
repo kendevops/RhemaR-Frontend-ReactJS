@@ -47,6 +47,7 @@ export default function LevelClearanceModal({
 
   const initialState = {
     intakeId: "",
+    intakeName: "",
     hasPaidFees: "",
     hasCompletedPMR: "",
     hasTakenAllCourses: "",
@@ -139,9 +140,8 @@ export default function LevelClearanceModal({
               disablePortal
               id="Search Intake"
               loading={intakeLoading}
-              value={formData?.intakeId}
+              value={formData?.intakeName}
               options={intakeOptions}
-              // options={["temp", "temp2"]}
               renderInput={(params) => {
                 return (
                   <TextField
@@ -152,6 +152,7 @@ export default function LevelClearanceModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("intakeName", value?.label);
                 updateForm("intakeId", value?.id);
               }}
             />

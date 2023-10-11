@@ -47,9 +47,13 @@ export default function AddCourseScheduleModal({
     campusId: "",
     campusName: "",
     courseId: "",
+    courseName: "",
     sessionId: "",
+    sessionName: "",
     onlineInstructorId: "",
+    onlineInstructorName: "",
     onsiteInstructorId: "",
+    onsiteInstructorName: "",
     onlineEndDateTime: "",
     onsiteEndDateTime: "",
     onlineStartDateTime: "",
@@ -94,7 +98,7 @@ export default function AddCourseScheduleModal({
       id: u?.id,
     }));
 
-  // console.log(instructorsOptions, users);
+  console.log(instructorsOptions);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -199,7 +203,9 @@ export default function AddCourseScheduleModal({
                 );
               }}
               onChange={(e, value: any) => {
-                updateForm("campusName", value?.name);
+                console.log(value);
+
+                updateForm("campusName", value?.label);
                 updateForm("campusId", value?.id);
               }}
             />
@@ -211,7 +217,7 @@ export default function AddCourseScheduleModal({
               disablePortal
               id="Search courses"
               loading={coursesLoading}
-              value={formData?.courseId}
+              value={formData?.courseName}
               options={coursesOptions}
               // options={["temp", "temp2"]}
               renderInput={(params) => {
@@ -224,6 +230,7 @@ export default function AddCourseScheduleModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("courseName", value?.label);
                 updateForm("courseId", value?.id);
               }}
             />
@@ -236,7 +243,7 @@ export default function AddCourseScheduleModal({
               disablePortal
               id="Search Session"
               loading={sessionsLoading}
-              value={formData?.sessionId}
+              value={formData?.sessionName}
               options={sessionOptions}
               // options={["temp", "temp2"]}
               renderInput={(params) => {
@@ -249,6 +256,7 @@ export default function AddCourseScheduleModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("sessionName", value?.label);
                 updateForm("sessionId", value?.id);
               }}
             />
@@ -260,7 +268,7 @@ export default function AddCourseScheduleModal({
               fullWidth
               disablePortal
               id="Search instructors"
-              value={formData?.onlineInstructorId}
+              value={formData?.onlineInstructorName}
               loading={usersLoading}
               options={instructorsOptions}
               renderInput={(params) => {
@@ -273,6 +281,7 @@ export default function AddCourseScheduleModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("onlineInstructorName", value?.label);
                 updateForm("onlineInstructorId", value?.id);
               }}
             />
@@ -284,7 +293,7 @@ export default function AddCourseScheduleModal({
               fullWidth
               disablePortal
               id="Search instructors"
-              value={formData?.onsiteInstructorId}
+              value={formData?.onsiteInstructorName}
               loading={usersLoading}
               options={instructorsOptions}
               renderInput={(params) => {
@@ -298,6 +307,7 @@ export default function AddCourseScheduleModal({
               }}
               onChange={(e, value: any) => {
                 updateForm("onsiteInstructorId", value?.id);
+                updateForm("onsiteInstructorName", value?.name);
               }}
             />
           </div>

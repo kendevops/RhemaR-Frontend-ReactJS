@@ -50,7 +50,9 @@ export default function CreateQuizModal({
   const initialState = defaultValues ?? {
     name: "",
     courseId: "",
+    courseName: "",
     sessionId: "",
+    sessionName: "",
     durationInSeconds: 0,
     endsAt: "",
     startsAt: "",
@@ -66,11 +68,13 @@ export default function CreateQuizModal({
     initialState: {
       name: initialState?.name,
       courseId: initialState?.courseId,
+      courseName: initialState?.courseName,
       durationInSeconds: initialState?.durationInSeconds,
       endsAt: initialState?.endsAt,
       startsAt: initialState?.startsAt,
       totalScore: initialState?.totalScore,
       sessionId: initialState?.sessionId,
+      sessionName: initialState?.sessionName,
     },
   });
 
@@ -205,7 +209,7 @@ export default function CreateQuizModal({
                     id="Search courses"
                     loading={isLoading}
                     options={coursesOptions}
-                    value={basicInformation?.courseId}
+                    value={basicInformation?.courseName}
                     renderInput={(params) => {
                       return (
                         <TextField
@@ -217,6 +221,7 @@ export default function CreateQuizModal({
                       );
                     }}
                     onChange={(e, value: any) => {
+                      updateBasicInformation("courseName", value?.label);
                       updateBasicInformation("courseId", value?.id);
                     }}
                   />
@@ -230,7 +235,7 @@ export default function CreateQuizModal({
                     id="Search session"
                     loading={sessionsLoading}
                     options={sessionOptions}
-                    value={basicInformation?.sessionId}
+                    value={basicInformation?.sessionName}
                     renderInput={(params) => {
                       return (
                         <TextField
@@ -242,6 +247,7 @@ export default function CreateQuizModal({
                       );
                     }}
                     onChange={(e, value: any) => {
+                      updateBasicInformation("sessionName", value?.label);
                       updateBasicInformation("sessionId", value?.id);
                     }}
                   />

@@ -32,6 +32,7 @@ export default function CareReplacementModal({
 
   const initialState = {
     level: "",
+    levelName: "",
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
@@ -54,7 +55,6 @@ export default function CareReplacementModal({
         ? createCardReplacement.mutate(formData, {
             onSuccess: (e) => {
               //   console.log(e);
-
               toast.success(
                 <ToastContent
                   type={"success"}
@@ -69,7 +69,7 @@ export default function CareReplacementModal({
               const paymentUrl =
                 e?.data?.data?.idCardReplacementRequest?.payment?.paymentUrl;
               window?.open(paymentUrl);
-              window.location?.reload();
+              // window.location?.reload();
             },
             onError: (e: any) => {
               handleError(e, formData);
@@ -116,7 +116,7 @@ export default function CareReplacementModal({
               disablePortal
               id="Search Level"
               loading={levelLoading}
-              value={formData?.level}
+              value={formData?.levelName}
               options={levelOptions}
               // options={["temp", "temp2"]}
               renderInput={(params) => {
@@ -129,6 +129,7 @@ export default function CareReplacementModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("levelName", value?.label);
                 updateForm("level", value?.id);
               }}
             />

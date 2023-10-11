@@ -27,7 +27,9 @@ export default function CreateExamModal({
   isOpen,
 }: CreateExamModalProps) {
   const { refetch } = useAllExams();
-  const [numQuestions, setNumQuestions] = useState(5);
+  const [numQuestions, setNumQuestions] = useState(
+    defaultValues?._count?.questions ?? 0
+  );
 
   const Options = ["Basic Information", "Questions"];
   const [option, setOption] = useState(0);
@@ -39,7 +41,7 @@ export default function CreateExamModal({
     id: cours?.id,
   }));
 
-  console.log(coursesData, coursesOptions);
+  console.log(defaultValues);
 
   const { mutate, isLoading: isCreating } = useCreateExam();
   const { mutate: mutateEdit, isLoading: isEditing } = useEditExam(
@@ -49,9 +51,10 @@ export default function CreateExamModal({
   const initialState = defaultValues ?? {
     name: "",
     courseId: "",
+    courseName: "",
     sessionId: "",
+    sessionName: "",
     duration: 0,
-    // session: `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
     endsAt: "",
     startsAt: "",
     score: 100,
@@ -66,11 +69,13 @@ export default function CreateExamModal({
     initialState: {
       name: initialState?.name,
       courseId: initialState?.courseId,
+      courseName: initialState?.courseName,
       duration: initialState?.duration,
       endsAt: initialState?.endsAt,
       startsAt: initialState?.startsAt,
       score: initialState?.score,
       sessionId: initialState?.sessionId,
+      sessionName: initialState?.sessionName,
     },
   });
 
@@ -204,7 +209,7 @@ export default function CreateExamModal({
                     id="Search courses"
                     loading={isLoading}
                     options={coursesOptions}
-                    value={basicInformation?.courseId}
+                    value={basicInformation?.courseName}
                     renderInput={(params) => {
                       return (
                         <TextField
@@ -216,6 +221,7 @@ export default function CreateExamModal({
                       );
                     }}
                     onChange={(e, value: any) => {
+                      updateBasicInformation("courseName", value?.label);
                       updateBasicInformation("courseId", value?.id);
                     }}
                   />
@@ -229,7 +235,7 @@ export default function CreateExamModal({
                     id="Search session"
                     loading={sessionsLoading}
                     options={sessionOptions}
-                    value={basicInformation?.sessionId}
+                    value={basicInformation?.sessionName}
                     renderInput={(params) => {
                       return (
                         <TextField
@@ -241,20 +247,11 @@ export default function CreateExamModal({
                       );
                     }}
                     onChange={(e, value: any) => {
+                      updateBasicInformation("sessionName", value?.label);
                       updateBasicInformation("sessionId", value?.id);
                     }}
                   />
                 </div>
-
-                {/* <FormDropdown
-                  title="Session"
-                  options={sessionsData?.nodes?.map((sess: any) => ({
-                    children: sess?.name,
-                  }))}
-                  onChange={(e) =>
-                    updateBasicInformation("session", e.target.value)
-                  }
-                /> */}
 
                 <FormInput
                   label="Duration (minutes)"
@@ -330,21 +327,20 @@ export default function CreateExamModal({
                 <div className="d-flex justify-content-between align-items-center my-4 ">
                   <button
                     onClick={() => {
-                      setNumQuestions((prev) => (prev += 5));
-
+                      setNumQuestions((prev: any) => prev + 5);
                       setQuestions(
-                        defaultValues?.questions ??
-                          Array.from(Array(numQuestions).keys())?.map(
-                            (val, ind) => {
-                              return {
-                                text: "questiontest2" + `${ind}`,
-                                score: 1,
-                                isActive: true,
-                                answer: "a",
-                                options: ["a", "b", "c", "d"],
-                              };
-                            }
-                          )
+                        // defaultValues?.questions ??
+                        Array.from(Array(numQuestions).keys())?.map(
+                          (val, ind) => {
+                            return {
+                              text: "questiontest2" + `${ind}`,
+                              score: 1,
+                              isActive: true,
+                              answer: "a",
+                              options: ["a", "b", "c", "d"],
+                            };
+                          }
+                        )
                       );
                     }}
                     className="btn btn-blue-800 btn-lg w-25"
@@ -355,21 +351,20 @@ export default function CreateExamModal({
 
                   <button
                     onClick={() => {
-                      setNumQuestions((prev) => (prev += 1));
-
+                      setNumQuestions((prev: any) => prev + 1);
                       setQuestions(
-                        defaultValues?.questions ??
-                          Array.from(Array(numQuestions).keys())?.map(
-                            (val, ind) => {
-                              return {
-                                text: "questiontest2" + `${ind}`,
-                                score: 1,
-                                isActive: true,
-                                answer: "a",
-                                options: ["a", "b", "c", "d"],
-                              };
-                            }
-                          )
+                        // defaultValues?.questions ??
+                        Array.from(Array(numQuestions).keys())?.map(
+                          (val, ind) => {
+                            return {
+                              text: "questiontest2" + `${ind}`,
+                              score: 1,
+                              isActive: true,
+                              answer: "a",
+                              options: ["a", "b", "c", "d"],
+                            };
+                          }
+                        )
                       );
                     }}
                     className="btn btn-blue-800 btn-lg w-25"
