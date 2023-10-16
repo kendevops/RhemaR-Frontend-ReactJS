@@ -23,7 +23,6 @@ const StartEndOnlineClass = ({ sectionId, refetch }: StartEndClassProps) => {
         { online: true },
         {
           onSuccess: (e) => {
-            //   console.log(e);
             toast.success(
               <ToastContent
                 type={"success"}
@@ -108,7 +107,6 @@ const StartEndOnsiteClass = ({ sectionId, refetch }: StartEndClassProps) => {
         { onsite: true },
         {
           onSuccess: (e) => {
-            //   console.log(e);
             toast.success(
               <ToastContent
                 type={"success"}
