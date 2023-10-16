@@ -10,6 +10,8 @@ import SessionSchedule from "../../components/students/SessionSchedule";
 import Tab from "../../components/atoms/Tab";
 import AcademicReport from "../../components/students/AcademicReport";
 import StudentActionButtons from "./StudentActionButtons";
+import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
+import useUserCourses from "../../hooks/queries/users/useUserCourses";
 
 const AcademicReportPage = () => {
   const [progress, setProgress] = useState(0);
@@ -19,19 +21,32 @@ const AcademicReportPage = () => {
 
   const currentLevel = levelTabs[level];
 
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const courses = coursesData?.courses;
+  // const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const { data: coursesData, isLoading: coursesLoading } = useUserCourses();
 
-  const completion = courses?.reduce((a: any, b: any) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
-  });
+  const { data: coursesReportData, isLoading: coursesReportLoading } =
+    useUserCoursesReport();
+  const courses = coursesData?.nodes;
+  const coursesReport = coursesReportData?.nodes;
+
+  // const completion = courses?.reduce((a: any, b: any) => {
+  //   return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
+  // });
+
+  const completion = coursesReport?.reduce(
+    (a: { completion: any }, b: { completion: any }) => {
+      console.log(a?.completion ?? 0);
+
+      return (a?.completion ?? 0) + (b?.completion ?? 0);
+    }
+  );
 
   const totalCompletion = courses?.length * 100;
 
   // console.log(totalCompletion, courses?.length, completion);
   const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
-  console.log(semesterProgress);
+  console.log(semesterProgress, completion, totalCompletion, courses);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 

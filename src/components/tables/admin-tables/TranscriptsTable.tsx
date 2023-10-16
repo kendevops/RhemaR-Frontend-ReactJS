@@ -4,29 +4,31 @@ import Table, { TableColumns } from "../../general/table/Table";
 import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
 import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
-import AddIntakeModal from "../../modals/AddIntakeModal";
-import useDeleteIntake from "../../../hooks/mutations/classes/useDeleteIntake";
-import useAllIntakes from "../../../hooks/queries/classes/useAllIntakes";
-import useAllClearance from "../../../hooks/queries/classes/useAllClearance";
-import useAllCardReplacement from "../../../hooks/queries/classes/useAllCardReplacement";
-import useDeleteCardReplacement from "../../../hooks/mutations/classes/useDeleteCardReplacement";
-import CareReplacementModal from "../../modals/CardReplacementModal";
-import CardReplacementModal from "../../modals/CardReplacementModal";
+import useAllTranscripts from "../../../hooks/queries/classes/useAllTranscripts";
+import useDeleteTranscript from "../../../hooks/mutations/classes/useDeleteTranscript";
+import TranscriptModal from "../../modals/TranscriptModal";
 
 interface Props {
   data: any;
   onCreate?: VoidFunction;
 }
 
-function ModifyCardReplacement({ data, onCreate }: Props) {
+function ModifyTranscript({ data, onCreate }: Props) {
   const [visibility, toggle] = useToggle();
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
 
   const defaultValues = {
     level: data?.lavel?.name,
+    type: data?.type,
+    comment: data?.comment,
+    city: data?.address?.city,
+    street: data?.address?.street,
+    state: data?.address?.state,
+    country: data?.address?.country,
+    zipCode: data?.address?.zipCode,
   };
 
-  const deleteMutation = useDeleteCardReplacement(data?.id as string);
+  const deleteMutation = useDeleteTranscript(data?.id as string);
   const isLoading = deleteMutation?.isLoading;
 
   const handleDelete = async () => {
@@ -37,7 +39,7 @@ function ModifyCardReplacement({ data, onCreate }: Props) {
         <ToastContent
           type={"success"}
           heading={"Successful"}
-          message={"Card Replacement Request Deleted successfully"}
+          message={"Transcript Request Deleted successfully"}
         />,
         ToastContent.Config
       );
@@ -68,23 +70,17 @@ function ModifyCardReplacement({ data, onCreate }: Props) {
         isLoading={isLoading}
       />
 
-      <CardReplacementModal
-        {...{ visibility, toggle, defaultValues, onCreate }}
-      />
+      <TranscriptModal {...{ visibility, toggle, defaultValues, onCreate }} />
     </>
   );
 }
 
-export default function CardReplacementTable() {
+export default function TranscriptTable() {
   // const { data: intakeData, isLoading, refetch } = useAllIntakes();
-  const {
-    data: cardReplacementData,
-    isLoading,
-    refetch,
-  } = useAllCardReplacement();
-  const data = cardReplacementData?.nodes;
+  const { data: transcriptData, isLoading, refetch } = useAllTranscripts();
+  const data = transcriptData?.nodes;
 
-  console.log(cardReplacementData?.nodes);
+  console.log(transcriptData?.nodes);
 
   const columns: TableColumns<any>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
@@ -128,7 +124,7 @@ export default function CardReplacementTable() {
 
         return (
           <div className="d-flex gap-3">
-            <ModifyCardReplacement onCreate={refetch} data={data} />
+            <ModifyTranscript onCreate={refetch} data={data} />
           </div>
         );
       },

@@ -1,16 +1,9 @@
 import { Icon } from "@iconify/react";
-import CreateExamModal from "../../components/modals/CreateExamModal";
-import ExamsTable from "../../components/tables/admin-tables/ExamsTable";
 import useToggle from "../../utility/hooks/useToggle";
-import Tab from "../../components/atoms/Tab";
-import { useState } from "react";
-import CreateQuizModal from "../../components/modals/CreateQuizModal";
-import QuizesTable from "../../components/tables/admin-tables/QuizTable";
 import UploadExamModal from "../../components/modals/UploadExamModal";
-import useAllExams from "../../hooks/queries/classes/useAllExams";
-import useAllQuizes from "../../hooks/queries/classes/useAllQuizes";
-import UploadQuizModal from "../../components/modals/UploadQuizModal";
 import useAllClassesAttendance from "../../hooks/queries/classes/useAllClassAttendance";
+import ClassAttendanceTable from "../../components/tables/admin-tables/ClassAttendanceTable";
+import AddClassAttendanceModal from "../../components/modals/AddClassAttentanceModal";
 
 export default function ClassCourseAttendance() {
   const [isCreatingClassAttendance, toggleCreatingClassAttendance] =
@@ -21,11 +14,6 @@ export default function ClassCourseAttendance() {
   const [isExamUploadOpen, toggleExamUpload] = useToggle();
 
   const { refetch } = useAllClassesAttendance();
-  const { refetch: refetchQuiz } = useAllQuizes();
-
-  const tabs = ["Class", "Course"];
-  const [tab, setTab] = useState(0);
-  const currentTab = tabs[tab];
 
   return (
     <>
@@ -34,91 +22,41 @@ export default function ClassCourseAttendance() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>Class & Course Attendance</div>
+        <div>Class Attendance</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
       </div>
-      <Tab.Wrapper>
-        {tabs?.map((t, i) => {
-          return (
-            <Tab
-              key={t}
-              onClick={() => setTab(i)}
-              tabColor="#203864"
-              isSelected={currentTab === t}
+
+      <>
+        <div className="d-flex justify-content-end mb-5 align-items-center">
+          <div className="d-flex  align-items-center gap-5 ">
+            <button
+              onClick={() => {}}
+              className="btn btn-blue-800 btn-lg w-auto "
             >
-              {t}
-            </Tab>
-          );
-        })}
-      </Tab.Wrapper>
-      {currentTab === "Class" && (
-        <>
-          <div className="d-flex justify-content-between mb-5 align-items-center">
-            <h1 className="text-bold">Class</h1>
-            <div className="d-flex  align-items-center gap-5 ">
-              <button
-                onClick={() => {}}
-                className="btn btn-blue-800 btn-lg w-auto "
-              >
-                Upload Class
-              </button>
-              <button
-                onClick={() => {}}
-                className="btn btn-blue-800 btn-lg w-auto"
-              >
-                Create Class Attendance
-              </button>
-            </div>
-
-            <CreateExamModal
-              isOpen={isCreatingClassAttendance}
-              toggle={() => {}}
-            />
+              Upload Class Attendance
+            </button>
+            <button
+              onClick={toggleCreatingClassAttendance}
+              className="btn btn-blue-800 btn-lg w-auto"
+            >
+              Create Class Attendance
+            </button>
           </div>
 
-          {/* Exams Table */}
-          <ExamsTable />
-        </>
-      )}
+          <AddClassAttendanceModal
+            visibility={isCreatingClassAttendance}
+            toggle={toggleCreatingClassAttendance}
+            onCreate={refetch}
+          />
+        </div>
 
-      {currentTab === "Course" && (
-        <>
-          <div className="d-flex justify-content-between mb-5 align-items-center">
-            <h1 className="text-bold">Course</h1>
-            <div className="d-flex  align-items-center gap-5 ">
-              <button
-                onClick={() => {}}
-                className="btn btn-blue-800 btn-lg w-auto "
-              >
-                Upload Quiz
-              </button>
-              <button
-                onClick={() => {}}
-                className="btn btn-blue-800 btn-lg w-auto"
-              >
-                Create Course Attendance
-              </button>
-            </div>
+        {/* Exams Table */}
+        <ClassAttendanceTable />
+      </>
 
-            <CreateQuizModal
-              isOpen={isCreatingCourseAttendance}
-              toggle={() => {}}
-            />
-          </div>
-
-          {/* Quiz Table */}
-          <QuizesTable />
-        </>
-      )}
-
-      <UploadQuizModal
-        isOpen={isQuizUploadOpen}
-        toggle={() => {}}
-        refetch={refetchQuiz}
-      />
       <UploadExamModal
         isOpen={isExamUploadOpen}
         toggle={() => {}}

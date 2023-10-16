@@ -225,6 +225,15 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+
+  {
+    path: "/ict-admin/quiz-details/:id",
+    component: lazy(() => import("../../views/ict-admin/QuizDetails")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
   {
     path: "/ict-admin/help-desk",
     component: lazy(() => import("../../views/ict-admin/HelpDesk")),

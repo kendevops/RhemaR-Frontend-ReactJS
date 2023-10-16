@@ -18,6 +18,10 @@ import UpcomingEvent from "../../components/molecules/UpcomingEvent";
 import ProgressBarMui from "../../components/progressBars/progressBer";
 import ProgressBarBootstrap from "../../components/progressBars/progressBarBoostrap";
 import BButton from "../../components/general/button";
+import useUserCourses from "../../hooks/queries/users/useUserCourses";
+import useUserClasses from "../../hooks/queries/users/useUserClasses";
+import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
+import usePaymentHistory from "../../hooks/queries/users/usePaymentHistory";
 
 const StudentDashboardPage = () => {
   const { data, isLoading } = useClasses({
@@ -34,23 +38,43 @@ const StudentDashboardPage = () => {
     ? eventsData?.nodes?.find((e) => e?.status !== "live")
     : undefined;
 
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const courses = coursesData?.courses;
+  const { data: coursesData, isLoading: coursesLoading } = useUserCourses();
+  const { data: classesData, isLoading: classesLoading } = useClasses();
+  const { data: coursesReportData, isLoading: coursesReportLoading } =
+    useUserCoursesReport();
 
-  console.log(lectures);
+  const { data: paymentData, isLoading: paymentLoading } = usePaymentHistory();
 
-  const completion = courses?.reduce((a, b) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
-  });
+  const courses = coursesData?.nodes;
+  const classes = classesData?.classes?.nodes;
+  const coursesReport = coursesReportData?.nodes;
+  const paymentHistory = paymentData?.nodes;
+
+  const ongoingOnlineClasses = classes?.filter(
+    (clas) => clas?.onlineStatus === "ONGOING"
+  );
+
+  const ongoingOnsiteClasses = classes?.filter(
+    (clas) => clas?.onsiteStatus === "ONGOING"
+  );
+
+  const completion = coursesReport?.reduce(
+    (a, b) => {
+      return (a?.completion ?? 0) + (b?.completion ?? 0);
+    },
+    [0]
+  );
 
   const totalCompletion = courses?.length * 100;
 
-  // console.log(totalCompletion, courses?.length, completion);
   const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
-  console.log(semesterProgress);
+  // console.log(semesterProgress, coursesReport);
+
+  // console.log(paymentHistory);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
+
   const application = userData?.applications
     ? userData?.applications[userData?.applications?.length - 1]
     : {};
@@ -60,30 +84,31 @@ const StudentDashboardPage = () => {
 
   const payUrl = application?.feePayment?.paymentUrl;
 
-  // const startDate = userData?.applications[0]?.session?.startDate;
-  // const endDate = userData?.applications[0]?.session?.endDate;
-
   console.log(userData);
+
+  const startDate = userData?.currentSession?.startDate;
+  const endDate = userData?.currentSession?.endDate;
 
   // const startDate = "2022-12-07T22:00:43.187Z";
   // const endDate = "2023-12-20T22:00:43.187Z";
 
-  // useEffect(() => {
-  //   const currentTime = new Date().getTime();
+  useEffect(() => {
+    const currentTime = new Date().getTime();
 
-  //   const startTime = new Date(startDate).getTime();
-  //   const endTime = new Date(endDate).getTime();
+    const startTime = new Date(startDate).getTime();
+    const endTime = new Date(endDate).getTime();
 
-  //   const totalDuration = endTime - startTime;
-  //   const elapsedDuration = currentTime - startTime;
+    console.log(endTime, startTime);
 
-  //   console.log(totalDuration, elapsedDuration);
+    const totalDuration = endTime - startTime;
+    const elapsedDuration = currentTime - startTime;
 
-  //   const calculatedProgress = Math.round(
-  //     (elapsedDuration / totalDuration) * 100
-  //   );
-  //   setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
-  // }, [startDate, endDate]);
+    const calculatedProgress = Math.round(
+      (elapsedDuration / totalDuration) * 100
+    );
+    console.log(totalDuration, elapsedDuration, calculatedProgress);
+    setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
+  }, [startDate, endDate]);
 
   return (
     <div className="container my-5 mx-0">
@@ -110,7 +135,7 @@ const StudentDashboardPage = () => {
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.campus?.name}`}</div>
+        <div>{`${userData?.currentCampus?.name}`}</div>
       </div>
       <div className="row">
         <div className="col-lg-12 col-md-12 col-12 mb-4 d-flex flex-column flex-lg-row  gap-5 justify-content-center ">
@@ -178,20 +203,24 @@ const StudentDashboardPage = () => {
         {/*  */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           {/* Upcmonign lecture */}
-          <section className="bg-white r-card px-5   py-4">
+          <section className="bg-white r-card px-5 mb-4   py-4">
             <div className="d-flex gap-3 align-center ">
               <FaCalendarAlt />
-              <p className="r-card-title">Ongoing Lecture</p>
+              <p className="r-card-title">Ongoing Online Lecture</p>
               {isLoading && <Spinner />}
             </div>
             <hr />
-            {lectures ? (
+            {ongoingOnlineClasses?.length > 0 ? (
               <article className="position-relative ">
-                <Link to={`/student/lecture/${lectures[0]?.id}`}>
+                <Link to={`/student/lecture/${ongoingOnlineClasses[0]?.id}`}>
                   <UpcomingEvent
-                    title={lectures[0]?.name}
-                    endDate={new Date(lectures[0]?.endTime)}
-                    startDate={new Date(lectures[0]?.startTime)}
+                    title={ongoingOnlineClasses[0]?.name}
+                    endDate={
+                      new Date(ongoingOnlineClasses[0]?.onlineEndDateTime)
+                    }
+                    startDate={
+                      new Date(ongoingOnlineClasses[0]?.onlineStartDateTime)
+                    }
                   />
                 </Link>
 
@@ -202,7 +231,38 @@ const StudentDashboardPage = () => {
                 </div>
               </article>
             ) : (
-              <p className="text-xl font-bold">No Upcoming Lectures</p>
+              <p className="text-xl font-bold">No Onging Online Lectures</p>
+            )}
+          </section>
+
+          <section className="bg-white r-card px-5   py-4">
+            <div className="d-flex gap-3 align-center ">
+              <FaCalendarAlt />
+              <p className="r-card-title">Ongoing OnSite Lecture</p>
+            </div>
+            <hr />
+            {ongoingOnsiteClasses?.length > 0 ? (
+              <article className="position-relative ">
+                <Link to={`/student/lecture/${ongoingOnsiteClasses[0]?.id}`}>
+                  <UpcomingEvent
+                    title={ongoingOnsiteClasses[0]?.name}
+                    endDate={
+                      new Date(ongoingOnsiteClasses[0]?.onsiteEndDateTime)
+                    }
+                    startDate={
+                      new Date(ongoingOnsiteClasses[0]?.onsiteStartDateTime)
+                    }
+                  />
+                </Link>
+
+                <div
+                  style={{ position: "absolute", right: "15px", top: "15px" }}
+                >
+                  <MdCancel style={{ color: "red", fontSize: "23px" }} />
+                </div>
+              </article>
+            ) : (
+              <p className="text-xl font-bold">No Onging Onsite Lectures</p>
             )}
           </section>
 

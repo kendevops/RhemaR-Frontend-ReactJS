@@ -9,6 +9,8 @@ import handleError from "../../../utils/handleError";
 import CreateQuizModal from "../../modals/CreateQuizModal";
 import useDeleteQuiz from "../../../hooks/mutations/classes/useDeleteQuiz";
 import useAllQuizes from "../../../hooks/queries/classes/useAllQuizes";
+import { Link } from "react-router-dom";
+import { FaEdit, FaRegEye } from "react-icons/fa";
 
 type EditQuizProps = {
   data: any;
@@ -54,8 +56,10 @@ function EditQuiz({ data, refetch }: EditQuizProps) {
         isOpen={isEditing}
         toggle={toggleEditing}
       />
-
-      <u onClick={toggleEditing}>Edit</u>
+      <FaEdit
+        onClick={toggleEditing}
+        style={{ cursor: "pointer", fontSize: "23px" }}
+      />
       <ConfirmDeleteModal
         visibility={visibilityDeleteModal}
         toggle={toggleDeleteModal}
@@ -121,9 +125,15 @@ export default function QuizesTable() {
                 title: "Action",
                 render: (d) => {
                   return (
-                    <div className="d-flex gap-4">
-                      <EditQuiz data={d} refetch={refetch} />
+                    <div className="d-flex gap-4 align-items-center ">
                       {/* <u onClick={handleDelete}>Delete</u> */}
+
+                      <Link to={`/ict-admin/quiz-details/${d?.id}`}>
+                        <FaRegEye
+                          style={{ cursor: "pointer", fontSize: "23px" }}
+                        />
+                      </Link>
+                      <EditQuiz data={d} refetch={refetch} />
                     </div>
                   );
                 },

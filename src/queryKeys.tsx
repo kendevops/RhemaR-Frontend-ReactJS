@@ -28,6 +28,8 @@ const queryKeys = {
   quizzes: "quizzes",
   clearance: "clearance",
   card: "card",
+  transcripts: "transcripts",
+  reports: "reports",
 };
 
 export default queryKeys;
