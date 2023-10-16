@@ -8,21 +8,22 @@ import { toast } from "react-toastify";
 import ToastContent from "../../molecules/ToastContent";
 import handleError from "../../../utils/handleError";
 import useDeleteExam from "../../../hooks/mutations/classes/useDeleteExam";
-import { Link } from "react-router-dom";
-import { FaEdit, FaRegEye } from "react-icons/fa";
+import useAllClassesAttendance from "../../../hooks/queries/classes/useAllClassAttendance";
+import AddClassAttendanceModal from "../../modals/AddClassAttentanceModal";
+import useDeleteClassAttendance from "../../../hooks/mutations/classes/useDeleteClassAttendance";
 
-type EditExamProps = {
+type EditClassAttandanceProps = {
   data: any;
   refetch: any;
 };
 
-function EditExam({ data, refetch }: EditExamProps) {
+function EditClassAttandance({ data, refetch }: EditClassAttandanceProps) {
   const [isEditing, toggleEditing] = useToggle();
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
 
   const id = data?.id;
 
-  const deleteIt = useDeleteExam(id);
+  const deleteIt = useDeleteClassAttendance(id);
 
   const isDeleteLoading = deleteIt?.isLoading;
 
@@ -33,7 +34,7 @@ function EditExam({ data, refetch }: EditExamProps) {
           <ToastContent
             type={"success"}
             heading={"Success"}
-            message={`Exam deleted successfully`}
+            message={`Attendance deleted successfully`}
           />,
           ToastContent.Config
         );
@@ -50,20 +51,14 @@ function EditExam({ data, refetch }: EditExamProps) {
 
   return (
     <>
-      <CreateExamModal
+      <AddClassAttendanceModal
         defaultValues={data}
-        isOpen={isEditing}
+        visibility={isEditing}
         toggle={toggleEditing}
+        onCreate={refetch}
       />
 
-      {/* <u onClick={toggleEditing} style={{ cursor: "pointer" }}>
-        Edit
-      </u> */}
-
-      <FaEdit
-        onClick={toggleEditing}
-        style={{ cursor: "pointer", fontSize: "23px" }}
-      />
+      <u onClick={toggleEditing}>Edit</u>
       <ConfirmDeleteModal
         visibility={visibilityDeleteModal}
         toggle={toggleDeleteModal}
@@ -74,8 +69,8 @@ function EditExam({ data, refetch }: EditExamProps) {
   );
 }
 
-export default function ExamsTable() {
-  const { data: examsData, isLoading, refetch } = useAllExams();
+export default function ClassAttendanceTable() {
+  const { data: examsData, isLoading, refetch } = useAllClassesAttendance();
   const data = examsData?.nodes;
 
   console.log(data);
@@ -93,46 +88,44 @@ export default function ExamsTable() {
                 title: "S/N",
                 render: (data, i) => <p>{i + 1}</p>,
               },
-              { key: "Name", title: "Name", render: (d) => <p>{d?.name}</p> },
+              {
+                key: "User",
+                title: "User",
+                render: (d) => (
+                  <p>{`${d?.user?.firstName} ${d?.user?.lastName}`}</p>
+                ),
+              },
+              {
+                key: "Class Name",
+                title: "Class Name",
+                render: (d) => <p>{d?.class?.name}</p>,
+              },
               {
                 key: "Course",
                 title: "Course",
-                render: (d) => <p>{d?.course?.name}</p>,
+                render: (d) => <p>{d?.class?.course?.name}</p>,
               },
               {
-                key: "Session",
-                title: "Session",
-                render: (d) => <p>{d?.session?.name}</p>,
+                key: "Level",
+                title: "Level",
+                render: (d) => <p>{d?.class?.course?.level?.name}</p>,
               },
               {
-                key: "Duration",
-                title: "Duration",
-                render: (d) => <p>{d?.duration}mins</p>,
+                key: "Attendance Method",
+                title: "Attendance Method",
+                render: (d) => <p>{d?.attendanceMethod}</p>,
               },
-              {
-                key: "Date",
-                title: "Date",
-                render: (d) => (
-                  <p>
-                    {new Date(d?.startsAt)?.toDateString()} -{" "}
-                    {new Date(d?.endsAt)?.toDateString()}{" "}
-                  </p>
-                ),
-              },
+
               {
                 key: "Action",
                 title: "Action",
                 render: (d) => {
+                  console.log(d);
+
                   return (
                     <div className="d-flex gap-4 align-items-center ">
+                      <EditClassAttandance data={d} refetch={refetch} />
                       {/* <u onClick={handleDelete}>Delete</u> */}
-
-                      <Link to={`/ict-admin/exam-details/${d?.id}`}>
-                        <FaRegEye
-                          style={{ cursor: "pointer", fontSize: "23px" }}
-                        />
-                      </Link>
-                      <EditExam data={d} refetch={refetch} />
                     </div>
                   );
                 },

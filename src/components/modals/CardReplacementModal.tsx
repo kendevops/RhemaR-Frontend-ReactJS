@@ -9,7 +9,7 @@ import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
 import useRequestCardReplacement from "../../hooks/mutations/classes/useRequstCardReplacement";
 import useUpateCardReplacement from "../../hooks/mutations/classes/useUpdateCardReplacement";
 
-interface CareReplacementModalModalProps {
+interface CardReplacementModalModalProps {
   toggle: VoidFunction;
   visibility: boolean;
   level?: string;
@@ -17,13 +17,13 @@ interface CareReplacementModalModalProps {
   defaultValues?: any;
 }
 
-export default function CareReplacementModal({
+export default function CardReplacementModal({
   toggle,
   visibility,
   onCreate,
   defaultValues,
   level,
-}: CareReplacementModalModalProps) {
+}: CardReplacementModalModalProps) {
   const createCardReplacement = useRequestCardReplacement();
   const updateCardReplacement = useUpateCardReplacement(defaultValues?.id);
 

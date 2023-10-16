@@ -11,6 +11,7 @@ import { Link, useHistory } from "react-router-dom";
 import isWithinCurrentDateRange from "../../utils/isWithinDateRange";
 import { FaCalendarAlt } from "react-icons/fa";
 import BButton from "../general/button";
+import useUserClasses from "../../hooks/queries/users/useUserClasses";
 
 export default function CourseSchedule({ title }: any) {
   const [viewing, setViewing] = useState(0);
@@ -18,32 +19,36 @@ export default function CourseSchedule({ title }: any) {
 
   const history = useHistory();
 
-  let classTabs = ["All"];
+  let classTabs = ["Online"];
 
   const currentClass = classTabs[clas];
 
   const monthParam = viewing + 1 < 10 ? `0${viewing + 1}` : viewing + 1;
 
-  const { data, isLoading } = useClasses({
-    startTime: `${new Date().getFullYear()}-${monthParam}-01T21:56:53.900Z`,
-  });
+  // const { data, isLoading } = useClasses({
+  //   onlineStartDateTime: `${new Date().getFullYear()}-${monthParam}-01T21:56:53.900Z`,
+  // });
+
+  // const { data, isLoading: classesLoading } = useUserClasses({});
+
+  const { data, isLoading } = useClasses({});
 
   const allClasses = data?.classes?.nodes;
   let classes = allClasses;
 
   console.log(classes);
 
-  if (classes && classes[0]?.campus?.name === "Abuja") {
-    classTabs = ["Weekend Classes", "Night Classes"];
-  }
+  // if (classes && classes[0]?.campus?.name === "Abuja") {
+  //   classTabs = ["Weekend Classes", "Night Classes"];
+  // }
 
-  if (currentClass === "Weekend Classes") {
-    classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
-  }
+  // if (currentClass === "Weekend Classes") {
+  //   classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
+  // }
 
-  if (currentClass === "Night Classes") {
-    classes = allClasses?.filter((clas: any) => clas?.type === "night");
-  }
+  // if (currentClass === "Night Classes") {
+  //   classes = allClasses?.filter((clas: any) => clas?.type === "night");
+  // }
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -127,22 +132,22 @@ export default function CourseSchedule({ title }: any) {
                 return (
                   <>
                     {isWithinCurrentDateRange(
-                      clas?.startTime,
-                      clas?.endTime
+                      clas?.onlineStartDateTime,
+                      clas?.onlineEndDateTime
                     ) ? (
                       <Link key={i} to={`/student/lecture/${clas?.id}`}>
                         <UpcomingEvent
                           title={clas?.name}
-                          endDate={new Date(clas?.endTime)}
-                          startDate={new Date(clas?.startTime)}
+                          endDate={new Date(clas?.onlineEndDateTime)}
+                          startDate={new Date(clas?.onlineStartDateTime)}
                         />
                       </Link>
                     ) : (
                       <Link key={i} to={`/student/lecture/${clas?.id}`}>
                         <UpcomingEvent
                           title={clas?.name}
-                          endDate={new Date(clas?.endTime)}
-                          startDate={new Date(clas?.startTime)}
+                          endDate={new Date(clas?.onlineEndDateTime)}
+                          startDate={new Date(clas?.onlineStartDateTime)}
                         />
                       </Link>
                     )}
@@ -153,8 +158,8 @@ export default function CourseSchedule({ title }: any) {
             <p>No Classes yet...</p>
           )}
 
-          {classes && (
-            <BButton text={"View All 2023/2024 Schedule"} onClick={() => {}} />
+          {classes?.length > 4 && (
+            <BButton text={"View All Schedule"} onClick={() => {}} />
           )}
         </div>
       </section>

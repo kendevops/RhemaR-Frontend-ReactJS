@@ -4,17 +4,12 @@ import useAllUsers from "../../hooks/queries/useAllUsers";
 import { Spinner } from "reactstrap";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Table, { TableColumns } from "../../components/general/table/Table";
-import parseRole from "../../utils/parseRole";
 import useToggle from "../../utility/hooks/useToggle";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
-import useRoles from "../../hooks/queries/useRoles";
 import { FaFilter, FaRegEye } from "react-icons/fa";
-import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Icon } from "@iconify/react";
 import { MdOutlineCancel } from "react-icons/md";
-import useCourses from "../../hooks/queries/classes/useCourses";
-import { Link } from "react-router-dom";
 import AddCourseScheduleModal from "../../components/modals/AddCourseScheduleModal";
 import UploadBulkCourseScheduleModal from "../../components/modals/UploadBulkCourseScheduleModal";
 import useAllClasses from "../../hooks/queries/classes/useAllClasses";
@@ -23,6 +18,10 @@ import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
+import {
+  StartEndOnlineClass,
+  StartEndOnsiteClass,
+} from "../ict-admin/StartEndClass";
 
 type FiltersProps = {
   campus?: string;
@@ -85,10 +84,6 @@ export default function ScheduleManagement() {
 
   console.log(classesData);
 
-  const { data: rolesData } = useRoles();
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
-
   const classes = classesData?.nodes;
 
   console.log(filters);
@@ -117,10 +112,6 @@ export default function ScheduleManagement() {
     children: d?.name,
   }));
   console.log(campusOptions);
-
-  const roleOptions = rolesData?.roles?.map((d: any) => ({
-    children: d?.name,
-  }));
 
   const filterProps: FilterProps = {
     params: [
@@ -188,8 +179,6 @@ export default function ScheduleManagement() {
     toggle: toggleFiltering,
   };
 
-  function onSearch() {}
-
   const columns: TableColumns<any>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
 
@@ -244,10 +233,17 @@ export default function ScheduleManagement() {
         <p>{new Date(data?.onsiteEndDateTime).toDateString()}</p>
       ),
     },
+
     {
-      key: "ID",
-      title: "ID",
-      render: (data) => <p>{data?.id}</p>,
+      key: "Online Status",
+      title: "Online Status",
+      render: (data) => <p>{data?.onlineStatus}</p>,
+    },
+
+    {
+      key: "Onsite Status",
+      title: "Onsite Status",
+      render: (data) => <p>{data?.onsiteStatus}</p>,
     },
 
     {
@@ -274,6 +270,30 @@ export default function ScheduleManagement() {
       key: "Option",
       title: "Option",
       render: (data) => <p>{data?.type}</p>,
+    },
+
+    {
+      key: "Online Class",
+      title: "Online Class",
+      render: (data) => {
+        return (
+          <div className="d-flex gap-4 align-items-center ">
+            <StartEndOnlineClass sectionId={data?.id} refetch={refetch} />
+          </div>
+        );
+      },
+    },
+
+    {
+      key: "Onsite Class",
+      title: "Onsite Class",
+      render: (data) => {
+        return (
+          <div className="d-flex gap-4 align-items-center ">
+            <StartEndOnsiteClass sectionId={data?.id} refetch={refetch} />
+          </div>
+        );
+      },
     },
 
     {

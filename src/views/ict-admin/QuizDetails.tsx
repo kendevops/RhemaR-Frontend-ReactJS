@@ -2,46 +2,36 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import BackButton from "../../components/molecules/BackButton";
-import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
 import Tab from "../../components/atoms/Tab";
 import useToggle from "../../utility/hooks/useToggle";
-import useCourse from "../../hooks/queries/classes/useCourse";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
 import handleError from "../../utils/handleError";
 import useAllExams from "../../hooks/queries/classes/useAllExams";
 import QuestionInput from "../../components/molecules/QuestionInput";
-import useCreateExamQuestion from "../../hooks/mutations/exams/useCreateExamQuestuions";
+import useAllQuizes from "../../hooks/queries/classes/useAllQuizes";
+import useCreateQuizQuestion from "../../hooks/mutations/exams/useCreateQuizQuestions";
 
 interface LectureParams {
   id: string;
 }
 
-type ExamDetailsProps = {
-  data?: any;
-};
-
-export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
+export default function ExamDetails() {
   const params = useParams<LectureParams>();
   let router = useHistory();
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
   const [isAddingQuestion, toggleAddQuestion] = useToggle();
 
-  const {
-    data: examData,
-    isLoading,
-    refetch,
-  } = useAllExams({ examId: params?.id });
+  const { data, isLoading, refetch } = useAllQuizes({ quizId: params?.id });
 
-  const examData2 = examData?.nodes[0];
+  const quizData = data?.nodes[0];
 
-  console.log(examData2);
+  console.log(quizData);
   const [numQuestions, setNumQuestions] = useState(0);
   const [questions, setQuestions] = useState(
     Array.from(Array(numQuestions).keys())?.map((val, ind) => {
       return {
-        examId: examData2?.id,
+        quizId: quizData?.id,
         text: "questiontest2" + `${ind}`,
         score: 1,
         isActive: true,
@@ -50,43 +40,61 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
       };
     })
   );
-  const { mutate, isLoading: isCreatingQuestions } = useCreateExamQuestion();
+  const { mutate, isLoading: isCreatingQuestions } = useCreateQuizQuestion();
+
+  useEffect(() => {
+    refetch();
+  }, [params?.id]);
 
   // const [data, setData] = useState<any>(null);
   const [tab, setTab] = useState(0);
 
-  let Tabs = ["Exam Info", "Exam Questions"];
+  let Tabs = ["Quiz Info", "Quiz Questions"];
 
   const currentTab = Tabs[tab];
 
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
 
-    const questionsData = questions[0];
+    const questionsData = questions;
 
     console.log(questionsData);
 
     // Creating
     if (questionsData) {
-      mutate(questionsData, {
-        onSuccess: (e) => {
-          console.log(e);
+      mutate(
+        { questions: questionsData },
+        {
+          onSuccess: (e) => {
+            console.log(e);
 
-          toast.success(
-            <ToastContent
-              heading={"Successful"}
-              message={"Exam Questions added successfully"}
-              type={"success"}
-            />,
-            ToastContent.Config
-          );
-          refetch();
-          toggleAddQuestion();
-        },
-        onError: (e: any) => {
-          handleError(e);
-        },
-      });
+            e?.data?.data?.results?.map((e: any) => {
+              if (!e?.success) {
+                toast.error(
+                  <ToastContent
+                    type={"error"}
+                    heading={"Error Adding Questions"}
+                    message={e?.error}
+                  />
+                );
+              } else {
+                toast.success(
+                  <ToastContent
+                    type={"success"}
+                    heading={"Students added"}
+                    message={"The question has been added successfully"}
+                  />
+                );
+                refetch();
+                toggleAddQuestion();
+              }
+            });
+          },
+          onError: (e: any) => {
+            handleError(e);
+          },
+        }
+      );
     }
   }
 
@@ -97,12 +105,12 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>{examData2?.name ?? ""}</div>
+        <div>{quizData?.name ?? ""}</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>Exam Details</div>
+        <div>Quiz Details</div>
       </div>
       <BackButton />
 
@@ -145,25 +153,25 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
 
               {!isLoading && (
                 <div className="my-5">
-                  {currentTab === "Exam Info" && (
+                  {currentTab === "Quiz Info" && (
                     <div className="d-flex flex-column gap-5">
-                      <h1>Name: {examData2?.name}</h1>
-                      <h2>Score: {examData2?.score}</h2>
+                      <h1>Name: {quizData?.name}</h1>
+                      <h2>Score: {quizData?.score}</h2>
                       <p>
                         Starts at:{" "}
-                        {new Date(examData2?.startsAt)?.toDateString()}
+                        {new Date(quizData?.startsAt)?.toDateString()}
                       </p>
                       <p>
-                        Ends at: {new Date(examData2?.endsAt)?.toDateString()}
+                        Ends at: {new Date(quizData?.endsAt)?.toDateString()}
                       </p>
-                      <h3>Course: {examData2?.course?.name}</h3>
-                      <h3>Session: {examData2?.session?.name}</h3>
-                      <h3>RD No: {examData2?.rdNo}</h3>
+                      <h3>Course: {quizData?.course?.name}</h3>
+                      <h3>Session: {quizData?.session?.name}</h3>
+                      <h3>RD No: {quizData?.rdNo}</h3>
                     </div>
                   )}
-                  {currentTab === "Exam Questions" && (
+                  {currentTab === "Quiz Questions" && (
                     <div className="d-flex  flex-wrap align-items-center gap-4 justify-content-between ">
-                      {examData2?.questions?.map((q: any, i: number) => {
+                      {quizData?.questions?.map((q: any, i: number) => {
                         return (
                           <div key={q?.id} className="shadow p-3">
                             <h2>{`Question ${i + 1}: ${q.text}`}</h2>
@@ -198,7 +206,7 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
         id="examModal"
       >
         <ModalHeader toggle={toggleAddQuestion}>
-          {"Add Exam Questions"}
+          {"Add Quiz Questions"}
         </ModalHeader>
         <ModalBody>
           <form onSubmit={handleSubmit}>
@@ -245,7 +253,7 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
                       Array.from(Array(numQuestions).keys())?.map(
                         (val, ind) => {
                           return {
-                            examId: examData2?.id,
+                            quizId: quizData?.id,
                             text: "questiontest2" + `${ind}`,
                             score: 1,
                             isActive: true,
@@ -270,7 +278,7 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
                       Array.from(Array(numQuestions).keys())?.map(
                         (val, ind) => {
                           return {
-                            examId: examData2?.id,
+                            quizId: quizData?.id,
                             text: "questiontest2" + `${ind}`,
                             score: 1,
                             isActive: true,

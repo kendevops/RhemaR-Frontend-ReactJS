@@ -7,6 +7,7 @@ import LevelClearanceModal from "../../components/modals/ClearanceModal";
 import RequestRBTCTranscript from "../../components/modals/RequestRBTCTranscriptModal";
 import ApplyForLevel2Modal from "../../components/modals/ApplyForLevel2Modal";
 import CareReplacementModal from "../../components/modals/CardReplacementModal";
+import TranscriptModal from "../../components/modals/TranscriptModal";
 
 const StudentActionButtons = ({ level }: any) => {
   //   const { onClick, text, done, id } = props;
@@ -84,7 +85,8 @@ const StudentActionButtons = ({ level }: any) => {
             {level === "Level 2" ? "Apply For Transcript" : "Apply For Level 2"}
           </button>
           {level === "Level 2" && showRequestRBTCTranscript && (
-            <RequestRBTCTranscript toggle={toggle} visibility={visibility} />
+            // <RequestRBTCTranscript toggle={toggle} visibility={visibility} />
+            <TranscriptModal toggle={toggle} visibility={visibility} />
           )}
 
           {level === "Level 1" && showApplyForLevel2 && (

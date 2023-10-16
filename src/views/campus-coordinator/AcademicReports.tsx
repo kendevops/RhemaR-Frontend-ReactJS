@@ -18,8 +18,9 @@ import { Link } from "react-router-dom";
 import Tab from "../../components/atoms/Tab";
 import ClearanceTable from "../../components/tables/admin-tables/ClearanceTable";
 import CardReplacementTable from "../../components/tables/admin-tables/CardReplacementTable";
+import TranscriptTable from "../../components/tables/admin-tables/TranscriptsTable";
 
-const tabs = ["Clearance", "Card Replacement"];
+const tabs = ["Clearance", "Card Replacement", "Transcripts"];
 const levelTabs = ["Level 1", "Level 2"];
 
 type FiltersProps = {
@@ -182,6 +183,7 @@ export default function ElearningManagement() {
         )}
 
         {currentTab === "Card Replacement" && <CardReplacementTable />}
+        {currentTab === "Transcripts" && <TranscriptTable />}
       </main>
     </Fragment>
   );

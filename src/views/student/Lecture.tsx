@@ -97,7 +97,7 @@ export default function Lecture() {
       },
       {
         onSuccess: (d) => {
-          console.log("Gotten class data");
+          console.log("Gotten class data", d);
           setData(d);
           setWatching(sessions[0]?.videoUrl);
         },

@@ -7,15 +7,24 @@ import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import ProgressBarMui from "../../components/progressBars/progressBer";
 import SessionSchedule from "../../components/students/SessionSchedule";
+import useUserCourses from "../../hooks/queries/users/useUserCourses";
+import useUserClasses from "../../hooks/queries/users/useUserClasses";
+import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
 
 const StudentSchedulePage = () => {
   const [progress, setProgress] = useState(0);
 
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const courses = coursesData?.courses;
+  const { data: coursesData, isLoading: coursesLoading } = useUserCourses();
+  const { data: classesData, isLoading: classesLoading } = useUserClasses();
+  const { data: coursesReportData, isLoading: coursesReportLoading } =
+    useUserCoursesReport();
 
-  const completion = courses?.reduce((a: any, b: any) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
+  const courses = coursesData?.nodes;
+  const classes = classesData?.classes?.nodes;
+  const coursesReport = coursesReportData?.nodes;
+
+  const completion = coursesReport?.reduce((a: any, b: any) => {
+    return (a?.completion ?? 0) + (b?.completion ?? 0);
   });
 
   const totalCompletion = courses?.length * 100;
@@ -27,8 +36,8 @@ const StudentSchedulePage = () => {
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
-  const startDate = userData?.applications[0]?.session?.startDate;
-  const endDate = userData?.applications[0]?.session?.endDate;
+  const startDate = userData?.currentSession?.startDate;
+  const endDate = userData?.currentSession?.endDate;
 
   console.log(userData);
 
@@ -59,13 +68,13 @@ const StudentSchedulePage = () => {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>2023/2024 Schedule</div>
+        <div>{`${userData?.currentSession?.name} Schedule`}</div>
 
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.campus?.name}`}</div>
+        <div>{`${userData?.currentCampus?.name}`}</div>
       </div>
       <div className="row">
         <div className="col-lg-6 col-md-6 col-12 mb-4">
@@ -74,7 +83,7 @@ const StudentSchedulePage = () => {
 
           {/* Semester Progress */}
           <ProgressBarMui
-            name={"No. of 2023/2024 Level 1 Weekend Classes"}
+            name={`No. of ${userData?.currentSession?.name} Level 1 Weekend Classes`}
             percentage={
               semesterProgress.toString() === "NaN" ? 0 : semesterProgress
             }
@@ -83,7 +92,7 @@ const StudentSchedulePage = () => {
           />
 
           <ProgressBarMui
-            name={"No. of 2023/2024 Level 1 Night Classes"}
+            name={`No. ${userData?.currentSession?.name} Level 1 Night Classes`}
             percentage={progress}
             progressColor={"green"}
             icon={<FaBook />}
@@ -95,7 +104,7 @@ const StudentSchedulePage = () => {
           <div className="bg-white d-flex flex-column  align-items-center justify-content-between r-card mb-4 payment-card">
             <div className="w-100 ">
               <ProgressBarMui
-                name={"No. of 2023/2024 Level 2 Classes"}
+                name={`No. of ${userData?.currentSession?.name} Level 1 Classes`}
                 percentage={30}
                 progressColor={"red"}
                 icon={<FaBook />}
@@ -106,7 +115,7 @@ const StudentSchedulePage = () => {
       </div>
 
       <div>
-        <SessionSchedule title={"2023/2024 Schedule"} />
+        <SessionSchedule title={`${userData?.currentSession?.name} Schedule`} />
       </div>
     </div>
   );
