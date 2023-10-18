@@ -9,6 +9,7 @@ import ProgressBarMui from "../../components/progressBars/progressBer";
 import SessionSchedule from "../../components/students/SessionSchedule";
 import Tab from "../../components/atoms/Tab";
 import QuizesContainer from "../../components/students/QuizesCaontainer";
+import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
 
 const StudentQuizesPage = () => {
   const [progress, setProgress] = useState(0);
@@ -19,11 +20,16 @@ const StudentQuizesPage = () => {
   const currentLevel = levelTabs[level];
 
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const courses = coursesData?.courses;
+  const { data: coursesReportData, isLoading: coursesReportLoading } =
+    useUserCoursesReport();
+  const courses = coursesData?.nodes;
+  const coursesReport = coursesReportData?.nodes;
 
-  const completion = courses?.reduce((a: any, b: any) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
-  });
+  const completion = coursesReport?.reduce(
+    (a: { completion: any }, b: { completion: any }) => {
+      return (a?.completion ?? 0) + (b?.completion ?? 0);
+    }
+  );
 
   const totalCompletion = courses?.length * 100;
 
@@ -34,8 +40,8 @@ const StudentQuizesPage = () => {
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
-  const startDate = userData?.applications[0]?.session?.startDate;
-  const endDate = userData?.applications[0]?.session?.endDate;
+  const startDate = userData?.currentSession?.startDate;
+  const endDate = userData?.currentSession?.endDate;
 
   console.log(userData);
 

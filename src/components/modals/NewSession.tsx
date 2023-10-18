@@ -58,7 +58,7 @@ export default function NewSession({
     e?.preventDefault();
     console.log({ formData });
 
-    formData.isActive = formData.isActive === "false" ? false : (true as any);
+    formData.isActive = formData.isActive === "No" ? false : (true as any);
 
     /// Creating
     if (!defValues) {
@@ -166,7 +166,7 @@ export default function NewSession({
               options={["Yes", "No"]?.map((o) => ({
                 children: o,
               }))}
-              title={"Is This The Current Intake?"}
+              title={"Is this the current active session?"}
             />
 
             <button

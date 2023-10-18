@@ -27,6 +27,7 @@ import { Icon } from "@iconify/react";
 import { FaCalendarAlt } from "react-icons/fa";
 import LectureButton from "../../components/general/lectureButton";
 import ElearningInstructor from "../../components/students/ElearningInstructor";
+import useCourse from "../../hooks/queries/classes/useCourse";
 
 interface LectureParams {
   id: string;
@@ -64,8 +65,11 @@ export default function Lecture() {
   const [isCompletted, setIsCompletted] = useState(false);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
+  const { data: courseData, isLoading: courseLoading } = useCourse(id);
 
-  console.log(sessions);
+  console.log(id, courseData);
+
+  // console.log(sessions);
 
   const currentSession = sessions?.find((s: any) => s?.videoUrl === watching);
 
@@ -97,7 +101,7 @@ export default function Lecture() {
       },
       {
         onSuccess: (d) => {
-          console.log("Gotten class data");
+          console.log("Gotten class data", d);
           setData(d);
           setWatching(sessions[0]?.videoUrl);
         },
@@ -128,7 +132,7 @@ export default function Lecture() {
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
+        <div>{`${userData?.firstName} ${userData?.lastName}`}</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
@@ -141,7 +145,7 @@ export default function Lecture() {
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.campus?.name}`}</div>
+        <div>{`${userData?.currentCampus?.name}`}</div>
       </div>
       <BackButton />
       <Row style={{ marginTop: "3rem" }}>

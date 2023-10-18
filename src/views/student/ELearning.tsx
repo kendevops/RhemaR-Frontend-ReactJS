@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Spinner } from "reactstrap";
 import { Icon } from "@iconify/react";
 import { FaBook, FaCalendarAlt, FaGraduationCap } from "react-icons/fa";
+import { IoMdCloseCircle } from "react-icons/io";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import useCourses from "../../hooks/queries/classes/useCourses";
 import ProgressBarMui from "../../components/progressBars/progressBer";
@@ -12,28 +13,35 @@ import { MdCancel } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useClasses from "../../hooks/queries/classes/useClasses";
 import { AiOutlineCreditCard } from "react-icons/ai";
+import useUserClasses from "../../hooks/queries/users/useUserClasses";
 
 const ELearningPage = () => {
   const [progress, setProgress] = useState(0);
-  const { data, isLoading } = useClasses({
-    startTime: "2022-12-01T21:56:53.900Z",
-  });
+  const { data, isLoading } = useClasses({});
+  const { data: coursesData, isLoading: coursesLoading } = useCourses();
 
   const lectures = data?.classes?.nodes;
 
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const ongoingOnlineClasses = lectures?.filter(
+    (clas: { onlineStatus: string }) => clas?.onlineStatus === "ONGOING"
+  );
+
+  const ongoingOnsiteClasses = lectures?.filter(
+    (clas: { onsiteStatus: string }) => clas?.onsiteStatus === "ONGOING"
+  );
+
+  console.log(lectures);
+
   const courses = coursesData?.courses;
 
-  const completion = courses?.reduce((a: any, b: any) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
-  });
+  // const completion = courses?.reduce((a: any, b: any) => {
+  //   return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
+  // });
 
   const totalCompletion = courses?.length * 100;
 
   // console.log(totalCompletion, courses?.length, completion);
-  const semesterProgress = Math.floor((completion / totalCompletion) * 100);
-
-  console.log(semesterProgress);
+  // const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
@@ -45,30 +53,30 @@ const ELearningPage = () => {
 
   const payUrl = application?.feePayment?.paymentUrl;
 
-  const startDate = userData?.applications[0]?.session?.startDate;
-  const endDate = userData?.applications[0]?.session?.endDate;
+  // const startDate = userData?.applications[0]?.session?.startDate;
+  // const endDate = userData?.applications[0]?.session?.endDate;
 
   console.log(userData);
 
   // const startDate = "2022-12-07T22:00:43.187Z";
   // const endDate = "2023-12-20T22:00:43.187Z";
 
-  useEffect(() => {
-    const currentTime = new Date().getTime();
+  // useEffect(() => {
+  //   const currentTime = new Date().getTime();
 
-    const startTime = new Date(startDate).getTime();
-    const endTime = new Date(endDate).getTime();
+  //   const startTime = new Date(startDate).getTime();
+  //   const endTime = new Date(endDate).getTime();
 
-    const totalDuration = endTime - startTime;
-    const elapsedDuration = currentTime - startTime;
+  //   const totalDuration = endTime - startTime;
+  //   const elapsedDuration = currentTime - startTime;
 
-    console.log(totalDuration, elapsedDuration);
+  //   console.log(totalDuration, elapsedDuration);
 
-    const calculatedProgress = Math.round(
-      (elapsedDuration / totalDuration) * 100
-    );
-    setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
-  }, [startDate, endDate]);
+  //   const calculatedProgress = Math.round(
+  //     (elapsedDuration / totalDuration) * 100
+  //   );
+  //   setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
+  // }, [startDate, endDate]);
 
   return (
     <div className="container my-5">
@@ -78,12 +86,11 @@ const ELearningPage = () => {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>E-Learning Class</div>
-
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.campus?.name}`}</div>
+        <div>{`${userData?.currentCampus?.name}`}</div>{" "}
       </div>
 
       <div className="row ">
@@ -92,33 +99,54 @@ const ELearningPage = () => {
           {/*  Progress */}
 
           {/* Upcmonign lecture */}
-          <section className="bg-white r-card px-5 py-4">
+          <section className="bg-white r-card px-5 mb-4   py-4">
             <div className="d-flex gap-3 align-center ">
               <FaCalendarAlt />
-              <p className="r-card-title">Ongoing Class(es)</p>
+              <p className="r-card-title">Ongoing Online Lecture</p>
               {isLoading && <Spinner />}
             </div>
             <hr />
-            {lectures ? (
+            {ongoingOnlineClasses?.length > 0 ? (
               <article className="position-relative ">
-                <Link to={`/student/lecture/${lectures[0]?.id}`}>
+                <Link to={`/student/lecture/${ongoingOnlineClasses[0]?.id}`}>
                   <UpcomingEvent
-                    title={lectures[0]?.name}
-                    endDate={new Date(lectures[0]?.endTime)}
-                    startDate={new Date(lectures[0]?.startTime)}
+                    title={ongoingOnlineClasses[0]?.name}
+                    endDate={
+                      new Date(ongoingOnlineClasses[0]?.onlineEndDateTime)
+                    }
+                    startDate={
+                      new Date(ongoingOnlineClasses[0]?.onlineStartDateTime)
+                    }
                   />
                 </Link>
-
-                <div
-                  style={{ position: "absolute", right: "15px", top: "15px" }}
-                >
-                  <MdCancel style={{ color: "red", fontSize: "23px" }} />
-                </div>
               </article>
             ) : (
-              <p className="text-xl font-bold">
-                There Are Currently No Ongoing Classes
-              </p>
+              <p className="text-xl font-bold">No Onging Online Lectures</p>
+            )}
+          </section>
+
+          <section className="bg-white r-card px-5   py-4">
+            <div className="d-flex gap-3 align-center ">
+              <FaCalendarAlt />
+              <p className="r-card-title">Ongoing OnSite Lecture</p>
+            </div>
+            <hr />
+            {ongoingOnsiteClasses?.length > 0 ? (
+              <article className="position-relative ">
+                <Link to={`/student/lecture/${ongoingOnsiteClasses[0]?.id}`}>
+                  <UpcomingEvent
+                    title={ongoingOnsiteClasses[0]?.name}
+                    endDate={
+                      new Date(ongoingOnsiteClasses[0]?.onsiteEndDateTime)
+                    }
+                    startDate={
+                      new Date(ongoingOnsiteClasses[0]?.onsiteStartDateTime)
+                    }
+                  />
+                </Link>
+              </article>
+            ) : (
+              <p className="text-xl font-bold">No Onging Onsite Lectures</p>
             )}
           </section>
         </div>

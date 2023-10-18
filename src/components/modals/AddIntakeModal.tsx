@@ -64,9 +64,11 @@ export default function AddIntakeModal({
     e?.preventDefault();
     console.log(formData);
 
-    formData.isActive = formData.isActive === "false" ? false : (true as any);
+    formData.isActive = formData.isActive === "No" ? false : (true as any);
 
     console.log(formData);
+
+    // const body = {...formData, session: formData.name}
 
     /// Creating
     if (!defValues) {
@@ -147,26 +149,23 @@ export default function AddIntakeModal({
           {editIsLoading && <Spinner />}
 
           <form className="mt-3" onSubmit={onSubmit}>
-            <FormDropdown
+            <FormInput
+              label="Intake Nmae"
+              type={"text"}
               onChange={(e) => updateForm("name", e?.target?.value)}
-              //   options={sessionOptions?.map((o: string) => ({
-              options={["October", "April", "January"]?.map((o) => ({
-                children: o,
-              }))}
-              title={"Intake"}
+              value={formData.name}
             />
 
             <FormDropdown
               onChange={(e) => updateForm("session", e?.target?.value)}
               options={sessionOptions?.map((o: string) => {
-                console.log(o);
-
                 return {
                   //   options={["October", "April", "January"]?.map((o) => ({
                   children: o,
                 };
               })}
               title={"Session"}
+              value={formData.session}
             />
 
             {/* <FormInput
@@ -184,6 +183,7 @@ export default function AddIntakeModal({
                   new Date(e?.target?.value)?.toISOString()
                 )
               }
+              // value={formData.startDate}
             />
             <FormInput
               label="End Date"
@@ -191,6 +191,7 @@ export default function AddIntakeModal({
               onChange={(e) =>
                 updateForm("endDate", new Date(e?.target?.value)?.toISOString())
               }
+              // value={formData.endDate}
             />
 
             <FormDropdown
@@ -199,7 +200,8 @@ export default function AddIntakeModal({
               options={["Yes", "No"]?.map((o) => ({
                 children: o,
               }))}
-              title={"Is This The Current Intake?"}
+              title={"Is this the current active Intake?"}
+              value={formData.isActive}
             />
 
             <button

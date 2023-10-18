@@ -9,40 +9,43 @@ import ToastContent from "../../molecules/ToastContent";
 import { ConfirmDeleteModal } from "../../modals/ConfirmDeleteModal";
 import useDeleteTuition from "../../../hooks/mutations/classes/useDeleteTuition";
 import EditTuitionModal from "../../modals/editModals/EditTuitionModal";
+import useAllCampusesTuitions from "../../../hooks/queries/classes/useAllCampusesTuitions";
+import handleError from "../../../utils/handleError";
 
-const DeleteTuition = (id: any) => {
+interface DeleteTuitionModalProps {
+  data: any;
+  refetch?: any;
+}
+const DeleteTuition = ({ data, refetch }: DeleteTuitionModalProps) => {
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const id = data?.id;
 
   const deleteIt = useDeleteTuition(id);
 
   const isDeleteLoading = deleteIt?.isLoading;
 
   const handleDelete = async () => {
-    try {
-      await deleteIt.mutateAsync();
-      console.log("Resource deleted");
-      toast.success(
-        <ToastContent
-          type={"success"}
-          heading={"Successful"}
-          message={"Tuition deleted successfully"}
-        />,
-        ToastContent.Config
-      );
-      toggleDeleteModal();
-    } catch (error: any) {
-      console.error("Error deleting resource", error);
-      toast.error(
-        <ToastContent
-          type={"error"}
-          heading={"Error"}
-          message={error?.response?.data?.error?.message?.toString()}
-        />,
-        ToastContent.Config
-      );
-    }
-    toggleDeleteModal();
+    deleteIt.mutate(undefined, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            type={"success"}
+            heading={"Success"}
+            message={`Tuition deleted successfully`}
+          />,
+          ToastContent.Config
+        );
+        refetch();
+
+        toggleDeleteModal();
+      },
+      onError: (e: any) => {
+        handleError(e);
+        toggleDeleteModal();
+      },
+    });
   };
 
   return (
@@ -56,72 +59,61 @@ const DeleteTuition = (id: any) => {
 };
 
 export default function AcademicTuitionTable() {
-  const { isLoading, data } = useAllCampuses();
-  const campusesData = data?.nodes;
+  const { isLoading, data, refetch } = useAllCampusesTuitions();
+  const campusesTuitiobsData = data?.nodes;
 
   const columns: TableColumns<any>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
       key: "Name",
-      title: "Name",
-      render: (data) => <p>{data?.name}</p>,
+      title: "Campus Name",
+      render: (data) => <p>{data?.campus?.name}</p>,
     },
     {
       key: "Level",
       title: "Level",
-      render: (data) => <p>{data?.tuitions?.level?.name?.split("_")[1]}</p>,
+      render: (data) => <p>{data?.level?.name?.split("_")[1]}</p>,
     },
     {
       key: "Application Fee",
-      title: "Cost",
-      render: (data) => <p>{data?.tuitions?.feePayment}</p>,
+      title: "Application Fee",
+      render: (data) => <p>{data?.feePayment}</p>,
     },
 
     {
       key: "Initial Payment",
-      title: "Cost",
-      render: (data) => <p>{data?.tuitions?.initialPayment}</p>,
+      title: "Initial Payment",
+      render: (data) => <p>{data?.initialPayment}</p>,
     },
     {
       key: "Installment Minimum",
-      title: "Cost",
-      render: (data) => <p>{data?.tuitions?.installmentMinimum}</p>,
+      title: "Installment Minimum",
+      render: (data) => <p>{data?.installmentMinimum}</p>,
     },
     {
       key: "Discount",
-      title: "Cost",
-      render: (data) => <p>{data?.tuitions?.discount}</p>,
+      title: "Discount",
+      render: (data) => <p>{data?.discount}</p>,
     },
     {
       key: "Total",
-      title: "Cost",
-      render: (data) => <p>{data?.tuitions?.total}</p>,
+      title: "Total",
+      render: (data) => <p>{data?.total}</p>,
     },
 
     {
       key: "Due Date",
       title: "Due Date",
-      render: (data) => (
-        <p>{new Date(data?.tuitions?.dueDate).toDateString()}</p>
-      ),
+      render: (data) => <p>{new Date(data?.dueDate).toDateString()}</p>,
     },
-
-    // total: 130000,
-    //     dueDate: '2022-11-23T13:24:00.417Z',
-    //     discount: 10,
-    //     feePayment: 10000,
-    //     initialPayment: 20000,
-    //     installmentMinimum: 10000,
     {
       key: "Action",
       title: "Action",
       render: (data) => {
-        console.log(data);
-
         return (
           <div className="d-flex gap-3">
-            <DeleteTuition />
-            <EditTuitionModal data={data} />
+            <DeleteTuition data={data} refetch={refetch} />
+            <EditTuitionModal data={data} refetch={refetch} />
           </div>
         );
       },
@@ -132,7 +124,7 @@ export default function AcademicTuitionTable() {
     <>
       {isLoading && <Spinner />}
       <Table.Wrapper>
-        {<Table columns={columns} data={campusesData} />}
+        {<Table columns={columns} data={campusesTuitiobsData} />}
       </Table.Wrapper>
     </>
   );

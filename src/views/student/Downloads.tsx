@@ -19,13 +19,13 @@ export default function Downloads() {
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const courses = coursesData?.courses;
+  const courses = coursesData?.courses?.nodes;
 
   const { data, isLoading } = useResources();
 
   const resourcesData = data?.nodes;
 
-  console.log(courses);
+  console.log(resourcesData);
 
   return (
     <>
@@ -44,7 +44,7 @@ export default function Downloads() {
             className=" bg-white "
             style={{ width: "2px", height: "20px" }}
           ></div>
-          <div>{`${userData?.campus?.name}`}</div>
+          <div>{`${userData?.currentCampus?.name}`}</div>
         </div>
         <div>
           <Tab.Wrapper className="d-flex gap-3 ">
@@ -94,49 +94,47 @@ export default function Downloads() {
 
         <div className="my-5">
           <div className="d-flex align-items-center flex-wrap justify-content-between">
-            {courses?.map((cs: any, ix: number) => {
-              return cs?.sections.map((c: any, i: number) => {
-                console.log(c?.materials[0]);
-                // const props = {
-                //   ...c,
-                //   type: getFileType(c?.materials[0]?.type),
-                //   url: c?.materials[0]?.path,
-                // };
+            {resourcesData?.map((c: any, i: number) => {
+              console.log(c);
+              // const props = {
+              //   ...c,
+              //   type: getFileType(c?.materials[0]?.type),
+              //   url: c?.materials[0]?.path,
+              // };
 
-                return (
-                  <div key={i} className="col-6 px-3 my-3">
-                    <a
-                      // href={pdf?.materials[0]?.path}
-                      href={c?.materials[0]?.path}
-                      className="d-flex align-items-center gap-4 shadow p-4 rounded-4 col-12  "
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {c?.materials[0]?.path.includes(".pdf") ? (
-                        <FaRegFilePdf
-                          style={{ fontSize: "60px", color: "red" }}
-                        />
-                      ) : (
-                        <ImFilePicture
-                          style={{ fontSize: "60px", color: "red" }}
-                        />
-                      )}
+              return (
+                <div key={i} className="col-6 px-3 my-3">
+                  <a
+                    // href={pdf?.materials[0]?.path}
+                    href={c?.data?.path}
+                    className="d-flex align-items-center gap-4 shadow p-4 rounded-4 col-12  "
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {c?.data?.path.includes(".pdf") ? (
+                      <FaRegFilePdf
+                        style={{ fontSize: "60px", color: "red" }}
+                      />
+                    ) : (
+                      <ImFilePicture
+                        style={{ fontSize: "60px", color: "red" }}
+                      />
+                    )}
 
-                      <div>
-                        <h2 className="fw-semibold ">
-                          Faith Foundation Syllabus (299kb)
-                        </h2>
-                        <p>For Faith Foundation Course</p>
-                      </div>
-                    </a>
-                  </div>
-                );
-              });
+                    <div>
+                      <h2 className="fw-semibold ">
+                        {`${c?.data?.name} (${c?.data?.size}kb)`}
+                      </h2>
+                      <p>For {`${c?.course?.name}`} Course</p>
+                    </div>
+                  </a>
+                </div>
+              );
             })}
           </div>
 
           <div className="d-flex align-items-center justify-content-between my-5 text-4xl">
-            <h2>page 1 0f 12</h2>
+            {/* <h2>page 1 of 12</h2> */}
             <div className="d-flex align-items-center gap-5">
               <h2>
                 <AiOutlineDoubleLeft className="" /> Previous

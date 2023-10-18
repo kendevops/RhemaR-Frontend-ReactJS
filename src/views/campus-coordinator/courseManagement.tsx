@@ -19,11 +19,61 @@ import AddCourseCoursesModal from "../../components/modals/AddCourseScheduleModa
 import UploadBulkCourseScheduleModal from "../../components/modals/UploadBulkCourseScheduleModal";
 import UploadBulkCourseModal from "../../components/modals/UploadBulkCourseModal";
 import AddCoreCourseModal from "../../components/modals/AddCourseModal";
+import useAllCourses from "../../hooks/queries/classes/useAllCourses";
+import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
+import useDeleteCourses from "../../hooks/mutations/classes/useDeleteCourses";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
 
 type FiltersProps = {
   level?: string;
   elective?: string;
   hours?: string;
+};
+
+interface DeleteProps {
+  id: any;
+  refetch: any;
+}
+
+const DeleteCoreCourse = ({ id, refetch }: DeleteProps) => {
+  const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const deleteIt = useDeleteCourses(id);
+
+  const isDeleteLoading = deleteIt?.isLoading;
+
+  const handleDelete = async () => {
+    try {
+      await deleteIt.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"course deleted successfully"}
+        />,
+        ToastContent.Config
+      );
+      refetch();
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      handleError(error);
+      toggleDeleteModal();
+    }
+  };
+
+  return (
+    <ConfirmDeleteModal
+      visibility={visibilityDeleteModal}
+      toggle={toggleDeleteModal}
+      onDelete={() => handleDelete()}
+      isLoading={isDeleteLoading}
+    />
+  );
 };
 
 export default function CourseManagement() {
@@ -32,10 +82,13 @@ export default function CourseManagement() {
   const { data, isLoading } = useAllUsers(filters);
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const {
+    data: coursesData,
+    isLoading: coursesLoading,
+    refetch,
+  } = useAllCourses();
 
-  const courses = coursesData?.courses;
+  const courses = coursesData?.nodes;
 
   console.log(courses, coursesData);
 
@@ -45,21 +98,11 @@ export default function CourseManagement() {
   const [isAdding, toggleAdding] = useToggle();
   const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
 
-  const usersData = data?.users?.nodes?.filter((u: any) => {
-    return u?.roles
-      ?.map((r: any) => r?.name)
-      .some((n: any) => n?.includes("ADMIN"));
-  });
-
   const ssData = data?.users?.nodes?.filter((u: any) => {
     return u?.roles
       ?.map((r: any) => r?.name)
       .some((n: any) => n?.includes("STUDENT_SERVICES_ADMIN"));
   });
-
-  console.log(ssData);
-
-  console.log(usersData);
 
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
@@ -75,9 +118,11 @@ export default function CourseManagement() {
       {
         inputType: "Dropdown",
         inputProps: {
-          options: ["Level 1", "Level 2", "Level 3"].map((d: any) => ({
-            children: d,
-          })),
+          options: ["Level_1", "Level_2", "Level_3", "Level_4"].map(
+            (d: any) => ({
+              children: d,
+            })
+          ),
         },
         id: "level",
         name: "Level",
@@ -89,8 +134,8 @@ export default function CourseManagement() {
             children: d,
           })),
         },
-        id: "elective",
-        name: "Course Elective",
+        id: "option",
+        name: "Course Option",
       },
       {
         inputType: "Dropdown",
@@ -119,23 +164,23 @@ export default function CourseManagement() {
     {
       key: "Course Instance",
       title: "Course",
-      render: (data) => <p>Paul's Theology of Righteousness</p>,
+      render: (data) => <p>{data.name}</p>,
     },
     {
       key: "Level",
       title: "Level",
-      render: (data) => <p>2</p>,
+      render: (data) => <p>{data.level.name}</p>,
     },
     {
       key: "Elective",
       title: "Elective",
-      render: (data) => <p>Core</p>,
+      render: (data) => <p>{data.type}</p>,
     },
 
     {
       key: "Hours",
       title: "Hours",
-      render: (data) => <p>12 hours</p>,
+      render: (data) => <p>{data.totalHours}</p>,
     },
 
     {
@@ -144,11 +189,19 @@ export default function CourseManagement() {
       render: (data) => {
         console.log("usersData", data);
         return (
-          <div className="d-flex gap-4">
-            <Link to={`/student-services-admin/course-details`}>
+          <div className="d-flex gap-5 align-items-center ">
+            <Link to={`/student-services-admin/course-details/${data.id}`}>
               <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
             </Link>
-            <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
+            <DeleteCoreCourse id={data.id} refetch={refetch} />
+
+            {/* <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} /> */}
+            {/* <ConfirmDeleteModal
+        visibility={visibilityDeleteModal}
+        toggle={toggleDeleteModal}
+        onDelete={handleDelete}
+        isLoading={isLoading}
+      /> */}
           </div>
         );
       },
@@ -159,10 +212,15 @@ export default function CourseManagement() {
     <Fragment>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddCoreCourseModal visibility={isAdding} toggle={toggleAdding} />
+        <AddCoreCourseModal
+          visibility={isAdding}
+          toggle={toggleAdding}
+          refetch={refetch}
+        />
         <UploadBulkCourseModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
+          refetch={refetch}
         />
       </div>
 
@@ -267,7 +325,7 @@ export default function CourseManagement() {
       <main id="Table">
         {isLoading && <Spinner />}
         <Table.Wrapper>
-          {usersData && <Table columns={columns} data={usersData} />}
+          {courses && <Table columns={columns} data={courses} />}
         </Table.Wrapper>
       </main>
     </Fragment>

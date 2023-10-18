@@ -10,6 +10,8 @@ import SessionSchedule from "../../components/students/SessionSchedule";
 import Tab from "../../components/atoms/Tab";
 import AcademicReport from "../../components/students/AcademicReport";
 import StudentActionButtons from "./StudentActionButtons";
+import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
+import useUserCourses from "../../hooks/queries/users/useUserCourses";
 
 const AcademicReportPage = () => {
   const [progress, setProgress] = useState(0);
@@ -19,46 +21,31 @@ const AcademicReportPage = () => {
 
   const currentLevel = levelTabs[level];
 
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const courses = coursesData?.courses;
+  // const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const { data: coursesData, isLoading: coursesLoading } = useUserCourses();
 
-  const completion = courses?.reduce((a: any, b: any) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
-  });
+  const { data: coursesReportData, isLoading: coursesReportLoading } =
+    useUserCoursesReport();
+  const courses = coursesData?.nodes;
+  const coursesReport = coursesReportData?.nodes;
+
+  const completion = coursesReport?.reduce(
+    (sum: number, course: { completion: number }) => {
+      return sum + (course?.completion ?? 0);
+    },
+    0
+  );
 
   const totalCompletion = courses?.length * 100;
 
   // console.log(totalCompletion, courses?.length, completion);
   const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
-  console.log(semesterProgress);
+  console.log(semesterProgress, completion, totalCompletion, courses);
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
-  const startDate = userData?.applications[0]?.session?.startDate;
-  const endDate = userData?.applications[0]?.session?.endDate;
-
   console.log(userData);
-
-  // const startDate = "2022-12-07T22:00:43.187Z";
-  // const endDate = "2023-12-20T22:00:43.187Z";
-
-  useEffect(() => {
-    const currentTime = new Date().getTime();
-
-    const startTime = new Date(startDate).getTime();
-    const endTime = new Date(endDate).getTime();
-
-    const totalDuration = endTime - startTime;
-    const elapsedDuration = currentTime - startTime;
-
-    console.log(totalDuration, elapsedDuration);
-
-    const calculatedProgress = Math.round(
-      (elapsedDuration / totalDuration) * 100
-    );
-    setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
-  }, [startDate, endDate]);
 
   return (
     <div className="container my-5">
@@ -68,18 +55,16 @@ const AcademicReportPage = () => {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>2023/2024 Academic Report</div>
-
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
-
+        <div>{`${userData?.firstName} ${userData?.lastName}`}</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.campus?.name}`}</div>
+        <div>{`${userData?.currentCampus?.name}`}</div>{" "}
       </div>
 
       <div>
@@ -107,7 +92,9 @@ const AcademicReportPage = () => {
                 <FaGraduationCap className="text-2xl m-xl-3 " />{" "}
                 <span className="">Admission Start Date</span>
               </p>
-              <p className="text-2xl">22nd July 2069</p>
+              <p className="text-2xl">
+                {new Date(userData?.currentSession?.startDate).toDateString()}
+              </p>
             </div>
             <hr />
             <div className="d-flex justify-content-between align-items-center text-2xl">
@@ -115,7 +102,9 @@ const AcademicReportPage = () => {
                 <FaGraduationCap className="text-2xl m-xl-3 " />{" "}
                 <span className="">Admission End Date</span>
               </p>
-              <p className="text-2xl">22nd July 2069</p>
+              <p className="text-2xl">
+                {new Date(userData?.currentSession?.endDate).toDateString()}
+              </p>
             </div>
           </div>
 
@@ -128,7 +117,7 @@ const AcademicReportPage = () => {
                 <FaGraduationCap className="text-2xl m-xl-3 " />{" "}
                 <span className="">Campus</span>
               </p>
-              <p className="text-2xl">Abuja</p>
+              <p className="text-2xl">{userData?.currentCampus?.name}</p>
             </div>
             <hr />
             <div className="d-flex justify-content-between align-items-center text-2xl">
@@ -136,7 +125,7 @@ const AcademicReportPage = () => {
                 <FaGraduationCap className="text-2xl m-xl-3 " />{" "}
                 <span className="">Year of Graduation</span>
               </p>
-              <p className="text-2xl">2069</p>
+              <p className="text-2xl">{userData?.graduateDate}</p>
             </div>
           </div>
         </div>

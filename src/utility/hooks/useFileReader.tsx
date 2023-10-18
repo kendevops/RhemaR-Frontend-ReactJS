@@ -28,8 +28,8 @@ export default function useFileReader(options?: fileReaderOptions) {
     });
 
     if (files) {
-      setFile(files[0]);
       fileReader.readAsDataURL(files[0]);
+      setFile(files[0]);
     }
   }
 

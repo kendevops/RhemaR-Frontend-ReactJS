@@ -10,6 +10,8 @@ type courseVideoProps = {
 const CoursePDF = ({ data }: courseVideoProps) => {
   const [isOpen, toggle] = useToggle();
 
+  console.log(data);
+
   const domData = [
     "session 1",
     "session 2",
@@ -33,7 +35,7 @@ const CoursePDF = ({ data }: courseVideoProps) => {
           );
         })}
       </div>
-      <div
+      {/* <div
         className="py-2 px-5 my-4 fw-bold mt-5 "
         style={{
           background: "#203864",
@@ -44,7 +46,7 @@ const CoursePDF = ({ data }: courseVideoProps) => {
       >
         + Add PDF
       </div>
-      <UploadPDFForSessionModal isOpen={isOpen} toggle={toggle} />
+      <UploadPDFForSessionModal isOpen={isOpen} toggle={toggle} /> */}
     </div>
   );
 };

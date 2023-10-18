@@ -26,6 +26,7 @@ export default function TabSelect({ options }: TabSelectProps) {
         alignItems: "center",
         border: "1px solid #e8e8e8",
         background: "#F5F7F9",
+        minWidth: "100%",
       }}
     >
       {options.map(({ element, isActive, key, onPress }, i) => {

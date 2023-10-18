@@ -16,7 +16,7 @@ export function ConfirmDeleteModal({
   isLoading,
 }: ConfirmDeleteModalProps) {
   return (
-    <div>
+    <>
       {/* <p
         className=""
         style={{ color: "red", cursor: "pointer" }}
@@ -26,7 +26,12 @@ export function ConfirmDeleteModal({
       </p> */}
 
       <RiDeleteBin6Line
-        style={{ cursor: "pointer", fontSize: "23px", color: "red" }}
+        style={{
+          cursor: "pointer",
+          fontSize: "23px",
+          color: "red",
+          marginTop: "-5px",
+        }}
         onClick={toggle}
       />
 
@@ -54,6 +59,6 @@ export function ConfirmDeleteModal({
           </div>
         </ModalBody>
       </Modal>
-    </div>
+    </>
   );
 }

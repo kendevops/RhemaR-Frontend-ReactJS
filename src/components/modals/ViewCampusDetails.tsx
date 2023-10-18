@@ -81,7 +81,7 @@ export default function ViewCampus({ data }: ViewCampusProps) {
                 />
                 <FormInput
                   label="Campus Address"
-                  value={formData.address}
+                  value={`${formData?.address?.street} ${formData?.address?.city} ${formData?.address?.state}`}
                   disabled
                 />
               </>

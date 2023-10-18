@@ -6,6 +6,8 @@ import useToggle from "../../utility/hooks/useToggle";
 import LevelClearanceModal from "../../components/modals/ClearanceModal";
 import RequestRBTCTranscript from "../../components/modals/RequestRBTCTranscriptModal";
 import ApplyForLevel2Modal from "../../components/modals/ApplyForLevel2Modal";
+import CareReplacementModal from "../../components/modals/CardReplacementModal";
+import TranscriptModal from "../../components/modals/TranscriptModal";
 
 const StudentActionButtons = ({ level }: any) => {
   //   const { onClick, text, done, id } = props;
@@ -15,6 +17,7 @@ const StudentActionButtons = ({ level }: any) => {
   const [showApplyForLevel2, setShowApplyForLevel2] = useState(false);
 
   const [visibility, toggle] = useToggle();
+  const [isCardReplacementVisibility, toggleCardReplacement] = useToggle();
 
   const cancelModelVisibility = () => {
     setShowClearanceModal(() => false);
@@ -82,7 +85,8 @@ const StudentActionButtons = ({ level }: any) => {
             {level === "Level 2" ? "Apply For Transcript" : "Apply For Level 2"}
           </button>
           {level === "Level 2" && showRequestRBTCTranscript && (
-            <RequestRBTCTranscript toggle={toggle} visibility={visibility} />
+            // <RequestRBTCTranscript toggle={toggle} visibility={visibility} />
+            <TranscriptModal toggle={toggle} visibility={visibility} />
           )}
 
           {level === "Level 1" && showApplyForLevel2 && (
@@ -94,17 +98,17 @@ const StudentActionButtons = ({ level }: any) => {
       <div className="d-flex align-items-center justify-content-start w-100">
         <div className="">
           <button
-            // onClick={() => {
-            //   toggle();
-            //   setShowRequestRBTCTranscript(() => true);
-            // }}
+            onClick={() => {
+              toggleCardReplacement();
+            }}
             className="btn btn-blue-800 btn-lg w-100  d-flex align-items-center justify-content-between"
           >
             Apply For ID Card Replacement
           </button>
-          {/* {showRequestRBTCTranscript && (
-            <RequestRBTCTranscript toggle={toggle} visibility={visibility} />
-          )} */}
+          <CareReplacementModal
+            visibility={isCardReplacementVisibility}
+            toggle={toggleCardReplacement}
+          />
         </div>
       </div>
     </div>

@@ -11,13 +11,16 @@ type CourseSchedule = {
   type: string;
   status: string;
   endTime: string;
-  startTime: string;
+  onsiteStartDateTime: string;
+  onsiteEndDateTime: string;
+  onlineStartDateTime: string;
+  onlineEndDateTime: string;
   session: string;
   campus: string;
   createdAt: string;
   course: {
     id: string;
-    title: string;
+    name: string;
   };
   instructor: {
     id: string;
@@ -26,9 +29,7 @@ type CourseSchedule = {
 };
 
 export default function StudentScheduleTable() {
-  const { data, isLoading } = useClasses({
-    startTime: "2022-12-01T21:56:53.900Z",
-  });
+  const { data, isLoading } = useClasses({});
 
   const lectures = data?.classes?.nodes;
 
@@ -37,30 +38,41 @@ export default function StudentScheduleTable() {
   const columns: TableColumns<CourseSchedule>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
+      key: "Online Date",
+      title: "Online Date",
+      render: (data) => (
+        <p>
+          {new Date(data?.onlineStartDateTime).toDateString()} -{" "}
+          {new Date(data?.onlineEndDateTime).toDateString()}
+        </p>
+      ),
+    },
+
+    {
       key: "Onsite Date",
       title: "Onsite Date",
       render: (data) => (
         <p>
-          {new Date(data?.startTime).toDateString()} -{" "}
-          {new Date(data?.endTime).toDateString()}
+          {new Date(data?.onsiteStartDateTime).toDateString()} -{" "}
+          {new Date(data?.onsiteEndDateTime).toDateString()}
         </p>
       ),
     },
     {
       key: "Course",
       title: "Course",
-      render: (data) => <p>{data?.course?.title}</p>,
+      render: (data) => <p>{data?.course?.name}</p>,
     },
     {
-      key: "Reading Assignment",
-      title: "Reading Assignment",
+      key: "Class",
+      title: "Class",
       render: (data) => <p>{data?.name}</p>,
     },
-    {
-      key: "Level",
-      title: "Level",
-      render: (data) => <p>{"Level"}</p>,
-    },
+    // {
+    //   key: "Level",
+    //   title: "Level",
+    //   render: (data) => <p>{"Level"}</p>,
+    // },
     {
       key: "Hour",
       title: "Hour",
@@ -77,7 +89,7 @@ export default function StudentScheduleTable() {
 
   return (
     <Table.Wrapper>
-      {/* {isLoading && <Spinner />} */}
+      {isLoading && <Spinner />}
       {data && <Table data={lectures} columns={columns} />}
     </Table.Wrapper>
   );

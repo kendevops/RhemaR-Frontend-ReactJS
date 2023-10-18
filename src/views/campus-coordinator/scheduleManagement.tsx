@@ -4,19 +4,24 @@ import useAllUsers from "../../hooks/queries/useAllUsers";
 import { Spinner } from "reactstrap";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Table, { TableColumns } from "../../components/general/table/Table";
-import parseRole from "../../utils/parseRole";
 import useToggle from "../../utility/hooks/useToggle";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
-import useRoles from "../../hooks/queries/useRoles";
 import { FaFilter, FaRegEye } from "react-icons/fa";
-import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Icon } from "@iconify/react";
 import { MdOutlineCancel } from "react-icons/md";
-import useCourses from "../../hooks/queries/classes/useCourses";
-import { Link } from "react-router-dom";
 import AddCourseScheduleModal from "../../components/modals/AddCourseScheduleModal";
 import UploadBulkCourseScheduleModal from "../../components/modals/UploadBulkCourseScheduleModal";
+import useAllClasses from "../../hooks/queries/classes/useAllClasses";
+import useDeleteClass from "../../hooks/mutations/classes/useDeleteClass";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
+import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
+import {
+  StartEndOnlineClass,
+  StartEndOnsiteClass,
+} from "../ict-admin/StartEndClass";
 
 type FiltersProps = {
   campus?: string;
@@ -26,18 +31,60 @@ type FiltersProps = {
   session?: string;
 };
 
+interface DeleteProps {
+  id: any;
+  refetch: any;
+}
+
+const DeleteClass = ({ id, refetch }: DeleteProps) => {
+  const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const deleteIt = useDeleteClass(id);
+
+  const isDeleteLoading = deleteIt?.isLoading;
+
+  const handleDelete = async () => {
+    try {
+      await deleteIt.mutateAsync();
+      console.log("Resource deleted");
+      toast.success(
+        <ToastContent
+          type={"success"}
+          heading={"Successful"}
+          message={"Class deleted successfully"}
+        />,
+        ToastContent.Config
+      );
+      refetch();
+      toggleDeleteModal();
+    } catch (error: any) {
+      console.error("Error deleting resource", error);
+      handleError(error);
+      toggleDeleteModal();
+    }
+  };
+
+  return (
+    <ConfirmDeleteModal
+      visibility={visibilityDeleteModal}
+      toggle={toggleDeleteModal}
+      onDelete={() => handleDelete()}
+      isLoading={isDeleteLoading}
+    />
+  );
+};
+
 export default function ScheduleManagement() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
   const { data, isLoading } = useAllUsers(filters);
   const { data: campusesData } = useAllCampuses();
-  const { data: rolesData } = useRoles();
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const { data: classesData, refetch } = useAllClasses(filters);
 
-  const courses = coursesData?.courses;
+  console.log(classesData);
 
-  console.log(courses, coursesData);
+  const classes = classesData?.nodes;
 
   console.log(filters);
 
@@ -66,30 +113,26 @@ export default function ScheduleManagement() {
   }));
   console.log(campusOptions);
 
-  const roleOptions = rolesData?.roles?.map((d: any) => ({
-    children: d?.name,
-  }));
-
   const filterProps: FilterProps = {
     params: [
-      //   {
-      //     inputType: "Dropdown",
-      //     inputProps: {
-      //       options: campusOptions,
-      //     },
-      //     id: "campus",
-      //     name: "Campus",
-      //   },
       {
         inputType: "Dropdown",
         inputProps: {
-          options: ["Enugu", "Lagos"].map((d: any) => ({
-            children: d,
-          })),
+          options: campusOptions,
         },
         id: "campus",
         name: "Campus",
       },
+      // {
+      //   inputType: "Dropdown",
+      //   inputProps: {
+      //     options: ["Enugu", "Lagos"].map((d: any) => ({
+      //       children: d,
+      //     })),
+      //   },
+      //   id: "campus",
+      //   name: "Campus",
+      // },
       {
         inputType: "Dropdown",
         inputProps: {
@@ -136,72 +179,134 @@ export default function ScheduleManagement() {
     toggle: toggleFiltering,
   };
 
-  function onSearch() {}
-
   const columns: TableColumns<any>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
 
     {
       key: "Course Instance",
       title: "Course",
-      render: (data) => <p>Math</p>,
+      render: (data) => <p>{data?.name}</p>,
     },
     {
       key: "Session",
       title: "Session",
-      render: (data) => <p>2222/3333</p>,
+      render: (data) => <p>{data?.session?.name}</p>,
     },
-    {
-      key: "Level",
-      title: "Level",
-      render: (data) => <p>2</p>,
-    },
+    // {
+    //   key: "Level",
+    //   title: "Level",
+    //   render: (data) => <p>{data.type}</p>,
+    // },
     {
       key: "Campus",
       title: "Campus",
-      render: (data) => <p>Lagos</p>,
+      render: (data) => <p>{data?.campus?.name}</p>,
     },
 
     {
-      key: "Start Date",
-      title: "Start Date",
-      render: (data) => <p> Sun 22nd April 2026</p>,
+      key: "Online Start Date",
+      title: "Online Start Date",
+      render: (data) => (
+        <p>{new Date(data?.onlineStartDateTime).toDateString()}</p>
+      ),
     },
 
     {
-      key: "End Date",
-      title: "End Date",
-      render: (data) => <p> Mon 22nd April 2026</p>,
+      key: "Online End Date",
+      title: "Online End Date",
+      render: (data) => (
+        <p> {new Date(data?.onlineEndDateTime).toDateString()}</p>
+      ),
     },
     {
-      key: "ID",
-      title: "ID",
-      render: (data) => <p>RMA-445676567-FD3456</p>,
+      key: "Onsite Start Date",
+      title: "Onsite Start Date",
+      render: (data) => (
+        <p> {new Date(data?.onsiteStartDateTime).toDateString()}</p>
+      ),
+    },
+
+    {
+      key: "Onsite End Date",
+      title: "Onsite End Date",
+      render: (data) => (
+        <p>{new Date(data?.onsiteEndDateTime).toDateString()}</p>
+      ),
+    },
+
+    {
+      key: "Online Status",
+      title: "Online Status",
+      render: (data) => <p>{data?.onlineStatus}</p>,
+    },
+
+    {
+      key: "Onsite Status",
+      title: "Onsite Status",
+      render: (data) => <p>{data?.onsiteStatus}</p>,
+    },
+
+    {
+      key: "Online Instructor",
+      title: "Online Instructor",
+      render: (data) => (
+        <p>
+          {`${data?.onlineInstructor?.firstName} ${data?.onlineInstructor?.lastName}`}
+        </p>
+      ),
     },
 
     {
       key: "Onsite Instructor",
       title: "Onsite Instructor",
-      render: (data) => <p>Dien Bassey</p>,
+      render: (data) => (
+        <p>
+          {`${data?.onsiteInstructor?.firstName} ${data?.onsiteInstructor?.lastName}`}
+        </p>
+      ),
     },
 
     {
       key: "Option",
       title: "Option",
-      render: (data) => <p>Weekend</p>,
+      render: (data) => <p>{data?.type}</p>,
+    },
+
+    {
+      key: "Online Class",
+      title: "Online Class",
+      render: (data) => {
+        return (
+          <div className="d-flex gap-4 align-items-center ">
+            <StartEndOnlineClass sectionId={data?.id} refetch={refetch} />
+          </div>
+        );
+      },
+    },
+
+    {
+      key: "Onsite Class",
+      title: "Onsite Class",
+      render: (data) => {
+        return (
+          <div className="d-flex gap-4 align-items-center ">
+            <StartEndOnsiteClass sectionId={data?.id} refetch={refetch} />
+          </div>
+        );
+      },
     },
 
     {
       key: "Action",
       title: "Action",
       render: (data) => {
-        console.log("usersData", data);
+        console.log(data);
         return (
-          <div className="d-flex gap-4">
-            <Link to={`/student-services-admin/course-details`}>
-              <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
-            </Link>
-            <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
+          <div className="d-flex gap-4 align-items-center ">
+            {/* <Link to={`/student-services-admin/course-details`}> */}
+            <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+            {/* </Link> */}
+            <DeleteClass id={data.id} refetch={refetch} />
           </div>
         );
       },
@@ -212,10 +317,15 @@ export default function ScheduleManagement() {
     <Fragment>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddCourseScheduleModal visibility={isAdding} toggle={toggleAdding} />
+        <AddCourseScheduleModal
+          visibility={isAdding}
+          toggle={toggleAdding}
+          onCreate={refetch}
+        />
         <UploadBulkCourseScheduleModal
           isOpen={isBulkUploadOpen}
           toggle={toggleBulkUpload}
+          refetch={refetch}
         />
       </div>
 
@@ -344,7 +454,7 @@ export default function ScheduleManagement() {
       <main id="Table">
         {isLoading && <Spinner />}
         <Table.Wrapper>
-          {usersData && <Table columns={columns} data={usersData} />}
+          {usersData && <Table columns={columns} data={classes} />}
         </Table.Wrapper>
       </main>
     </Fragment>

@@ -15,6 +15,7 @@ type AssignInstructorModalProps = {
   visibility: boolean;
   defaultValues?: {
     email: string;
+    emailName?: string;
   };
   onAssign?: VoidFunction;
 };
@@ -28,6 +29,7 @@ export default function AssignInstructorModal({
   const { formData, formIsValid, updateForm } = useForm({
     initialState: defaultValues ?? {
       email: "",
+      emailName: "",
     },
   });
   const { isLoading, mutate } = useAssignRole();
@@ -122,6 +124,7 @@ export default function AssignInstructorModal({
                 fullWidth
                 disablePortal
                 id="Search Staff"
+                value={formData?.emailName as any}
                 loading={usersLoading}
                 options={userOptions}
                 renderInput={(params) => {
@@ -134,6 +137,7 @@ export default function AssignInstructorModal({
                   );
                 }}
                 onChange={(e, value) => {
+                  updateForm("emailName", value?.label);
                   updateForm("email", value?.id);
                 }}
               />

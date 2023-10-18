@@ -5,7 +5,7 @@ import queryKeys from "../../../queryKeys";
 export default function useCreateCourse() {
   const q = useQueryClient();
   const { course, courses, allCourses } = queryKeys;
-  return useMutation((data: any) => api.post(`/courses/create`, data), {
+  return useMutation((data: any) => api.post(`/courses`, data), {
     onSuccess: () => q?.invalidateQueries([course, courses, allCourses]),
   });
 }

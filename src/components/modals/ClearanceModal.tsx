@@ -8,85 +8,110 @@ import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
 import { states } from "../../data/States";
 import { InstructorsData } from "../../data/InstructorsData";
+import { Autocomplete, TextField } from "@mui/material";
+import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
+import useClearanceApplication from "../../hooks/mutations/classes/useClearanceApplication";
+import handleError from "../../utils/handleError";
+import ToastContent from "../molecules/ToastContent";
+import { toast } from "react-toastify";
+import useUpdateClearanceApplication from "../../hooks/mutations/classes/useUpadateClearanceApplication";
+import FormRadioGroup from "../molecules/FormRadioGroup";
 
 interface LevelClearanceModalModalProps {
   toggle: VoidFunction;
   visibility: boolean;
   level?: string;
   onCreate?: VoidFunction;
+  defaultValues?: any;
 }
 
 export default function LevelClearanceModal({
   toggle,
   visibility,
   onCreate,
+  defaultValues,
   level,
 }: LevelClearanceModalModalProps) {
-  const { isLoading: campusesLoading, data } = useAllCampuses();
-  const createTuition = useCreateCampusTuition();
-  // const updateTuition = useUpdateCampusTuition(id ?? "");
+  const mainLevel = level === "Level 1" ? "LEVEL_1" : "LEVEL_2";
+  const createClearanceApplication = useClearanceApplication(mainLevel);
+  const updateClearanceApplication = useUpdateClearanceApplication(
+    mainLevel,
+    defaultValues?.id
+  );
 
-  const isLoading = createTuition.isLoading || campusesLoading;
+  console.log(level, mainLevel);
+
+  const isLoading =
+    createClearanceApplication.isLoading ||
+    updateClearanceApplication.isLoading;
 
   const initialState = {
-    isIntake: "",
-    takenQuizes: "",
-    takenCourses: "",
-    paidFees: "",
-    PMR: "",
+    intakeId: "",
+    intakeName: "",
+    hasPaidFees: "",
+    hasCompletedPMR: "",
+    hasTakenAllCourses: "",
+    hasTakenAllQuizzes: "",
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
     typeof initialState
   >({
-    initialState: initialState,
+    initialState: defaultValues ?? initialState,
   });
 
-  // function handleSubmit(e: FormEvent) {
-  //   e.preventDefault();
+  const { data: intakeData, isLoading: intakeLoading } = useAllIntakes();
 
-  //   const { level, campus, ...otherData } = formData;
+  const intakeOptions = intakeData?.nodes?.map((session: any) => ({
+    label: session?.name,
+    id: session?.id,
+  }));
 
-  //   if (formIsValid) {
-  //     isCreating
-  //       ? createTuition.mutate(formData, {
-  //           onSuccess: () => {
-  //             toast.success(
-  //               <ToastContent
-  //                 type={"success"}
-  //                 heading={"Success"}
-  //                 message={`Successfully created campus tuition`}
-  //               />,
-  //               ToastContent.Config
-  //             );
-  //             !!onCreate && onCreate();
-  //             toggle();
-  //           },
-  //           onError: (e: any) => {
-  //             handleError(e, formData);
-  //           },
-  //         })
-  //       : updateTuition.mutate(otherData, {
-  //           onSuccess: () => {
-  //             toast.success(
-  //               <ToastContent
-  //                 type={"success"}
-  //                 heading={"Success"}
-  //                 message={`Successfully updated campus tuition`}
-  //               />,
-  //               ToastContent.Config
-  //             );
-  //             toggle();
-  //           },
-  //           onError: (e: any) => {
-  //             handleError(e, formData);
-  //           },
-  //         });
-  //   } else {
-  //     alert("Please fill in all fields");
-  //     console.log(formData);
-  //   }
-  // }
+  console.log(intakeData, intakeOptions);
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    if (formIsValid) {
+      !defaultValues
+        ? createClearanceApplication.mutate(formData, {
+            onSuccess: () => {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Success"}
+                  message={`Clearance Application was Successfully`}
+                />,
+                ToastContent.Config
+              );
+              !!onCreate && onCreate();
+              toggle();
+            },
+            onError: (e: any) => {
+              handleError(e, formData);
+            },
+          })
+        : updateClearanceApplication.mutate(formData, {
+            onSuccess: () => {
+              toast.success(
+                <ToastContent
+                  type={"success"}
+                  heading={"Success"}
+                  message={`Clearance Upadate was Successfully`}
+                />,
+                ToastContent.Config
+              );
+              toggle();
+            },
+            onError: (e: any) => {
+              handleError(e, formData);
+            },
+          });
+    } else {
+      alert("Please fill in all fields");
+      console.log(formData);
+    }
+  }
 
   return (
     <Modal centered isOpen={visibility} toggle={toggle}>
@@ -95,43 +120,78 @@ export default function LevelClearanceModal({
         //   className="bg-blue-800 text-white"
       >
         {level === "Level 1"
-          ? "Application For Level 1 Clearance"
-          : "Application For Level 2 Clearance"}
+          ? `${
+              defaultValues
+                ? "Updating Level 1 Application"
+                : "Application For Level 1 Clearance"
+            }`
+          : `${
+              defaultValues
+                ? "Updating Level 2 Application"
+                : "Application For Level 2 Clearance"
+            }`}
       </ModalHeader>
       <ModalBody>
-        <form onSubmit={() => {}}>
-          <FormDropdown
-            title="Intake"
-            value={formData?.isIntake}
-            options={["No", "Yes"].map((d: any) => ({ children: d }))}
-            onChange={(e) => updateForm("isIntake", e?.target?.value)}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="Search Intake">Intake ID</label>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="Search Intake"
+              loading={intakeLoading}
+              value={formData?.intakeName}
+              options={intakeOptions}
+              renderInput={(params) => {
+                return (
+                  <TextField
+                    {...params}
+                    placeholder="Search Intake"
+                    className="form-control "
+                  />
+                );
+              }}
+              onChange={(e, value: any) => {
+                updateForm("intakeName", value?.label);
+                updateForm("intakeId", value?.id);
+              }}
+            />
+          </div>
+
+          <FormRadioGroup
+            label="Have You Taken All Courses?"
+            options={["Yes", "No"]}
+            onChange={(e) => {
+              updateForm("hasTakenAllCourses", !!(e.target.value === "Yes"));
+            }}
+            hasErrors={formErrors?.hasTakenAllCourses}
           />
 
-          <FormDropdown
-            title="Have You Taken All Courses?"
-            value={formData?.takenCourses}
-            options={["No", "Yes"].map((d: any) => ({ children: d }))}
-            onChange={(e) => updateForm("takenCourses", e?.target?.value)}
-          />
-          <FormDropdown
-            title="Have You Taken All Quizes?"
-            value={formData?.takenQuizes}
-            options={["No", "Yes"].map((d: any) => ({ children: d }))}
-            onChange={(e) => updateForm("takenQuizes", e?.target?.value)}
+          <FormRadioGroup
+            label="Have You Taken All Quizes?"
+            options={["Yes", "No"]}
+            onChange={(e) => {
+              updateForm("hasTakenAllQuizzes", !!(e.target.value === "Yes"));
+            }}
+            hasErrors={formErrors?.hasTakenAllQuizzes}
           />
 
-          <FormDropdown
-            title="Have You Paid-up Your Fees?"
-            value={formData?.paidFees}
-            options={["No", "Yes"].map((d: any) => ({ children: d }))}
-            onChange={(e) => updateForm("takenCourses", e?.target?.value)}
+          <FormRadioGroup
+            label="Have You Paid-up Your Fees?"
+            options={["Yes", "No"]}
+            onChange={(e) => {
+              updateForm("hasPaidFees", !!(e.target.value === "Yes"));
+            }}
+            hasErrors={formErrors?.hasPaidFees}
           />
 
-          <FormDropdown
-            title="Have You Completed your PMR?"
-            value={formData?.PMR}
-            options={["No", "Yes"].map((d: any) => ({ children: d }))}
-            onChange={(e) => updateForm("PMR", e?.target?.value)}
+          <FormRadioGroup
+            label="Have You Completed your PMR?"
+            options={["Yes", "No"]}
+            onChange={(e) => {
+              updateForm("hasCompletedPMR", !!(e.target.value === "Yes"));
+            }}
+            hasErrors={formErrors?.hasCompletedPMR}
           />
           {isLoading ? (
             <Spinner />

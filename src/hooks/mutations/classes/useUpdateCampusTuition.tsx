@@ -10,7 +10,7 @@ interface Data {
   feePayment: number;
   initialPayment: number;
   installmentMinimum: number;
-  installmentDuration: number;
+  installmentMinimumDurationInMonths: number;
   dueDate: string;
 }
 

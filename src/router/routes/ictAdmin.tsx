@@ -149,6 +149,17 @@ const ictAdminRoutes = [
       resource: "Admins",
     },
   },
+
+  {
+    path: "/ict-admin/attendance",
+    component: lazy(
+      () => import("../../views/ict-admin/ClassCourseAttendance")
+    ),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
   {
     path: "/ict-admin/instructors",
     component: lazy(() => import("../../views/ict-admin/Instructors")),
@@ -200,6 +211,24 @@ const ictAdminRoutes = [
   {
     path: "/ict-admin/exams",
     component: lazy(() => import("../../views/ict-admin/Exams")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+
+  {
+    path: "/ict-admin/exam-details/:id",
+    component: lazy(() => import("../../views/ict-admin/ExamDetails")),
+    meta: {
+      action: "read",
+      resource: "Admins",
+    },
+  },
+
+  {
+    path: "/ict-admin/quiz-details/:id",
+    component: lazy(() => import("../../views/ict-admin/QuizDetails")),
     meta: {
       action: "read",
       resource: "Admins",

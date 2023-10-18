@@ -40,6 +40,7 @@ export default function EditCampusModal({
     levels: data?.levels,
     name: data?.name,
     region: data?.region,
+    email: data?.email,
     currency: data?.currency,
     continent: data?.continent,
     campusCode: data?.campusCode,
@@ -49,11 +50,10 @@ export default function EditCampusModal({
     shortName: data?.shortName,
     country: data?.address?.country,
     campusAbbreviation: data?.campusAbbreviation,
-
     city: data?.address?.city,
     street: data?.address?.street,
     state: data?.address?.state,
-    // zipCode: data?.zipCode,
+    zipCode: data?.zipCode,
   };
 
   const editCampus = useEditCampus(data?.id);
@@ -91,7 +91,9 @@ export default function EditCampusModal({
       city: formData.city,
       street: formData.state,
       state: formData.state,
-      // zipCode: formData.zipCode,
+      region: formData.region,
+      zipCode: +formData.zipCode,
+      country: formData.country,
     };
 
     const data2 = {
@@ -179,7 +181,13 @@ export default function EditCampusModal({
               value={formData?.levels}
               onChange={(e) => updateForm("levels", e.target.value)}
               options={levelData?.map((v: any) => ({ children: v.name }))}
-              setLevelValues={setLevelValues}
+              setValues={setLevelValues}
+            />
+            <FormInput
+              label="Email"
+              placeholder="Enter Campus Email"
+              onChange={(e) => updateForm("email", e?.target?.value)}
+              value={formData?.email}
             />
 
             <FormInput
@@ -233,12 +241,12 @@ export default function EditCampusModal({
               disabled
             />
 
-            {/* <FormInput
-            label="Zip Code"
-            placeholder="Zip Code"
-            onChange={(e) => updateForm("zipCode", e?.target?.value)}
-            value={formData?.zipCode}
-          /> */}
+            <FormInput
+              label="Zip Code"
+              placeholder="Zip Code"
+              onChange={(e) => updateForm("zipCode", e?.target?.value)}
+              value={formData?.zipCode}
+            />
 
             <FormInput
               label="Continent"

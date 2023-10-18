@@ -22,6 +22,9 @@ import useAllIntakes from "../../hooks/queries/classes/useAllIntakes";
 import { MdOutlineCancel } from "react-icons/md";
 import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
 import useDeleteApplication from "../../hooks/mutations/classes/useDeleteApplication";
+import { AiOutlineCaretDown } from "react-icons/ai";
+import AddstudentApplicationModal from "../../components/modals/AddStudentApplicationModal";
+import UploadBulkStudentApplicationModal from "../../components/modals/UploadBulkStudentApplicationModal";
 
 interface ViewApplicationProps {
   status?: any;
@@ -211,20 +214,20 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
 export default function Applications() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
+  const [addStudentDropDown, setAddStudentDropDown] = useState(false);
   const [isFiltering, toggleFiltering] = useToggle();
-  const { data, isLoading, refetch } = useApplications(
-    filtering ? filters : {}
-  );
+  const [isAdding, toggleAdding] = useToggle();
+  const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
+  const { data, isLoading, refetch } = useApplications(filters);
   const { data: sessionsData } = useAcademicSessions();
 
   const { data: campusesData } = useAllCampuses();
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
 
   // useEffect(()=>{
   //   const { data, isLoading, refetch } = useApplications(filters);
   // },[])
 
-  console.log(userData);
+  console.log(filters);
 
   const campusOptions = campusesData?.nodes?.map((d: any) => ({
     children: d?.name,
@@ -304,10 +307,10 @@ export default function Applications() {
     isOpen: isFiltering,
     onFilter: (params: any) => {
       setFilters({
-        intake: params?.intake,
         campus: params?.campus,
         session: params?.session,
         status: params?.status,
+        intake: params?.intake,
         applicationDateFrom: params?.applicationDateFrom
           ? params?.applicationDateFrom
           : null,
@@ -329,6 +332,12 @@ export default function Applications() {
 
   return (
     <section>
+      <AddstudentApplicationModal isOpen={isAdding} toggle={toggleAdding} />
+      <UploadBulkStudentApplicationModal
+        isOpen={isBulkUploadOpen}
+        toggle={toggleBulkUpload}
+        refetch={refetch}
+      />
       <div
         className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
         style={{ color: "white", fontWeight: 700 }}
@@ -437,7 +446,7 @@ export default function Applications() {
         >
           <button
             className="btn btn-outline-info btn-lg "
-            style={{ width: "fit-content" }}
+            style={{ width: "fit-content", height: "50px" }}
             onClick={() => {
               toggleFiltering();
               setFiltering(false);
@@ -446,6 +455,44 @@ export default function Applications() {
           >
             Filter
           </button>
+
+          <div
+            className=""
+            // style={{
+            //   height: `${addStudentDropDown ? "150px" : ""}`,
+            // }}
+          >
+            <button
+              className="btn btn-blue-800 btn-lg mb-3 "
+              style={{ width: "fit-content" }}
+              onClick={() => setAddStudentDropDown(() => !addStudentDropDown)}
+            >
+              Add New Application <AiOutlineCaretDown className="mx-3" />
+            </button>
+
+            {addStudentDropDown && (
+              <div
+                className="position-absolute d-flex gap-3 flex-column z-3 bg-white p-3"
+                // style={{ width: "200px" }}
+              >
+                <button
+                  className="btn btn-blue-800 btn-lg"
+                  style={{ minWidth: "100%" }}
+                  onClick={toggleAdding}
+                >
+                  Add single Application
+                </button>
+
+                <button
+                  className="btn btn-blue-800 btn-lg"
+                  style={{ minWidth: "100%" }}
+                  onClick={toggleBulkUpload}
+                >
+                  Bulk upload Applications
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </article>
       {data && (
@@ -460,7 +507,7 @@ export default function Applications() {
                 render: (data, i) => {
                   console.log(data);
 
-                  return <p>{i}</p>;
+                  return <p>{i + 1}</p>;
                 },
               },
               {

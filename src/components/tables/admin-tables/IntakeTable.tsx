@@ -28,7 +28,6 @@ function ModifyIntake({ data, onCreate }: Props) {
     isActive: data?.isActive,
     id: data?.id,
   };
-  console.log(defaultValues?.id);
 
   const deleteMutation = useDeleteIntake(defaultValues?.id as string);
   const isLoading = deleteMutation?.isLoading;
@@ -56,11 +55,9 @@ function ModifyIntake({ data, onCreate }: Props) {
         />,
         ToastContent.Config
       );
+      toggleDeleteModal();
     }
-    toggleDeleteModal();
   };
-
-  console.log(data);
 
   return (
     <>
@@ -73,6 +70,7 @@ function ModifyIntake({ data, onCreate }: Props) {
         onDelete={handleDelete}
         isLoading={isLoading}
       />
+
       <AddIntakeModal {...{ visibility, toggle, defaultValues, onCreate }} />
     </>
   );
@@ -108,11 +106,15 @@ export default function IntakeTable() {
     },
 
     {
+      key: "active",
+      title: "Active",
+      render: (data) => <p>{data?.isActive ? "Yes" : "No"}</p>,
+    },
+
+    {
       key: "Action",
       title: "Action",
       render: (data) => {
-        console.log(data);
-
         return (
           <div className="d-flex gap-3">
             <ModifyIntake onCreate={refetch} data={data} />

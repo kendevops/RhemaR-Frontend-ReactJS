@@ -34,7 +34,7 @@ const StudentServiceAdminRoutes = [
   },
 
   {
-    path: "/student-services-admin/course-details",
+    path: "/student-services-admin/course-details/:id",
     component: lazy(() =>
       import("../../views/campus-coordinator/courseDetails")
     ),
@@ -49,6 +49,12 @@ const StudentServiceAdminRoutes = [
     path: "/student-services-admin/course-management",
     component: lazy(() =>
       import("../../views/campus-coordinator/courseManagement")
+    ),
+  },
+  {
+    path: "/student-services-admin/academic-reports",
+    component: lazy(() =>
+      import("../../views/campus-coordinator/AcademicReports")
     ),
   },
   {
