@@ -32,11 +32,11 @@ export default function ExamDetails() {
     Array.from(Array(numQuestions).keys())?.map((val, ind) => {
       return {
         quizId: quizData?.id,
-        text: "questiontest2" + `${ind}`,
-        score: 1,
+        text: "No Question" + `${ind}`,
+        score: "",
         isActive: true,
-        answer: "a",
-        options: ["a", "b", "c", "d"],
+        answer: "",
+        options: [],
       };
     })
   );
@@ -254,11 +254,11 @@ export default function ExamDetails() {
                         (val, ind) => {
                           return {
                             quizId: quizData?.id,
-                            text: "questiontest2" + `${ind}`,
-                            score: 1,
+                            text: "No Question" + `${ind}`,
+                            score: "",
                             isActive: true,
-                            answer: "a",
-                            options: ["a", "b", "c", "d"],
+                            answer: "",
+                            options: [],
                           };
                         }
                       )
@@ -279,11 +279,11 @@ export default function ExamDetails() {
                         (val, ind) => {
                           return {
                             quizId: quizData?.id,
-                            text: "questiontest2" + `${ind}`,
-                            score: 1,
+                            text: "No Question" + `${ind}`,
+                            score: "",
                             isActive: true,
-                            answer: "a",
-                            options: ["a", "b", "c", "d"],
+                            answer: "",
+                            options: [],
                           };
                         }
                       )

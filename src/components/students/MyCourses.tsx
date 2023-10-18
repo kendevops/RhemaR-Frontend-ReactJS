@@ -20,7 +20,7 @@ const courseColumns: TableColumns<any>[] = [
   {
     key: "Course Title",
     title: "Course Title",
-    render: (data) => <p>{data?.title}</p>,
+    render: (data) => <p>{data?.name}</p>,
   },
   {
     key: "% Complete",
@@ -39,22 +39,27 @@ const courseColumns: TableColumns<any>[] = [
       };
 
       return (
-        <Doughnut
-          style={{
-            maxWidth: "3rem",
-            maxHeight: "3rem",
-          }}
-          height={5}
-          width={5}
-          data={dat}
-        />
+        <div className="d-flex justify-content-center ">
+          <Doughnut
+            style={{
+              maxWidth: "3rem",
+              maxHeight: "3rem",
+              textAlign: "center",
+            }}
+            height={5}
+            width={5}
+            data={dat}
+          />
+        </div>
       );
     },
   },
   {
     key: "Score",
     title: "Score",
-    render: (data) => <p>{data?.report?.score ?? "-"}</p>,
+    render: (data) => (
+      <p style={{ textAlign: "center" }}>{data?.report?.score ?? "-"}</p>
+    ),
   },
 ];
 
@@ -80,14 +85,14 @@ export default function MyCourses() {
   const { data: courses, isLoading } = useCourses();
   const [missedCourses, setMissedCourses] = useState(false);
 
-  let coursesData: any[] = courses?.courses;
+  let coursesData: any[] = courses?.courses?.nodes;
 
   // for missed classes, set the start time to a previous date
-  const { data, isLoading: missedLoading } = useClasses({
-    status: "ended",
-  });
+  const { data, isLoading: missedLoading } = useClasses({});
 
   const missedData = data?.classes?.nodes;
+
+  console.log(missedData);
 
   const dataLoaded = !!missedData && !!coursesData;
 

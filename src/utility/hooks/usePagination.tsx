@@ -7,6 +7,8 @@ export default function usePagination(data: any[], itemsPerPage: number) {
   const isWholeNumber = dataPerPage % 1 === 0;
   const lastPage = isWholeNumber ? dataPerPage : Math.floor(dataPerPage) + 1;
 
+  console.log(data);
+
   const paginatedData = data?.filter(
     (_, i) => i >= (page - 1) * itemsPerPage && i <= (itemsPerPage - 1) * page
   );

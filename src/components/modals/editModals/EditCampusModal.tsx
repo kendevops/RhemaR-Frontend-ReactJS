@@ -181,7 +181,7 @@ export default function EditCampusModal({
               value={formData?.levels}
               onChange={(e) => updateForm("levels", e.target.value)}
               options={levelData?.map((v: any) => ({ children: v.name }))}
-              setLevelValues={setLevelValues}
+              setValues={setLevelValues}
             />
             <FormInput
               label="Email"

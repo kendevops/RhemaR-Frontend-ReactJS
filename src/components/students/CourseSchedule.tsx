@@ -34,7 +34,9 @@ export default function CourseSchedule({ title }: any) {
   const { data, isLoading } = useClasses({});
 
   const allClasses = data?.classes?.nodes;
-  let classes = allClasses;
+  let classes = allClasses?.filter(
+    (cl: any) => cl.onlineStatus !== "ONGOING" && cl.onlineStatus !== "ENDED"
+  );
 
   console.log(classes);
 
@@ -127,7 +129,7 @@ export default function CourseSchedule({ title }: any) {
         <div>
           {classes ? (
             classes
-              ?.filter?.((c: any, i: number) => i <= 4)
+              ?.filter?.((c: any, inx: number) => inx <= 4)
               .map((clas: any, i: number) => {
                 return (
                   <>

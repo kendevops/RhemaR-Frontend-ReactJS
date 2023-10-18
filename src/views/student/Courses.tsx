@@ -17,12 +17,15 @@ import useNotifications from "../../hooks/queries/notifications/useNotifications
 import Announcement from "../../components/molecules/Announcement";
 import SubmitProjectModal from "../../components/modals/SubmitProjectModal";
 import useToggle from "../../utility/hooks/useToggle";
+import { Icon } from "@iconify/react";
+import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 
 export default function StudentCourses() {
-  const { data, isLoading } = useClasses({
-    startTime: "2022-12-01T21:56:53.900Z",
-  });
+  const { data: userData, isLoading: userLoading } = useCurrentUser();
+  const { data, isLoading } = useClasses({});
   const lectures = data?.classes?.nodes;
+
+  console.log(lectures);
 
   const { data: notificationsData, isLoading: notifcationsLoading } =
     useNotifications();
@@ -33,6 +36,18 @@ export default function StudentCourses() {
 
   return (
     <section className="container my-5">
+      <div
+        className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
+        style={{ color: "white", fontWeight: 700 }}
+      >
+        <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
+        <div>Courses</div>
+        <div
+          className=" bg-white "
+          style={{ width: "2px", height: "20px" }}
+        ></div>
+        <div>{`${userData?.currentCampus?.name}`}</div>{" "}
+      </div>
       <Row>
         <ColWrapper lg="5">
           {/* Upcoming Lecture */}
@@ -52,38 +67,40 @@ export default function StudentCourses() {
               {lectures && lectures[0] && (
                 <div className="p-1 bg-white rounded-2">
                   <time className="font-bold text-center text-blue-600">
-                    {new Date(lectures[0]?.startTime)?.getDate() ===
-                    new Date(lectures[0]?.endTime)?.getDate()
-                      ? new Date(lectures[0]?.startTime)?.getDate()
+                    {new Date(lectures[0]?.onlineStartDateTime)?.getDate() ===
+                    new Date(lectures[0]?.onlineEndDateTime)?.getDate()
+                      ? new Date(lectures[0]?.onlineStartDateTime)?.getDate()
                       : `${new Date(
-                          lectures[0]?.startTime
+                          lectures[0]?.onlineStartDateTime
                         )?.getDate()} - ${new Date(
-                          lectures[0]?.endTime
+                          lectures[0]?.onlineEndDateTime
                         )?.getDate()} `}{" "}
                     <br />
-                    {getMonth(new Date(lectures[0]?.startTime))}
+                    {getMonth(new Date(lectures[0]?.onlineStartDateTime))}
                   </time>
                 </div>
               )}
-              <div>
-                <h2 className="text-xl font-bold text-white">
-                  {(lectures && lectures[0]?.name) ?? ""}
-                </h2>
-                <div className="d-flex align-items-center gap-3">
-                  <Clock color="#fff" size={12} />
-                  <time className="text-white">
-                    {lectures &&
-                      getTimeString({
-                        date: new Date(lectures[0]?.startTime),
-                      })}{" "}
-                    -{" "}
-                    {lectures &&
-                      getTimeString({
-                        date: new Date(lectures[0]?.endTime),
-                      })}
-                  </time>
+              {lectures && lectures[0] && (
+                <div>
+                  <h2 className="text-xl font-bold text-white">
+                    {(lectures && lectures[0]?.name) ?? ""}
+                  </h2>
+                  <div className="d-flex align-items-center gap-3">
+                    <Clock color="#fff" size={12} />
+                    <time className="text-white">
+                      {lectures &&
+                        getTimeString({
+                          date: new Date(lectures[0]?.onlineStartDateTime),
+                        })}{" "}
+                      -{" "}
+                      {lectures &&
+                        getTimeString({
+                          date: new Date(lectures[0]?.onlineEndDateTime),
+                        })}
+                    </time>
+                  </div>
                 </div>
-              </div>
+              )}
               {lectures && (
                 <Link to={`/student/lecture/${lectures[0]?.id}`}>
                   <span
@@ -153,7 +170,7 @@ export default function StudentCourses() {
           <section>
             <h2 className="text-xl font-bold text-blue-600">Notifications</h2>
             <CardWrapper className="text-center">
-              {notifcationsLoading && <Spinner />}
+              {/* {notifcationsLoading && <Spinner />} */}
               {!!notifications ? (
                 <div>
                   <ul className="no-padding-left">
