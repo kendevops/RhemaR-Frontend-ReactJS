@@ -60,12 +60,6 @@ const SidebarToggle = (props) => {
           className="text-primary toggle-icon d-none d-xl-block"
           onClick={() => setMenuCollapsed(true)}
         />
-        // <Disc
-        //   size={40}
-        //   data-tour="toggle-icon"
-        //   className="text-primary toggle-icon d-none d-xl-block"
-        //   onClick={() => setMenuCollapsed(true)}
-        // />
       );
     } else {
       return (
