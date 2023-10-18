@@ -10,6 +10,8 @@ import TextArea from "../molecules/TextArea";
 import handleError from "../../utils/handleError";
 import FormInput from "../molecules/FormInput";
 import useCourses from "../../hooks/queries/classes/useCourses";
+import { toast } from "react-toastify";
+import ToastContent from "../molecules/ToastContent";
 
 interface props {
   toggle: VoidFunction;
@@ -26,9 +28,13 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
     desc: "",
   };
 
+  // const lectures = data?.classes?.nodes;
+
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
-  const coursesOptions = coursesData?.courses?.map((cours: any) => ({
-    label: cours?.title,
+  console.log(coursesData);
+
+  const coursesOptions = coursesData?.courses?.nodes?.map((cours: any) => ({
+    label: cours?.name,
     id: cours?.id,
   }));
 
@@ -46,8 +52,19 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
         title: formData.title,
       },
       {
-        onSuccess: () => {
+        onSuccess: (e) => {
           alert("Submitted");
+          console.log(e);
+
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Successful"}
+              message={"Project submission was successfully"}
+            />,
+            ToastContent.Config
+          );
+
           isOpen && toggle();
         },
         onError: (e) => handleError(e, formData, toggleError),
@@ -59,6 +76,8 @@ export default function SubmitProjectModal({ isOpen, toggle }: props) {
   const { startUpload, isLoading: isUploading } = useUploadFile({
     file: file!,
     onSuccess: (d) => {
+      console.log(d);
+
       const uploaded = {
         path: d?.fileUrl,
         name: file?.name,

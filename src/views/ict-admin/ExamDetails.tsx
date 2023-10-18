@@ -42,11 +42,11 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
     Array.from(Array(numQuestions).keys())?.map((val, ind) => {
       return {
         examId: examData2?.id,
-        text: "questiontest2" + `${ind}`,
-        score: 1,
+        text: "No Question" + `${ind}`,
+        score: "",
         isActive: true,
-        answer: "a",
-        options: ["a", "b", "c", "d"],
+        answer: "",
+        options: [],
       };
     })
   );
@@ -246,11 +246,11 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
                         (val, ind) => {
                           return {
                             examId: examData2?.id,
-                            text: "questiontest2" + `${ind}`,
-                            score: 1,
+                            text: "No Question" + `${ind}`,
+                            score: "",
                             isActive: true,
-                            answer: "a",
-                            options: ["a", "b", "c", "d"],
+                            answer: "",
+                            options: [],
                           };
                         }
                       )
@@ -271,11 +271,11 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
                         (val, ind) => {
                           return {
                             examId: examData2?.id,
-                            text: "questiontest2" + `${ind}`,
-                            score: 1,
+                            text: "No Question" + `${ind}`,
+                            score: "",
                             isActive: true,
-                            answer: "a",
-                            options: ["a", "b", "c", "d"],
+                            answer: "",
+                            options: [],
                           };
                         }
                       )

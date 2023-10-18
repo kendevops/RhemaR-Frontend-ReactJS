@@ -83,11 +83,11 @@ export default function CreateExamModal({
     defaultValues?.questions ??
       Array.from(Array(numQuestions).keys())?.map((val, ind) => {
         return {
-          text: "questiontest2" + `${ind}`,
-          score: 1,
+          text: "No Question" + `${ind}`,
+          score: "",
           isActive: true,
-          answer: "a",
-          options: ["a", "b", "c", "d"],
+          answer: "",
+          options: [],
         };
       })
   );
@@ -333,11 +333,11 @@ export default function CreateExamModal({
                         Array.from(Array(numQuestions).keys())?.map(
                           (val, ind) => {
                             return {
-                              text: "questiontest2" + `${ind}`,
-                              score: 1,
+                              text: "No Question" + `${ind}`,
+                              score: "",
                               isActive: true,
-                              answer: "a",
-                              options: ["a", "b", "c", "d"],
+                              answer: "",
+                              options: [],
                             };
                           }
                         )
@@ -357,11 +357,11 @@ export default function CreateExamModal({
                         Array.from(Array(numQuestions).keys())?.map(
                           (val, ind) => {
                             return {
-                              text: "questiontest2" + `${ind}`,
-                              score: 1,
+                              text: "No Question" + `${ind}`,
+                              score: "",
                               isActive: true,
-                              answer: "a",
-                              options: ["a", "b", "c", "d"],
+                              answer: "",
+                              options: [],
                             };
                           }
                         )

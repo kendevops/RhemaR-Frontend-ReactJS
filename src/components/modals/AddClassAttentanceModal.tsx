@@ -46,6 +46,8 @@ export default function AddClassAttendanceModal({
   const isCreating = !defaultValues;
 
   const [filters, setFilters] = useState<FiltersProps>({});
+  const [sectionIdValues, setSectionIdValues] = useState<any>([]);
+
   const {
     data: classesData,
     isLoading: classesLoading,
@@ -69,11 +71,12 @@ export default function AddClassAttendanceModal({
     classId: "",
     className: "",
     attendanceMethod: "",
-    sectionsLeftAt: "",
-    sectionsJoinedAt: "",
+    // sectionsLeftAt: "",
+    // sectionsJoinedAt: "",
     watchTime: "",
-    sectionId: "",
+    // sectionId: "",
     sectionName: "",
+    sectionIds: [],
   };
 
   const { formData, formIsValid, updateForm, formErrors } = useForm<
@@ -103,7 +106,7 @@ export default function AddClassAttendanceModal({
     ?.filter((cls: any) => cls?.name === formData?.className)
     ?.map((cor: any) =>
       cor?.course?.sections?.map((c: any) => ({
-        label: c?.name,
+        name: c?.name,
         id: c?.id,
       }))
     );
@@ -112,27 +115,37 @@ export default function AddClassAttendanceModal({
     ? []?.concat(...sectionOptions)
     : [];
 
+  console.log(sectionIdValues);
+
+  const sectionIdsObject = sectionIdValues?.map((item: any) => ({
+    sectionId: item,
+  }));
+  console.log(sectionIdsObject);
+
+  console.log(flattenedSectionOptions);
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     const {
-      sectionsLeftAt,
-      sectionsJoinedAt,
-      sectionId,
+      // sectionsLeftAt,
+      // sectionsJoinedAt,
+      // sectionId,
       watchTime,
       ...otherData
     } = formData;
 
     const body = {
       ...formData,
-      sectionsAttendances: [
-        {
-          leftAt: sectionsLeftAt,
-          joinedAt: sectionsJoinedAt,
-          watchTime: +watchTime,
-          sectionId: sectionId,
-        },
-      ],
+      sectionsAttendances: sectionIdsObject,
+      // [
+      //   {
+      //     // leftAt: sectionsLeftAt,
+      //     // joinedAt: sectionsJoinedAt,
+      //     // watchTime: +watchTime,
+      //     sectionId: sectionId,
+      //   },
+      //   // sectionIdsObject,
+      // ],
     };
 
     if (formIsValid) {
@@ -217,8 +230,6 @@ export default function AddClassAttendanceModal({
                 );
               }}
               onChange={(e, value: any) => {
-                console.log(value);
-
                 updateForm("userName", value?.label);
                 updateForm("userId", value?.id);
               }}
@@ -250,7 +261,7 @@ export default function AddClassAttendanceModal({
             />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="Search section">Section ID</label>
             <Autocomplete
               fullWidth
@@ -274,7 +285,16 @@ export default function AddClassAttendanceModal({
                 updateForm("sectionId", value?.id);
               }}
             />
-          </div>
+          </div> */}
+
+          <FormDropdownSelectMultiple
+            title="Sectiion Ids"
+            // value={formData?.levels}
+            onChange={(e) => updateForm("sectionIds", e.target.value)}
+            options={flattenedSectionOptions?.map((v: any) => v)}
+            setIdVales={setSectionIdValues}
+            disabled={!isCreating}
+          />
 
           <FormInput
             label="Joined class at"
@@ -290,7 +310,7 @@ export default function AddClassAttendanceModal({
               updateForm("leftAt", new Date(e?.target?.value)?.toISOString())
             }
           />
-          <FormInput
+          {/* <FormInput
             label="Joined section at"
             type={"date"}
             onChange={(e) =>
@@ -299,9 +319,9 @@ export default function AddClassAttendanceModal({
                 new Date(e?.target?.value)?.toISOString()
               )
             }
-          />
+          /> */}
 
-          <FormInput
+          {/* <FormInput
             label="Left section at"
             type={"date"}
             onChange={(e) =>
@@ -310,7 +330,7 @@ export default function AddClassAttendanceModal({
                 new Date(e?.target?.value)?.toISOString()
               )
             }
-          />
+          /> */}
 
           {isLoading ? (
             <Spinner />

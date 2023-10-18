@@ -82,11 +82,11 @@ export default function CreateQuizModal({
     defaultValues?.questions ??
       Array.from(Array(numQuestions).keys())?.map((val, ind) => {
         return {
-          text: "questiontest2" + `${ind}`,
-          score: 1,
+          text: "No Question" + `${ind}`,
+          score: "",
           isActive: true,
-          answer: "a",
-          options: ["a", "b", "c", "d"],
+          answer: "",
+          options: [],
         };
       })
   );
@@ -348,11 +348,11 @@ export default function CreateQuizModal({
                           Array.from(Array(numQuestions).keys())?.map(
                             (val, ind) => {
                               return {
-                                text: "questiontest2" + `${ind}`,
-                                score: 1,
+                                text: "No Question" + `${ind}`,
+                                score: "",
                                 isActive: true,
-                                answer: "a",
-                                options: ["a", "b", "c", "d"],
+                                answer: "",
+                                options: [],
                               };
                             }
                           )
@@ -373,11 +373,11 @@ export default function CreateQuizModal({
                           Array.from(Array(numQuestions).keys())?.map(
                             (val, ind) => {
                               return {
-                                text: "questiontest2" + `${ind}`,
-                                score: 1,
+                                text: "No Question" + `${ind}`,
+                                score: "",
                                 isActive: true,
-                                answer: "a",
-                                options: ["a", "b", "c", "d"],
+                                answer: "",
+                                options: [],
                               };
                             }
                           )

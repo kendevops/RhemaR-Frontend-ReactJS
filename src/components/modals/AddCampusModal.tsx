@@ -155,8 +155,8 @@ export default function AddCampusModal({
             title="Campus Levels"
             // value={formData?.levels}
             onChange={(e) => updateForm("levels", e.target.value)}
-            options={levelData?.map((v: any) => ({ children: v.name }))}
-            setLevelValues={setLevelValues}
+            options={levelData?.map((v: any) => v)}
+            setValues={setLevelValues}
             disabled={!isCreating}
           />
 

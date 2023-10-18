@@ -14,12 +14,13 @@ interface FormDropdownOption {
 }
 
 type FormDropdownProps = {
-  options: FormDropdownOption[];
+  options: any;
   title: string;
   lg?: string;
   md?: string;
   hasErrors?: boolean;
-  setLevelValues?: any;
+  setValues?: any;
+  setIdVales?: any;
 } & React.SelectHTMLAttributes<HTMLSelectElement>;
 
 export default function FormDropdownSelectMultiple({
@@ -29,31 +30,42 @@ export default function FormDropdownSelectMultiple({
   md,
   hasErrors,
   value,
-  setLevelValues,
+  setValues,
+  setIdVales,
   ...otherProps
 }: FormDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<any>([]);
 
-  console.log(value);
+  console.log(options);
 
   const toggle = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option: string) => {
+  const handleOptionClick = (option: string, id: string) => {
     setSelectedOptions((prevSelected) =>
       prevSelected.includes(option)
         ? prevSelected.filter((item) => item !== option)
         : [...prevSelected, option]
     );
 
-    setLevelValues((prevSelected: any) =>
-      prevSelected.includes(option)
-        ? prevSelected.filter((item: any) => item !== option)
-        : [...prevSelected, option]
-    );
+    if (setValues) {
+      setValues((prevSelected: any) =>
+        prevSelected.includes(option)
+          ? prevSelected.filter((item: any) => item !== option)
+          : [...prevSelected, option]
+      );
+    }
+
+    if (setIdVales) {
+      setIdVales((prevSelected: any) =>
+        prevSelected.includes(id)
+          ? prevSelected.filter((item: any) => item !== id)
+          : [...prevSelected, id]
+      );
+    }
   };
 
   //
@@ -92,15 +104,15 @@ export default function FormDropdownSelectMultiple({
         //   width: "100%",
         // }}
         >
-          {options?.map(({ children }, i) => {
-            console.log(children);
+          {options?.map((v: any, i: number) => {
+            console.log(v);
 
             return (
               <DropdownItem
                 key={i.toString()}
-                onClick={() => handleOptionClick(children as string)}
+                onClick={() => handleOptionClick(v.name as string, v.id)}
               >
-                {children}
+                {v.name}
               </DropdownItem>
             );
           })}

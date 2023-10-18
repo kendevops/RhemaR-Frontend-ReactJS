@@ -58,18 +58,15 @@ const StudentDashboardPage = () => {
     (clas) => clas?.onsiteStatus === "ONGOING"
   );
 
-  const completion = coursesReport?.reduce(
-    (a, b) => {
-      return (a?.completion ?? 0) + (b?.completion ?? 0);
-    },
-    [0]
-  );
+  const completion = coursesReport?.reduce((sum, course) => {
+    return sum + (course?.completion ?? 0);
+  }, 0);
 
   const totalCompletion = courses?.length * 100;
 
   const semesterProgress = Math.floor((completion / totalCompletion) * 100);
 
-  // console.log(semesterProgress, coursesReport);
+  console.log(semesterProgress, totalCompletion);
 
   // console.log(paymentHistory);
 
@@ -98,15 +95,12 @@ const StudentDashboardPage = () => {
     const startTime = new Date(startDate).getTime();
     const endTime = new Date(endDate).getTime();
 
-    console.log(endTime, startTime);
-
     const totalDuration = endTime - startTime;
     const elapsedDuration = currentTime - startTime;
 
     const calculatedProgress = Math.round(
       (elapsedDuration / totalDuration) * 100
     );
-    console.log(totalDuration, elapsedDuration, calculatedProgress);
     setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
   }, [startDate, endDate]);
 
@@ -122,7 +116,7 @@ const StudentDashboardPage = () => {
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
+        <div>{`${userData?.firstName} ${userData?.lastName}`}</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
@@ -223,12 +217,6 @@ const StudentDashboardPage = () => {
                     }
                   />
                 </Link>
-
-                <div
-                  style={{ position: "absolute", right: "15px", top: "15px" }}
-                >
-                  <MdCancel style={{ color: "red", fontSize: "23px" }} />
-                </div>
               </article>
             ) : (
               <p className="text-xl font-bold">No Onging Online Lectures</p>
@@ -238,7 +226,7 @@ const StudentDashboardPage = () => {
           <section className="bg-white r-card px-5   py-4">
             <div className="d-flex gap-3 align-center ">
               <FaCalendarAlt />
-              <p className="r-card-title">Ongoing OnSite Lecture</p>
+              <p className="r-card-title">Ongoing Onsite Lecture</p>
             </div>
             <hr />
             {ongoingOnsiteClasses?.length > 0 ? (
@@ -254,12 +242,6 @@ const StudentDashboardPage = () => {
                     }
                   />
                 </Link>
-
-                <div
-                  style={{ position: "absolute", right: "15px", top: "15px" }}
-                >
-                  <MdCancel style={{ color: "red", fontSize: "23px" }} />
-                </div>
               </article>
             ) : (
               <p className="text-xl font-bold">No Onging Onsite Lectures</p>
@@ -272,7 +254,7 @@ const StudentDashboardPage = () => {
           </div> */}
           <div className=" mb-4">
             <CardWrapper>
-              <CourseSchedule title={"Upcoming Classes"} />
+              <CourseSchedule title={"Class Schedules"} />
             </CardWrapper>
           </div>
         </div>
