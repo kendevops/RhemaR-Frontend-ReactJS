@@ -11,10 +11,24 @@ import useDeleteQuiz from "../../../hooks/mutations/classes/useDeleteQuiz";
 import useAllQuizes from "../../../hooks/queries/classes/useAllQuizes";
 import { Link } from "react-router-dom";
 import { FaEdit, FaRegEye } from "react-icons/fa";
+import FilterModal, { FilterProps } from "../../modals/FilterModal";
+import useAcademicSessions from "../../../hooks/queries/classes/useAcademicSessions";
+import useAllCampuses from "../../../hooks/queries/classes/useAllCampuses";
+import useAllCourses from "../../../hooks/queries/classes/useAllCourses";
+import useCampusLevel from "../../../hooks/queries/classes/useCampusLevel";
+import { useState } from "react";
 
 type EditQuizProps = {
   data: any;
   refetch: any;
+};
+
+type QuizesTableProps = {
+  isOpen?: boolean;
+  toggle: VoidFunction;
+  setFilters?: any;
+  filters?: any;
+  setFiltering?: any;
 };
 
 function EditQuiz({ data, refetch }: EditQuizProps) {
@@ -70,16 +84,100 @@ function EditQuiz({ data, refetch }: EditQuizProps) {
   );
 }
 
-export default function QuizesTable() {
-  // const { data: examsData, isLoading, refetch } = useAllExams();
-  const { data: examsData, isLoading, refetch } = useAllQuizes();
+export default function QuizesTable({
+  isOpen,
+  toggle,
+  setFilters,
+  setFiltering,
+  filters,
+}: QuizesTableProps) {
+  const [filterQuizId, setFilterQuizId] = useState("");
+  const [filterLevelId, setFilterLevelId] = useState("");
+  const [filterCourseId, setFilterCourseId] = useState("");
 
-  const data = examsData?.nodes;
+  const { data: quizesData, isLoading, refetch } = useAllQuizes(filters);
+  const data = quizesData?.nodes;
 
-  console.log(data, examsData);
+  console.log(filters);
+
+  const quizOptions = data?.map((exam: any) => ({
+    children: exam?.name,
+    id: exam?.id,
+  }));
+
+  const { data: coursesData } = useAllCourses();
+  const coursesOptions = coursesData?.nodes?.map((cours: any) => ({
+    children: cours?.name,
+    id: cours?.id,
+  }));
+
+  const { data: levelData, isLoading: levelLoading } = useCampusLevel();
+  const levelOptions = levelData?.map((session: any) => ({
+    children: session?.name,
+    id: session?.id,
+  }));
+
+  console.log(data, quizesData);
+
+  const filterProps: FilterProps = {
+    params: [
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: quizOptions,
+        },
+        id: "quiz",
+        name: "Quiz",
+        setId: setFilterQuizId,
+      },
+
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: coursesOptions,
+        },
+        id: "course",
+        name: "Course",
+        setId: setFilterCourseId,
+      },
+
+      {
+        inputType: "Dropdown",
+        inputProps: {
+          options: levelOptions,
+        },
+        id: "level",
+        name: "Level",
+        setId: setFilterLevelId,
+      },
+    ],
+    isOpen: isOpen,
+    onFilter: (params: any) => {
+      setFilters(
+        Object.fromEntries(
+          Object.entries({
+            quizId: filterQuizId,
+            levelId: filterLevelId,
+            courseId: filterCourseId,
+            quiz: params?.quiz,
+            level: params?.level,
+            course: params?.course,
+          }).filter(([, value]) => value !== null && value !== "")
+        )
+      );
+      console.log(params);
+
+      refetch();
+      setFiltering(true);
+      toggle();
+    },
+    toggle: toggle,
+  };
 
   return (
     <>
+      <FilterModal {...filterProps} />
+
       <Table.Wrapper>
         {isLoading && <Spinner />}
         {data && (

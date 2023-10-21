@@ -6,6 +6,7 @@ import CardWrapper from "../../../components/students/CardWrapper";
 import useCurrentUser from "../../../hooks/queries/users/useCurrentUser";
 import usePaymentHistory from "../../../hooks/queries/users/usePaymentHistory";
 import downloadFile from "../../../utils/downloadFile";
+import SearchBar from "../../general/searchBar";
 
 const tabs = ["Fee Breakdown", "Payment History"];
 
@@ -23,6 +24,7 @@ const TuitionAndClearanceTable = () => {
   const application = applications?.length ? applications[0] : undefined;
 
   const feeData = application?.installments;
+
   const { data: paymentsData, isLoading: paymentsDataLoading } =
     usePaymentHistory();
 
@@ -64,7 +66,7 @@ const TuitionAndClearanceTable = () => {
       {
         title: "Payment",
         key: "Payment",
-        render: (d) => <p>{d?.payment ?? "Level 1 Fees"}</p>,
+        render: (d) => <p>{d?.type ?? "Level 1 Fees"}</p>,
       },
       {
         title: "Transaction ID",
@@ -93,7 +95,7 @@ const TuitionAndClearanceTable = () => {
             <>
               {d?.status === "success" ? (
                 <u>
-                  <a {...attributes}>Download Receipt</a>
+                  <a {...attributes}>Paid - Download Receipt</a>
                 </u>
               ) : (
                 <p>{d?.status}</p>
@@ -109,6 +111,9 @@ const TuitionAndClearanceTable = () => {
   return (
     <>
       {/* Table */}
+      <div className="text-center my-5">
+        <SearchBar />
+      </div>
       <CardWrapper>
         <Tab.Wrapper>
           {tabs.map((c, i) => {

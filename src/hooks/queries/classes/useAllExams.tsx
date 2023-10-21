@@ -4,7 +4,9 @@ import api from "../../../api";
 import embedParams from "../../../utils/embedParams";
 
 export default function useAllExams(params?: any) {
-  return useQuery([queryKeys.exams], () =>
+  console.log(params);
+
+  return useQuery([queryKeys.exams, embedParams(params)], () =>
     api.get(`/exams/${embedParams(params)}`).then((r) => r.data?.data?.exams)
   );
 }

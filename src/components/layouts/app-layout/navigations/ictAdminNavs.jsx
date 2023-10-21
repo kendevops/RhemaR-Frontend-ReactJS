@@ -100,14 +100,14 @@ export default [
   //   action: "read",
   //   resource: "Admins",
   // },
-  // {
-  //   id: "pmrs",
-  //   title: "PMRs",
-  //   icon: <Icon icon="bi:collection-fill" />,
-  //   navLink: "/ict-admin/pmrs",
-  //   action: "read",
-  //   resource: "Admins",
-  // },
+  {
+    id: "pmrs",
+    title: "PMRs",
+    icon: <Icon icon="bi:collection-fill" />,
+    navLink: "/ict-admin/pmrs",
+    action: "read",
+    resource: "Admins",
+  },
   // {
   //   id: "timetable",
   //   title: "Timetable",

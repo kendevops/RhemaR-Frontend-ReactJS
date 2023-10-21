@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
 import FormInput from "../molecules/FormInput";
@@ -32,11 +32,6 @@ export default function CreateCourseMaterialModal({
   toggle,
   isLoading,
 }: CreateCourseMaterialModalProps) {
-  // "type": "MAIN_CAMPUSES",
-  // "title": "christ the healer 2",
-  // "level": "LEVEL_1",
-  // "courseId": "6515fba4db0665b089ac4976",
-  // "instructorId": "641dc7962c089cd00f164848",
   const { formData, updateForm } = useForm({
     initialState: {
       title: defaultValues?.title ?? "",
@@ -56,6 +51,8 @@ export default function CreateCourseMaterialModal({
     defaultValues?.materials ?? []
   );
 
+  const [uploadingMaterials, setUploadingMaterials] = useState(false);
+
   const [assignments, setAssignments] = useState<any[]>(
     defaultValues?.assignments ?? []
   );
@@ -73,44 +70,24 @@ export default function CreateCourseMaterialModal({
     }
   }
 
-  //   const { file, onChangeFile } = useFileReader();
-
   const {
+    img,
     onChangeFile: onChangeMaterial,
     status: materialStatus,
     file: materialFile,
   } = useFileReader();
 
   const uploadMaterial = useUploadFile({
-    file: materialFile!,
-    onSuccess: (d) => {
+    file: materialFile as any,
+    onSuccess: async (d) => {
       console.log({ d });
-      console.log(materialFile);
+      // console.log(materialFile);
 
       handleAdd("material", {
-        name: materialFile?.name ?? Date?.now?.toString(),
+        name: materialFile?.name ?? "Unknwon file details",
         path: d?.fileUrl,
         size: materialFile?.size ?? 1024,
         type: materialFile?.type ?? "unknown",
-      });
-    },
-  });
-
-  const {
-    onChangeFile: onChangeAssignment,
-    status: assignmentStatus,
-    file: assignmentFile,
-  } = useFileReader();
-
-  const UploadAssignment = useUploadFile({
-    file: assignmentFile!,
-    onSuccess: (d) => {
-      console.log({ d });
-      handleAdd("assignment", {
-        name: assignmentFile?.name ?? Date?.now?.toString(),
-        path: d?.fileUrl,
-        size: assignmentFile?.size ?? 1024,
-        type: assignmentFile?.type ?? "unknown",
       });
     },
   });
@@ -127,6 +104,13 @@ export default function CreateCourseMaterialModal({
       });
     }
   }
+
+  useEffect(() => {
+    if (uploadingMaterials) {
+      uploadMaterial.startUpload();
+    }
+    setUploadingMaterials(false);
+  }, [uploadingMaterials]);
 
   function handleSubmit(e: any) {
     e.preventDefault();
@@ -150,14 +134,7 @@ export default function CreateCourseMaterialModal({
           {!!defaultValues ? "Modify Material" : "Create Material"}
         </ModalHeader>
         <ModalBody>
-          <form
-            // onSubmit={(e) => {
-            //   e.preventDefault();
-            //   uploadVideo.startUpload();
-            // }}
-
-            onSubmit={handleSubmit}
-          >
+          <form onSubmit={handleSubmit}>
             <FormDropdown
               title="type"
               value={formData?.type}
@@ -193,10 +170,9 @@ export default function CreateCourseMaterialModal({
                   </label>
                   <input
                     onChange={(e) => {
+                      // onChangeUploadFile(e);
                       onChangeMaterial(e);
-                      //   if (materialStatus?.success) {
-                      uploadMaterial.startUpload();
-                      //   }
+                      setUploadingMaterials(true);
                     }}
                     id="Upload"
                     type={"file"}

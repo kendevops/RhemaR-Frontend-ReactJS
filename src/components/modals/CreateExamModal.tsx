@@ -14,6 +14,7 @@ import FormDropdown from "../molecules/FormDropdown";
 import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 import useAllExams from "../../hooks/queries/classes/useAllExams";
 import useEditExam from "../../hooks/mutations/classes/useEditExam";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type CreateExamModalProps = {
   defaultValues?: any;
@@ -27,9 +28,6 @@ export default function CreateExamModal({
   isOpen,
 }: CreateExamModalProps) {
   const { refetch } = useAllExams();
-  const [numQuestions, setNumQuestions] = useState(
-    defaultValues?._count?.questions ?? 0
-  );
 
   const Options = ["Basic Information", "Questions"];
   const [option, setOption] = useState(0);
@@ -60,6 +58,14 @@ export default function CreateExamModal({
     score: 100,
   };
 
+  const initialQuestion = {
+    text: "No Question",
+    score: "",
+    isActive: true,
+    answer: "",
+    options: [],
+  };
+
   const {
     formData: basicInformation,
     updateForm: updateBasicInformation,
@@ -80,16 +86,7 @@ export default function CreateExamModal({
   });
 
   const [questions, setQuestions] = useState(
-    defaultValues?.questions ??
-      Array.from(Array(numQuestions).keys())?.map((val, ind) => {
-        return {
-          text: "No Question" + `${ind}`,
-          score: "",
-          isActive: true,
-          answer: "",
-          options: [],
-        };
-      })
+    defaultValues?.questions ?? [initialQuestion]
   );
 
   const { data: sessionsData, isLoading: sessionsLoading } =
@@ -100,8 +97,30 @@ export default function CreateExamModal({
     id: session?.id,
   }));
 
-  console.log(sessionsData, sessionOptions);
+  function addData() {
+    setQuestions((p: any) => {
+      return [...p, initialQuestion];
+    });
+  }
 
+  function add5Data() {
+    setQuestions((p: any) => {
+      return [
+        ...p,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+      ];
+    });
+  }
+
+  function removeData(index: number) {
+    setQuestions((p: any) => {
+      return p?.filter((_: any, i: number) => i !== index);
+    });
+  }
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
 
@@ -312,37 +331,36 @@ export default function CreateExamModal({
                     });
                   }
                   return (
-                    <QuestionInput
-                      key={i + 1}
-                      serialNumber={i + 1}
-                      onChangeQuestion={(e) =>
-                        handleQuestionChange(e, "question")
-                      }
-                      onChangeOption={handleOptionChange}
-                      onChangeAnswer={(e) => handleQuestionChange(e, "answer")}
-                      onChangeScore={(e) => handleQuestionChange(e, "score")}
-                    />
+                    <>
+                      <QuestionInput
+                        key={i + 1}
+                        serialNumber={i + 1}
+                        onChangeQuestion={(e) =>
+                          handleQuestionChange(e, "question")
+                        }
+                        onChangeOption={handleOptionChange}
+                        onChangeAnswer={(e) =>
+                          handleQuestionChange(e, "answer")
+                        }
+                        onChangeScore={(e) => handleQuestionChange(e, "score")}
+                      />
+                      {i > 0 && (
+                        <RiDeleteBin6Line
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "23px",
+                            color: "red",
+                            marginTop: "-5px",
+                          }}
+                          onClick={() => removeData(i)}
+                        />
+                      )}
+                    </>
                   );
                 })}
                 <div className="d-flex justify-content-between align-items-center my-4 ">
                   <button
-                    onClick={() => {
-                      setNumQuestions((prev: any) => prev + 5);
-                      setQuestions(
-                        // defaultValues?.questions ??
-                        Array.from(Array(numQuestions).keys())?.map(
-                          (val, ind) => {
-                            return {
-                              text: "No Question" + `${ind}`,
-                              score: "",
-                              isActive: true,
-                              answer: "",
-                              options: [],
-                            };
-                          }
-                        )
-                      );
-                    }}
+                    onClick={() => add5Data()}
                     className="btn btn-blue-800 btn-lg w-25"
                     type="button"
                   >
@@ -350,23 +368,7 @@ export default function CreateExamModal({
                   </button>
 
                   <button
-                    onClick={() => {
-                      setNumQuestions((prev: any) => prev + 1);
-                      setQuestions(
-                        // defaultValues?.questions ??
-                        Array.from(Array(numQuestions).keys())?.map(
-                          (val, ind) => {
-                            return {
-                              text: "No Question" + `${ind}`,
-                              score: "",
-                              isActive: true,
-                              answer: "",
-                              options: [],
-                            };
-                          }
-                        )
-                      );
-                    }}
+                    onClick={() => addData()}
                     className="btn btn-blue-800 btn-lg w-25"
                     type="button"
                   >

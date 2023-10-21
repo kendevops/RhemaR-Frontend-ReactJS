@@ -4,7 +4,7 @@ import api from "../../../api";
 import embedParams from "../../../utils/embedParams";
 
 export default function useAllQuizes(params?: any) {
-  return useQuery([queryKeys.quiz], () =>
+  return useQuery([queryKeys.quiz, embedParams(params)], () =>
     api.get(`/quizzes/${embedParams(params)}`).then((r) => r.data?.data?.exams)
   );
 }

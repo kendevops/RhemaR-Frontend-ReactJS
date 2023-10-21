@@ -40,7 +40,7 @@ const courseColumns: TableColumns<any>[] = [
 
       return (
         <div className="d-flex justify-content-center ">
-          <Doughnut
+          {/* <Doughnut
             style={{
               maxWidth: "3rem",
               maxHeight: "3rem",
@@ -49,7 +49,8 @@ const courseColumns: TableColumns<any>[] = [
             height={5}
             width={5}
             data={dat}
-          />
+          /> */}
+          <p>{completion}%</p>
         </div>
       );
     },
@@ -90,7 +91,9 @@ export default function MyCourses() {
   // for missed classes, set the start time to a previous date
   const { data, isLoading: missedLoading } = useClasses({});
 
-  const missedData = data?.classes?.nodes;
+  const missedData = data?.classes?.nodes?.filter(
+    (c: { onlineStatus: string }) => c.onlineStatus === "ENDED"
+  );
 
   console.log(missedData);
 
