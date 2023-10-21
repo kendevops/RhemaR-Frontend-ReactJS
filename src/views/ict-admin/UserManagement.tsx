@@ -15,11 +15,24 @@ import UploadBulkStudentModal from "../../components/modals/UploadBulkStudentsMo
 import AddStudentModal from "../../components/modals/AddStudentModal";
 import { Icon } from "@iconify/react";
 import AllUserTable from "../../components/tables/admin-tables/AllUsersTable";
+import { MdOutlineCancel } from "react-icons/md";
+
+type FiltersProps = {
+  [key: string]: string | undefined;
+  campus?: string;
+  name?: string;
+  levle?: string;
+  role?: string;
+};
 
 export default function UserManagement() {
   const Options = ["All", "Staff", "Students"];
   const [option, setOption] = useState(0);
   const [addStudentDropDown, setAddStudentDropDown] = useState(false);
+
+  const [isFiltering, toggleFiltering] = useToggle();
+  const [filters, setFilters] = useState<FiltersProps>({});
+  const [filtering, setFiltering] = useState(false);
 
   const currentOption = Options[option];
 
@@ -52,6 +65,24 @@ export default function UserManagement() {
     });
   };
 
+  const removeFilter = (keyToRemove: string) => {
+    setFilters((prevFilters) => {
+      const newFilters: any = { ...prevFilters };
+
+      if (keyToRemove in newFilters) {
+        delete newFilters[keyToRemove];
+      }
+
+      if (Object.keys(filters).length < 2) {
+        setFiltering(false);
+      }
+
+      return newFilters;
+    });
+  };
+
+  console.log(filters);
+
   return (
     <section>
       {/* Modal For Adding Staff */}
@@ -72,11 +103,14 @@ export default function UserManagement() {
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>Users Management</div>
 
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        {/* <div>{`${userData?.campus?.name}`}</div> */}
+        {filtering && currentOption === "All" && (
+          <div
+            className=" bg-white "
+            style={{ width: "2px", height: "20px" }}
+          ></div>
+        )}
+
+        {filtering && currentOption === "All" && <div>Filtered List</div>}
       </div>
       <div role={"tabpanel"} className="d-flex px-2 gap-3 border-bottom ">
         {Options.map((o, i) => {
@@ -103,6 +137,18 @@ export default function UserManagement() {
         <div style={{ width: "70%" }}>
           <SearchBar />
         </div>
+
+        {currentOption === "All" && (
+          <button
+            className="btn btn-outline-info btn-lg "
+            style={{ width: "fit-content", height: "50px" }}
+            onClick={() => {
+              toggleFiltering();
+            }}
+          >
+            Filter
+          </button>
+        )}
 
         {currentOption === "Staff" ? (
           <button
@@ -153,8 +199,37 @@ export default function UserManagement() {
         )}
       </article>
 
+      {filtering && currentOption === "All" && (
+        <div className="d-flex gap-4 ">
+          {Object.keys(filters).map((key: string) => (
+            <div key={key} className="">
+              <p
+                className=" py-3 px-4 rounded-5 d-flex align-items-center  gap-2 "
+                style={{ background: "#f0f0f0" }}
+              >
+                <p style={{ textAlign: "center" }} className="mt-1">
+                  {filters[key]}
+                </p>
+                <MdOutlineCancel
+                  className="mb-2"
+                  onClick={() => removeFilter(key)}
+                />
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Table */}
-      {currentOption === "All" && <AllUserTable />}
+      {currentOption === "All" && (
+        <AllUserTable
+          toggle={toggleFiltering}
+          isOpen={isFiltering}
+          filters={filters}
+          setFiltering={setFiltering}
+          setFilters={setFilters}
+        />
+      )}
       {currentOption === "Staff" && <UserManagementTable />}
       {currentOption === "Students" && <StudentsManagementTable />}
     </section>

@@ -56,22 +56,97 @@ export default function UploadExamModal({
     });
   };
 
+  const [questions, setQuestions] = useState<any>([]);
+  const [examNames, setExamNames] = useState<any>([]);
+
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement> | any) => {
+    const file = event.target.files[0] as any;
+
+    if (file) {
+      parseCSV(file);
+    }
+  };
+
+  const parseCSV = (file: any) => {
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const contents = e.target.result;
+
+      const lines = contents.split("\n");
+      const headers = lines[0].split(",");
+
+      const groupedQuestions: any = {};
+      const uniqueExamNames: any = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(",");
+        const question: any = {};
+
+        for (let j = 0; j < headers.length; j++) {
+          if (values[j]) {
+            if (values[j] == "true" || values[j] == "yes") {
+              question[headers[j]] = true;
+            } else {
+              question[headers[j]] = values[j];
+            }
+
+            if (headers[j] == "name") {
+              uniqueExamNames.push(question[headers[j]]);
+            }
+          }
+        }
+
+        const examName = question["name"];
+
+        if (!groupedQuestions[examName]) {
+          groupedQuestions[examName] = [];
+        }
+
+        groupedQuestions[examName].push(question);
+      }
+      setQuestions(groupedQuestions);
+      setExamNames(uniqueExamNames);
+    };
+
+    reader.readAsText(file);
+  };
+
   const handleUploadData = () => {
-    console.log(dataToUpload);
+    const uniqueSet = new Set(examNames);
+    const uniqueArray = Array.from(uniqueSet);
+
+    const exam = uniqueArray?.map((q: any, i: any) => {
+      return {
+        questions: questions[q].map((s: any, i: number) => ({
+          text: s.text,
+          answer: s.answer,
+          score: +s.score,
+          isActive: true,
+          options: [s.option1, s.option2, s.option3 ?? "", s.option4 ?? ""],
+        })),
+
+        rdNo: +questions[q][0].rdNo,
+        score: +questions[q][0].totalScore,
+        duration: +questions[q][0].duration,
+        courseId: questions[q][0].courseId,
+        sessionId: questions[q][0].sessionId,
+        name: questions[q][0].name,
+
+        endsAt: questions[q][0].endsAt
+          ? new Date(questions[q][0].endsAt)?.toISOString()
+          : null,
+        startsAt: questions[q][0].startsAt
+          ? new Date(questions[q][0].startsAt)?.toISOString()
+          : null,
+      };
+    });
+
+    // console.log(exam);
+
     mutate(
       {
-        exams: dataToUpload?.map((d: any) => ({
-          ...d,
-
-          questions: [],
-
-          rdNo: +d.rdNo,
-          score: +d.score,
-          duration: +d.duration,
-
-          endsAt: d.endsAt ? new Date(d.endsAt)?.toISOString() : null,
-          startsAt: d.startsAt ? new Date(d.startsAt)?.toISOString() : null,
-        })),
+        exams: exam,
       },
       {
         onSuccess: (e) => {
@@ -117,7 +192,7 @@ export default function UploadExamModal({
             style={{ height: "200px", width: "100%", background: "#f0f0f0" }}
           >
             <input
-              onChange={importHandler}
+              onChange={handleFileUpload}
               accept={acceptableCSVFileTypes}
               type="file"
             />

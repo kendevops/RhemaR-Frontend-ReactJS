@@ -12,13 +12,13 @@ export default function SessionSchedule({ title }: any) {
 
   const history = useHistory();
 
-  let classTabs = [
-    "L1 Weekend Schedule X",
-    "L1 Night Schedule X",
-    "L2 Schedule X",
-  ];
+  // let classTabs = [
+  //   "L1 Weekend Schedule X",
+  //   "L1 Night Schedule X",
+  //   "L2 Schedule X",
+  // ];
 
-  const currentClass = classTabs[clas];
+  // const currentClass = classTabs[clas];
 
   const monthParam = viewing + 1 < 10 ? `0${viewing + 1}` : viewing + 1;
 
@@ -31,17 +31,17 @@ export default function SessionSchedule({ title }: any) {
 
   console.log(classes);
 
-  if (classes && classes[0]?.campus?.name === "Abuja") {
-    classTabs = ["L1 Weekend Schedule", "L1 Night Schedule", "L2 Schedule"];
-  }
+  // if (classes && classes[0]?.campus?.name === "Abuja") {
+  //   classTabs = ["L1 Weekend Schedule", "L1 Night Schedule", "L2 Schedule"];
+  // }
 
-  if (currentClass === "Weekend Classes") {
-    classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
-  }
+  // if (currentClass === "Weekend Classes") {
+  //   classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
+  // }
 
-  if (currentClass === "Night Classes") {
-    classes = allClasses?.filter((clas: any) => clas?.type === "night");
-  }
+  // if (currentClass === "Night Classes") {
+  //   classes = allClasses?.filter((clas: any) => clas?.type === "night");
+  // }
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -80,7 +80,7 @@ export default function SessionSchedule({ title }: any) {
         <hr />
         {/* Tabs */}
         <div className="d-flex justify-content-between mb-2">
-          <Tab.Wrapper className="d-flex gap-4  ">
+          {/* <Tab.Wrapper className="d-flex gap-4  ">
             {classTabs?.map((t, i) => {
               return (
                 <Tab
@@ -95,7 +95,7 @@ export default function SessionSchedule({ title }: any) {
                 </Tab>
               );
             })}
-          </Tab.Wrapper>
+          </Tab.Wrapper> */}
 
           <button className="btn btn-blue-800 py-2 px-4 text-xl ">
             Download (PDF)

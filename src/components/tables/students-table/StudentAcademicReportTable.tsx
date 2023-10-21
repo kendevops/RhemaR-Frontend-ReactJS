@@ -4,8 +4,11 @@ import Table, { TableColumns } from "../../general/table/Table";
 import useToggle from "../../../utility/hooks/useToggle";
 import AddSchedule from "../../modals/AddSchedule";
 import useClasses from "../../../hooks/queries/classes/useClasses";
+import useUserCourses from "../../../hooks/queries/users/useUserCourses";
+import useCourses from "../../../hooks/queries/classes/useCourses";
 
 type CourseSchedule = {
+  report: any;
   id: string;
   name: string;
   type: string;
@@ -31,43 +34,43 @@ type CourseSchedule = {
 //attendances > sectionsAttendance
 export default function StudentAcademicReportTable() {
   const { data, isLoading } = useClasses({});
+  const { data: coursesData, isLoading: isLoadingCoursesData } = useCourses();
+
+  console.log(coursesData?.courses?.nodes);
 
   const lectures = data?.classes?.nodes;
 
   console.log(lectures);
 
+  const coursesWithProgress = coursesData?.courses?.nodes?.filter(
+    (cls: any) => cls?.report?.completion
+  );
+
+  console.log(coursesWithProgress);
+
   const columns: TableColumns<CourseSchedule>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
 
     {
-      key: "Class",
-      title: "Class",
-      render: (data) => <p>{data?.name}</p>,
-    },
-    {
-      key: "Class type",
-      title: "Class type",
-      render: (data) => <p>{data?.type}</p>,
-    },
-    {
       key: "Course",
       title: "Course",
-      render: (data) => <p>{data?.course?.name}</p>,
+      render: (data) => <p>{data?.name}</p>,
     },
+
     {
       key: "Option",
       title: "Option",
-      render: (data) => <p>{data?.course?.type}</p>,
+      render: (data) => <p>{data?.type}</p>,
     },
 
     {
       key: "Attendance",
-      title: "Attendance",
+      title: "Attendance  (%)",
       render: (data) => {
         const att = data?.attendances;
         console.log(att);
 
-        return <p>{"Level"}</p>;
+        return <p>{data?.report?.completion}%</p>;
       },
     },
     {
@@ -75,11 +78,6 @@ export default function StudentAcademicReportTable() {
       title: "Grade",
       render: (data) => <p>{"100"}</p>,
     },
-    // {
-    //   key: "Action",
-    //   title: "Action",
-    //   render: (data) => <EditSchedule {...{ data }} />,
-    // },
   ];
 
   // Add filter to group by campus
@@ -87,7 +85,7 @@ export default function StudentAcademicReportTable() {
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}
-      {data && <Table data={lectures} columns={columns} />}
+      {data && <Table data={coursesWithProgress} columns={columns} />}
     </Table.Wrapper>
   );
 }

@@ -16,13 +16,13 @@ import StudentAcademicReportTable from "../tables/students-table/StudentAcademic
 
 export default function AcademicReport({ title }: any) {
   const [viewing, setViewing] = useState(0);
-  const [clas, setClas] = useState(0);
+  // const [clas, setClas] = useState(0);
 
-  const history = useHistory();
+  // const history = useHistory();
 
-  let classTabs = ["Summary", "Detailed"];
+  // let classTabs = ["Summary", "Detailed"];
 
-  const currentClass = classTabs[clas];
+  // const currentClass = classTabs[clas];
 
   const monthParam = viewing + 1 < 10 ? `0${viewing + 1}` : viewing + 1;
 
@@ -35,17 +35,17 @@ export default function AcademicReport({ title }: any) {
 
   console.log(classes);
 
-  if (classes && classes[0]?.campus?.name === "Abuja") {
-    classTabs = ["L1 Weekend Schedule", "L1 Night Schedule", "L2 Schedule"];
-  }
+  // if (classes && classes[0]?.campus?.name === "Abuja") {
+  //   classTabs = ["L1 Weekend Schedule", "L1 Night Schedule", "L2 Schedule"];
+  // }
 
-  if (currentClass === "Weekend Classes") {
-    classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
-  }
+  // if (currentClass === "Weekend Classes") {
+  //   classes = allClasses?.filter((clas: any) => clas?.type === "weekend");
+  // }
 
-  if (currentClass === "Night Classes") {
-    classes = allClasses?.filter((clas: any) => clas?.type === "night");
-  }
+  // if (currentClass === "Night Classes") {
+  //   classes = allClasses?.filter((clas: any) => clas?.type === "night");
+  // }
 
   // For navigating between dates
   function handleViewing(direction: "prev" | "next") {
@@ -80,23 +80,6 @@ export default function AcademicReport({ title }: any) {
         <hr />
         {/* Tabs */}
         <div className="d-flex justify-content-between mb-2">
-          <Tab.Wrapper className="d-flex gap-4  ">
-            {classTabs?.map((t, i) => {
-              return (
-                <Tab
-                  key={t}
-                  tabColor="#203864"
-                  isSelected={currentClass === t}
-                  onClick={() => {
-                    setClas(i);
-                  }}
-                >
-                  {t}
-                </Tab>
-              );
-            })}
-          </Tab.Wrapper>
-
           <button className="btn btn-blue-800 py-2 px-4 text-xl ">
             Download (PDF)
           </button>

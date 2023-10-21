@@ -1,13 +1,16 @@
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import FormDropdown from "../molecules/FormDropdown";
+import FormDropdownSelectMultiple from "../molecules/FormDropdownSelectMultiple";
 import FormInput from "../molecules/FormInput";
 import useForm from "../../utility/hooks/useForm";
+import { Autocomplete } from "@mui/material";
 
 export type FilterParams = {
-  inputType: "Text" | "Dropdown";
+  inputType: "Text" | "Dropdown" | "Autocomplete";
   inputProps: any; //props for the inputType
   id: string;
   name: string;
+  setId?: any;
 };
 
 export type FilterProps = {
@@ -15,6 +18,7 @@ export type FilterProps = {
   onFilter: (params: any) => void;
   isOpen?: boolean;
   toggle: VoidFunction;
+  otherStates?: any;
   // setIsFiltering?: VoidFunction
 };
 
@@ -23,6 +27,7 @@ export default function FilterModal({
   params,
   toggle,
   isOpen,
+  otherStates,
 }: // setIsFiltering
 FilterProps) {
   let initialState: any = {};
@@ -36,6 +41,7 @@ FilterProps) {
   const inputs = {
     Text: FormInput,
     Dropdown: FormDropdown,
+    Autocomplete: Autocomplete,
   };
 
   const { formData, formErrors, updateForm } = useForm({ initialState });
@@ -55,6 +61,8 @@ FilterProps) {
       <ModalHeader toggle={toggle}>Filter </ModalHeader>
       <ModalBody>
         {params.map((p) => {
+          console.log(p);
+
           const defProps = {
             title: p.name,
             label: p.name,
@@ -62,6 +70,13 @@ FilterProps) {
             placeholder: p.name,
             onChange: (e: any) => {
               updateForm(p.id, e?.target?.value);
+              const pId = p?.inputProps?.options.filter(
+                (en: any) => en.children === e?.target?.value
+              );
+
+              if (p.setId) {
+                p?.setId(pId[0]?.id);
+              }
             },
           };
           return (

@@ -4,8 +4,11 @@ import Table, { TableColumns } from "../../general/table/Table";
 import useToggle from "../../../utility/hooks/useToggle";
 import AddSchedule from "../../modals/AddSchedule";
 import useClasses from "../../../hooks/queries/classes/useClasses";
+import useCourses from "../../../hooks/queries/classes/useCourses";
 
 type CourseSchedule = {
+  report: any;
+  totalHours: number;
   id: string;
   name: string;
   type: string;
@@ -30,6 +33,11 @@ type CourseSchedule = {
 
 export default function StudentScheduleTable() {
   const { data, isLoading } = useClasses({});
+  const { data: coursesData } = useCourses();
+
+  console.log(coursesData?.courses?.nodes);
+
+  const courses = coursesData?.courses?.nodes;
 
   const lectures = data?.classes?.nodes;
 
@@ -38,45 +46,39 @@ export default function StudentScheduleTable() {
   const columns: TableColumns<CourseSchedule>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
-      key: "Online Date",
-      title: "Online Date",
+      key: " Date",
+      title: " Date",
       render: (data) => (
         <p>
-          {new Date(data?.onlineStartDateTime).toDateString()} -{" "}
-          {new Date(data?.onlineEndDateTime).toDateString()}
-        </p>
-      ),
-    },
-
-    {
-      key: "Onsite Date",
-      title: "Onsite Date",
-      render: (data) => (
-        <p>
-          {new Date(data?.onsiteStartDateTime).toDateString()} -{" "}
-          {new Date(data?.onsiteEndDateTime).toDateString()}
+          {/* {new Date(data?.onlineStartDateTime).toDateString()} -{" "}
+          {new Date(data?.onlineEndDateTime).toDateString()} */}
+          {"Not Inclused"}
         </p>
       ),
     },
     {
       key: "Course",
       title: "Course",
-      render: (data) => <p>{data?.course?.name}</p>,
-    },
-    {
-      key: "Class",
-      title: "Class",
       render: (data) => <p>{data?.name}</p>,
     },
     // {
-    //   key: "Level",
-    //   title: "Level",
-    //   render: (data) => <p>{"Level"}</p>,
+    //   key: "Class",
+    //   title: "Class",
+    //   render: (data) => <p>{data?.name}</p>,
     // },
+
     {
       key: "Hour",
       title: "Hour",
-      render: (data) => <p>{"12"}</p>,
+      render: (data) => <p>{data?.totalHours}</p>,
+    },
+
+    {
+      key: "Done",
+      title: "Done",
+      render: (data) => (
+        <p>{data?.report?.completion === 100 ? "Yes" : "No"}</p>
+      ),
     },
     // {
     //   key: "Action",
@@ -90,7 +92,7 @@ export default function StudentScheduleTable() {
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}
-      {data && <Table data={lectures} columns={columns} />}
+      {data && <Table data={courses} columns={columns} />}
     </Table.Wrapper>
   );
 }

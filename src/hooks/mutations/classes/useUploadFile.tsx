@@ -3,6 +3,7 @@ import useCreateUploadUrl from "./useCreateUploadUrl";
 import usePutFile from "./usePutFile";
 import ToastContent from "../../../components/molecules/ToastContent";
 import getFileFormat from "../../../utils/getFileFormat";
+import { useEffect, useState } from "react";
 
 type UseUploadFileParams = {
   file: File;
@@ -13,6 +14,12 @@ export default function useUploadFile({
   file,
   onSuccess,
 }: UseUploadFileParams) {
+  const [updateFile, setUpadteFile] = useState<any>({});
+
+  console.log(file);
+
+  const fileDtata = file;
+
   const createUploadUrl = useCreateUploadUrl(getFileFormat(file?.name));
   const putFile = usePutFile();
 
@@ -34,9 +41,11 @@ export default function useUploadFile({
   }
 
   function startUpload() {
-    console.log({ file });
+    console.log(fileDtata, file, updateFile);
     createUploadUrl.mutate(undefined, {
       onSuccess: (d) => {
+        console.log(d, file);
+
         putFile.mutate(
           { file, uploadUrl: d?.url },
           {

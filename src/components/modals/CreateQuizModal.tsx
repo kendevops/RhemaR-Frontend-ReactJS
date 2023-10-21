@@ -15,6 +15,7 @@ import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions
 import useCreateQuiz from "../../hooks/mutations/classes/useCreateQuiz";
 import useEditQuiz from "../../hooks/mutations/classes/useEditQuiz";
 import useAllQuizes from "../../hooks/queries/classes/useAllQuizes";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type CreateQuizModalProps = {
   defaultValues?: any;
@@ -59,6 +60,14 @@ export default function CreateQuizModal({
     totalScore: 100,
   };
 
+  const initialQuestion = {
+    text: "No Question",
+    score: "",
+    isActive: true,
+    answer: "",
+    options: [],
+  };
+
   const {
     formData: basicInformation,
     updateForm: updateBasicInformation,
@@ -79,16 +88,7 @@ export default function CreateQuizModal({
   });
 
   const [questions, setQuestions] = useState(
-    defaultValues?.questions ??
-      Array.from(Array(numQuestions).keys())?.map((val, ind) => {
-        return {
-          text: "No Question" + `${ind}`,
-          score: "",
-          isActive: true,
-          answer: "",
-          options: [],
-        };
-      })
+    defaultValues?.questions ?? [initialQuestion]
   );
 
   const { data: sessionsData, isLoading: sessionsLoading } =
@@ -99,8 +99,30 @@ export default function CreateQuizModal({
     id: session?.id,
   }));
 
-  console.log(sessionsData, sessionOptions);
+  function addData() {
+    setQuestions((p: any) => {
+      return [...p, initialQuestion];
+    });
+  }
 
+  function add5Data() {
+    setQuestions((p: any) => {
+      return [
+        ...p,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+      ];
+    });
+  }
+
+  function removeData(index: number) {
+    setQuestions((p: any) => {
+      return p?.filter((_: any, i: number) => i !== index);
+    });
+  }
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
 
@@ -253,16 +275,6 @@ export default function CreateQuizModal({
                   />
                 </div>
 
-                {/* <FormDropdown
-                  title="Session"
-                  options={sessionsData?.nodes?.map((sess: any) => ({
-                    children: sess?.name,
-                  }))}
-                  onChange={(e) =>
-                    updateBasicInformation("session", e.target.value)
-                  }
-                /> */}
-
                 <FormInput
                   label="Duration (minutes)"
                   placeholder="Duration in minutes e.g. 60"
@@ -325,39 +337,38 @@ export default function CreateQuizModal({
                     });
                   }
                   return (
-                    <QuestionInput
-                      key={i + 1}
-                      serialNumber={i + 1}
-                      onChangeQuestion={(e) =>
-                        handleQuestionChange(e, "question")
-                      }
-                      onChangeOption={handleOptionChange}
-                      onChangeAnswer={(e) => handleQuestionChange(e, "answer")}
-                      onChangeScore={(e) => handleQuestionChange(e, "score")}
-                    />
+                    <>
+                      <QuestionInput
+                        key={i + 1}
+                        serialNumber={i + 1}
+                        onChangeQuestion={(e) =>
+                          handleQuestionChange(e, "question")
+                        }
+                        onChangeOption={handleOptionChange}
+                        onChangeAnswer={(e) =>
+                          handleQuestionChange(e, "answer")
+                        }
+                        onChangeScore={(e) => handleQuestionChange(e, "score")}
+                      />
+
+                      {i > 0 && (
+                        <RiDeleteBin6Line
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "23px",
+                            color: "red",
+                            marginTop: "-5px",
+                          }}
+                          onClick={() => removeData(i)}
+                        />
+                      )}
+                    </>
                   );
                 })}
 
                 <div className="d-flex justify-content-between align-items-center my-4 ">
                   <button
-                    onClick={() => {
-                      setNumQuestions((prev) => (prev += 5));
-
-                      setQuestions(
-                        defaultValues?.questions ??
-                          Array.from(Array(numQuestions).keys())?.map(
-                            (val, ind) => {
-                              return {
-                                text: "No Question" + `${ind}`,
-                                score: "",
-                                isActive: true,
-                                answer: "",
-                                options: [],
-                              };
-                            }
-                          )
-                      );
-                    }}
+                    onClick={() => add5Data()}
                     className="btn btn-blue-800 btn-lg w-25"
                     type="button"
                   >
@@ -365,24 +376,7 @@ export default function CreateQuizModal({
                   </button>
 
                   <button
-                    onClick={() => {
-                      setNumQuestions((prev) => (prev += 1));
-
-                      setQuestions(
-                        defaultValues?.questions ??
-                          Array.from(Array(numQuestions).keys())?.map(
-                            (val, ind) => {
-                              return {
-                                text: "No Question" + `${ind}`,
-                                score: "",
-                                isActive: true,
-                                answer: "",
-                                options: [],
-                              };
-                            }
-                          )
-                      );
-                    }}
+                    onClick={() => addData()}
                     className="btn btn-blue-800 btn-lg w-25"
                     type="button"
                   >

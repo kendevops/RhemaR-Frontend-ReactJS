@@ -70,6 +70,8 @@ export default function LectureMaterial() {
       audio: data?.audio?.length > 0 ? data.audio[0] : {},
     };
 
+    console.log(body);
+
     mutate(
       { sections: [body] },
       {
@@ -96,6 +98,9 @@ export default function LectureMaterial() {
 
   function onCreateMaterial(data: any) {
     // setSectionsData((p) => [...p, data]);
+
+    console.log(data);
+
     const body = {
       ...data,
       courseId: params?.id,
