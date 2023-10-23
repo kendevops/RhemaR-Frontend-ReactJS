@@ -33,6 +33,7 @@ interface ViewApplicationProps {
 }
 
 type FiltersProps = {
+  [key: string]: string | undefined;
   campus?: string;
   applicationDateFrom?: string;
   applicationDateTo?: string;
@@ -214,8 +215,8 @@ function ViewApplicationModal({ data, status, refetch }: ViewApplicationProps) {
 export default function Applications() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
-  const [addStudentDropDown, setAddStudentDropDown] = useState(false);
   const [isFiltering, toggleFiltering] = useToggle();
+  const [addStudentDropDown, setAddStudentDropDown] = useState(false);
   const [isAdding, toggleAdding] = useToggle();
   const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
   const { data, isLoading, refetch } = useApplications(filters);
@@ -237,10 +238,6 @@ export default function Applications() {
   const intakeDataOptions = intakeData?.nodes?.map((d: any) => ({
     children: d?.name,
   }));
-
-  // const intakeOptions = ["April", "November"].map((v) => ({
-  //   children: v + " intake",
-  // }));
 
   const sessionOptions = sessionsData?.nodes?.map((sess: any) => ({
     children: sess?.name,
@@ -306,18 +303,22 @@ export default function Applications() {
     ],
     isOpen: isFiltering,
     onFilter: (params: any) => {
-      setFilters({
-        campus: params?.campus,
-        session: params?.session,
-        status: params?.status,
-        intake: params?.intake,
-        applicationDateFrom: params?.applicationDateFrom
-          ? params?.applicationDateFrom
-          : null,
-        applicationDateTo: params?.applicationDateTo
-          ? params?.applicationDateTo
-          : null,
-      });
+      setFilters(
+        Object.fromEntries(
+          Object.entries({
+            campus: params?.campus,
+            session: params?.session,
+            status: params?.status,
+            intake: params?.intake,
+            applicationDateFrom: params?.applicationDateFrom
+              ? params?.applicationDateFrom
+              : null,
+            applicationDateTo: params?.applicationDateTo
+              ? params?.applicationDateTo
+              : null,
+          }).filter(([, value]) => value !== null && value !== "")
+        )
+      );
       console.log(params);
 
       refetch();
@@ -328,7 +329,21 @@ export default function Applications() {
     toggle: toggleFiltering,
   };
 
-  // console.log(defaultValues?.id);
+  const removeFilter = (keyToRemove: string) => {
+    setFilters((prevFilters) => {
+      const newFilters: any = { ...prevFilters };
+
+      if (keyToRemove in newFilters) {
+        delete newFilters[keyToRemove];
+      }
+
+      if (Object.keys(filters).length < 2) {
+        setFiltering(false);
+      }
+
+      return newFilters;
+    });
+  };
 
   return (
     <section>
@@ -357,77 +372,19 @@ export default function Applications() {
 
       {filtering && (
         <div className="d-flex gap-4 ">
-          {filters?.campus && (
-            <p
-              className="d-flex gap-3 py-3 px-4 rounded-5  "
-              style={{ background: "#f0f0f0" }}
-            >
-              <p>
-                {filters?.campus}{" "}
-                <MdOutlineCancel onClick={() => setFiltering(false)} />
+          {Object.keys(filters).map((key: string) => (
+            <div key={key}>
+              <p
+                className="d-flex gap-3 py-3 px-4 rounded-5  "
+                style={{ background: "#f0f0f0" }}
+              >
+                <p>
+                  {filters[key]}{" "}
+                  <MdOutlineCancel onClick={() => removeFilter(key)} />
+                </p>
               </p>
-            </p>
-          )}
-
-          {filters?.session && (
-            <p
-              className="d-flex gap-3 py-3 px-4 rounded-5  "
-              style={{ background: "#f0f0f0" }}
-            >
-              <p>
-                {filters?.session}{" "}
-                <MdOutlineCancel onClick={() => setFiltering(false)} />
-              </p>
-            </p>
-          )}
-
-          {filters?.applicationDateFrom && (
-            <p
-              className="d-flex gap-3 py-3 px-4  rounded-5  "
-              style={{ background: "#f0f0f0" }}
-            >
-              <p>
-                {filters?.applicationDateFrom}{" "}
-                <MdOutlineCancel onClick={() => setFiltering(false)} />
-              </p>
-            </p>
-          )}
-
-          {filters?.applicationDateTo && (
-            <p
-              className="d-flex gap-3 py-3 px-4  rounded-5  "
-              style={{ background: "#f0f0f0" }}
-            >
-              <p>
-                {filters?.applicationDateTo}{" "}
-                <MdOutlineCancel onClick={() => setFiltering(false)} />
-              </p>
-            </p>
-          )}
-
-          {filters?.intake && (
-            <p
-              className="d-flex gap-3 py-3 px-4  rounded-5  "
-              style={{ background: "#f0f0f0" }}
-            >
-              <p>
-                {filters?.intake}{" "}
-                <MdOutlineCancel onClick={() => setFiltering(false)} />
-              </p>
-            </p>
-          )}
-
-          {filters?.status && (
-            <p
-              className="d-flex gap-3 py-3 px-4  rounded-5  "
-              style={{ background: "#f0f0f0" }}
-            >
-              <p>
-                {filters?.status}{" "}
-                <MdOutlineCancel onClick={() => setFiltering(false)} />
-              </p>
-            </p>
-          )}
+            </div>
+          ))}
         </div>
       )}
 

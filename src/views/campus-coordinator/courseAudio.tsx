@@ -13,6 +13,9 @@ const CourseAudio = ({ data }: courseAudioProps) => {
   const [currentSession, setCurrentSession] = useState(
     data ? data[0]?.name : ""
   );
+  const [currentAudioName, setCurrentAudioName] = useState(
+    data ? data[0]?.audio?.name : ""
+  );
   const [isOpen, toggle] = useToggle();
 
   console.log(data);
@@ -35,6 +38,7 @@ const CourseAudio = ({ data }: courseAudioProps) => {
                 setCurrentAudio(i);
                 setWatching(ses?.audio?.path);
                 setCurrentSession(ses?.name);
+                setCurrentAudioName(ses?.audio?.name);
               }}
             >
               {ses.name}
@@ -65,9 +69,11 @@ const CourseAudio = ({ data }: courseAudioProps) => {
           //   paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
         }}
       >
-        <p className="mb-5 fw-bold text-2xl">
+        <p className="mb-3 fw-bold text-2xl">
           {currentSession ? currentSession : "No"} (Audio)
         </p>
+        <p className="mb-5 text-2xl">{currentAudioName}</p>
+
         <ReactPlayer
           url={watching}
           // url={"https://soundcloud.com/miami-nights-1984/accelerated"}

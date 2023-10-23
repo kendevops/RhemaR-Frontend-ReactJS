@@ -7,20 +7,31 @@ import useCourses from "../../hooks/queries/classes/useCourses";
 import ProgressBarMui from "../../components/progressBars/progressBer";
 import Tab from "../../components/atoms/Tab";
 import TuitionPaymentContainer from "../../components/students/TuitionPaymentsContainer";
+import useToggle from "../../utility/hooks/useToggle";
+import MakePaymentModal from "../../components/modals/MakePaymentModal";
+import CardWrapper from "../../components/students/CardWrapper";
+import typography from "../../assets/img/Typography";
+import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
 
 const StudentTuitionPage = () => {
+  const [isOpen, toggle] = useToggle();
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(0);
+  const [paymentAmount, setPaymentAmount] = useState(0);
 
   let levelTabs = ["Level 1", "Level 2"];
 
   const currentLevel = levelTabs[level];
 
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
+  const { data: coursesReportData, isLoading: coursesReportLoading } =
+    useUserCoursesReport();
   const courses = coursesData?.courses;
 
-  const completion = courses?.reduce((a: any, b: any) => {
-    return a?.report?.completion ?? 0 + b?.report?.completion ?? 0;
+  const coursesReport = coursesReportData?.nodes;
+
+  const completion = coursesReport?.reduce((a: any, b: any) => {
+    return (a?.completion ?? 0) + (b?.completion ?? 0);
   });
 
   const totalCompletion = courses?.length * 100;
@@ -32,8 +43,8 @@ const StudentTuitionPage = () => {
 
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
-  const startDate = userData?.applications[0]?.session?.startDate;
-  const endDate = userData?.applications[0]?.session?.endDate;
+  const startDate = userData?.currentSession?.startDate;
+  const endDate = userData?.currentSession?.endDate;
 
   console.log(userData);
 
@@ -57,21 +68,45 @@ const StudentTuitionPage = () => {
     setProgress(calculatedProgress > 100 ? 100 : calculatedProgress);
   }, [startDate, endDate]);
 
+  const applications1 = userData?.levelOneApplications;
+  const applications2 = userData?.levelTwoApplications;
+
+  const application1 = applications1?.length ? applications1[0] : undefined;
+  const application2 = applications2?.length ? applications2[0] : undefined;
+
+  const application = currentLevel === "Level 1" ? application1 : application2;
+
+  console?.log(application);
+
+  const dash = [
+    {
+      title: "Application Fee",
+      ...application?.initialPayment,
+    },
+    {
+      title: "Initial Payment",
+      ...application?.feePayment,
+    },
+    {
+      title: "Monthly Installment",
+      installments: application?.installments,
+      amount: application?.feePayment?.amount * 8,
+      paidAt: application?.installments?.length === 8,
+    },
+  ];
+
   return (
     <div className="container my-5">
+      <MakePaymentModal amount={paymentAmount} {...{ isOpen, toggle }} />
+
       <div
         className="d-flex align-items-center  bg-blue-800 btn-lg gap-5 mb-5"
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>Tuition Payment</div>
-
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
+        <div>Tuition Payment and Fee Breakdown</div>
       </div>
+
       <div>
         <Tab.Wrapper className="d-flex gap-3 ">
           {levelTabs?.map((t, i) => {
@@ -90,35 +125,55 @@ const StudentTuitionPage = () => {
           })}
         </Tab.Wrapper>
 
-        <div className="row my-4">
-          <div className="col-lg-6 col-md-6 col-12 mb-4">
-            {coursesLoading && <Spinner />}
-            {/* Semester Progress */}
+        <section className="mb-5 d-flex gap-5 justify-content-between">
+          {application &&
+            dash?.map((d) => {
+              console.log(d);
 
-            {/* Semester Progress */}
-            {currentLevel === "Level 1" && (
-              <ProgressBarMui
-                name={"No. of L1 Quizes Completed"}
-                percentage={
-                  semesterProgress.toString() === "NaN" ? 0 : semesterProgress
-                }
-                progressColor={"yellow"}
-                icon={<FaBook />}
-              />
-            )}
+              return (
+                <CardWrapper className="w-100" key={d?.title}>
+                  <div className="my-3">
+                    <p className="d-flex justify-content-between">
+                      {d?.title}
+                      {d?.title === "Monthly Installment" && (
+                        <span>{`${d?.installments?.length}/8`}</span>
+                      )}
+                    </p>
+                    <h2
+                      style={{
+                        fontSize: typography.h2,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      N{d?.amount}
+                    </h2>
+                  </div>
 
-            {currentLevel === "Level 2" && (
-              <ProgressBarMui
-                name={"No. of L2 Quizes Completed"}
-                percentage={progress}
-                progressColor={"green"}
-                icon={<FaBook />}
-              />
-            )}
-          </div>
-
-          {/*  */}
-        </div>
+                  {d?.paidAt ? (
+                    <div
+                      style={{
+                        background: "rgba(92, 153, 61, 0.1)",
+                        color: "#5C993D",
+                      }}
+                      className="p-3 rounded-3 text-center w-100  bg-success-200"
+                    >
+                      Paid
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setPaymentAmount(d?.amount);
+                        d?.paymentUrl ? window?.open(d?.paymentUrl) : toggle();
+                      }}
+                      className="btn btn-blue-800 btn-lg w-100"
+                    >
+                      Make Payment
+                    </button>
+                  )}
+                </CardWrapper>
+              );
+            })}
+        </section>
 
         <div>
           <TuitionPaymentContainer

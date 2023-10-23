@@ -12,6 +12,7 @@ import useAllExams from "../../hooks/queries/classes/useAllExams";
 import QuestionInput from "../../components/molecules/QuestionInput";
 import useAllQuizes from "../../hooks/queries/classes/useAllQuizes";
 import useCreateQuizQuestion from "../../hooks/mutations/exams/useCreateQuizQuestions";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 interface LectureParams {
   id: string;
@@ -27,19 +28,16 @@ export default function ExamDetails() {
   const quizData = data?.nodes[0];
 
   console.log(quizData);
-  const [numQuestions, setNumQuestions] = useState(0);
-  const [questions, setQuestions] = useState(
-    Array.from(Array(numQuestions).keys())?.map((val, ind) => {
-      return {
-        quizId: quizData?.id,
-        text: "No Question" + `${ind}`,
-        score: "",
-        isActive: true,
-        answer: "",
-        options: [],
-      };
-    })
-  );
+  const initialQuestion = {
+    text: "No Question",
+    score: "",
+    isActive: true,
+    answer: "",
+    options: [],
+  };
+
+  const [questions, setQuestions] = useState([initialQuestion]);
+
   const { mutate, isLoading: isCreatingQuestions } = useCreateQuizQuestion();
 
   useEffect(() => {
@@ -52,6 +50,31 @@ export default function ExamDetails() {
   let Tabs = ["Quiz Info", "Quiz Questions"];
 
   const currentTab = Tabs[tab];
+
+  function addData() {
+    setQuestions((p: any) => {
+      return [...p, initialQuestion];
+    });
+  }
+
+  function add5Data() {
+    setQuestions((p: any) => {
+      return [
+        ...p,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+        initialQuestion,
+      ];
+    });
+  }
+
+  function removeData(index: number) {
+    setQuestions((p: any) => {
+      return p?.filter((_: any, i: number) => i !== index);
+    });
+  }
 
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
@@ -232,38 +255,34 @@ export default function ExamDetails() {
                   });
                 }
                 return (
-                  <QuestionInput
-                    key={i + 1}
-                    serialNumber={i + 1}
-                    onChangeQuestion={(e) =>
-                      handleQuestionChange(e, "question")
-                    }
-                    onChangeOption={handleOptionChange}
-                    onChangeAnswer={(e) => handleQuestionChange(e, "answer")}
-                    onChangeScore={(e) => handleQuestionChange(e, "score")}
-                  />
+                  <>
+                    <QuestionInput
+                      key={i + 1}
+                      serialNumber={i + 1}
+                      onChangeQuestion={(e) =>
+                        handleQuestionChange(e, "question")
+                      }
+                      onChangeOption={handleOptionChange}
+                      onChangeAnswer={(e) => handleQuestionChange(e, "answer")}
+                      onChangeScore={(e) => handleQuestionChange(e, "score")}
+                    />
+                    {i > 0 && (
+                      <RiDeleteBin6Line
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "23px",
+                          color: "red",
+                          marginTop: "-5px",
+                        }}
+                        onClick={() => removeData(i)}
+                      />
+                    )}
+                  </>
                 );
               })}
               <div className="d-flex justify-content-between align-items-center my-4 ">
                 <button
-                  onClick={() => {
-                    setNumQuestions((prev: any) => prev + 5);
-                    setQuestions(
-                      // defaultValues?.questions ??
-                      Array.from(Array(numQuestions).keys())?.map(
-                        (val, ind) => {
-                          return {
-                            quizId: quizData?.id,
-                            text: "No Question" + `${ind}`,
-                            score: "",
-                            isActive: true,
-                            answer: "",
-                            options: [],
-                          };
-                        }
-                      )
-                    );
-                  }}
+                  onClick={() => add5Data()}
                   className="btn btn-blue-800 btn-lg w-25"
                   type="button"
                 >
@@ -271,24 +290,7 @@ export default function ExamDetails() {
                 </button>
 
                 <button
-                  onClick={() => {
-                    setNumQuestions((prev: any) => prev + 1);
-                    setQuestions(
-                      // defaultValues?.questions ??
-                      Array.from(Array(numQuestions).keys())?.map(
-                        (val, ind) => {
-                          return {
-                            quizId: quizData?.id,
-                            text: "No Question" + `${ind}`,
-                            score: "",
-                            isActive: true,
-                            answer: "",
-                            options: [],
-                          };
-                        }
-                      )
-                    );
-                  }}
+                  onClick={() => addData()}
                   className="btn btn-blue-800 btn-lg w-25"
                   type="button"
                 >

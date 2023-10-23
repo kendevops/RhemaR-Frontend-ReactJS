@@ -4,11 +4,17 @@ import useForm from "../../utility/hooks/useForm";
 import handleError from "../../utils/handleError";
 import FormInput from "../molecules/FormInput";
 import { Spinner } from "reactstrap";
+import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
+import FormDropdown from "../molecules/FormDropdown";
+import ToastContent from "../molecules/ToastContent";
+import { toast } from "react-toastify";
 
 const initialState = {
   area: "",
   church: "",
   studentComment: " ",
+  mentorComment: " ",
+  level: " ",
 };
 
 const initialData = {
@@ -19,6 +25,10 @@ const initialData = {
 
 export default function PMRForm() {
   const { mutate, isLoading } = useSubmitPmr();
+  const { data: levelData } = useCampusLevel();
+  const levels = levelData?.map((v: any) => v.name);
+
+  console.log(levelData);
 
   const { formData, formErrors, formIsValid, toggleError, updateForm } =
     useForm({ initialState });
@@ -65,7 +75,13 @@ export default function PMRForm() {
       },
       {
         onSuccess: () => {
-          alert("Pmr submitted");
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Form submitted"}
+              message={"Form submitted successfully"}
+            />
+          );
         },
         onError: (e) => handleError(e, formData, toggleError),
       }
@@ -93,6 +109,19 @@ export default function PMRForm() {
           hasErrors={formErrors.studentComment}
           label="Student Comment"
           onChange={(e) => updateForm("studentComment", e.target.value)}
+        />
+
+        <FormInput
+          hasErrors={formErrors.mentorComment}
+          label="Mentor Comment"
+          onChange={(e) => updateForm("mentorComment", e.target.value)}
+        />
+
+        <FormDropdown
+          title="Select Level"
+          value={formData?.level}
+          options={levels?.map((d: any) => ({ children: d }))}
+          onChange={(e) => updateForm("level", e?.target?.value)}
         />
 
         {/* Student Data */}

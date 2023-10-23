@@ -78,14 +78,14 @@ export default [
     action: "read",
     resource: "Students",
   },
-  {
-    id: "courses",
-    title: "Courses",
-    icon: <Icon icon="bi:collection-fill" />,
-    navLink: "/student/courses",
-    action: "read",
-    resource: "Students",
-  },
+  // {
+  //   id: "courses",
+  //   title: "Courses",
+  //   icon: <Icon icon="bi:collection-fill" />,
+  //   navLink: "/student/courses",
+  //   action: "read",
+  //   resource: "Students",
+  // },
   {
     id: "pmr",
     title: "PMR",
@@ -95,14 +95,14 @@ export default [
     resource: "Students",
   },
 
-  {
-    id: "tution&clearance",
-    title: "Tuition & Clearance",
-    icon: <Icon icon="fa-regular:credit-card" />,
-    navLink: "/student/tuition-clearance",
-    action: "read",
-    resource: "Students",
-  },
+  // {
+  //   id: "tution&clearance",
+  //   title: "Tuition & Clearance",
+  //   icon: <Icon icon="fa-regular:credit-card" />,
+  //   navLink: "/student/tuition-clearance",
+  //   action: "read",
+  //   resource: "Students",
+  // },
   {
     id: "events",
     title: "Events",

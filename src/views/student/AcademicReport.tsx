@@ -12,10 +12,17 @@ import AcademicReport from "../../components/students/AcademicReport";
 import StudentActionButtons from "./StudentActionButtons";
 import useUserCoursesReport from "../../hooks/queries/users/useUserCoursesReport";
 import useUserCourses from "../../hooks/queries/users/useUserCourses";
+import CardWrapper from "../../components/students/CardWrapper";
+import SubmitProjectModal from "../../components/modals/SubmitProjectModal";
+import MyCourses from "../../components/students/MyCourses";
+import { Link } from "react-router-dom";
+import ColWrapper from "../../components/students/ColWrapper";
+import useToggle from "../../utility/hooks/useToggle";
 
 const AcademicReportPage = () => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(0);
+  const [projectOpen, toggleProject] = useToggle();
 
   let levelTabs = ["Level 1", "Level 2"];
 
@@ -180,6 +187,37 @@ const AcademicReportPage = () => {
           </div>
         </div>
       </div>
+      {/* <ColWrapper> */}
+      {/* My Courses */}
+      <section>
+        <div
+          className="d-flex justify-content-between"
+          aria-level={2}
+          role={"heading"}
+        >
+          <h2 className="text-xl font-bold text-blue-600">My Courses</h2>
+
+          <Link to={"/student/all-courses"}>
+            <small className="text-decoration-underline">Show All</small>
+          </Link>
+        </div>
+
+        <div>
+          <CardWrapper>
+            <MyCourses />
+          </CardWrapper>
+
+          <SubmitProjectModal isOpen={projectOpen} toggle={toggleProject} />
+          <button
+            onClick={toggleProject}
+            className="btn mt-4 btn-blue-800 btn-lg w-100 mb-5"
+            type="button"
+          >
+            Submit Project
+          </button>
+        </div>
+      </section>
+      {/* </ColWrapper> */}
 
       <div>
         <StudentActionButtons level={currentLevel} />

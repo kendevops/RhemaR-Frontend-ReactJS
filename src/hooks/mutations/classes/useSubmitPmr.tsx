@@ -4,7 +4,9 @@ import api from "../../../api";
 type Data = {
   area: string;
   church: string;
+  level: string;
   studentComment: string;
+  mentorComment?: string;
   studentData: {
     date: string;
     timeCompleted: number;

@@ -29,6 +29,8 @@ function ViewPmr({ data }: any) {
 export default function PmrTable() {
   const { data, isLoading } = useAllPmrs();
 
+  console.log(data);
+
   const tableProps = {
     columns: [
       {

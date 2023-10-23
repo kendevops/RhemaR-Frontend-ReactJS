@@ -11,6 +11,7 @@ import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import usePaymentHistory from "../../hooks/queries/users/usePaymentHistory";
 import useToggle from "../../utility/hooks/useToggle";
 import downloadFile from "../../utils/downloadFile";
+import { Icon } from "@iconify/react";
 
 const tabs = ["Fee Breakdown", "Payment History"];
 
@@ -46,8 +47,11 @@ const TuitionAndClearancePage = () => {
   ];
 
   const feeData = application?.installments;
+
   const { data: paymentsData, isLoading: paymentsDataLoading } =
     usePaymentHistory();
+
+  console.log(paymentsData);
 
   // Conditionals
   if (currentTab === tabs[0]) {
@@ -87,7 +91,7 @@ const TuitionAndClearancePage = () => {
       {
         title: "Payment",
         key: "Payment",
-        render: (d) => <p>{d?.payment ?? "Level 1 Fees"}</p>,
+        render: (d) => <p>{d?.type ?? "Level 1 Fees"}</p>,
       },
       {
         title: "Transaction ID",
@@ -116,7 +120,7 @@ const TuitionAndClearancePage = () => {
             <>
               {d?.status === "success" ? (
                 <u>
-                  <a {...attributes}>Download Receipt</a>
+                  <a {...attributes}>Paid - Download Receipt</a>
                 </u>
               ) : (
                 <p>{d?.status}</p>
@@ -135,6 +139,16 @@ const TuitionAndClearancePage = () => {
       <MakePaymentModal amount={10000} {...{ isOpen, toggle }} />
       {/* Dash Cards */}
       <section className="mb-5 d-flex gap-5 justify-content-between">
+        <div
+          className="d-flex align-items-center  bg-blue-800 btn-lg gap-5"
+          style={{ color: "white", fontWeight: 700 }}
+        >
+          <Icon
+            icon="mdi:note-text"
+            style={{ width: "20px", height: "20px" }}
+          />
+          <div>{`Payments and Fees Breakdown`}</div>
+        </div>
         {application &&
           dash?.map((d) => {
             return (

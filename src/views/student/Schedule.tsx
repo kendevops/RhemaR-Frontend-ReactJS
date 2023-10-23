@@ -69,12 +69,6 @@ const StudentSchedulePage = () => {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>{`${userData?.currentSession?.name} Schedule`}</div>
-
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.currentCampus?.name}`}</div>
       </div>
       <div className="row">
         <div className="col-lg-6 col-md-6 col-12 mb-4">

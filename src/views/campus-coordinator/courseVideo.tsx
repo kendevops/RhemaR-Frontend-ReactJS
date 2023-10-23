@@ -10,6 +10,9 @@ type courseVideoProps = {
 const CourseVideo = ({ data }: courseVideoProps) => {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [watching, setWatching] = useState(data ? data[0]?.video?.path : "");
+  const [currentVideoName, setCurrentVideoName] = useState(
+    data ? data[0]?.video?.name : ""
+  );
   const [currentSession, setCurrentSession] = useState(
     data ? data[0]?.name : ""
   );
@@ -36,6 +39,7 @@ const CourseVideo = ({ data }: courseVideoProps) => {
                 setCurrentVideo(i);
                 setWatching(ses?.video?.path);
                 setCurrentSession(ses?.name);
+                setCurrentVideoName(ses?.video?.name);
               }}
             >
               {ses.name}
@@ -66,9 +70,10 @@ const CourseVideo = ({ data }: courseVideoProps) => {
           //   paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
         }}
       >
-        <p className="mb-5 fw-bold text-2xl">
+        <p className="mb-3 fw-bold text-2xl">
           {currentSession ? currentSession : "No"} (Video)
         </p>
+        <p className="mb-5 text-2xl">{currentVideoName}</p>
         <ReactPlayer
           url={watching}
           // url={"https://youtu.be/CAavJmWDKkc?si=0nCubdqFQVVbG-wn"}
