@@ -58,10 +58,9 @@ export default function StudentEvents() {
           <div className="">
             <EventsList ListData={Listdata} />
 
-            <div className="container my-5">
-              {/* <EventsCards Eventsdata={Eventsdata} /> */}
+            {/* <div className="container my-5">
               <EventsCards isStudent />
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

@@ -17,6 +17,7 @@ import userRoles from "../../utility/userRoles";
 import useAcademicSessions from "../../hooks/queries/classes/useAcademicSessions";
 import useCreateClassSchedule from "../../hooks/mutations/classes/useCreateClassSchedule";
 import useUpdateClassSchedule from "../../hooks/mutations/classes/useUpdateClassSchedule";
+import useAllClasses from "../../hooks/queries/classes/useAllClasses";
 
 interface AddCourseScheduleModalProps {
   toggle: VoidFunction;
@@ -37,6 +38,10 @@ export default function AddCourseScheduleModal({
   const campusesData = data?.nodes;
   const createClassSchedule = useCreateClassSchedule();
   const updateClassSchedule = useUpdateClassSchedule(defaultValues?.id);
+  const { data: classesData, refetch } = useAllClasses();
+
+  const classes = classesData?.nodes;
+  console.log(classes);
 
   const isLoading =
     createClassSchedule.isLoading || updateClassSchedule.isLoading;
@@ -98,10 +103,26 @@ export default function AddCourseScheduleModal({
       id: u?.id,
     }));
 
-  console.log(instructorsOptions);
-
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    const isClassExist = await classes?.filter(
+      (d: any) =>
+        d?.session?.id === formData.sessionId &&
+        d?.campus?.id === formData.campusId &&
+        d?.course?.id === formData.courseId
+    );
+
+    if (isClassExist.length > 0) {
+      return toast.error(
+        <ToastContent
+          type={"error"}
+          heading={"Already Exist"}
+          message={`Class schedule already exist`}
+        />,
+        ToastContent.Config
+      );
+    }
 
     const { ...otherData } = formData;
 
@@ -184,13 +205,13 @@ export default function AddCourseScheduleModal({
           />
 
           <div className="form-group">
-            <label htmlFor="Search campuses">Campus ID</label>
+            <label htmlFor="Search campuses">Campus</label>
             <Autocomplete
               fullWidth
               disablePortal
               id="Search campuses"
               loading={coursesLoading}
-              value={formData?.campusId}
+              value={formData?.campusName}
               options={campusOptions}
               // options={["temp", "temp2"]}
               renderInput={(params) => {
@@ -211,7 +232,7 @@ export default function AddCourseScheduleModal({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="Search courses">Course ID</label>
+            <label htmlFor="Search courses">Course</label>
             <Autocomplete
               fullWidth
               disablePortal
@@ -237,7 +258,7 @@ export default function AddCourseScheduleModal({
           </div>
 
           <div className="form-group">
-            <label htmlFor="Search Session">Session ID</label>
+            <label htmlFor="Search Session">Session</label>
             <Autocomplete
               fullWidth
               disablePortal
@@ -263,7 +284,7 @@ export default function AddCourseScheduleModal({
           </div>
 
           <div className="form-group">
-            <label htmlFor="Search instructors">Online Instructor ID</label>
+            <label htmlFor="Search instructors">Online Instructor</label>
             <Autocomplete
               fullWidth
               disablePortal
@@ -288,7 +309,7 @@ export default function AddCourseScheduleModal({
           </div>
 
           <div className="form-group">
-            <label htmlFor="Search instructors">Onsite Instructor ID</label>
+            <label htmlFor="Search instructors">Onsite Instructor</label>
             <Autocomplete
               fullWidth
               disablePortal
@@ -306,8 +327,8 @@ export default function AddCourseScheduleModal({
                 );
               }}
               onChange={(e, value: any) => {
+                updateForm("onsiteInstructorName", value?.label);
                 updateForm("onsiteInstructorId", value?.id);
-                updateForm("onsiteInstructorName", value?.name);
               }}
             />
           </div>

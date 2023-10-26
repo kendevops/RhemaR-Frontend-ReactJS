@@ -24,6 +24,8 @@ type CourseSchedule = {
   course: {
     id: string;
     name: string;
+    code: string;
+    type: string;
   };
   instructor: {
     id: string;
@@ -50,16 +52,25 @@ export default function StudentScheduleTable() {
       title: " Date",
       render: (data) => (
         <p>
-          {/* {new Date(data?.onlineStartDateTime).toDateString()} -{" "}
-          {new Date(data?.onlineEndDateTime).toDateString()} */}
-          {"Not Inclused"}
+          {new Date(data?.onlineStartDateTime).toDateString()} -{" "}
+          {new Date(data?.onlineEndDateTime).toDateString()}
         </p>
       ),
     },
     {
       key: "Course",
       title: "Course",
-      render: (data) => <p>{data?.name}</p>,
+      render: (data) => <p>{data?.course?.name}</p>,
+    },
+    {
+      key: "Code",
+      title: "Code",
+      render: (data) => <p>{data?.course?.code}</p>,
+    },
+    {
+      key: "Type",
+      title: "Type",
+      render: (data) => <p>{data?.course?.type}</p>,
     },
     // {
     //   key: "Class",
@@ -67,11 +78,11 @@ export default function StudentScheduleTable() {
     //   render: (data) => <p>{data?.name}</p>,
     // },
 
-    {
-      key: "Hour",
-      title: "Hour",
-      render: (data) => <p>{data?.totalHours}</p>,
-    },
+    // {
+    //   key: "Hour",
+    //   title: "Hour",
+    //   render: (data) => <p>{data?.totalHours}</p>,
+    // },
 
     {
       key: "Done",
@@ -92,7 +103,7 @@ export default function StudentScheduleTable() {
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}
-      {data && <Table data={courses} columns={columns} />}
+      {data && <Table data={lectures} columns={columns} />}
     </Table.Wrapper>
   );
 }

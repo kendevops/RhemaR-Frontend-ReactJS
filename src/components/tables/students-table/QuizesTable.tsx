@@ -10,8 +10,8 @@ type CourseSchedule = {
   name: string;
   type: string;
   status: string;
-  endTime: string;
-  startTime: string;
+  endsAt: string;
+  startsAt: string;
   session: string;
   campus: string;
   createdAt: string;
@@ -26,43 +26,52 @@ type CourseSchedule = {
 };
 
 export default function QuizesTable() {
-  const { data, isLoading } = useClasses({
-    startTime: "2022-12-01T21:56:53.900Z",
-  });
+  const { data, isLoading } = useClasses({});
 
   const lectures = data?.classes?.nodes;
 
   console.log(lectures);
+
+  const quizes = lectures?.map((q: { course: any }) => q?.course?.quizzes);
+  console.log(quizes);
+
+  const flattenedQuizes = quizes.flat();
+  console.log(flattenedQuizes);
 
   const columns: TableColumns<CourseSchedule>[] = [
     { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
     {
       key: "Quiz",
       title: "Quiz",
-      render: (data) => <p>{data?.course?.title}</p>,
+      render: (data) => <p>{data?.name}</p>,
     },
 
+    // {
+    //   key: "Grade",
+    //   title: "Grade",
+    //   render: (data) => <p>{"100"}</p>,
+    // },
+    // {
+    //   key: "Course",
+    //   title: "Course",
+    //   render: (data) => <p>{data?.course?.title}</p>,
+    // },
     {
-      key: "Grade",
-      title: "Grade",
-      render: (data) => <p>{"100"}</p>,
+      key: "Starts At",
+      title: "Starts At",
+      render: (data) => <p>{new Date(data?.startsAt).toDateString()}</p>,
     },
     {
-      key: "Course",
-      title: "Course",
-      render: (data) => <p>{data?.course?.title}</p>,
-    },
-    {
-      key: "Date Completed",
-      title: "Date Completed",
-      render: (data) => <p>{new Date(data?.startTime).toDateString()}</p>,
+      key: "Ends At",
+      title: "Ends At",
+      render: (data) => <p>{new Date(data?.endsAt).toDateString()}</p>,
     },
 
-    {
-      key: "Action",
-      title: "Action",
-      render: (data) => <p>{"Take Quiz"}</p>,
-    },
+    // {
+    //   key: "Action",
+    //   title: "Action",
+    //   render: (data) => <p>{"Take Quiz"}</p>,
+    // },
   ];
 
   // Add filter to group by campus
@@ -70,7 +79,7 @@ export default function QuizesTable() {
   return (
     <Table.Wrapper>
       {isLoading && <Spinner />}
-      {data && <Table data={lectures} columns={columns} />}
+      {data && <Table data={flattenedQuizes} columns={columns} />}
     </Table.Wrapper>
   );
 }

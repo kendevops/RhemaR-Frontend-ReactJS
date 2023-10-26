@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { Modal, ModalHeader, ModalBody, Spinner } from "reactstrap";
 import useForm from "../../utility/hooks/useForm";
 import useCreateCampusTuition from "../../hooks/mutations/classes/useCreateCampusTuition";
@@ -18,12 +18,15 @@ import useCreateCourse from "../../hooks/mutations/classes/useCreateCourse";
 import useEditCourse from "../../hooks/mutations/classes/useEditCourse";
 import useFileReader from "../../utility/hooks/useFileReader";
 import useUploadFile from "../../hooks/mutations/classes/useUploadFile";
+import useCourse from "../../hooks/queries/classes/useCourse";
+import api from "../../api";
 
 interface AddCoreCoursesModalProps {
   toggle: VoidFunction;
   visibility: boolean;
   defaultValues?: any;
   refetch?: any;
+  id?: any;
 }
 
 export default function AddCoreCourseModal({
@@ -31,7 +34,12 @@ export default function AddCoreCourseModal({
   defaultValues,
   visibility,
   refetch,
+  id,
 }: AddCoreCoursesModalProps) {
+  // const { data: courseData, refetch: refetchCoureById } = useCourse(id);
+
+  console.log(defaultValues);
+
   const isCreating = !defaultValues;
 
   const createCourse = useCreateCourse();
@@ -64,8 +72,9 @@ export default function AddCoreCourseModal({
     // optionalFields: ["discount"],
   });
 
-  const defaultUrl =
-    "https://rhema-course-uploads-bucket.s3.amazonaws.com/cf43584bf5034b24b9136b25394f51f8.png";
+  useEffect(() => {
+    refetch();
+  }, [visibility]);
 
   const { data: levelData } = useCampusLevel();
 

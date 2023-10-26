@@ -14,6 +14,7 @@ import useAllExams from "../../hooks/queries/classes/useAllExams";
 import QuestionInput from "../../components/molecules/QuestionInput";
 import useCreateExamQuestion from "../../hooks/mutations/exams/useCreateExamQuestuions";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import FAQCard from "../../components/general/FAQCard";
 
 interface LectureParams {
   id: string;
@@ -40,7 +41,7 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
   console.log(examData2);
 
   const initialQuestion = {
-    examId: examData2.id,
+    examId: examData2?.id,
     text: "No Question",
     score: "",
     isActive: true,
@@ -187,17 +188,21 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
                     <div className="d-flex  flex-wrap align-items-center gap-4 justify-content-between ">
                       {examData2?.questions?.map((q: any, i: number) => {
                         return (
-                          <div key={q?.id} className="shadow p-3">
-                            <h2>{`Question ${i + 1}: ${q.text}`}</h2>
-                            <h2>{`Score: ${q.score}`}</h2>
-                            <ol>
-                              Option:{" "}
-                              {q?.options?.map((op: string, ind: number) => (
-                                <li key={ind}>{op}</li>
-                              ))}
-                            </ol>
-                            <p>{`Answer: ${q.answer}`}</p>
-                          </div>
+                          <>
+                            {/* <FAQCard data={q} /> */}
+
+                            <div key={q?.id} className="shadow p-3">
+                              <h2>{`Question ${i + 1}: ${q.text}`}</h2>
+                              <h2>{`Score: ${q.score}`}</h2>
+                              <ol>
+                                Option:{" "}
+                                {q?.options?.map((op: string, ind: number) => (
+                                  <li key={ind}>{op}</li>
+                                ))}
+                              </ol>
+                              <p>{`Answer: ${q.answer}`}</p>
+                            </div>
+                          </>
                         );
                       })}
                     </div>

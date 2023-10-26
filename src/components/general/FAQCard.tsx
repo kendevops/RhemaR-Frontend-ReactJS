@@ -3,7 +3,12 @@ import React from "react";
 import { GrUserSettings } from "react-icons/gr";
 import { MdOutlineVideoSettings } from "react-icons/md";
 
-export default function FAQCard() {
+type FAQCardProps = {
+  data?: any;
+};
+export default function FAQCard({ data }: FAQCardProps) {
+  // console.log(data);
+
   return (
     <div
       className="border-top border-4 border-blue-800 px-3 py-5 text-blue-800 shadow-lg  my-4"

@@ -30,6 +30,8 @@ const queryKeys = {
   card: "card",
   transcripts: "transcripts",
   reports: "reports",
+  event: "event",
+  events: "events",
 };
 
 export default queryKeys;

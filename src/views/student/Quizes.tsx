@@ -22,8 +22,11 @@ const StudentQuizesPage = () => {
   const { data: coursesData, isLoading: coursesLoading } = useCourses();
   const { data: coursesReportData, isLoading: coursesReportLoading } =
     useUserCoursesReport();
-  const courses = coursesData?.nodes;
+  const courses = coursesData?.courses?.nodes;
   const coursesReport = coursesReportData?.nodes;
+
+  console.log(coursesReport);
+  console.log(courses);
 
   const completion = coursesReport?.reduce(
     (a: { completion: any }, b: { completion: any }) => {
@@ -73,12 +76,6 @@ const StudentQuizesPage = () => {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>Course Quizes</div>
-
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
       </div>
       <div>
         <Tab.Wrapper className="d-flex gap-3 ">
