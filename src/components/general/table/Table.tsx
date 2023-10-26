@@ -12,7 +12,7 @@ export type TableColumns<T> = {
 export type TableProps<T = any> = {
   columns: TableColumns<T>[];
   data: T[];
-  itemsPerPage?: number;
+  itemsPerPage?: any;
 };
 
 interface Props {
@@ -34,6 +34,13 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
       key: p.toString(),
       onPress: () => setPage(p),
     }));
+
+  // const extraOptions: TabSelectOptionProps[] = pages.map((p) => ({
+  //   element: p.toString(),
+  //   isActive: page === p,
+  //   key: p.toString(),
+  //   onPress: () => setPage(p),
+  // }));
 
   const moreOptions: TabSelectOptionProps[] = [];
 
@@ -76,12 +83,15 @@ export default function Table({ columns, data, itemsPerPage }: TableProps) {
     </th>
   ));
 
+  console.log(itemsPerPage);
+
   //** TableBody */
   const tabData = paginatedData?.map((data, i) => {
+    const dataIndex: any = (page - 1) * 9 + i;
     return (
       <tr key={`column${i}`}>
         {columns?.map(({ render }, i2) => (
-          <td key={`data${i}${i2}`}>{render(data, i)}</td>
+          <td key={`data${i}${i2}`}>{render(data, dataIndex)}</td>
         ))}
       </tr>
     );

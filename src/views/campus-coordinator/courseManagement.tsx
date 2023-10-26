@@ -9,7 +9,7 @@ import useToggle from "../../utility/hooks/useToggle";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useRoles from "../../hooks/queries/useRoles";
-import { FaFilter, FaRegEye } from "react-icons/fa";
+import { FaEdit, FaFilter, FaRegEye } from "react-icons/fa";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Icon } from "@iconify/react";
 import { MdOutlineCancel } from "react-icons/md";
@@ -35,11 +35,13 @@ type FiltersProps = {
 interface DeleteProps {
   id: any;
   refetch: any;
+  data?: any;
 }
 
-const DeleteCoreCourse = ({ id, refetch }: DeleteProps) => {
+const DeleteCoreCourse = ({ id, refetch, data }: DeleteProps) => {
+  const [isEditing, toggleEditing] = useToggle();
   const [visibilityDeleteModal, toggleDeleteModal] = useToggle();
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [singleId, setSingleId] = useState("");
 
   const deleteIt = useDeleteCourses(id);
 
@@ -67,12 +69,32 @@ const DeleteCoreCourse = ({ id, refetch }: DeleteProps) => {
   };
 
   return (
-    <ConfirmDeleteModal
-      visibility={visibilityDeleteModal}
-      toggle={toggleDeleteModal}
-      onDelete={() => handleDelete()}
-      isLoading={isDeleteLoading}
-    />
+    <>
+      {singleId && (
+        <AddCoreCourseModal
+          visibility={isEditing}
+          toggle={toggleEditing}
+          refetch={refetch}
+          defaultValues={data}
+          id={id}
+        />
+      )}
+
+      <FaEdit
+        onClick={() => {
+          setSingleId(id);
+          toggleEditing();
+        }}
+        style={{ cursor: "pointer", fontSize: "23px", marginBottom: "4px" }}
+      />
+
+      <ConfirmDeleteModal
+        visibility={visibilityDeleteModal}
+        toggle={toggleDeleteModal}
+        onDelete={() => handleDelete()}
+        isLoading={isDeleteLoading}
+      />
+    </>
   );
 };
 
@@ -193,7 +215,7 @@ export default function CourseManagement() {
             <Link to={`/student-services-admin/course-details/${data.id}`}>
               <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
             </Link>
-            <DeleteCoreCourse id={data.id} refetch={refetch} />
+            <DeleteCoreCourse id={data?.id} refetch={refetch} data={data} />
 
             {/* <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} /> */}
             {/* <ConfirmDeleteModal
@@ -230,12 +252,6 @@ export default function CourseManagement() {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>Course Management</div>
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-
-        <div>User Campus</div>
 
         {filtering && (
           <div

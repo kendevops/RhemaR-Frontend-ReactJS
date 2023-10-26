@@ -19,6 +19,8 @@ const Event = () => {
 
   const { data, isLoading } = useEvent(id);
 
+  console.log(data);
+
   return (
     <>
       <main className="container">

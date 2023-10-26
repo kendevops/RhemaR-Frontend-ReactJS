@@ -9,6 +9,12 @@ import useToggle from "../../utility/hooks/useToggle";
 import getTimeString from "../../utils/getTimeString";
 import useNotifications from "../../hooks/queries/notifications/useNotifications";
 import { Spinner } from "reactstrap";
+import usePublishNotification from "../../hooks/mutations/notifications/usePublishNotification";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import handleError from "../../utils/handleError";
+import { ConfirmDeleteModal } from "../../components/modals/ConfirmDeleteModal";
+import useDeleteNotification from "../../hooks/queries/notifications/useDeleteNotification";
 
 export interface announcement {
   id: string;
@@ -28,13 +34,46 @@ export default function MessageBoard() {
   const [visibility, toggle] = useToggle();
 
   const [selected, setSelected] = useState(0);
-  const { data: notificationsData, isLoading } = useNotifications();
+  const { data: notificationsData, isLoading, refetch } = useNotifications();
 
   const data = notificationsData?.nodes as announcement[];
 
   const checkValidIndex = (index: number) => {
     return data?.length >= index;
   };
+
+  const { mutate, isLoading: publishIsLoading } = usePublishNotification();
+
+  function onCreateAnnouncement(data: any) {
+    console.log(data);
+
+    const body = {
+      ...data,
+      attachments: data?.materials?.length > 0 ? data.materials : [],
+    };
+
+    console.log(body);
+
+    mutate(body, {
+      onSuccess: () => {
+        toast.success(
+          <ToastContent
+            heading={"Announcement created successfully"}
+            type={"success"}
+            message={`Announcement has been created successfully`}
+          />,
+          ToastContent.Config
+        );
+        refetch();
+        toggle();
+      },
+
+      onError: (e: any) => {
+        handleError(e);
+        toggle();
+      },
+    });
+  }
 
   return (
     <Row style={{ marginTop: "3rem" }}>
@@ -46,7 +85,13 @@ export default function MessageBoard() {
           <button onClick={toggle} className="btn btn-blue-800 btn-lg ">
             New Announcement
           </button>
-          <NewAnnouncementModal {...{ toggle, visibility }} />
+          {/* <NewAnnouncementModal {...{ toggle, visibility }} /> */}
+          <NewAnnouncementModal
+            toggle={toggle}
+            isOpen={visibility}
+            onCreate={onCreateAnnouncement}
+            isLoading={publishIsLoading}
+          />
         </div>
 
         {/* Announcements */}
@@ -59,18 +104,19 @@ export default function MessageBoard() {
               {data.map((others, i) => {
                 const isSelected = i === selected;
 
-                function onPressDelete() {}
                 function onPress() {
                   setSelected(i);
                 }
 
                 const props = {
                   title: others?.title,
+                  id: others?.id,
                   message: others?.content,
                   date: new Date(others?.createdAt),
                   isSelected,
                   onPress,
-                  onPressDelete,
+                  refetch,
+                  data: others,
                 };
 
                 return (

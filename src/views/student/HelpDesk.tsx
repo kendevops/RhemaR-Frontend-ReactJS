@@ -64,6 +64,8 @@ export default function StudentHelpDesk() {
 
   const faqsData = data?.faqs?.nodes;
 
+  console.log(data);
+
   const [selectedCategoryData, setSelectedCategoryData] = useState<any[]>([]);
 
   function handleSelectCategory(category: string) {

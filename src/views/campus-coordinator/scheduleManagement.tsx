@@ -184,8 +184,13 @@ export default function ScheduleManagement() {
 
     {
       key: "Course Instance",
-      title: "Course",
+      title: "Course Instance",
       render: (data) => <p>{data?.name}</p>,
+    },
+    {
+      key: "Course",
+      title: "Course",
+      render: (data) => <p>{data?.course?.name}</p>,
     },
     {
       key: "Session",

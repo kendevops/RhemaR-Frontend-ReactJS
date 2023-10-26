@@ -32,6 +32,8 @@ export default function EditCampusModal({
     data?.levels?.map((l: any) => l.name)
   );
 
+  console.log(data?.id);
+
   const { data: levelData } = useCampusLevel();
 
   console.log(levelData);
@@ -82,7 +84,6 @@ export default function EditCampusModal({
   //   }));
 
   //   function onSubmit() {}
-  console.log("level", formData.levels, levelValues);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();

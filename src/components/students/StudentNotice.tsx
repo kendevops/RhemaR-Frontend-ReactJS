@@ -8,14 +8,16 @@ import useToggle from "../../utility/hooks/useToggle";
 interface EventProps {
   startDate: Date;
   endDate?: Date;
-  title: string;
+  data: any;
   onClick?: MouseEventHandler;
+  id: string;
 }
 
 export default function StudentNotice({
   endDate,
   startDate,
-  title,
+  data,
+  id,
   onClick,
 }: EventProps) {
   const startTime = getTimeString({ date: startDate });
@@ -55,20 +57,21 @@ export default function StudentNotice({
 
           {/* Title */}
           <div>
-            <h2 className="text-xl font-bold">{title}</h2>
+            <h2 className="text-xl font-bold">{data?.title}</h2>
             <time className="text-sm">
               {startTime} {endTime ? `-${endTime}` : ""}
             </time>
           </div>
         </div>
 
-        <h3>For All Students</h3>
+        <h3>{data?.type}</h3>
       </article>
 
       <StudentNoticeModal
         visibility={visibility}
         toggle={toggle}
-        data={title}
+        data={data}
+        id={id}
       />
     </>
   );
