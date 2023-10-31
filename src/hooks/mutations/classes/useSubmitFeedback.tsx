@@ -3,7 +3,7 @@ import api from "../../../api";
 
 interface Data {
   message: string;
-  survey: {
+  submissions: {
     question: string;
     rating: number;
     comment: string;
@@ -12,6 +12,6 @@ interface Data {
 
 export default function useSubmitFeedback(classId: string) {
   return useMutation((data: Data) =>
-    api.post(`/classes/${classId}/feedbacks`, data)
+    api.post(`/classes/feedbacks/${classId}/submissions`, data)
   );
 }

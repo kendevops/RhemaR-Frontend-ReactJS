@@ -8,6 +8,9 @@ import handleError from "../../utils/handleError";
 import { Icon } from "@iconify/react";
 import BackButton from "../../components/molecules/BackButton";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
+import { toast } from "react-toastify";
+import ToastContent from "../../components/molecules/ToastContent";
+import { useParams } from "react-router-dom";
 
 interface StudentFeedbackModalProps {
   courseId: string;
@@ -17,6 +20,10 @@ interface StudentFeedbackModalProps {
     instructor: string;
     studentName?: string;
   };
+}
+
+interface LectureParams {
+  id: string;
 }
 
 //options
@@ -56,6 +63,10 @@ export default function StudentLectureFeedback({
 }: StudentFeedbackModalProps) {
   const [questions, setQuestions] = useState(q);
 
+  const params = useParams<LectureParams>();
+
+  const id = params?.id;
+
   const { data: userData, isLoading: userLoading } = useCurrentUser();
 
   const { formData, formErrors, toggleError, updateForm } = useForm({
@@ -64,7 +75,9 @@ export default function StudentLectureFeedback({
     },
   });
 
-  const { mutate, isLoading } = useSubmitFeedback(courseId);
+  const { mutate, isLoading } = useSubmitFeedback(id);
+
+  console.log(courseId);
 
   //When form is submitted
   function handleSubmit(e: FormEvent) {
@@ -72,13 +85,21 @@ export default function StudentLectureFeedback({
 
     const data = {
       message: formData.message,
-      survey: questions.map(({ title, ...others }) => ({ ...others })),
+      submissions: questions.map(({ title, ...others }) => ({ ...others })),
     };
+
+    console.log(data);
 
     mutate(data, {
       onSuccess: () => {
-        alert("Feedback Submitted");
-        // isOpen && toggle();
+        toast.success(
+          <ToastContent
+            type={"success"}
+            heading={"Successful"}
+            message={"Feedback Submitted successfully"}
+          />,
+          ToastContent.Config
+        ); // isOpen && toggle();
       },
       onError: (e) => handleError(e, formData, toggleError),
     });
@@ -105,11 +126,6 @@ export default function StudentLectureFeedback({
           ?.split("_")
           .join(" ")
           .toLowerCase()}`}</div>
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.campus?.name}`}</div>
       </div>
       <BackButton />
       <div id="feedbackModal">

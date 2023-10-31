@@ -28,6 +28,9 @@ import { FaCalendarAlt } from "react-icons/fa";
 import LectureButton from "../../components/general/lectureButton";
 import ElearningInstructor from "../../components/students/ElearningInstructor";
 import useCourse from "../../hooks/queries/classes/useCourse";
+import useGetClass from "../../hooks/queries/users/useGetClass";
+import ToastContent from "../../components/molecules/ToastContent";
+import { toast } from "react-toastify";
 
 interface LectureParams {
   id: string;
@@ -38,7 +41,7 @@ interface LectureParams {
 const assignments = ["Reading Assignment.pdf", "Listening Assignment.mp3"];
 
 const tabs = ["Course Overview", "E-Learning Instructor", "Course Chat"];
-const playTabs = ["Session 2: Audio", "Session 2: Video"];
+const playTabs = [" Audio", "Video"];
 
 // const video = require("../../assets/videos/class.mp4");
 
@@ -46,34 +49,52 @@ export default function Lecture() {
   const params = useParams<LectureParams>();
   let router = useHistory();
   const className = "d-flex gap-4";
+  const [sectionId, setSectionId] = useState("");
 
   const id = params?.id;
 
   const [eachSessionOverView, setEachSessionOverView] = useState("");
+
+  const { mutate, isLoading: attendClassIsLoading } = useAttendClass(
+    params?.id
+  );
+  const {
+    data,
+    isLoading: classDataIsLoading,
+    refetch,
+  } = useGetClass(params?.id);
 
   const [tab, setTab] = useState(0);
   const [playTab, setPlayTab] = useState(0);
   const currentTab = tabs[tab];
   const currentPlayTab = playTabs[playTab];
 
-  const { mutate, isLoading } = useAttendClass(params?.id);
-  const [data, setData] = useState<any>(null);
-  const course = data?.class?.course;
-  const instructor = data?.class?.instructor;
-  const sessions = course?.sections;
+  // const [data, setData] = useState<any>(null);
+  const course = data?.course;
+  const instructor = data?.onlineInstructor;
+  const sessions = data?.course?.sections;
   const [watching, setWatching] = useState("");
+  const [listening, setListening] = useState("");
+
   const [isCompletted, setIsCompletted] = useState(false);
 
-  const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { data: courseData, isLoading: courseLoading } = useCourse(id);
+  const { data: userData } = useCurrentUser();
 
-  console.log(id, courseData);
+  console.log(course, id);
 
   // console.log(sessions);
 
-  const currentSession = sessions?.find((s: any) => s?.videoUrl === watching);
+  const currentSession = sessions?.find(
+    (s: any) => s?.video?.path === watching
+  );
 
-  console.log(data);
+  const attendedSections = data?.attendance?.sectionsAttendance;
+
+  const hasAttended = attendedSections?.find(
+    (s: any) => s?.section?.id === currentSession?.id
+  );
+
+  console.log(currentSession, attendedSections, data);
 
   const classId = data?.class?.id;
 
@@ -88,37 +109,53 @@ export default function Lecture() {
   console.log(course?.exams[0].id);
 
   useEffect(() => {
-    if (!params?.id) router?.goBack();
+    if (!data) return;
+    setWatching(sessions[0]?.video?.path);
+    setListening(sessions[0]?.audio?.path);
+    setSectionId(sessions[0]?.id);
+  }, [sessions, data]);
 
-    if (data) return;
+  const handleAttendClass = () => {
+    if (!sectionId) return;
 
-    // Fetch course data
+    console.log(sectionId);
 
     mutate(
       {
-        section: "section 1",
-        watchTime: "",
+        sectionId: sectionId,
+        watchTime: 1,
       },
       {
-        onSuccess: (d) => {
-          console.log("Gotten class data", d);
-          setData(d);
-          setWatching(sessions[0]?.videoUrl);
+        onSuccess: () => {
+          toast.success(
+            <ToastContent
+              type={"success"}
+              heading={"Successful"}
+              message={"Section Attended successfully"}
+            />,
+            ToastContent.Config
+          );
+          refetch();
+        },
+
+        onError: (e: any) => {
+          console.log(e);
+          toast.error(
+            <ToastContent
+              type={"error"}
+              heading={"Error"}
+              message={e?.response?.data?.error?.message?.toString()}
+            />,
+            ToastContent.Config
+          );
         },
       }
     );
-
-    //authomatically mark attendance when the user reaches this page
-  }, [params?.id, router, mutate, sessions, data]);
-
-  useEffect(() => {
-    if (!data) return;
-    setWatching(sessions[0]?.videoUrl);
-  }, [sessions, data]);
+  };
 
   //download button for courses
 
-  console.log(sessions);
+  console.log(data, sessions);
 
   return (
     <div className=" ">
@@ -128,11 +165,7 @@ export default function Lecture() {
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>E-Learning Class</div>
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.firstName} ${userData?.lastName}`}</div>
+
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
@@ -151,69 +184,89 @@ export default function Lecture() {
       <Row style={{ marginTop: "3rem" }}>
         {/* Left */}
         <ColWrapper lg="7">
-          {isLoading && <Spinner />}
+          {classDataIsLoading && <Spinner />}
           {/* Video or Audio Player */}
-          {data?.class?.status == "ongoing" && (
-            <section>
-              <div className="mb-5">
-                <Tab.Wrapper>
-                  {playTabs?.map((t, i) => {
-                    return (
-                      <Tab
-                        key={t}
-                        isSelected={t === currentPlayTab}
-                        tabColor={colors.green[500]}
-                        onClick={() => setPlayTab(i)}
-                      >
-                        {t}
-                      </Tab>
-                    );
-                  })}
-                </Tab.Wrapper>
-              </div>
+          {data?.onlineStatus == "ONGOING" && (
+            <>
+              <section>
+                <div className="mb-5">
+                  <Tab.Wrapper>
+                    {playTabs?.map((t, i) => {
+                      return (
+                        <Tab
+                          key={t}
+                          isSelected={t === currentPlayTab}
+                          tabColor="#203864"
+                          onClick={() => setPlayTab(i)}
+                        >
+                          {t}
+                        </Tab>
+                      );
+                    })}
+                  </Tab.Wrapper>
+                </div>
 
-              {currentPlayTab.includes("Video") && (
-                <div
-                  style={{
-                    position: "relative",
-                    paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
-                  }}
-                >
-                  <ReactPlayer
-                    url={watching}
-                    controls
-                    width="100%"
-                    height="100%"
+                {currentPlayTab.includes("Video") && (
+                  <div
                     style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
+                      position: "relative",
+                      paddingTop:
+                        "56.25%" /* Player ratio: 100 / (1280 / 720) */,
                     }}
-                  />
+                  >
+                    <ReactPlayer
+                      url={watching}
+                      controls
+                      width="100%"
+                      height="100%"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                      }}
+                    />
+                  </div>
+                )}
+
+                {currentPlayTab.includes("Audio") && (
+                  <div
+                    style={{
+                      position: "relative",
+                      paddingTop:
+                        "56.25%" /* Player ratio: 100 / (1280 / 720) */,
+                    }}
+                  >
+                    <ReactPlayer
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                      }}
+                      // url={"https://soundcloud.com/miami-nights-1984/accelerated"}
+                      url={listening}
+                      controls
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                )}
+              </section>
+
+              {!hasAttended && (
+                <div
+                  style={{ textAlign: "end", cursor: "pointer" }}
+                  className="my-4"
+                  onClick={handleAttendClass}
+                >
+                  Mark as completed{" "}
+                  {attendClassIsLoading ? (
+                    <Spinner />
+                  ) : (
+                    <BsFillCheckCircleFill style={{ color: "green" }} />
+                  )}
                 </div>
               )}
-
-              {currentPlayTab.includes("Audio") && (
-                <div
-                  style={{
-                    position: "relative",
-                    paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
-                  }}
-                >
-                  <ReactPlayer
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                    }}
-                    url={"https://soundcloud.com/miami-nights-1984/accelerated"}
-                    controls
-                    width="100%"
-                    height="100%"
-                  />
-                </div>
-              )}
-            </section>
+            </>
           )}
 
           {/* Course overview and Discussion */}
@@ -224,7 +277,8 @@ export default function Lecture() {
                   <Tab
                     key={t}
                     isSelected={t === currentTab}
-                    tabColor={colors.green[500]}
+                    // tabColor={colors.green[500]}
+                    tabColor="#203864"
                     onClick={() => setTab(i)}
                   >
                     {t}
@@ -234,7 +288,10 @@ export default function Lecture() {
             </Tab.Wrapper>
 
             {currentTab === "Course Overview" && (
-              <CourseOverview course={course} overView={eachSessionOverView} />
+              <CourseOverview
+                section={currentSession}
+                // overView={currentSession?.overView}
+              />
             )}
             {currentTab === "E-Learning Instructor" && (
               <ElearningInstructor instructor={instructor} />
@@ -258,27 +315,33 @@ export default function Lecture() {
                   fontSize: "18px",
                 }}
               >
-                {data?.class?.status == "ongoing" && (
+                {data?.onlineStatus == "ONGOING" && (
                   <div>
                     <div className="d-flex align-items-center gap-3">
                       <FaCalendarAlt />
-                      <div>Start Date: 30th April 2023</div>
+                      <div>
+                        Start Date:{" "}
+                        {new Date(data?.onlineStartDateTime).toDateString()}
+                      </div>
                     </div>
 
                     <div className="d-flex align-items-center gap-3">
                       <FaCalendarAlt />
-                      <div>End Date: 30th April 2023</div>
+                      <div>
+                        End Date:{" "}
+                        {new Date(data?.onlineEndDateTime).toDateString()}
+                      </div>
                     </div>
                   </div>
                 )}
-                {data?.class?.status !== "ongoing" && (
+                {data?.onlineStatus !== "ONGOING" && (
                   <div className="d-flex align-items-center gap-3">
                     <FaCalendarAlt />
                     <div>Date Of Course: 30th April 2023</div>
                   </div>
                 )}
               </div>
-              {data?.class?.status == "ongoing" && (
+              {data?.onlineStatus == "ONGOING" && (
                 <>
                   <div className="bg-blue-800 w-100 px-5 text-white py-3 text-2xl">
                     Course Session
@@ -289,21 +352,34 @@ export default function Lecture() {
                         const value =
                           i <= 0 ? 100 : Math.round(Math.random() * 10); //change later
 
+                        const attended = attendedSections?.find(
+                          (s2: any) => s2?.section?.id === s?.id
+                        );
                         // setEachSessionOverView(s.overView);
 
                         function handleWatch() {
-                          setWatching(s?.videoUrl);
+                          setWatching(s?.video?.path);
+                          setSectionId(s?.id);
+                        }
+
+                        function handleListen() {
+                          setListening(s?.audio?.path);
+                          setSectionId(s?.id);
                         }
 
                         return (
-                          <div className="" key={s?.name}>
-                            {s?.name === currentSession?.name ? (
+                          <div className="" key={s?.id}>
+                            {/* {s?.name === currentSession?.name ? ( */}
+                            {attended ? (
                               <div
                                 className="my-3 d-flex align-items-center justify-content-between w-100 "
                                 style={{
-                                  // color:
-                                  //   s?.name === currentSession?.name ? "green" : "",
+                                  cursor: "pointer",
                                   fontSize: "25px",
+                                }}
+                                onClick={() => {
+                                  handleWatch();
+                                  handleListen();
                                 }}
                               >
                                 <div className="d-flex align-items-center  gap-4 ">
@@ -317,7 +393,11 @@ export default function Lecture() {
                                     {s?.name}
                                   </p>
                                 </div>
-                                <BsFillPlayCircleFill />
+                                {s?.name === currentSession?.name ? (
+                                  <BsFillPlayCircleFill />
+                                ) : (
+                                  <GoPlay />
+                                )}
                               </div>
                             ) : (
                               <div
@@ -326,7 +406,10 @@ export default function Lecture() {
                                   fontSize: "25px",
                                   cursor: "pointer",
                                 }}
-                                onClick={handleWatch}
+                                onClick={() => {
+                                  handleWatch();
+                                  handleListen();
+                                }}
                               >
                                 <div className="d-flex align-items-center  gap-4 ">
                                   <MdOutlineRadioButtonUnchecked />
@@ -337,7 +420,11 @@ export default function Lecture() {
                                     {s?.name}
                                   </p>
                                 </div>
-                                <GoPlay />
+                                {s?.name === currentSession?.name ? (
+                                  <BsFillPlayCircleFill />
+                                ) : (
+                                  <GoPlay />
+                                )}
                               </div>
                             )}
                           </div>
@@ -349,9 +436,9 @@ export default function Lecture() {
             </div>
 
             <div className="my-5">
-              {data?.class?.status == "ongoing" && (
+              {data?.onlineStatus == "ONGOING" && (
                 <>
-                  <div>
+                  {/* <div>
                     <button
                       onClick={toggle}
                       className="btn btn-blue-800 btn-lg w-100  d-flex align-items-center justify-content-between"
@@ -361,8 +448,12 @@ export default function Lecture() {
                     <StudentFeedbackModal
                       {...{ formValues, isOpen, toggle, courseId: classId }}
                     />
-                  </div>
-                  <LectureButton text={"Course Feedback"} id={`feedback`} />
+                  </div> */}
+                  <LectureButton
+                    text={"Course Feedback"}
+                    id={`feedback/${id}`}
+                    done={true}
+                  />
                   <LectureButton
                     text={"Course Exams"}
                     done={true}

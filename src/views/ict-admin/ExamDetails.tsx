@@ -38,10 +38,8 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
 
   const examData2 = examData?.nodes[0];
 
-  console.log(examData2);
-
   const initialQuestion = {
-    examId: examData2?.id,
+    examId: params?.id,
     text: "No Question",
     score: "",
     isActive: true,
@@ -85,31 +83,32 @@ export default function ExamDetails({ data: ExamData }: ExamDetailsProps) {
   function handleSubmit(e: FormEvent) {
     e?.preventDefault();
 
-    const questionsData = questions[0];
-
-    console.log(questionsData, questions);
+    const questionsData = questions;
 
     // Creating
     if (questionsData) {
-      mutate(questionsData, {
-        onSuccess: (e) => {
-          console.log(e);
+      mutate(
+        { questions: questionsData },
+        {
+          onSuccess: (e) => {
+            console.log(e);
 
-          toast.success(
-            <ToastContent
-              heading={"Successful"}
-              message={"Exam Questions added successfully"}
-              type={"success"}
-            />,
-            ToastContent.Config
-          );
-          refetch();
-          toggleAddQuestion();
-        },
-        onError: (e: any) => {
-          handleError(e);
-        },
-      });
+            toast.success(
+              <ToastContent
+                heading={"Successful"}
+                message={"Exam Questions added successfully"}
+                type={"success"}
+              />,
+              ToastContent.Config
+            );
+            refetch();
+            toggleAddQuestion();
+          },
+          onError: (e: any) => {
+            handleError(e);
+          },
+        }
+      );
     }
   }
 

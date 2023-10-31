@@ -147,7 +147,7 @@ const StudentRoutes = [
   },
 
   {
-    path: "/student/feedback",
+    path: "/student/feedback/:id",
     component: lazy(() => import("../../views/student/LectureFeedback")),
     meta: {
       action: "read",

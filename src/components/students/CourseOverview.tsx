@@ -1,16 +1,13 @@
 import typography from "../../assets/img/Typography";
 
 type CourseOverviewProps = {
-  course: any;
+  section: any;
   overView?: string;
 };
 
-export default function CourseOverview({
-  course,
-  overView,
-}: CourseOverviewProps) {
-  const title = course?.title;
-  const content = <>{course?.desc}</>;
+export default function CourseOverview({ section }: CourseOverviewProps) {
+  const title = section?.name;
+  const overView = <>{section?.overView}</>;
 
   return (
     <article className="my-4">
@@ -28,7 +25,7 @@ export default function CourseOverview({
           lineHeight: "2rem",
         }}
       >
-        {content}
+        {overView}
       </p>
     </article>
   );

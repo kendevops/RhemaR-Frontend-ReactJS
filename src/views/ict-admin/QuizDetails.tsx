@@ -29,6 +29,7 @@ export default function ExamDetails() {
 
   console.log(quizData);
   const initialQuestion = {
+    quizId: params?.id,
     text: "No Question",
     score: "",
     isActive: true,
@@ -108,10 +109,10 @@ export default function ExamDetails() {
                     message={"The question has been added successfully"}
                   />
                 );
-                refetch();
-                toggleAddQuestion();
               }
             });
+            refetch();
+            toggleAddQuestion();
           },
           onError: (e: any) => {
             handleError(e);

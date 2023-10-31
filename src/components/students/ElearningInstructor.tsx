@@ -9,7 +9,7 @@ export default function ElearningInstructor({
 }: ElearningInstructorProps) {
   console.log(instructor);
 
-  const name = instructor?.firstName;
+  const name = `${instructor?.firstName} ${instructor?.lastName}`;
   const email = <>{instructor?.email}</>;
 
   return (

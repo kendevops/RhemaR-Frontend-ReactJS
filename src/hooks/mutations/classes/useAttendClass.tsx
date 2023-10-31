@@ -3,8 +3,8 @@ import api from "../../../api";
 import queryKeys from "../../../queryKeys";
 
 interface Body {
-  section: string;
-  watchTime: string;
+  sectionId: string;
+  watchTime: number;
 }
 
 export default function useAttendClass(id: string) {
@@ -12,7 +12,7 @@ export default function useAttendClass(id: string) {
   const { classes, courses } = queryKeys;
   return useMutation(
     (body: Body) =>
-      api.post(`/classes/${id}/attend`).then((r) => r?.data?.data),
+      api.post(`/classes/${id}/attend`, body).then((r) => r?.data?.data),
     {
       onSuccess: () => q.invalidateQueries([classes, courses]),
     }

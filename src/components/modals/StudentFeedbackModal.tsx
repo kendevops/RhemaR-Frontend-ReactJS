@@ -71,7 +71,7 @@ export default function StudentFeedbackModal({
 
     const data = {
       message: formData.message,
-      survey: questions.map(({ title, ...others }) => ({ ...others })),
+      submissions: questions.map(({ title, ...others }) => ({ ...others })),
     };
 
     mutate(data, {

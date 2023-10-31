@@ -24,32 +24,6 @@ export default function LectureQuizes() {
 
   console.log(sessions);
 
-  useEffect(
-    () => {
-      if (!params?.id) router?.goBack();
-
-      if (data) return;
-
-      // Fetch course data
-
-      mutate(
-        {
-          section: "section 1",
-          watchTime: "",
-        },
-        {
-          onSuccess: (d) => {
-            console.log("Gotten class data");
-            setData(d);
-          },
-        }
-      );
-    },
-
-    //authomatically mark attendance when the user reaches this page
-    [params?.id, router, mutate, sessions, data]
-  );
-
   return (
     <div className=" ">
       <div
