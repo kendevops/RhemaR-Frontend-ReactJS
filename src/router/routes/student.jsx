@@ -173,9 +173,18 @@ const StudentRoutes = [
     },
   },
 
+  // {
+  //   path: "/student/exam/:id",
+  //   component: lazy(() => import("../../views/student/Exam")),
+  //   meta: {
+  //     action: "read",
+  //     resource: "Students",
+  //   },
+  // },
+
   {
     path: "/student/exam/:id",
-    component: lazy(() => import("../../views/student/Exam")),
+    component: lazy(() => import("../../views/student/TakeExam")),
     meta: {
       action: "read",
       resource: "Students",

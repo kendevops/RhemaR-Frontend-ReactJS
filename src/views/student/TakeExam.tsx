@@ -13,11 +13,11 @@ import {
   Input,
   Spinner,
 } from "reactstrap";
-import useSubmitQuiz from "../../hooks/mutations/exams/useSubmitQuiz";
+import useSubmitExam from "../../hooks/mutations/classes/useSubmitExam";
 import handleError from "../../utils/handleError";
 import { toast } from "react-toastify";
 import ToastContent from "../../components/molecules/ToastContent";
-import useStartQuiz from "../../hooks/queries/classes/useStartQuiz";
+import useExam from "../../hooks/queries/classes/useExam";
 
 interface LectureParams {
   id: string;
@@ -27,13 +27,13 @@ export default function LectureQuizes() {
   const params = useParams<LectureParams>();
   let router = useHistory();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
-  const { mutate, isLoading: submitIsLoading } = useSubmitQuiz(params?.id);
+  const { mutate, isLoading: submitIsLoading } = useSubmitExam(params?.id);
 
-  const { data, isLoading } = useStartQuiz(params?.id);
+  const { data: exam, isLoading } = useExam(params?.id);
 
-  console.log(data);
+  console.log(exam);
 
-  // const quiz = {
+  // const exam2 = {
   //   id: "652fd41db74083ba7d20d6ab",
   //   rdNo: 2048114,
   //   name: "Math Exam",
@@ -98,13 +98,14 @@ export default function LectureQuizes() {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(
-    Array(data?.questions.length).fill(null)
+    Array(exam?.questions?.length).fill(null)
   );
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < data?.questions?.length - 1) {
+    if (currentQuestionIndex < exam?.questions?.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
+    console.log(selectedOptions);
   };
 
   const handlePreviousQuestion = () => {
@@ -125,9 +126,8 @@ export default function LectureQuizes() {
 
     const newSubmissions = selectedOptions.map((answer, index) => ({
       answer,
-      questionId: data?.questions[index].id,
+      questionId: exam?.questions[index].id,
     }));
-    // setSubmissions(newSubmissions);
 
     console.log(newSubmissions);
 
@@ -162,30 +162,30 @@ export default function LectureQuizes() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>Course Quizes</div>
+        <div>Course Exam</div>
       </div>
       <BackButton />
 
       <div className="d-flex align-items-center justify-content-center  gap-4 flex-wrap mt-5  ">
         {isLoading ? (
           <Spinner />
-        ) : data ? (
+        ) : exam ? (
           <div
             className="border-top border-4 border-blue-800 px-3 py-5 text-blue-800 shadow-lg  my-4"
             style={{ width: "80%", height: "350px" }}
           >
             <Card>
               <CardBody>
-                <h2>{data?.name}</h2>
+                <h2>{exam?.name}</h2>
                 <Form>
                   <FormGroup tag="fieldset">
                     <Label>
                       {" "}
                       Question {currentQuestionIndex + 1}:{" "}
-                      {data?.questions[currentQuestionIndex].text}
+                      {exam?.questions[currentQuestionIndex]?.text}
                     </Label>
-                    {data?.questions[currentQuestionIndex].options.map(
-                      (option: any, index: React.Key | null | undefined) => (
+                    {exam?.questions[currentQuestionIndex]?.options.map(
+                      (option: any, index: number) => (
                         <FormGroup check key={index}>
                           <Label check>
                             <Input
@@ -218,7 +218,7 @@ export default function LectureQuizes() {
                   Previous
                 </Button>
               )}
-              {currentQuestionIndex < data?.questions.length - 1 ? (
+              {currentQuestionIndex < exam?.questions?.length - 1 ? (
                 <Button
                   style={{
                     background: "#203864",
@@ -251,7 +251,7 @@ export default function LectureQuizes() {
               className="border-top border-4 border-blue-800 px-3 py-5 text-blue-800 shadow-lg  my-4"
               style={{ width: "400px", height: "100px" }}
             >
-              <p>Looks like Quiz has already ended.</p>
+              <p>Looks like exam has already ended.</p>
             </div>
           </>
         )}

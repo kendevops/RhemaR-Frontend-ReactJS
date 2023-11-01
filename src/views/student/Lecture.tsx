@@ -82,7 +82,7 @@ export default function Lecture() {
 
   console.log(course, id);
 
-  // console.log(sessions);
+  console.log(sessions);
 
   const currentSession = sessions?.find(
     (s: any) => s?.video?.path === watching
@@ -106,7 +106,7 @@ export default function Lecture() {
     studentName: "John Doe",
   };
 
-  console.log(course?.exams[0].id);
+  console.log(course?.exams[0].id, course?.quizzes[0].id);
 
   useEffect(() => {
     if (!data) return;
@@ -166,14 +166,6 @@ export default function Lecture() {
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
         <div>E-Learning Class</div>
 
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.level?.name
-          ?.split("_")
-          .join(" ")
-          .toLowerCase()}`}</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
@@ -254,16 +246,31 @@ export default function Lecture() {
 
               {!hasAttended && (
                 <div
-                  style={{ textAlign: "end", cursor: "pointer" }}
-                  className="my-4"
+                  style={{
+                    // textAlign: "end",
+                    width: "100%",
+                  }}
+                  className="my-4 d-flex align-items-center justify-content-end text-white "
                   onClick={handleAttendClass}
                 >
-                  Mark as completed{" "}
-                  {attendClassIsLoading ? (
-                    <Spinner />
-                  ) : (
-                    <BsFillCheckCircleFill style={{ color: "green" }} />
-                  )}
+                  <p
+                    className="py-3 px-3 d-flex align-items-center justify-content-between "
+                    style={{
+                      width: "200px",
+                      cursor: "pointer",
+                      background: "#203864",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    Mark as completed{" "}
+                    {attendClassIsLoading ? (
+                      <Spinner />
+                    ) : (
+                      <BsFillCheckCircleFill
+                        style={{ color: "green", margin: "0 5px" }}
+                      />
+                    )}
+                  </p>
                 </div>
               )}
             </>
@@ -368,7 +375,19 @@ export default function Lecture() {
                         }
 
                         return (
-                          <div className="" key={s?.id}>
+                          <div
+                            className=""
+                            key={s?.id}
+                            style={{
+                              background: `${
+                                s?.name === currentSession?.name
+                                  ? "#f2f2f2"
+                                  : ""
+                              }`,
+                              padding: "1px 10px",
+                              borderRadius: "5px",
+                            }}
+                          >
                             {/* {s?.name === currentSession?.name ? ( */}
                             {attended ? (
                               <div
@@ -455,7 +474,7 @@ export default function Lecture() {
                     done={true}
                   />
                   <LectureButton
-                    text={"Course Exams"}
+                    text={"Take Exam"}
                     done={true}
                     id={`exam/${course?.exams[0]?.id}`}
                   />
@@ -477,9 +496,9 @@ export default function Lecture() {
                 id={`lecture-material/${id}`}
               />
               <LectureButton
-                text={"Course Quizes"}
+                text={"Take Quiz"}
                 done={true}
-                id={`lecture-quizes/${id}`}
+                id={`lecture-quizes/${course?.quizzes[0]?.id}`}
               />
             </div>
           </div>

@@ -29,6 +29,7 @@ export default function Exam() {
   >([]);
 
   const { data, isLoading } = useExam(params?.id);
+
   const submitExam = useSubmitExam(params?.id);
 
   console.log(data);

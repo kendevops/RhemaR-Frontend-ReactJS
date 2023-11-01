@@ -36,20 +36,6 @@ export default function LectureMaterial() {
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.firstName} ${userData?.firstName}`}</div>
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.level?.name
-          ?.split("_")
-          .join(" ")
-          .toLowerCase()}`}</div>
-        <div
-          className=" bg-white "
-          style={{ width: "2px", height: "20px" }}
-        ></div>
-        <div>{`${userData?.campus?.name}`}</div>
       </div>
       <BackButton />
 
