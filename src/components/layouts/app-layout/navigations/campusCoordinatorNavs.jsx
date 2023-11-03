@@ -15,12 +15,12 @@ export default [
     icon: <Icon icon="teenyicons:users-solid" />,
     navLink: "/student-services-admin/applications",
   },
-  {
-    id: "students",
-    title: "Students Management",
-    icon: <Icon icon="teenyicons:users-solid" />,
-    navLink: "/student-services-admin/students",
-  },
+  // {
+  //   id: "students",
+  //   title: "Students Management",
+  //   icon: <Icon icon="teenyicons:users-solid" />,
+  //   navLink: "/student-services-admin/students",
+  // },
 
   // {
   //   id: "student-services-admin",

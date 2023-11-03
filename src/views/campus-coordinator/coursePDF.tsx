@@ -10,7 +10,7 @@ type courseVideoProps = {
 const CoursePDF = ({ data }: courseVideoProps) => {
   const [isOpen, toggle] = useToggle();
 
-  console.log(data);
+  console.log("data", data);
 
   const domData = [
     "session 1",
@@ -21,15 +21,21 @@ const CoursePDF = ({ data }: courseVideoProps) => {
   ];
   return (
     <div className="d-flex gap-5 align-items-start justify-content-between ">
-      <div className="d-flex align-items-center gap-4 flex-wrap mt-5  ">
-        {domData.map((ses, i) => {
+      <div className="d-flex align-items-center gap-5 flex-wrap mt-5  ">
+        {data?.map((ses: any, i: number) => {
+          console.log(ses);
+
           return (
             <div key={i}>
               <div className="text-center">
-                <a href={"pdfurl"} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={ses?.data?.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FaRegFilePdf style={{ fontSize: "60px", color: "red" }} />
                 </a>
-                <p className="text-2xl my-3">Name of the PDF</p>
+                <p className="text-2xl my-3">{ses.title}</p>
               </div>
             </div>
           );

@@ -206,6 +206,36 @@ export default function CourseManagement() {
     },
 
     {
+      key: "Videos",
+      title: "Videos",
+      render: (data) => {
+        let videoCount = 0;
+        data?.sections.forEach((section: any) => {
+          if (section.video) {
+            videoCount++;
+          }
+        });
+
+        return <p>{videoCount}</p>;
+      },
+    },
+
+    {
+      key: "Audios",
+      title: "Audios",
+      render: (data) => {
+        let audioCount = 0;
+        data?.sections.forEach((section: any) => {
+          if (section.audio) {
+            audioCount++;
+          }
+        });
+
+        return <p>{audioCount}</p>;
+      },
+    },
+
+    {
       key: "Action",
       title: "Action",
       render: (data) => {
