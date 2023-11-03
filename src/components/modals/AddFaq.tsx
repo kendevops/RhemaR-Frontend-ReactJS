@@ -51,10 +51,10 @@ export default function AddFaq({
 
   const isCreating = !defaultValues;
 
-  const createCourse = useCreateCourse();
+  // const createCourse = useCreateCourse();
   const createFAQ = useCreateFAQ();
 
-  const isLoading = createCourse.isLoading;
+  const isLoading = createFAQ.isLoading;
 
   const { isLoading: editIsLoading, mutate: mutateEdit } = useUpdateFaq(
     defaultValues?.id
@@ -67,7 +67,9 @@ export default function AddFaq({
 
     /// Creating
     if (!defaultValues) {
-      createCourse.mutate(formData, {
+      console.log(formData);
+
+      createFAQ.mutate(formData, {
         onSuccess: () => {
           toast.success(
             <ToastContent
@@ -137,11 +139,12 @@ export default function AddFaq({
             {/* dropdown */}
             <FormDropdown
               title="Category"
-              value={formData?.category as any}
+              value={formData?.category}
               options={options?.map((o) => ({
                 children: o,
-                onClick: () => updateForm("category", o),
+                // onClick: () => updateForm("category", o),
               }))}
+              onChange={(e) => updateForm("category", e?.target?.value)}
             />
 
             {/* question */}

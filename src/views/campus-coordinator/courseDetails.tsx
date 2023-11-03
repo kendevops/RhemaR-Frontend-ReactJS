@@ -52,7 +52,7 @@ export default function LectureMaterial() {
   const sessions = data?.sections;
   const materials = data?.materials;
 
-  console.log(data);
+  console.log(materials, data);
   console.log(sessions);
 
   function onCreateSection(data: any) {
@@ -102,9 +102,11 @@ export default function LectureMaterial() {
     console.log(data);
 
     const body = {
-      ...data,
+      title: data.title,
+      level: data.level,
+      type: data.type,
       courseId: params?.id,
-      instructorId: "641dc7962c089cd00f164848",
+      // instructorId: "641dc7962c089cd00f164848",
       data: data?.materials[0],
     };
 
