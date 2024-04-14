@@ -180,6 +180,13 @@ export default function EditCampusModal({ data }: EditCampusModalProps) {
               onChange={(e) => updateForm("levels", e.target.value)}
               options={levelData?.map((v: any) => ({ children: v.name }))}
               value={formData?.levels}
+            />
+
+            {/* <FormDropdownSelectMultiple2
+              title="Campus Levels"
+              onChange={(e) => updateForm("levels", e.target.value)}
+              options={levelData?.map((v: any) => ({ children: v.name }))}
+              value={formData?.levels}
             /> */}
 
             <FormInput

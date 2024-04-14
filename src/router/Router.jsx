@@ -33,7 +33,7 @@ import {
   UpdateLoggedInUserAbility,
 } from "../utility/utilsGeneric";
 import userRoles from "../utility/userRoles";
-import useCurrentUser from "../hooks/queries/users/useCurrentUser";
+// import useCurrentUser from "../hooks/queries/users/useCurrentUser";
 import getToken from "../utils/getToken";
 import parseJwt from "../utils/parseJwt";
 import { handleLogout } from "../redux/slices/authSlice";
@@ -54,7 +54,7 @@ const Router = () => {
   const loggedIn = isUserLoggedIn();
   const data = getUserData();
 
-  console.log(data);
+  console.log(data, "Data");
 
   const accessToken = getToken("accessToken");
   const decodedJwt = parseJwt(accessToken);

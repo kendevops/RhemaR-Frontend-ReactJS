@@ -297,6 +297,14 @@ export default function AcademicManager() {
         Export Campus List
       </button>
 
+      <button
+        className="btn btn-blue-800 btn-lg d-flex gap-3 my-3   align-items-center "
+        style={{ width: "fit-content" }}
+      >
+        <HiPlus />
+        Export Campus List
+      </button>
+
       {/* level */}
 
       {tab === 5 && (
