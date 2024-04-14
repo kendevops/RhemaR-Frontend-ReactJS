@@ -3,7 +3,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 type ProgressBarMuiProps = {
   name: string;
-  percentage?: number | undefined;
+  percentage?: any;
   progressColor?: string;
   progessNumber?: any;
   icon?: any;

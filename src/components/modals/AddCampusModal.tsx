@@ -16,6 +16,8 @@ import useCreateCampus from "../../hooks/mutations/classes/useCreateCampus";
 import useAllUsers from "../../hooks/queries/useAllUsers";
 import useCampusLevel from "../../hooks/queries/classes/useCampusLevel";
 
+// import './styles.css';
+
 interface AddCampusModalProps {
   toggle: VoidFunction;
   visibility: boolean;
@@ -127,9 +129,17 @@ export default function AddCampusModal({
     }
   }
 
+  const customCloseIconStyle = {
+    color: "red", // Change this to your desired color
+    fontSize: "27px",
+  };
+
   return (
     <Modal centered isOpen={visibility} toggle={toggle} scrollable>
-      <ModalHeader toggle={toggle}>Create Campus</ModalHeader>
+      <ModalHeader toggle={toggle}>
+        Create Campus
+        {/* <span className="custom-close-icon">&times;</span> */}
+      </ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit}>
           <FormInput

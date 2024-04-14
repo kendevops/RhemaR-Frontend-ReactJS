@@ -53,7 +53,7 @@ export default function AddStaff({ toggle, visibility }: AddStaffProps) {
                 disablePortal
                 id="Search Staff"
                 loading={loading}
-                options={userOptions}
+                options={userOptions ? userOptions : []}
                 renderInput={(params) => {
                   return (
                     <TextField

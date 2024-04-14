@@ -24,14 +24,17 @@ export default function Tab({
       role={"tab"}
       style={{
         borderRadius: "0px",
-        borderColor: isSelected ? tabColor ?? colors.primary : "white",
-        borderTopWidth: "0px",
-        borderRightWidth: "0px",
-        borderLeftWidth: "0px",
+        borderColor: tabColor,
+        borderTopWidth: "2px",
+        borderRightWidth: "2px",
+        borderLeftWidth: "2px",
         borderBottomWidth: "2px",
+        color: isSelected ? "white" ?? colors.primary : tabColor,
+        // border: "2px",
+        background: isSelected ? tabColor ?? colors.primary : "white",
       }}
       onClick={onClick}
-      className={`btn text-blue-500  pb-3 shadow-none text-lg ease-transition`}
+      className="btn text-blue-500 px-4  pb-3 shadow-none text-xl ease-transition"
     >
       {children}
     </button>

@@ -48,10 +48,15 @@ export default function FormDropdownSelectMultiple({
         ? prevSelected.filter((item) => item !== option)
         : [...prevSelected, option]
     );
+
+    setLevelValues((prevSelected: any) =>
+      prevSelected.includes(option)
+        ? prevSelected.filter((item: any) => item !== option)
+        : [...prevSelected, option]
+    );
   };
 
-  setLevelValues(() => selectedOptions);
-
+  //
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };

@@ -85,7 +85,7 @@ export default function SessionSchedule({ title }: any) {
               return (
                 <Tab
                   key={t}
-                  tabColor="#289483"
+                  tabColor="#203864"
                   isSelected={currentClass === t}
                   onClick={() => {
                     setClas(i);

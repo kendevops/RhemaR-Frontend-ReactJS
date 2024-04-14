@@ -115,7 +115,7 @@ const TuitionAndClearanceTable = () => {
             return (
               <Tab
                 onClick={() => setTab(i)}
-                tabColor="#289483"
+                tabColor="#203864"
                 isSelected={currentTab === c}
                 key={c}
               >

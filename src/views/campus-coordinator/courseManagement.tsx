@@ -9,35 +9,41 @@ import useToggle from "../../utility/hooks/useToggle";
 import FilterModal, { FilterProps } from "../../components/modals/FilterModal";
 import useAllCampuses from "../../hooks/queries/classes/useAllCampuses";
 import useRoles from "../../hooks/queries/useRoles";
-import AddAdminModal from "../../components/modals/AddAdminModal";
-import EditAdminModal from "../../components/modals/editModals/EditAdminModal";
-import AddAdminBySSAdminModal from "../../components/modals/AddAdminBySSAdmin";
-import TableProfilePicture from "../../components/general/tableProfilePic";
-import { FaRegEye } from "react-icons/fa";
+import { FaFilter, FaRegEye } from "react-icons/fa";
 import useCurrentUser from "../../hooks/queries/users/useCurrentUser";
 import { Icon } from "@iconify/react";
 import { MdOutlineCancel } from "react-icons/md";
+import useCourses from "../../hooks/queries/classes/useCourses";
+import { Link } from "react-router-dom";
+import AddCourseCoursesModal from "../../components/modals/AddCourseScheduleModal";
+import UploadBulkCourseScheduleModal from "../../components/modals/UploadBulkCourseScheduleModal";
+import UploadBulkCourseModal from "../../components/modals/UploadBulkCourseModal";
+import AddCoreCourseModal from "../../components/modals/AddCourseModal";
 
 type FiltersProps = {
-  campus?: string;
-  role?: string;
-  fromLoginDate?: string;
-  toLoginDate?: string;
+  level?: string;
+  elective?: string;
+  hours?: string;
 };
 
-export default function AdminManagement() {
+export default function CourseManagement() {
   const [filters, setFilters] = useState<FiltersProps>({});
   const [filtering, setFiltering] = useState(false);
   const { data, isLoading } = useAllUsers(filters);
   const { data: campusesData } = useAllCampuses();
   const { data: rolesData } = useRoles();
   const { data: userData, isLoading: userLoading } = useCurrentUser();
+  const { data: coursesData, isLoading: coursesLoading } = useCourses();
+
+  const courses = coursesData?.courses;
+
+  console.log(courses, coursesData);
 
   console.log(filters);
 
   const [isFiltering, toggleFiltering] = useToggle();
   const [isAdding, toggleAdding] = useToggle();
-  const [isEditing, toggleEditing] = useToggle();
+  const [isBulkUploadOpen, toggleBulkUpload] = useToggle();
 
   const usersData = data?.users?.nodes?.filter((u: any) => {
     return u?.roles
@@ -69,39 +75,38 @@ export default function AdminManagement() {
       {
         inputType: "Dropdown",
         inputProps: {
-          options: campusOptions,
+          options: ["Level 1", "Level 2", "Level 3"].map((d: any) => ({
+            children: d,
+          })),
         },
-        id: "campus",
-        name: "Campus",
+        id: "level",
+        name: "Level",
       },
       {
         inputType: "Dropdown",
         inputProps: {
-          options: roleOptions,
+          options: ["Core", "Option"].map((d: any) => ({
+            children: d,
+          })),
         },
-        id: "role",
-        name: "Role",
+        id: "elective",
+        name: "Course Elective",
       },
       {
-        inputType: "Text",
+        inputType: "Dropdown",
         inputProps: {
-          type: "date",
+          options: ["12", "5", "10"].map((d: any) => ({
+            children: d,
+          })),
         },
-        id: "fromLoginDate",
-        name: "Last Login Date (From)",
-      },
-      {
-        inputType: "Text",
-        inputProps: {
-          type: "date",
-        },
-        id: "toLoginDate",
-        name: "Last Login Date (To)",
+        id: "hours",
+        name: "Course Hours",
       },
     ],
     isOpen: isFiltering,
     onFilter: (params: any) => {
       setFilters(params);
+      setFiltering(true);
     },
     toggle: toggleFiltering,
   };
@@ -109,43 +114,30 @@ export default function AdminManagement() {
   function onSearch() {}
 
   const columns: TableColumns<any>[] = [
-    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i}</p> },
-    { key: "Pic", title: "Pic", render: (data, i) => <TableProfilePicture /> },
+    { key: "Serial number", title: "S/N", render: (data, i) => <p>{i + 1}</p> },
 
     {
-      key: "First name",
-      title: "First name",
-      render: (data) => <p>{data?.firstName}</p>,
+      key: "Course Instance",
+      title: "Course",
+      render: (data) => <p>Paul's Theology of Righteousness</p>,
     },
     {
-      key: "Last name",
-      title: "Last name",
-      render: (data) => <p>{data?.lastName}</p>,
+      key: "Level",
+      title: "Level",
+      render: (data) => <p>2</p>,
     },
     {
-      key: "Roles",
-      title: "Roles",
-      render: (data) => (
-        <p>
-          {data?.roles?.map(
-            (r: any, i: number) =>
-              `${parseRole(r?.name)}${
-                i === data?.roles?.length - 1 ? "" : ", "
-              }`
-          )}
-        </p>
-      ),
+      key: "Elective",
+      title: "Elective",
+      render: (data) => <p>Core</p>,
     },
+
     {
-      key: "Campus",
-      title: "Campus",
-      render: (data) => <p>{"HQ"}</p>,
+      key: "Hours",
+      title: "Hours",
+      render: (data) => <p>12 hours</p>,
     },
-    {
-      key: "Last Login",
-      title: "Last Login",
-      render: (data) => <p>{"1 Week Ago"}</p>,
-    },
+
     {
       key: "Action",
       title: "Action",
@@ -153,16 +145,10 @@ export default function AdminManagement() {
         console.log("usersData", data);
         return (
           <div className="d-flex gap-4">
-            {/* <p className="" style={{ color: "red", cursor: "pointer" }}>
-              Delete
-            </p> */}
-
-            <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+            <Link to={`/student-services-admin/course-details`}>
+              <FaRegEye style={{ cursor: "pointer", fontSize: "23px" }} />
+            </Link>
             <RiDeleteBin6Line style={{ cursor: "pointer", fontSize: "23px" }} />
-
-            {/* <p onClick={toggleEditing} style={{ cursor: "pointer" }}>
-              Edit
-            </p> */}
           </div>
         );
       },
@@ -173,7 +159,11 @@ export default function AdminManagement() {
     <Fragment>
       <div id="Modals">
         <FilterModal {...filterProps} />
-        <AddAdminBySSAdminModal isOpen={isAdding} toggle={toggleAdding} />
+        <AddCoreCourseModal visibility={isAdding} toggle={toggleAdding} />
+        <UploadBulkCourseModal
+          isOpen={isBulkUploadOpen}
+          toggle={toggleBulkUpload}
+        />
       </div>
 
       <div
@@ -181,44 +171,61 @@ export default function AdminManagement() {
         style={{ color: "white", fontWeight: 700 }}
       >
         <Icon icon="mdi:note-text" style={{ width: "20px", height: "20px" }} />
-        <div>Student Services Admin</div>
-
+        <div>Course Management</div>
         <div
           className=" bg-white "
           style={{ width: "2px", height: "20px" }}
         ></div>
-        <div>{`${userData?.campus?.name}`}</div>
-        {filters.campus && (
+
+        <div>User Campus</div>
+
+        {filtering && (
           <div
             className=" bg-white "
             style={{ width: "2px", height: "20px" }}
           ></div>
         )}
 
-        {filters.campus && <div>Filtering</div>}
+        {filtering && <div>Filtered List</div>}
       </div>
 
-      {filters.campus && (
+      {filtering && (
         <div className="d-flex gap-4 ">
-          <p
-            className="d-flex gap-3 py-3 px-4 rounded-5  "
-            style={{ background: "#fffaaa" }}
-          >
-            {filters?.campus} <MdOutlineCancel />{" "}
-          </p>
-          <p
-            className="d-flex gap-3 py-3 px-4  rounded-5  "
-            style={{ background: "#fffaaa" }}
-          >
-            {filters?.role} <MdOutlineCancel />
-          </p>
-          <p
-            className="d-flex gap-3 py-3 px-4  rounded-5  "
-            style={{ background: "#fffaaa" }}
-          >
-            {filters?.fromLoginDate} - {filters?.toLoginDate}{" "}
-            <MdOutlineCancel />
-          </p>
+          {filters?.level && (
+            <p
+              className="d-flex gap-3 py-3 px-4 rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.level}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.elective && (
+            <p
+              className="d-flex gap-3 py-3 px-4 rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.elective}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
+
+          {filters?.hours && (
+            <p
+              className="d-flex gap-3 py-3 px-4  rounded-5  "
+              style={{ background: "#f0f0f0" }}
+            >
+              <p>
+                {filters?.hours}{" "}
+                <MdOutlineCancel onClick={() => setFiltering(false)} />
+              </p>
+            </p>
+          )}
         </div>
       )}
 
@@ -233,18 +240,26 @@ export default function AdminManagement() {
           }}
         >
           <button
-            className="btn btn-outline-info btn-lg "
+            className="btn btn-blue-800 btn-lg"
+            style={{ width: "fit-content" }}
+            onClick={toggleBulkUpload}
+          >
+            Bulk Upload
+          </button>
+          <button
+            className="border-800-blue border-2 btn-lg "
             style={{ width: "fit-content" }}
             onClick={toggleFiltering}
           >
-            Filter
+            <FaFilter /> Filter Courses
           </button>
+
           <button
             className="btn btn-blue-800 btn-lg"
             style={{ width: "fit-content" }}
             onClick={toggleAdding}
           >
-            Add admin
+            Add Course
           </button>
         </div>
       </article>
@@ -252,12 +267,7 @@ export default function AdminManagement() {
       <main id="Table">
         {isLoading && <Spinner />}
         <Table.Wrapper>
-          {usersData && (
-            <Table
-              columns={columns}
-              data={userData?.campus?.name === "HQ" ? usersData : ssData}
-            />
-          )}
+          {usersData && <Table columns={columns} data={usersData} />}
         </Table.Wrapper>
       </main>
     </Fragment>

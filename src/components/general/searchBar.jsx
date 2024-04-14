@@ -17,9 +17,12 @@ const SearchBar = (props) => {
 
   return (
     <>
-      <div className="input-group bg-blue-400">
-        <div className="input-group-prepend">
-          <span className="input-group-text h-100" id="basic-addon1">
+      <div
+        className="input-group bg-blue-400"
+        style={{ border: "2px solid #203864" }}
+      >
+        <div className="input-group-prepend g-search-icon">
+          <span className="input-group-text h-100 " id="basic-addon1">
             <Search color="#182252" />
           </span>
         </div>
@@ -36,7 +39,7 @@ const SearchBar = (props) => {
           <button
             onClick={onSearch}
             style={searchButtonStyle}
-            className="btn btn-lg btn-blue-800"
+            className="btn btn-lg btn-blue-800 rounded-0"
             type="button"
           >
             Search
